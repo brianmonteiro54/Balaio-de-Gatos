@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Parte 2: MSE, RMSE, R², PDPs e onde rodar isso na AWS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF3E2; --cream-2:#F5E9CF; --paper:#FFF9EC;
+    --ink:#2B1810; --ink-soft:#4A3528;
+    --orange:#FF6B35; --orange-deep:#E54E1B;
+    --caramel:#D4A574; --sage:#5C8D89; --sage-deep:#3F6864;
+    --coral:#C73E1D; --olive:#6B8E23; --yellow:#F4D35E;
+    --plum:#8B4F7F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Sora',sans-serif;background:var(--cream);color:var(--ink);
+    line-height:1.6;overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 10% 20%,rgba(255,107,53,0.04) 0%,transparent 50%),
+      radial-gradient(circle at 90% 80%,rgba(92,141,137,0.05) 0%,transparent 50%);
+  }
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.4;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  }
+  h1,h2,h3,.display{font-family:'Caprasimo',serif;font-weight:400;letter-spacing:-0.01em}
+  .container{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:2px solid var(--ink);box-shadow:0 4px 0 var(--ink)}
+  .nav-inner{max-width:1180px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .nav-brand{font-family:'Caprasimo',serif;font-size:22px;display:flex;align-items:center;gap:8px}
+  .nav-brand .pt{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--ink);color:var(--yellow);padding:3px 8px;border-radius:100px;font-weight:600}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap}
+  .nav-links a{color:var(--ink);text-decoration:none;padding:6px 12px;font-size:13px;font-weight:500;border-radius:20px;transition:all 0.15s;white-space:nowrap}
+  .nav-links a:hover{background:var(--ink);color:var(--cream)}
+
+  /* HERO */
+  .hero{padding:100px 0 80px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center}
+  .hero h1{font-size:clamp(44px,7vw,84px);line-height:0.95;margin-bottom:28px}
+  .hero h1 .accent{color:var(--orange);display:inline-block;transform:rotate(-2deg)}
+  .hero h1 .scratch{position:relative;display:inline-block}
+  .hero h1 .scratch::after{content:'';position:absolute;bottom:8%;left:-3%;width:106%;height:18%;background:var(--yellow);z-index:-1;transform:skew(-8deg,-1deg)}
+  .hero p{font-size:19px;color:var(--ink-soft);max-width:540px;margin-bottom:32px}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:28px}
+  .hero-badge .v2{background:var(--orange);color:var(--paper);padding:2px 8px;border-radius:100px;font-size:11px;margin-left:4px}
+  .hero-cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:var(--paper);padding:16px 28px;border-radius:60px;text-decoration:none;font-weight:600;font-size:16px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);transition:all 0.15s}
+  .hero-cta:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .cat-pile{position:relative;height:380px;font-size:80px;line-height:1}
+  .cat-pile .float-cat{position:absolute;animation:floatcat 6s ease-in-out infinite;filter:drop-shadow(3px 4px 0 var(--ink-soft))}
+  .cat-pile .c1{top:0%;left:18%;font-size:90px;animation-delay:0s;transform:rotate(-8deg)}
+  .cat-pile .c2{top:8%;right:0%;font-size:70px;animation-delay:-1s;transform:rotate(12deg)}
+  .cat-pile .c3{top:38%;left:38%;font-size:110px;animation-delay:-2s}
+  .cat-pile .c4{bottom:6%;left:0%;font-size:64px;animation-delay:-3s;transform:rotate(-12deg)}
+  .cat-pile .c5{bottom:10%;right:14%;font-size:95px;animation-delay:-4s;transform:rotate(6deg)}
+  .cat-pile .c6{top:56%;right:0%;font-size:50px;animation-delay:-2.5s}
+  .cat-pile .chip{position:absolute;top:22%;left:0%;font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--ink);color:var(--yellow);padding:6px 12px;border-radius:8px;transform:rotate(-6deg);box-shadow:3px 3px 0 var(--orange)}
+  .cat-pile .chip2{position:absolute;bottom:24%;right:28%;font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--orange);color:var(--paper);padding:5px 10px;border-radius:8px;transform:rotate(4deg);box-shadow:3px 3px 0 var(--ink)}
+  @keyframes floatcat{0%,100%{translate:0 0}50%{translate:0 -12px}}
+
+  /* SECTIONS */
+  section.chapter{padding:80px 0;position:relative}
+  section.chapter + section.chapter{border-top:2px dashed rgba(43,24,16,0.18)}
+  .chapter-number{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--orange-deep);margin-bottom:12px;letter-spacing:0.1em;text-transform:uppercase}
+  .chapter h2{font-size:clamp(36px,5vw,60px);line-height:1;margin-bottom:18px;max-width:800px}
+  .chapter > .container > .lead{font-size:18px;color:var(--ink-soft);max-width:680px;margin-bottom:40px}
+
+  /* CARD STYLES */
+  .recap-card{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:28px;box-shadow:6px 6px 0 var(--orange)}
+  .recap-card h3{font-size:26px;margin-bottom:14px}
+  .recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+  .recap-mini{background:var(--cream-2);border:1.5px solid var(--ink);border-radius:12px;padding:14px 16px}
+  .recap-mini .name{font-family:'Caprasimo',serif;font-size:18px}
+  .recap-mini .val{font-family:'JetBrains Mono',monospace;color:var(--orange-deep);font-weight:600;font-size:13px}
+  .recap-mini .desc{font-size:13px;color:var(--ink-soft);margin-top:4px}
+  .comp-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:12px}
+  .comp-table th,.comp-table td{padding:12px 14px;text-align:left;border-bottom:1.5px dashed rgba(43,24,16,0.18);font-size:14px}
+  .comp-table th{font-family:'Caprasimo',serif;font-weight:400;font-size:16px;background:var(--cream-2)}
+  .comp-table th:first-child{border-top-left-radius:8px}
+  .comp-table th:last-child{border-top-right-radius:8px}
+  .comp-table tr:last-child td{border-bottom:none}
+  .comp-table .mae-col{color:var(--sage-deep);font-weight:600}
+  .comp-table .rmse-col{color:var(--coral);font-weight:600}
+
+  /* METRIC BLOCK */
+  .metric-block{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:stretch}
+  .metric-visual{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:30px;box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column}
+  .metric-formula{font-family:'JetBrains Mono',monospace;background:var(--cream-2);border:2px dashed var(--ink);border-radius:12px;padding:20px;margin:16px 0;text-align:center;font-size:15px}
+  .metric-formula .frac{display:inline-block;text-align:center;vertical-align:middle}
+  .metric-formula .frac > span{display:block}
+  .metric-formula .frac .num{border-bottom:2px solid var(--ink);padding:0 10px 4px}
+  .metric-formula .frac .den{padding:4px 10px 0}
+  .metric-formula .equals{margin:0 12px;font-size:22px;color:var(--orange-deep);vertical-align:middle}
+  .metric-formula .result{font-family:'Caprasimo',serif;color:var(--orange-deep);font-size:28px;vertical-align:middle}
+  .metric-formula .sup{font-size:0.7em;vertical-align:super}
+  .metric-explain{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:30px;box-shadow:6px 6px 0 var(--sage);display:flex;flex-direction:column}
+  .metric-explain .question{font-family:'Caprasimo',serif;font-size:24px;color:var(--sage-deep);margin-bottom:14px;line-height:1.2}
+  .metric-explain p{margin-bottom:14px;font-size:15.5px;color:var(--ink-soft)}
+  .metric-explain strong{color:var(--ink)}
+  .metric-explain ul{margin:0 0 14px 20px;font-size:14.5px;color:var(--ink-soft)}
+  .metric-explain ul li{margin-bottom:6px}
+  .metric-explain .bizz{background:var(--yellow);border:2px solid var(--ink);border-radius:12px;padding:16px;margin-top:auto;font-size:14px}
+  .metric-explain .bizz::before{content:"💼 "}
+
+  /* MSE BARS */
+  .err-bars{display:flex;flex-direction:column;gap:11px}
+  .err-row{display:grid;grid-template-columns:70px 1fr 90px;gap:10px;align-items:center}
+  .err-name{font-weight:600;font-size:13px}
+  .err-name.outlier{color:var(--coral);font-weight:700}
+  .err-bar-wrap{height:34px;background:var(--cream-2);border:1.5px solid var(--ink);border-radius:8px;position:relative;overflow:hidden}
+  .err-bar-actual,.err-bar-pred{position:absolute;border-radius:6px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:var(--paper);transition:width 0.3s ease}
+  .err-bar-actual{background:var(--sage);height:50%;top:0;left:0}
+  .err-bar-pred{background:var(--orange);height:50%;bottom:0;left:0}
+  .err-value{text-align:right;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--coral);font-weight:600}
+  .err-value .sq{font-size:10px;color:var(--ink-soft);display:block;margin-top:2px}
+  .outlier-control{background:var(--cream-2);border:2px dashed var(--ink);border-radius:12px;padding:18px;margin-top:18px}
+  .outlier-control label{display:flex;align-items:center;justify-content:space-between;font-weight:600;margin-bottom:10px;font-size:13px}
+  .outlier-control input[type=range]{width:100%;accent-color:var(--coral);height:6px}
+  .outlier-control .hint{font-size:12px;color:var(--ink-soft);margin-top:6px;font-style:italic}
+  .err-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px}
+  .err-summary-card{background:var(--cream-2);border:2px solid var(--ink);border-radius:10px;padding:12px 8px;text-align:center}
+  .err-summary-card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);font-weight:600}
+  .err-summary-card .v{font-family:'Caprasimo',serif;font-size:24px;color:var(--orange-deep);line-height:1.2}
+  .err-summary-card.featured{background:var(--ink)}
+  .err-summary-card.featured .lbl{color:var(--cream-2)}
+  .err-summary-card.featured .v{color:var(--yellow)}
+
+  /* R² */
+  .r2-section .container > .r2-wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:stretch}
+  .r2-chart-card{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:26px;box-shadow:6px 6px 0 var(--ink)}
+  .r2-svg{width:100%;aspect-ratio:1/1;max-height:380px;background:#FCF6E3;border-radius:12px}
+  .r2-toggle{display:flex;gap:8px;margin-top:14px}
+  .r2-toggle button{flex:1;background:var(--paper);border:2px solid var(--ink);color:var(--ink);padding:10px;border-radius:10px;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.15s}
+  .r2-toggle button.active{background:var(--ink);color:var(--yellow)}
+  .r2-toggle button:hover:not(.active){background:var(--cream-2)}
+  .r2-controls{margin-top:18px}
+  .r2-controls label{display:flex;align-items:center;justify-content:space-between;font-weight:600;margin-bottom:10px;font-size:14px}
+  .r2-controls input[type=range]{width:100%;accent-color:var(--orange);height:6px}
+  .r2-readout{background:var(--ink);color:var(--paper);border-radius:16px;padding:20px;margin-top:16px;text-align:center}
+  .r2-readout .lbl{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--cream-2);font-weight:600}
+  .r2-readout .v{font-family:'Caprasimo',serif;font-size:54px;color:var(--yellow);line-height:1.05;margin:4px 0}
+  .r2-readout .interp{font-size:13px;color:var(--cream-2)}
+
+  /* PDP */
+  .pdp-section .container > .pdp-wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:40px}
+  .pdp-card{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:26px;box-shadow:6px 6px 0 var(--ink)}
+  .pdp-feature-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .pdp-feat{background:var(--cream-2);border:2px solid var(--ink);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:center;transition:all 0.15s;font-weight:600;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .pdp-feat:hover{background:var(--paper)}
+  .pdp-feat.active{background:var(--ink);color:var(--yellow);transform:translateY(-2px);box-shadow:0 4px 0 var(--ink)}
+  .pdp-feat .ic{font-size:22px}
+  .pdp-svg{width:100%;aspect-ratio:1.4/1;background:#FCF6E3;border-radius:12px}
+  .pdp-insight{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:8px;padding:14px 18px;margin-top:16px;font-size:14px;color:var(--ink-soft)}
+  .pdp-insight strong{color:var(--ink)}
+
+  /* MARQUEE */
+  .cat-strip{background:var(--orange);color:var(--paper);padding:14px 0;overflow:hidden;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+  .cat-strip-inner{display:flex;gap:40px;animation:marquee 26s linear infinite;white-space:nowrap;font-family:'Caprasimo',serif;font-size:18px}
+  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* AWS DIVIDER */
+  .aws-divider{background:var(--ink);color:var(--paper);padding:80px 0;text-align:center;border-top:2px solid var(--ink)}
+  .aws-divider h2{font-size:clamp(38px,6vw,68px);line-height:1;color:var(--paper);margin-bottom:18px;max-width:none}
+  .aws-divider h2 .accent{color:var(--orange)}
+  .aws-divider h2 .yel{color:var(--yellow)}
+  .aws-divider p{max-width:640px;margin:0 auto;font-size:18px;color:var(--cream-2)}
+  .aws-divider .pipe{display:inline-flex;align-items:center;gap:10px;margin-top:36px;font-family:'JetBrains Mono',monospace;font-size:13px;flex-wrap:wrap;justify-content:center}
+  .aws-divider .pipe span{background:rgba(255,255,255,0.06);border:1.5px solid var(--cream-2);padding:8px 14px;border-radius:100px}
+  .aws-divider .pipe .arrow{color:var(--orange);font-size:20px;background:transparent;border:none;padding:0}
+
+  /* CHIP SECTIONS */
+  .chip-hero{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:stretch;margin-bottom:40px}
+  .chip-illustration{border:2px solid var(--ink);border-radius:20px;padding:30px;box-shadow:6px 6px 0 var(--ink);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:380px}
+  .chip-illustration.trn{background:linear-gradient(135deg,#FFE8DD 0%,#FBF3E2 100%)}
+  .chip-illustration.inf{background:linear-gradient(135deg,#DDEEEC 0%,#FBF3E2 100%)}
+  .chip-svg{width:260px;height:260px;margin-bottom:18px}
+  .chip-label{text-align:center}
+  .chip-label .fam{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+  .chip-label .nm{font-family:'Caprasimo',serif;font-size:34px;line-height:1;margin-top:4px}
+  .chip-label .tag{display:inline-block;margin-top:10px;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+  .chip-label .tag.train{background:var(--orange);color:var(--paper)}
+  .chip-label .tag.infer{background:var(--sage);color:var(--paper)}
+  .chip-info{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:30px;box-shadow:6px 6px 0 var(--ink)}
+  .chip-info h3{font-size:28px;margin-bottom:14px}
+  .chip-info h3 .word{color:var(--orange)}
+  .chip-info h3 .sword{color:var(--sage-deep)}
+  .chip-info p{margin-bottom:14px;font-size:15px;color:var(--ink-soft)}
+  .chip-info p strong{color:var(--ink)}
+  .chip-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .chip-spec{background:var(--cream-2);border:1.5px solid var(--ink);border-radius:10px;padding:12px 14px;font-size:13px}
+  .chip-spec .lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);font-weight:600}
+  .chip-spec .v{font-family:'Caprasimo',serif;font-size:18px;color:var(--ink);line-height:1.2;margin-top:2px}
+
+  /* COST CALC */
+  .cost-calc{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:30px;box-shadow:6px 6px 0 var(--orange);margin-top:10px}
+  .cost-calc.inf{box-shadow:6px 6px 0 var(--sage)}
+  .cost-calc h3{font-size:26px;margin-bottom:6px}
+  .cost-calc .sub{font-size:14px;color:var(--ink-soft);margin-bottom:22px}
+  .cost-control{margin-bottom:22px}
+  .cost-control label{display:flex;align-items:center;justify-content:space-between;font-weight:600;margin-bottom:8px;font-size:14px}
+  .cost-control label .val{font-family:'JetBrains Mono',monospace;color:var(--orange-deep);font-weight:700}
+  .cost-control input[type=range]{width:100%;accent-color:var(--orange);height:6px}
+  .cost-control .hint{font-size:12px;color:var(--ink-soft);margin-top:6px;font-style:italic}
+  .cost-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .cost-side{border:2px solid var(--ink);border-radius:14px;padding:18px;text-align:center}
+  .cost-side.gpu{background:#F9D5C2}
+  .cost-side.aws-chip{background:#DCE9C4}
+  .cost-side.inf-aws{background:#BFE0DD}
+  .cost-side .who{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);font-weight:700}
+  .cost-side .price{font-family:'Caprasimo',serif;font-size:34px;line-height:1.1;color:var(--ink);margin:6px 0}
+  .cost-side .detail{font-size:12px;color:var(--ink-soft)}
+  .cost-savings{background:var(--ink);color:var(--paper);border-radius:14px;padding:18px;margin-top:18px;text-align:center}
+  .cost-savings .lbl{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--cream-2);font-weight:600}
+  .cost-savings .v{font-family:'Caprasimo',serif;font-size:38px;color:var(--yellow);line-height:1.1;margin-top:4px}
+
+  /* WHEN TO USE */
+  .when-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+  .when-card{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:22px;box-shadow:4px 4px 0 var(--ink)}
+  .when-card.go{background:#DCE9C4}
+  .when-card.notyet{background:#F9D5C2}
+  .when-card h4{font-family:'Caprasimo',serif;font-size:20px;margin-bottom:8px}
+  .when-card .icon{font-size:32px;margin-bottom:8px;display:block}
+  .when-card p{font-size:14px;color:var(--ink-soft);margin-bottom:8px}
+  .when-card ul{font-size:13px;list-style:none}
+  .when-card ul li{margin-bottom:6px;padding-left:22px;position:relative}
+  .when-card ul li::before{content:"→";position:absolute;left:0;color:var(--orange-deep);font-weight:700}
+
+  /* CHEAT */
+  .cheatsheet{background:var(--cream-2);padding:80px 0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+  .cheat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:30px}
+  .cheat-card{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:20px;box-shadow:4px 4px 0 var(--ink)}
+  .cheat-card .name{font-family:'Caprasimo',serif;font-size:22px;margin-bottom:4px}
+  .cheat-card .micro{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--orange-deep);background:var(--cream-2);padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:10px}
+  .cheat-card .q{font-size:14px;color:var(--ink-soft);font-style:italic;margin-bottom:8px}
+  .cheat-card .what{font-size:14px}
+
+  /* FOOTER */
+  footer{text-align:center;padding:60px 32px 80px;color:var(--ink-soft);font-size:14px;border-top:2px solid var(--ink)}
+  footer .heart{color:var(--orange);display:inline-block;animation:heartbeat 1.4s ease-in-out infinite}
+  footer a{color:var(--orange-deep)}
+  @keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+
+  /* RESPONSIVE */
+  @media (max-width:920px){
+    .hero-grid,.metric-block,.r2-section .container > .r2-wrap,.pdp-section .container > .pdp-wrap,.chip-hero,.cost-compare,.recap-grid,.when-grid{grid-template-columns:1fr}
+    .cat-pile{height:240px;font-size:60px}
+    .err-row{grid-template-columns:55px 1fr 70px}
+    .container{padding:0 20px}
+    .nav-inner{flex-direction:column;align-items:flex-start;padding:12px 20px}
+    .nav-links{font-size:11px}
+    .nav-links a{padding:4px 8px;font-size:11px}
+    .chip-illustration{min-height:280px}
+    .chip-svg{width:200px;height:200px}
+    .err-summary-card .v{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span class="pt">PARTE 2</span></div>
+    <div class="nav-links">
+      <a href="#recap">Recap</a>
+      <a href="#mse">MSE</a>
+      <a href="#rmse">RMSE</a>
+      <a href="#r2">R²</a>
+      <a href="#pdp">PDPs</a>
+      <a href="#trainium">Trainium</a>
+      <a href="#inferentia">Inferentia</a>
+      <a href="#resumo">Cola</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula visual <span class="v2">parte 2</span></div>
+        <h1>
+          O balaio<br>
+          <span class="scratch">volta.</span><br>
+          Agora <span class="accent">elevado ao quadrado</span><br>
+          e rodando na <span class="accent">AWS</span>.
+        </h1>
+        <p>
+          Ontem você aprendeu a medir um modelo. Hoje a gente <strong>vai mais fundo na régua</strong> (MSE, RMSE, R²), aprende a <strong>perguntar pro modelo por que ele decidiu</strong> (PDPs), e termina <strong>onde rodar tudo isso pagando menos</strong> com Trainium e Inferentia. Mexa nos controles. Aprende fazendo.
+        </p>
+        <a href="#recap" class="hero-cta">Bora continuar 🐾</a>
+      </div>
+      <div class="cat-pile">
+        <span class="float-cat c1">😺</span>
+        <span class="float-cat c2">🐱</span>
+        <span class="float-cat c3">🐈‍⬛</span>
+        <span class="float-cat c4">🐈</span>
+        <span class="float-cat c5">😸</span>
+        <span class="float-cat c6">😻</span>
+        <span class="chip">x²  √x  R²</span>
+        <span class="chip2">Trn · Inf</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>📐 MSE</span><span>🚧 RMSE</span><span>🎯 R²</span><span>🔬 PDPs</span><span>🧠 EC2 TRAINIUM</span><span>⚡ EC2 INFERENTIA</span><span>📐 MSE</span><span>🚧 RMSE</span><span>🎯 R²</span><span>🔬 PDPs</span><span>🧠 EC2 TRAINIUM</span><span>⚡ EC2 INFERENTIA</span>
+  </div>
+</div>
+
+<!-- RECAP -->
+<section class="chapter" id="recap">
+  <div class="container">
+    <span class="chapter-number">00 · Recap rápido</span>
+    <h2>Onde a gente parou.</h2>
+    <p class="lead">
+      Lembra dos 5 gatinhos do balaio cujo peso o modelo tava prevendo? <strong>Mel, Bento, Pipoca, Salem e Pretinha.</strong> A gente calculou o <strong>MAE: 0,32 kg</strong>. Era simples: a média de quanto a gente errou, sem importar pra que lado.
+    </p>
+
+    <div class="recap-card">
+      <h3>🧠 Os mesmos 5 gatinhos, agora tabelados:</h3>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Gato</th>
+            <th>Peso real</th>
+            <th>Previsão</th>
+            <th>Erro |real − previsto|</th>
+            <th>Erro²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🐈 Mel</td><td>3,2 kg</td><td>3,5 kg</td><td class="mae-col">0,3</td><td class="rmse-col">0,09</td></tr>
+          <tr><td>🐈 Bento</td><td>4,5 kg</td><td>4,0 kg</td><td class="mae-col">0,5</td><td class="rmse-col">0,25</td></tr>
+          <tr><td>🐈 Pipoca</td><td>2,8 kg</td><td>3,0 kg</td><td class="mae-col">0,2</td><td class="rmse-col">0,04</td></tr>
+          <tr><td>🐈 Salem</td><td>5,1 kg</td><td>4,8 kg</td><td class="mae-col">0,3</td><td class="rmse-col">0,09</td></tr>
+          <tr><td>🐈 Pretinha</td><td>3,9 kg</td><td>4,2 kg</td><td class="mae-col">0,3</td><td class="rmse-col">0,09</td></tr>
+        </tbody>
+      </table>
+      <div class="recap-grid">
+        <div class="recap-mini">
+          <div class="name">📏 MAE</div>
+          <div class="val">(0,3 + 0,5 + 0,2 + 0,3 + 0,3) ÷ 5 = 0,32 kg</div>
+          <div class="desc">Trata todo erro igual. Pra cima ou pra baixo, mesma coisa.</div>
+        </div>
+        <div class="recap-mini">
+          <div class="name">📐 Erros² somados</div>
+          <div class="val">0,09 + 0,25 + 0,04 + 0,09 + 0,09 = 0,56</div>
+          <div class="desc">Já dá pra sentir: <strong>erros maiores pesam mais</strong>. Bora pra MSE.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MSE -->
+<section class="chapter" id="mse">
+  <div class="container">
+    <span class="chapter-number">01 · MSE · Mean Squared Error</span>
+    <h2>Elevar o erro <span style="color:var(--orange)">ao quadrado</span> muda tudo.</h2>
+    <p class="lead">
+      MSE faz uma coisinha aparentemente boba: ao invés de só somar os erros, ela <strong>eleva cada um ao quadrado</strong> antes. Parece detalhe, mas o efeito é dramático: <strong>erros grandes ficam GIGANTES</strong>, erros pequenos viram migalha.
+    </p>
+
+    <div class="metric-block">
+      <div class="metric-visual">
+        <div style="font-family:'Caprasimo',serif;font-size:22px;margin-bottom:14px">⚠️ O efeito do gato outlier</div>
+        <p style="font-size:14px;color:var(--ink-soft);margin-bottom:14px">
+          Imagina que um <strong>6º gatinho</strong> chega no balaio: o Garfield. É um gatão obeso e o modelo erra feio nele. <strong>Mexe no slider</strong> pra controlar o erro e veja como MAE e MSE reagem <em>bem diferente</em>:
+        </p>
+
+        <div class="err-bars" id="mse-bars"></div>
+
+        <div class="outlier-control">
+          <label>
+            <span>🐈 Erro do Garfield (gato outlier)</span>
+            <span id="ol-value" style="font-family:'JetBrains Mono',monospace;color:var(--coral);font-weight:700">1,5 kg</span>
+          </label>
+          <input type="range" id="ol-slider" min="0" max="40" value="15">
+          <div class="hint">Quanto maior o erro, mais o MSE explode. MAE só anda devagarinho.</div>
+        </div>
+
+        <div class="err-summary">
+          <div class="err-summary-card">
+            <div class="lbl">MAE (kg)</div>
+            <div class="v" id="mae-val">0,52</div>
+          </div>
+          <div class="err-summary-card featured">
+            <div class="lbl">MSE (kg²)</div>
+            <div class="v" id="mse-val">0,47</div>
+          </div>
+          <div class="err-summary-card">
+            <div class="lbl">RMSE (kg)</div>
+            <div class="v" id="rmse-val">0,68</div>
+          </div>
+        </div>
+
+        <div class="metric-formula" style="margin-top:18px">
+          MSE
+          <span class="equals">=</span>
+          <span class="frac">
+            <span class="num">Σ (real − previsto)<span class="sup">2</span></span>
+            <span class="den">n</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="metric-explain">
+        <div class="question">"E se eu não quiser deixar o modelo errar feio?"</div>
+        <p>
+          O <strong>MSE</strong> é exatamente isso: ele <strong>amplifica os erros grandes</strong> ao quadrá-los. Errou 1 kg? Vira 1. Errou 2 kg? Vira <strong>4</strong> (não 2!). Errou 5 kg? Vira <strong>25</strong> (não 5!). Erros grandes contribuem <em>desproporcionalmente</em> pra métrica.
+        </p>
+        <p>
+          <strong>A unidade do MSE é estranha:</strong> se você prevê peso em kg, MSE vem em kg². Não dá pra falar "o modelo erra 0,5 kg²" pro chefe, ele te olha torto. Por isso a gente quase sempre passa do MSE pro <strong>RMSE</strong> (próximo capítulo).
+        </p>
+        <p>
+          Mas o MSE <strong>é a estrela quando você TREINA o modelo</strong>. Muitos algoritmos otimizam MSE internamente porque ele é <em>derivável</em> e <em>convexo</em> — propriedades matemáticas que ajudam o algoritmo a aprender melhor.
+        </p>
+        <div class="bizz">
+          <strong>Quando usar?</strong> Quando você <em>não tolera erros gigantes</em>. Se o modelo prevê tempo de chegada de Uber: errar 5 min é ruim, errar 50 min é catastrófico. MSE/RMSE penalizam isso direito. MAE não percebe a diferença com a mesma intensidade.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RMSE -->
+<section class="chapter" id="rmse">
+  <div class="container">
+    <span class="chapter-number">02 · RMSE · Root Mean Squared Error</span>
+    <h2>A <span style="color:var(--orange)">raiz quadrada</span> de volta ao chão.</h2>
+    <p class="lead">
+      RMSE é literalmente <strong>√MSE</strong>. Você tira a raiz quadrada do MSE e pronto: <strong>volta pra unidade original</strong> (kg, reais, minutos), mantendo a propriedade de "punir mais os erros grandes" que veio do quadrado.
+    </p>
+
+    <div class="metric-block">
+      <div class="metric-visual">
+        <div style="font-family:'Caprasimo',serif;font-size:22px;margin-bottom:14px">📊 MAE vs RMSE lado a lado</div>
+        <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px">
+          Mexa de novo o slider do Garfield (lá em cima) e <strong>repare</strong>: MAE cresce devagarzinho. RMSE dispara quando o outlier piora. Mesma unidade (kg), comportamentos opostos.
+        </p>
+
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Critério</th>
+              <th>MAE</th>
+              <th>RMSE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fórmula</strong></td>
+              <td class="mae-col">média de |erro|</td>
+              <td class="rmse-col">√(média de erro²)</td>
+            </tr>
+            <tr>
+              <td><strong>Unidade</strong></td>
+              <td class="mae-col">igual à variável (kg)</td>
+              <td class="rmse-col">igual à variável (kg)</td>
+            </tr>
+            <tr>
+              <td><strong>Sensível a outliers?</strong></td>
+              <td class="mae-col">não muito</td>
+              <td class="rmse-col">MUITO</td>
+            </tr>
+            <tr>
+              <td><strong>Fácil de explicar?</strong></td>
+              <td class="mae-col">sim, é a média do erro</td>
+              <td class="rmse-col">mais ou menos</td>
+            </tr>
+            <tr>
+              <td><strong>Usada pra treinar?</strong></td>
+              <td class="mae-col">às vezes</td>
+              <td class="rmse-col">muito comum (via MSE)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="metric-formula" style="margin-top:20px">
+          RMSE
+          <span class="equals">=</span>
+          <span style="font-size:22px">√</span>
+          <span style="font-size:18px">(</span>
+          <span class="frac">
+            <span class="num">Σ (real − previsto)<span class="sup">2</span></span>
+            <span class="den">n</span>
+          </span>
+          <span style="font-size:18px">)</span>
+        </div>
+      </div>
+
+      <div class="metric-explain">
+        <div class="question">"Por que não usar só MAE então?"</div>
+        <p>
+          MAE e RMSE <strong>respondem a perguntas diferentes</strong>. MAE responde "<em>em média, quanto erro?</em>". RMSE responde "<em>quão volátil é meu erro?</em>". Um modelo pode ter MAE baixo mas RMSE alto: a maioria das previsões boas, mas <strong>alguns erros enormes</strong> escondidos.
+        </p>
+        <p>
+          <strong>Regra prática:</strong> se MAE e RMSE estão próximos, seus erros são <em>todos parecidos</em> — sem outliers. Se RMSE é <em>bem maior</em> que MAE, você tem <strong>casos catastróficos escondidos</strong> que merecem investigação.
+        </p>
+        <p>
+          <strong>Lê assim:</strong> "RMSE de 0,52 kg" = "o erro típico fica em torno de ±0,52 kg, mas com inclinação a punir mais os pontos longe da média".
+        </p>
+        <div class="bizz">
+          <strong>No nosso caso:</strong> se o veterinário usa o modelo pra dose de remédio, RMSE alto te alerta: tem gatos onde o modelo se perde feio. Esses são os pacientes que vão sofrer overdose ou underdose. <strong>Vale a pena olhar caso a caso.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- R² -->
+<section class="chapter r2-section" id="r2">
+  <div class="container">
+    <span class="chapter-number">03 · R² · Coeficiente de Determinação</span>
+    <h2>Seu modelo é <em style="color:var(--orange);font-style:normal">melhor que chutar a média</em>?</h2>
+    <p class="lead">
+      MAE e RMSE te dizem <strong>quanto</strong> seu modelo erra. Mas isso é "muito" ou "pouco"? <strong>Depende.</strong> R² responde de outro ângulo: <strong>quanto da variação dos dados o modelo consegue explicar?</strong>
+    </p>
+    <p class="lead">
+      A ideia é comparar com um <strong>baseline burro</strong>: um "modelo" que sempre prevê a <strong>média</strong> do peso (3,9 kg pra todo gato). R² mede o quanto seu modelo <em>melhora</em> em relação a esse burrão.
+    </p>
+
+    <div class="r2-wrap">
+      <div class="r2-chart-card">
+        <svg class="r2-svg" viewBox="0 0 400 400" id="r2-svg">
+          <g stroke="#D4A574" stroke-width="1" opacity="0.4" fill="none">
+            <line x1="60" y1="80" x2="380" y2="80"/>
+            <line x1="60" y1="160" x2="380" y2="160"/>
+            <line x1="60" y1="240" x2="380" y2="240"/>
+            <line x1="60" y1="320" x2="380" y2="320"/>
+            <line x1="140" y1="40" x2="140" y2="360"/>
+            <line x1="220" y1="40" x2="220" y2="360"/>
+            <line x1="300" y1="40" x2="300" y2="360"/>
+          </g>
+          <line x1="60" y1="360" x2="380" y2="360" stroke="#2B1810" stroke-width="2"/>
+          <line x1="60" y1="40" x2="60" y2="360" stroke="#2B1810" stroke-width="2"/>
+
+          <!-- Diagonal perfect prediction -->
+          <line x1="60" y1="360" x2="360" y2="60" stroke="#6B8E23" stroke-width="2" stroke-dasharray="6 5" opacity="0.5"/>
+          <text x="350" y="80" font-family="JetBrains Mono" font-size="9" fill="#6B8E23" text-anchor="end">previsão perfeita</text>
+
+          <!-- Residual lines -->
+          <g id="r2-residuals"></g>
+          <!-- Points -->
+          <g id="r2-points"></g>
+
+          <text x="220" y="392" font-family="Sora" font-size="13" font-weight="600" fill="#2B1810" text-anchor="middle">Peso real (kg)</text>
+          <text x="20" y="200" font-family="Sora" font-size="13" font-weight="600" fill="#2B1810" text-anchor="middle" transform="rotate(-90 20 200)">Previsão do modelo (kg)</text>
+          <text x="60" y="375" font-family="JetBrains Mono" font-size="10" fill="#2B1810" text-anchor="middle">2</text>
+          <text x="360" y="375" font-family="JetBrains Mono" font-size="10" fill="#2B1810" text-anchor="middle">6</text>
+          <text x="50" y="362" font-family="JetBrains Mono" font-size="10" fill="#2B1810" text-anchor="end">2</text>
+          <text x="50" y="44" font-family="JetBrains Mono" font-size="10" fill="#2B1810" text-anchor="end">6</text>
+          <text x="220" y="22" font-family="Caprasimo" font-size="15" fill="#2B1810" text-anchor="middle">Peso previsto vs Peso real (15 gatos)</text>
+        </svg>
+
+        <div class="r2-toggle">
+          <button id="r2-mode-model" class="active">📦 Meu modelo</button>
+          <button id="r2-mode-mean">😴 Baseline burrão (média)</button>
+        </div>
+
+        <div class="r2-controls">
+          <label>
+            <span>🎚️ Qualidade do modelo</span>
+            <span id="r2-qval" style="font-family:'JetBrains Mono',monospace;color:var(--orange-deep);font-weight:700">Bom</span>
+          </label>
+          <input type="range" id="r2-quality" min="0" max="100" value="78">
+        </div>
+
+        <div class="r2-readout">
+          <div class="lbl">R² (Coeficiente de Determinação)</div>
+          <div class="v" id="r2-value">0,84</div>
+          <div class="interp" id="r2-interp">O modelo explica 84% da variação no peso dos gatos.</div>
+        </div>
+      </div>
+
+      <div class="metric-explain" style="box-shadow:6px 6px 0 var(--plum)">
+        <div class="question">"Vale a pena ter modelo, ou chutar a média já basta?"</div>
+        <p>
+          Imagina que eu nunca treinei modelo. Pra todo gato novo, eu digo <strong>"chuto 3,9 kg" (a média do treino)</strong>. É o baseline mais idiota possível. Ele já erra alguma coisa, mas... é o piso.
+        </p>
+        <p>R² compara meu modelo com esse burro:</p>
+        <ul>
+          <li><strong>R² = 1,0</strong>: modelo perfeito, sem erro nenhum</li>
+          <li><strong>R² = 0,84</strong>: modelo explica 84% da variação. <strong>Excelente</strong>.</li>
+          <li><strong>R² = 0</strong>: meu modelo é <em>tão ruim</em> quanto o burro</li>
+          <li><strong>R² < 0</strong>: meu modelo é <strong>PIOR</strong> que o burro. Joga fora.</li>
+        </ul>
+        <p>
+          <strong>Cuidado:</strong> R² alto NÃO significa modelo "bom" pra qualquer coisa. Se os dados já têm pouca variação, até modelos preguiçosos têm R² alto. <strong>Sempre olhe junto com MAE/RMSE.</strong>
+        </p>
+        <div class="bizz">
+          <strong>Quando usar?</strong> Pra <em>comparar modelos</em> num mesmo problema, ou pra responder ao chefe: "vale a pena ter ML aqui ou eu uso só uma média?". Se R² baixo, o ML não tá agregando muito sobre o trivial.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PDP -->
+<section class="chapter pdp-section" id="pdp">
+  <div class="container">
+    <span class="chapter-number">04 · PDP · Partial Dependence Plots</span>
+    <h2>Por que o <span style="color:var(--orange)">modelo decidiu</span> assim?</h2>
+    <p class="lead">
+      Mudamos de problema: agora o modelo prevê <strong>"chance do gato ser adotado"</strong> (0 a 100%). Ele olha um monte de features: idade, peso, pelagem, castração. Mas... <em>qual delas mais influencia</em> a decisão? O <strong>PDP</strong> responde isso.
+    </p>
+    <p class="lead">
+      PDP = "se eu mudar UMA feature mantendo o resto fixo, como a previsão média muda?". É a maneira mais simples de <strong>abrir a caixa-preta</strong> sem matemática pesada. <strong>Clica nas features</strong> abaixo:
+    </p>
+
+    <div class="pdp-wrap">
+      <div class="pdp-card">
+        <div class="pdp-feature-picker">
+          <div class="pdp-feat active" data-feat="idade"><span class="ic">🐾</span>Idade do gato</div>
+          <div class="pdp-feat" data-feat="peso"><span class="ic">⚖️</span>Peso (kg)</div>
+          <div class="pdp-feat" data-feat="pelagem"><span class="ic">🎨</span>Pelagem</div>
+          <div class="pdp-feat" data-feat="castrado"><span class="ic">🩺</span>Castrado?</div>
+        </div>
+
+        <svg class="pdp-svg" viewBox="0 0 400 280" id="pdp-svg">
+          <g stroke="#D4A574" stroke-width="1" opacity="0.4" fill="none">
+            <line x1="50" y1="60" x2="380" y2="60"/>
+            <line x1="50" y1="120" x2="380" y2="120"/>
+            <line x1="50" y1="180" x2="380" y2="180"/>
+            <line x1="50" y1="240" x2="380" y2="240"/>
+          </g>
+          <line x1="50" y1="240" x2="380" y2="240" stroke="#2B1810" stroke-width="2"/>
+          <line x1="50" y1="40" x2="50" y2="240" stroke="#2B1810" stroke-width="2"/>
+
+          <g id="pdp-content"></g>
+
+          <text x="215" y="270" font-family="Sora" font-size="12" font-weight="600" fill="#2B1810" text-anchor="middle" id="pdp-xlabel">Idade do gato (anos)</text>
+          <text x="20" y="140" font-family="Sora" font-size="12" font-weight="600" fill="#2B1810" text-anchor="middle" transform="rotate(-90 20 140)">% chance de adoção</text>
+
+          <text x="42" y="244" font-family="JetBrains Mono" font-size="10" fill="#2B1810" text-anchor="end">0%</text>
+          <text x="42" y="64" font-family="JetBrains Mono" font-size="10" fill="#2B1810" text-anchor="end">100%</text>
+
+          <text x="215" y="30" font-family="Caprasimo" font-size="14" fill="#2B1810" text-anchor="middle" id="pdp-title">Efeito da idade na chance de adoção</text>
+        </svg>
+
+        <div class="pdp-insight" id="pdp-insight">
+          <strong>Leitura:</strong> filhotes (0-1 ano) têm a maior chance de adoção (~85%). Cai forte conforme o gato envelhece. Gatos idosos (10+ anos) caem pra menos de 20%. <em>Triste, mas é o que o modelo aprendeu dos dados.</em>
+        </div>
+      </div>
+
+      <div class="metric-explain" style="box-shadow:6px 6px 0 var(--plum)">
+        <div class="question">"O modelo é uma caixa-preta. Como entender o que ele pensa?"</div>
+        <p>
+          O PDP responde isso em <strong>uma linha simples</strong> por feature: ele varia <em>só aquela feature</em> em todos os valores possíveis, mantendo as outras nas suas distribuições reais, e calcula a <strong>previsão média</strong>. O resultado é a curva.
+        </p>
+        <p><strong>Como ler:</strong></p>
+        <ul>
+          <li>Curva <strong>subindo</strong> → mais dessa feature, mais alta a previsão</li>
+          <li>Curva <strong>descendo</strong> → mais dessa feature, mais baixa</li>
+          <li>Curva <strong>flat</strong> → essa feature não importa muito pro modelo</li>
+          <li>Curva com <strong>"joelhos"</strong> → existem thresholds importantes</li>
+        </ul>
+        <p>
+          <strong>Cuidados:</strong> PDP assume que as features são <em>independentes</em>. Se idade e peso são correlacionados (filhote pesa pouco), o PDP pode mentir um pouquinho. Pra casos mais robustos, existem ALE plots e SHAP values.
+        </p>
+        <div class="bizz">
+          <strong>Onde vira ouro?</strong> Compliance, regulamentação, debugging. Em finanças/saúde, você <em>tem que</em> explicar a decisão do modelo. PDP é a primeira parada de qualquer auditoria. "Por que negou meu crédito?" → mostra o PDP da renda, da idade, do score.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AWS DIVIDER -->
+<section class="aws-divider">
+  <div class="container">
+    <span class="chapter-number" style="color:var(--yellow)">Mudança de cena</span>
+    <h2>
+      Beleza. <span class="accent">O modelo</span><br>
+      tá pronto.<br>
+      <span class="yel">Onde rodar agora?</span>
+    </h2>
+    <p>
+      Métricas resolvidas, modelo afinado, PDP bonito. Agora vem a pergunta que <strong>aparece em toda prova de AWS</strong> e em toda reunião com o time de plataforma: <em>onde a gente treina e onde a gente serve esse modelo, gastando o mínimo possível?</em>
+    </p>
+    <div class="pipe">
+      <span>📊 dados</span>
+      <span class="arrow">→</span>
+      <span>🧠 treino</span>
+      <span class="arrow">→</span>
+      <span>🤖 modelo</span>
+      <span class="arrow">→</span>
+      <span>⚡ inferência</span>
+      <span class="arrow">→</span>
+      <span>💰 ROI</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINIUM -->
+<section class="chapter" id="trainium">
+  <div class="container">
+    <span class="chapter-number">05 · EC2 Trainium · Família Trn</span>
+    <h2>O chip da AWS feito pra <span style="color:var(--orange)">treinar modelos</span>.</h2>
+    <p class="lead">
+      Treinar um modelo grande de ML em GPU tradicional custa <strong>muito caro</strong>. A AWS desenhou um <strong>chip próprio</strong> só pra essa tarefa: o <strong>AWS Trainium</strong>. Você encontra ele nas instâncias EC2 da família <strong>Trn1</strong> e <strong>Trn2</strong>.
+    </p>
+
+    <div class="chip-hero">
+      <div class="chip-illustration trn">
+        <svg class="chip-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Chip body -->
+          <rect x="40" y="40" width="120" height="120" rx="10" fill="#2B1810" stroke="#FF6B35" stroke-width="3"/>
+          <rect x="55" y="55" width="90" height="90" rx="6" fill="#FF6B35" stroke="#FFF9EC" stroke-width="2"/>
+          <!-- Inner pattern -->
+          <rect x="68" y="68" width="64" height="64" rx="4" fill="#2B1810" opacity="0.7"/>
+          <text x="100" y="98" font-family="JetBrains Mono" font-size="14" fill="#F4D35E" text-anchor="middle" font-weight="700">Trn</text>
+          <text x="100" y="116" font-family="JetBrains Mono" font-size="10" fill="#FFF9EC" text-anchor="middle">TRAINIUM</text>
+          <!-- Pins top -->
+          <g fill="#2B1810">
+            <rect x="50" y="20" width="6" height="20"/><rect x="65" y="20" width="6" height="20"/>
+            <rect x="80" y="20" width="6" height="20"/><rect x="95" y="20" width="6" height="20"/>
+            <rect x="110" y="20" width="6" height="20"/><rect x="125" y="20" width="6" height="20"/>
+            <rect x="140" y="20" width="6" height="20"/>
+          </g>
+          <!-- Pins bottom -->
+          <g fill="#2B1810">
+            <rect x="50" y="160" width="6" height="20"/><rect x="65" y="160" width="6" height="20"/>
+            <rect x="80" y="160" width="6" height="20"/><rect x="95" y="160" width="6" height="20"/>
+            <rect x="110" y="160" width="6" height="20"/><rect x="125" y="160" width="6" height="20"/>
+            <rect x="140" y="160" width="6" height="20"/>
+          </g>
+          <!-- Pins left -->
+          <g fill="#2B1810">
+            <rect x="20" y="50" width="20" height="6"/><rect x="20" y="65" width="20" height="6"/>
+            <rect x="20" y="80" width="20" height="6"/><rect x="20" y="95" width="20" height="6"/>
+            <rect x="20" y="110" width="20" height="6"/><rect x="20" y="125" width="20" height="6"/>
+            <rect x="20" y="140" width="20" height="6"/>
+          </g>
+          <!-- Pins right -->
+          <g fill="#2B1810">
+            <rect x="160" y="50" width="20" height="6"/><rect x="160" y="65" width="20" height="6"/>
+            <rect x="160" y="80" width="20" height="6"/><rect x="160" y="95" width="20" height="6"/>
+            <rect x="160" y="110" width="20" height="6"/><rect x="160" y="125" width="20" height="6"/>
+            <rect x="160" y="140" width="20" height="6"/>
+          </g>
+        </svg>
+        <div class="chip-label">
+          <div class="fam">EC2 Family · Trn1 / Trn2</div>
+          <div class="nm">Trainium</div>
+          <div class="tag train">🧠 Para TREINO</div>
+        </div>
+      </div>
+
+      <div class="chip-info">
+        <h3>Chip <span class="word">desenhado pela AWS</span> pra treinar ML.</h3>
+        <p>
+          A AWS criou o Trainium pra resolver um problema concreto: as <strong>GPUs caras (NVIDIA A100, H100)</strong> são ótimas pra ML, mas custam um rim e nem sempre tão disponíveis. Trainium é o <strong>chip proprietário</strong> deles, voltado especificamente pra <strong>workloads de treino</strong>.
+        </p>
+        <p>
+          As instâncias EC2 que carregam esse chip são da família <strong>Trn1</strong> (geração 1, mais comum hoje) e <strong>Trn2</strong> (geração 2, mais nova e potente). Você acessa via SDK chamado <strong>AWS Neuron</strong>, que integra com PyTorch, TensorFlow e Hugging Face.
+        </p>
+        <p>
+          <strong>O grande apelo:</strong> custa <strong>significativamente menos por hora de treino</strong> que instâncias GPU equivalentes, especialmente em modelos grandes (LLMs, foundation models, deep learning pesado).
+        </p>
+
+        <div class="chip-specs">
+          <div class="chip-spec">
+            <div class="lbl">Família EC2</div>
+            <div class="v">trn1.* / trn2.*</div>
+          </div>
+          <div class="chip-spec">
+            <div class="lbl">SDK</div>
+            <div class="v">AWS Neuron</div>
+          </div>
+          <div class="chip-spec">
+            <div class="lbl">Workload</div>
+            <div class="v">Treino</div>
+          </div>
+          <div class="chip-spec">
+            <div class="lbl">Vs GPU</div>
+            <div class="v">↓ até ~50% custo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRN CALCULATOR -->
+    <div class="cost-calc">
+      <h3>💰 Calculadora: treinar nosso modelo de adoção</h3>
+      <p class="sub">Imagine que pra retreinar o classificador do AdoteUmaPata.com, você precisa rodar X horas em GPU ou em Trainium. <strong>Mexe no slider</strong> e veja o impacto:</p>
+
+      <div class="cost-control">
+        <label>
+          <span>⏱️ Horas de treino necessárias</span>
+          <span class="val" id="trn-hours-val">100 h</span>
+        </label>
+        <input type="range" id="trn-hours" min="10" max="1000" value="100" step="10">
+        <div class="hint">Modelos pequenos: ~10-50h. Modelos grandes (LLMs, visão): 500h+. Foundation models: milhares.</div>
+      </div>
+
+      <div class="cost-compare">
+        <div class="cost-side gpu">
+          <div class="who">🖥️ GPU tradicional</div>
+          <div class="price" id="gpu-price">R$ 1.530</div>
+          <div class="detail">~R$ 15,30/hora (instância GPU comparável)</div>
+        </div>
+        <div class="cost-side aws-chip">
+          <div class="who">🧠 EC2 Trn1</div>
+          <div class="price" id="trn-price">R$ 770</div>
+          <div class="detail">~R$ 7,70/hora (trn1 comparável)</div>
+        </div>
+      </div>
+
+      <div class="cost-savings">
+        <div class="lbl">💵 Você economiza por treino</div>
+        <div class="v"><span id="trn-savings">R$ 760</span> <span style="font-size:18px;opacity:0.85">(<span id="trn-pct">50</span>%)</span></div>
+      </div>
+    </div>
+
+    <div class="when-grid">
+      <div class="when-card go">
+        <span class="icon">✅</span>
+        <h4>Bora de Trainium quando...</h4>
+        <ul>
+          <li>Treinos longos e recorrentes (LLMs, foundation models)</li>
+          <li>Custo é o critério #1 (startup, projeto interno)</li>
+          <li>Modelos em PyTorch/TensorFlow padrão</li>
+          <li>Você quer ficar 100% na AWS sem depender de cota NVIDIA</li>
+        </ul>
+      </div>
+      <div class="when-card notyet">
+        <span class="icon">🛑</span>
+        <h4>Talvez ainda não:</h4>
+        <ul>
+          <li>Você usa frameworks/operadores muito exóticos não suportados</li>
+          <li>Time já produtivo em CUDA e não quer adaptar via Neuron</li>
+          <li>Treino curtinho, onde a economia não compensa o esforço</li>
+          <li>POCs rápidas onde reaproveitar código GPU é mais valioso</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFERENTIA -->
+<section class="chapter" id="inferentia">
+  <div class="container">
+    <span class="chapter-number">06 · EC2 Inferentia · Família Inf</span>
+    <h2>O chip da AWS feito pra <span style="color:var(--sage-deep)">servir o modelo</span>.</h2>
+    <p class="lead">
+      Treinar o modelo é uma coisa. Mas depois ele precisa <strong>responder pra milhões de fotos/dia</strong> do app de adoção. Isso é <strong>inferência</strong>, e a AWS tem um chip diferente, especializado nisso: o <strong>AWS Inferentia</strong>. Vive nas instâncias da família <strong>Inf1</strong> e <strong>Inf2</strong>.
+    </p>
+
+    <div class="chip-hero">
+      <div class="chip-illustration inf">
+        <svg class="chip-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="40" width="120" height="120" rx="10" fill="#2B1810" stroke="#5C8D89" stroke-width="3"/>
+          <rect x="55" y="55" width="90" height="90" rx="6" fill="#5C8D89" stroke="#FFF9EC" stroke-width="2"/>
+          <rect x="68" y="68" width="64" height="64" rx="4" fill="#2B1810" opacity="0.7"/>
+          <text x="100" y="98" font-family="JetBrains Mono" font-size="14" fill="#F4D35E" text-anchor="middle" font-weight="700">Inf</text>
+          <text x="100" y="116" font-family="JetBrains Mono" font-size="9" fill="#FFF9EC" text-anchor="middle">INFERENTIA</text>
+          <g fill="#2B1810">
+            <rect x="50" y="20" width="6" height="20"/><rect x="65" y="20" width="6" height="20"/>
+            <rect x="80" y="20" width="6" height="20"/><rect x="95" y="20" width="6" height="20"/>
+            <rect x="110" y="20" width="6" height="20"/><rect x="125" y="20" width="6" height="20"/>
+            <rect x="140" y="20" width="6" height="20"/>
+          </g>
+          <g fill="#2B1810">
+            <rect x="50" y="160" width="6" height="20"/><rect x="65" y="160" width="6" height="20"/>
+            <rect x="80" y="160" width="6" height="20"/><rect x="95" y="160" width="6" height="20"/>
+            <rect x="110" y="160" width="6" height="20"/><rect x="125" y="160" width="6" height="20"/>
+            <rect x="140" y="160" width="6" height="20"/>
+          </g>
+          <g fill="#2B1810">
+            <rect x="20" y="50" width="20" height="6"/><rect x="20" y="65" width="20" height="6"/>
+            <rect x="20" y="80" width="20" height="6"/><rect x="20" y="95" width="20" height="6"/>
+            <rect x="20" y="110" width="20" height="6"/><rect x="20" y="125" width="20" height="6"/>
+            <rect x="20" y="140" width="20" height="6"/>
+          </g>
+          <g fill="#2B1810">
+            <rect x="160" y="50" width="20" height="6"/><rect x="160" y="65" width="20" height="6"/>
+            <rect x="160" y="80" width="20" height="6"/><rect x="160" y="95" width="20" height="6"/>
+            <rect x="160" y="110" width="20" height="6"/><rect x="160" y="125" width="20" height="6"/>
+            <rect x="160" y="140" width="20" height="6"/>
+          </g>
+        </svg>
+        <div class="chip-label">
+          <div class="fam">EC2 Family · Inf1 / Inf2</div>
+          <div class="nm">Inferentia</div>
+          <div class="tag infer">⚡ Para INFERÊNCIA</div>
+        </div>
+      </div>
+
+      <div class="chip-info">
+        <h3>Chip <span class="sword">otimizado pra rodar</span> em produção.</h3>
+        <p>
+          Servir um modelo é um problema diferente de treinar. Em treino, você roda gradient descent, atualiza pesos, faz forward + backward. Em <strong>inferência</strong> é só <em>"forward"</em>: input entra, predição sai. Bilhões de vezes por dia, com <strong>latência baixa</strong>.
+        </p>
+        <p>
+          A AWS desenhou o <strong>Inferentia</strong> com isso em mente. Ele tem alto <strong>throughput</strong> (muitas predições/segundo) e baixa latência por inferência. As instâncias EC2 são da família <strong>Inf1</strong> (geração 1) e <strong>Inf2</strong> (geração 2, com mais memória — boa pra LLMs grandes).
+        </p>
+        <p>
+          <strong>O grande apelo:</strong> custo por inferência muito menor que GPU equivalente. Em escala (milhões/bilhões de requests/mês), a economia vira números absurdos.
+        </p>
+
+        <div class="chip-specs">
+          <div class="chip-spec">
+            <div class="lbl">Família EC2</div>
+            <div class="v">inf1.* / inf2.*</div>
+          </div>
+          <div class="chip-spec">
+            <div class="lbl">SDK</div>
+            <div class="v">AWS Neuron</div>
+          </div>
+          <div class="chip-spec">
+            <div class="lbl">Workload</div>
+            <div class="v">Inferência</div>
+          </div>
+          <div class="chip-spec">
+            <div class="lbl">Vs GPU</div>
+            <div class="v">↓ até ~70% custo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INF CALCULATOR -->
+    <div class="cost-calc inf">
+      <h3>💰 Calculadora: servir o classificador em produção</h3>
+      <p class="sub">O AdoteUmaPata.com recebe N fotos/mês pra classificar. <strong>Mexe no slider</strong> de volume mensal e veja o quanto a infra muda de preço:</p>
+
+      <div class="cost-control">
+        <label>
+          <span>📸 Fotos classificadas / mês</span>
+          <span class="val" id="inf-reqs-val">10 milhões</span>
+        </label>
+        <input type="range" id="inf-reqs" min="1" max="100" value="10">
+        <div class="hint">App pequeno: ~1M/mês. App médio: 10-50M. App grande: 100M+. LLMs: bilhões.</div>
+      </div>
+
+      <div class="cost-compare">
+        <div class="cost-side gpu">
+          <div class="who">🖥️ GPU tradicional</div>
+          <div class="price" id="gpu-inf-price">R$ 12.000</div>
+          <div class="detail">~R$ 1.200 por milhão de requests</div>
+        </div>
+        <div class="cost-side inf-aws">
+          <div class="who">⚡ EC2 Inf2</div>
+          <div class="price" id="inf-price">R$ 4.000</div>
+          <div class="detail">~R$ 400 por milhão de requests</div>
+        </div>
+      </div>
+
+      <div class="cost-savings">
+        <div class="lbl">💵 Economia mensal estimada</div>
+        <div class="v"><span id="inf-savings">R$ 8.000</span> <span style="font-size:18px;opacity:0.85">(<span id="inf-pct">66</span>%)</span></div>
+      </div>
+    </div>
+
+    <div class="when-grid">
+      <div class="when-card go">
+        <span class="icon">✅</span>
+        <h4>Bora de Inferentia quando...</h4>
+        <ul>
+          <li>Volume de inferência é alto (milhões/bilhões/mês)</li>
+          <li>Custo por predição é a métrica principal</li>
+          <li>Modelos comuns (CV, NLP, recomendação, LLM)</li>
+          <li>Deploy via SageMaker, EKS ou EC2 puro</li>
+        </ul>
+      </div>
+      <div class="when-card notyet">
+        <span class="icon">🛑</span>
+        <h4>Talvez não compense:</h4>
+        <ul>
+          <li>Volume baixo (a economia não cobre o esforço de migrar)</li>
+          <li>Modelos com operadores customizados não suportados pelo Neuron</li>
+          <li>Latência ultra-baixa que pede outra arquitetura (edge, mobile)</li>
+          <li>Sua stack é Bedrock/SageMaker JumpStart e você não toca infra</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="background:var(--ink);color:var(--paper);border-radius:18px;padding:26px;margin-top:36px;border:2px solid var(--ink)">
+      <div style="font-family:'Caprasimo',serif;font-size:22px;color:var(--yellow);margin-bottom:10px">🧠 Resumo na cabeça:</div>
+      <p style="color:var(--cream-2);font-size:15px;line-height:1.7">
+        Trainium e Inferentia são <strong style="color:var(--yellow)">"primos"</strong>: ambos chips da AWS, acessados pelo mesmo SDK (Neuron), com a mesma promessa: <strong style="color:var(--yellow)">menos custo que GPU NVIDIA</strong>. A diferença é o que cada um faz melhor: <strong style="color:var(--orange)">Trn pra treinar</strong>, <strong style="color:var(--sage)">Inf pra servir</strong>. Lembra: <em>Trn = Training, Inf = Inference</em>. Pronto, decorou.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CHEATSHEET -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final da Parte 2</span>
+    <h2 style="margin-bottom:8px">A cola da aula de hoje.</h2>
+    <p style="font-size:17px;color:var(--ink-soft);max-width:700px;margin-bottom:16px">
+      Salva, imprime, tira print. Tudo que vimos hoje em um cartão por conceito.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">📐 MSE</div>
+        <div class="micro">média de (erro)²</div>
+        <div class="q">"Quão MAL eu erro quando erro?"</div>
+        <div class="what">Pune muito os erros grandes. Unidade estranha (kg², R²). Usado pra treinar.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🚧 RMSE</div>
+        <div class="micro">√MSE</div>
+        <div class="q">"E em kg, quanto eu erro tipicamente?"</div>
+        <div class="what">Mesma unidade da variável. Sensível a outliers. RMSE > MAE significa outliers escondidos.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎯 R²</div>
+        <div class="micro">1 − SS_res / SS_tot</div>
+        <div class="q">"Meu modelo é melhor que chutar a média?"</div>
+        <div class="what">0 a 1 (ou negativo se ruim). R² > 0,8 é bom. Cuidado: depende da variação dos dados.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔬 PDP</div>
+        <div class="micro">Partial Dependence Plot</div>
+        <div class="q">"Como cada feature afeta a previsão?"</div>
+        <div class="what">Curva por feature. Sobe = ajuda; desce = atrapalha; flat = não importa. Ótimo pra explicabilidade.</div>
+      </div>
+      <div class="cheat-card" style="background:#FFE8DD">
+        <div class="name">🧠 EC2 Trainium (Trn)</div>
+        <div class="micro">trn1.* / trn2.*</div>
+        <div class="q">"Onde treino pagando menos?"</div>
+        <div class="what">Chip AWS pra TREINO. Acessado via SDK Neuron. Economia significativa vs GPU NVIDIA.</div>
+      </div>
+      <div class="cheat-card" style="background:#DDEEEC">
+        <div class="name">⚡ EC2 Inferentia (Inf)</div>
+        <div class="micro">inf1.* / inf2.*</div>
+        <div class="q">"Onde sirvo pagando menos?"</div>
+        <div class="what">Chip AWS pra INFERÊNCIA. Mesmo SDK Neuron. Economia grande quando o volume é alto.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🪡 Trn vs Inf</div>
+        <div class="micro">mnemônico simples</div>
+        <div class="q">"Como não confundir os dois?"</div>
+        <div class="what"><strong>Tr</strong>n = <strong>Tr</strong>aining. <strong>Inf</strong> = <strong>Inf</strong>erence. Nome ajuda. Os dois SDK mesmo: Neuron.</div>
+      </div>
+      <div class="cheat-card" style="background:var(--orange);color:var(--paper)">
+        <div class="name" style="color:var(--paper)">🐾 Resumão geral</div>
+        <div class="q" style="color:rgba(255,255,255,0.85)">"Que pipeline montar?"</div>
+        <div class="what" style="color:var(--paper)"><strong>Mede</strong> (MSE/RMSE/R²) → <strong>explica</strong> (PDPs) → <strong>treina</strong> em Trn → <strong>serve</strong> em Inf → <strong>lucro</strong> (a métrica que o chefe quer).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Parte 2 da aula visual da <strong>Escola da Nuvem</strong>, feita com <span class="heart">🧡</span> pelo professor <a href="https://www.linkedin.com/in/brianrichard1/" target="_blank">Brian</a>, materializada em código.
+  </div>
+  <div style="margin-top:8px;opacity:0.7">
+    Mexe nos sliders, clica nas features, brinca com as calculadoras. <em>"Os alunos que aprendam mexendo, não decorando."</em>
+  </div>
+</footer>
+
+<script>
+  // ====================================================================
+  // 1) MSE / RMSE - INTERACTIVE OUTLIER DEMO
+  // ====================================================================
+
+  // Base 5 cats with fixed errors
+  const baseCats = [
+    { name: 'Mel',      actual: 3.2, pred: 3.5 },
+    { name: 'Bento',    actual: 4.5, pred: 4.0 },
+    { name: 'Pipoca',   actual: 2.8, pred: 3.0 },
+    { name: 'Salem',    actual: 5.1, pred: 4.8 },
+    { name: 'Pretinha', actual: 3.9, pred: 4.2 }
+  ];
+  const MAX_KG_MSE = 8; // wider scale to fit Garfield
+
+  const mseBarsEl = document.getElementById('mse-bars');
+  const olSlider = document.getElementById('ol-slider');
+  const olValue = document.getElementById('ol-value');
+  const maeValEl = document.getElementById('mae-val');
+  const mseValEl = document.getElementById('mse-val');
+  const rmseValEl = document.getElementById('rmse-val');
+
+  function renderMseBars(outlierErr){
+    // Garfield is a 7kg cat. Model prediction = 7 - outlierErr (always under-predict for simplicity)
+    const garfieldActual = 7.0;
+    const garfieldPred = Math.max(0, garfieldActual - outlierErr);
+
+    const cats = baseCats.concat([{ name: 'Garfield', actual: garfieldActual, pred: garfieldPred, outlier: true }]);
+    mseBarsEl.innerHTML = '';
+
+    let sumAbs = 0, sumSq = 0;
+    cats.forEach(c => {
+      const err = Math.abs(c.actual - c.pred);
+      sumAbs += err;
+      sumSq += err*err;
+      const row = document.createElement('div');
+      row.className = 'err-row';
+      const nameClass = c.outlier ? 'err-name outlier' : 'err-name';
+      row.innerHTML = `
+        <div class="${nameClass}">${c.outlier ? '😼' : '🐈'} ${c.name}</div>
+        <div class="err-bar-wrap">
+          <div class="err-bar-actual" style="width: ${(c.actual/MAX_KG_MSE)*100}%">real ${c.actual.toFixed(1).replace('.', ',')}</div>
+          <div class="err-bar-pred" style="width: ${(c.pred/MAX_KG_MSE)*100}%">previu ${c.pred.toFixed(1).replace('.', ',')}</div>
+        </div>
+        <div class="err-value">±${err.toFixed(2).replace('.', ',')}<span class="sq">erro² = ${(err*err).toFixed(2).replace('.', ',')}</span></div>
+      `;
+      mseBarsEl.appendChild(row);
+    });
+
+    const n = cats.length;
+    const mae = sumAbs / n;
+    const mse = sumSq / n;
+    const rmse = Math.sqrt(mse);
+
+    maeValEl.textContent = mae.toFixed(2).replace('.', ',');
+    mseValEl.textContent = mse.toFixed(2).replace('.', ',');
+    rmseValEl.textContent = rmse.toFixed(2).replace('.', ',');
+  }
+
+  function updateOutlier(){
+    const v = parseInt(olSlider.value, 10) / 10; // 0..4.0 kg
+    olValue.textContent = v.toFixed(1).replace('.', ',') + ' kg';
+    renderMseBars(v);
+  }
+  olSlider.addEventListener('input', updateOutlier);
+  updateOutlier();
+
+  // ====================================================================
+  // 2) R² INTERACTIVE - scatter plot with mean baseline toggle
+  // ====================================================================
+
+  // Real cat weights for 15 cats (true values)
+  const r2Real = [2.4, 2.7, 3.0, 3.2, 3.5, 3.7, 3.9, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.5];
+  // Per-cat noise factors that give a "good model" baseline (small residuals)
+  const r2Noise = [0.15, -0.20, 0.18, -0.10, 0.22, -0.15, 0.05, 0.12, -0.18, 0.10, -0.22, 0.15, -0.10, 0.20, -0.15];
+
+  const r2Mean = r2Real.reduce((a,b) => a+b, 0) / r2Real.length;
+
+  const r2QualitySlider = document.getElementById('r2-quality');
+  const r2QvalEl = document.getElementById('r2-qval');
+  const r2ValueEl = document.getElementById('r2-value');
+  const r2InterpEl = document.getElementById('r2-interp');
+  const r2PointsG = document.getElementById('r2-points');
+  const r2ResidualsG = document.getElementById('r2-residuals');
+  let r2Mode = 'model'; // or 'mean'
+
+  // Map (real_kg, pred_kg) -> svg coords. domain 2..6 kg => 60..360 px
+  function r2ToSvg(real, pred){
+    const x = 60 + ((real - 2) / 4) * 300;
+    const y = 360 - ((pred - 2) / 4) * 300; // invert
+    return [x, y];
+  }
+
+  function getPredictions(quality){
+    // quality 0..100. higher quality -> smaller residuals.
+    // We build predictions = real + noise * (1 - quality/100) * 2 (amplification at low quality)
+    const factor = 1 + (1 - quality/100) * 3; // 1x at perfect, up to 4x at worst
+    return r2Real.map((r, i) => {
+      const n = r2Noise[i] * factor;
+      // also add some bias when quality very low
+      const bias = (1 - quality/100) * 0.5 * (i % 2 === 0 ? 1 : -1);
+      return r + n + bias;
+    });
+  }
+
+  function computeR2(reals, preds){
+    const mean = reals.reduce((a,b) => a+b, 0) / reals.length;
+    let ssRes = 0, ssTot = 0;
+    for (let i = 0; i < reals.length; i++){
+      ssRes += Math.pow(reals[i] - preds[i], 2);
+      ssTot += Math.pow(reals[i] - mean, 2);
+    }
+    return 1 - ssRes/ssTot;
+  }
+
+  function renderR2(){
+    const quality = parseInt(r2QualitySlider.value, 10);
+    const preds = r2Mode === 'mean'
+      ? r2Real.map(() => r2Mean)
+      : getPredictions(quality);
+
+    r2PointsG.innerHTML = '';
+    r2ResidualsG.innerHTML = '';
+
+    // Draw residual lines (real, real) -> (real, pred)
+    r2Real.forEach((r, i) => {
+      const [x1, y1] = r2ToSvg(r, r);
+      const [x2, y2] = r2ToSvg(r, preds[i]);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      line.setAttribute('stroke', r2Mode === 'mean' ? '#C73E1D' : '#FF6B35');
+      line.setAttribute('stroke-width', '1.5');
+      line.setAttribute('opacity', '0.45');
+      line.setAttribute('stroke-dasharray', '3 3');
+      r2ResidualsG.appendChild(line);
+    });
+
+    // Draw points
+    r2Real.forEach((r, i) => {
+      const [cx, cy] = r2ToSvg(r, preds[i]);
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', cx);
+      circle.setAttribute('cy', cy);
+      circle.setAttribute('r', '6');
+      circle.setAttribute('fill', r2Mode === 'mean' ? '#C73E1D' : '#FF6B35');
+      circle.setAttribute('stroke', '#2B1810');
+      circle.setAttribute('stroke-width', '1.5');
+      r2PointsG.appendChild(circle);
+    });
+
+    // If mean mode, also draw the mean horizontal line
+    if (r2Mode === 'mean'){
+      const [, meanY] = r2ToSvg(2, r2Mean);
+      const meanLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      meanLine.setAttribute('x1', '60');
+      meanLine.setAttribute('y1', meanY);
+      meanLine.setAttribute('x2', '360');
+      meanLine.setAttribute('y2', meanY);
+      meanLine.setAttribute('stroke', '#C73E1D');
+      meanLine.setAttribute('stroke-width', '2.5');
+      meanLine.setAttribute('opacity', '0.8');
+      r2ResidualsG.appendChild(meanLine);
+
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', '358');
+      txt.setAttribute('y', meanY - 6);
+      txt.setAttribute('font-family', 'JetBrains Mono');
+      txt.setAttribute('font-size', '10');
+      txt.setAttribute('fill', '#C73E1D');
+      txt.setAttribute('text-anchor', 'end');
+      txt.setAttribute('font-weight', '700');
+      txt.textContent = `média = ${r2Mean.toFixed(1).replace('.', ',')} kg`;
+      r2ResidualsG.appendChild(txt);
+    }
+
+    // Compute R²
+    let r2;
+    if (r2Mode === 'mean'){
+      // For the dumb baseline, R² is by definition 0
+      r2 = 0;
+    } else {
+      r2 = computeR2(r2Real, preds);
+    }
+
+    r2ValueEl.textContent = r2.toFixed(2).replace('.', ',');
+
+    // Quality label
+    let qLabel;
+    if (quality >= 85) qLabel = 'Excelente';
+    else if (quality >= 65) qLabel = 'Bom';
+    else if (quality >= 40) qLabel = 'Mediano';
+    else if (quality >= 15) qLabel = 'Ruim';
+    else qLabel = 'Péssimo';
+    r2QvalEl.textContent = qLabel;
+
+    // Interpretation
+    if (r2Mode === 'mean'){
+      r2InterpEl.textContent = 'O baseline burrão sempre chuta a média. Por construção, R² = 0.';
+    } else if (r2 < 0){
+      r2InterpEl.textContent = 'R² negativo! O modelo é PIOR que chutar a média. Joga fora.';
+    } else if (r2 >= 0.85){
+      r2InterpEl.textContent = `Excelente: o modelo explica ${(r2*100).toFixed(0)}% da variação no peso.`;
+    } else if (r2 >= 0.65){
+      r2InterpEl.textContent = `Bom: o modelo explica ${(r2*100).toFixed(0)}% da variação. Funcional.`;
+    } else if (r2 >= 0.4){
+      r2InterpEl.textContent = `Mediano: explica ${(r2*100).toFixed(0)}% da variação. Tem espaço pra melhorar.`;
+    } else {
+      r2InterpEl.textContent = `Ruim: só ${(r2*100).toFixed(0)}% da variação explicada. Pouco melhor que a média.`;
+    }
+  }
+
+  document.getElementById('r2-mode-model').addEventListener('click', () => {
+    r2Mode = 'model';
+    document.getElementById('r2-mode-model').classList.add('active');
+    document.getElementById('r2-mode-mean').classList.remove('active');
+    renderR2();
+  });
+  document.getElementById('r2-mode-mean').addEventListener('click', () => {
+    r2Mode = 'mean';
+    document.getElementById('r2-mode-mean').classList.add('active');
+    document.getElementById('r2-mode-model').classList.remove('active');
+    renderR2();
+  });
+  r2QualitySlider.addEventListener('input', renderR2);
+  renderR2();
+
+  // ====================================================================
+  // 3) PDP - feature picker with different curve shapes
+  // ====================================================================
+
+  const pdpData = {
+    idade: {
+      title: 'Efeito da idade na chance de adoção',
+      xLabel: 'Idade do gato (anos)',
+      xTicks: [{pos: 0, label: '0'}, {pos: 1, label: '15'}],
+      type: 'line',
+      // Each value is normalized 0..1 along x and y
+      points: [
+        [0.00, 0.85], [0.07, 0.78], [0.14, 0.70], [0.21, 0.62], [0.28, 0.55],
+        [0.35, 0.48], [0.43, 0.42], [0.50, 0.38], [0.57, 0.34], [0.64, 0.30],
+        [0.71, 0.26], [0.78, 0.23], [0.85, 0.20], [0.92, 0.18], [1.00, 0.17]
+      ],
+      insight: '<strong>Leitura:</strong> filhotes (0-1 ano) têm a maior chance de adoção (~85%). Cai forte conforme o gato envelhece. Gatos idosos (10+ anos) caem pra menos de 20%. <em>Triste, mas é o que o modelo aprendeu dos dados.</em>'
+    },
+    peso: {
+      title: 'Efeito do peso na chance de adoção',
+      xLabel: 'Peso (kg)',
+      xTicks: [{pos: 0, label: '1'}, {pos: 1, label: '8'}],
+      type: 'line',
+      points: [
+        [0.00, 0.40], [0.10, 0.50], [0.20, 0.62], [0.30, 0.72], [0.40, 0.78],
+        [0.50, 0.76], [0.60, 0.68], [0.70, 0.58], [0.80, 0.50], [0.90, 0.44], [1.00, 0.40]
+      ],
+      insight: '<strong>Leitura:</strong> a curva tem formato de <strong>sino</strong>. Gatos de peso médio (3-4 kg) têm maior chance. Muito magrinhos ou muito gordos caem. <em>O modelo aprendeu que peso "normal" é um sinal positivo.</em>'
+    },
+    pelagem: {
+      title: 'Efeito da pelagem na chance de adoção',
+      xLabel: 'Cor da pelagem',
+      xTicks: [],
+      type: 'bar',
+      bars: [
+        { label: 'Preto', value: 0.45, color: '#2B1810' },
+        { label: 'Branco', value: 0.62, color: '#F5E9CF' },
+        { label: 'Laranja', value: 0.75, color: '#FF6B35' },
+        { label: 'Cinza', value: 0.58, color: '#8B7E6A' },
+        { label: 'Tricolor', value: 0.70, color: '#D4A574' }
+      ],
+      insight: '<strong>Leitura:</strong> gatos <strong>laranjas e tricolores</strong> têm a maior chance de adoção. Gatos pretos têm a menor — <em>infelizmente</em> existe um viés histórico nos dados de adoção. <strong>Isso é uma red flag de bias</strong> que precisa ser tratada antes de colocar o modelo em produção.'
+    },
+    castrado: {
+      title: 'Efeito da castração na chance de adoção',
+      xLabel: 'Castrado?',
+      xTicks: [],
+      type: 'bar',
+      bars: [
+        { label: 'Sim', value: 0.68, color: '#6B8E23' },
+        { label: 'Não', value: 0.42, color: '#C73E1D' }
+      ],
+      insight: '<strong>Leitura:</strong> gatos <strong>castrados</strong> têm 26 pontos percentuais a mais de chance de adoção. Faz sentido: o adotante não vai precisar pagar pela cirurgia depois. <em>É uma feature de alto impacto e o modelo aprendeu isso bem.</em>'
+    }
+  };
+
+  function renderPdp(featKey){
+    const data = pdpData[featKey];
+    const g = document.getElementById('pdp-content');
+    g.innerHTML = '';
+
+    document.getElementById('pdp-title').textContent = data.title;
+    document.getElementById('pdp-xlabel').textContent = data.xLabel;
+
+    // Plot area: x: 50..380 (330px), y: 60..240 (180px, inverted so 60=top=100%, 240=bottom=0%)
+    const x0 = 50, x1 = 380, y0 = 240, y1 = 60;
+    const w = x1 - x0;
+    const h = y0 - y1;
+
+    if (data.type === 'line'){
+      // Build path
+      const pts = data.points.map(p => [x0 + p[0]*w, y0 - p[1]*h]);
+      let d = '';
+      pts.forEach((p, i) => {
+        d += (i === 0 ? 'M ' : ' L ') + p[0] + ' ' + p[1];
+      });
+      // Fill below path
+      let dFill = d + ` L ${pts[pts.length-1][0]} ${y0} L ${pts[0][0]} ${y0} Z`;
+
+      const fill = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      fill.setAttribute('d', dFill);
+      fill.setAttribute('fill', 'rgba(255,107,53,0.15)');
+      fill.setAttribute('stroke', 'none');
+      g.appendChild(fill);
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      line.setAttribute('d', d);
+      line.setAttribute('fill', 'none');
+      line.setAttribute('stroke', '#FF6B35');
+      line.setAttribute('stroke-width', '3.5');
+      line.setAttribute('stroke-linejoin', 'round');
+      g.appendChild(line);
+
+      // Dots on points
+      pts.forEach(p => {
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', p[0]);
+        c.setAttribute('cy', p[1]);
+        c.setAttribute('r', '3.5');
+        c.setAttribute('fill', '#FF6B35');
+        c.setAttribute('stroke', '#2B1810');
+        c.setAttribute('stroke-width', '1.5');
+        g.appendChild(c);
+      });
+
+      // X ticks
+      data.xTicks.forEach(t => {
+        const tx = x0 + t.pos * w;
+        const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        txt.setAttribute('x', tx);
+        txt.setAttribute('y', 256);
+        txt.setAttribute('font-family', 'JetBrains Mono');
+        txt.setAttribute('font-size', '10');
+        txt.setAttribute('fill', '#2B1810');
+        txt.setAttribute('text-anchor', 'middle');
+        txt.textContent = t.label;
+        g.appendChild(txt);
+      });
+
+    } else if (data.type === 'bar'){
+      // Bar chart
+      const n = data.bars.length;
+      const barW = (w / n) * 0.65;
+      const gap = (w / n) * 0.35;
+      data.bars.forEach((b, i) => {
+        const bx = x0 + i * (w/n) + gap/2;
+        const bh = b.value * h;
+        const by = y0 - bh;
+
+        // Bar
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', bx);
+        rect.setAttribute('y', by);
+        rect.setAttribute('width', barW);
+        rect.setAttribute('height', bh);
+        rect.setAttribute('fill', b.color);
+        rect.setAttribute('stroke', '#2B1810');
+        rect.setAttribute('stroke-width', '2');
+        rect.setAttribute('rx', '4');
+        g.appendChild(rect);
+
+        // Value on top
+        const val = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        val.setAttribute('x', bx + barW/2);
+        val.setAttribute('y', by - 6);
+        val.setAttribute('font-family', 'JetBrains Mono');
+        val.setAttribute('font-size', '11');
+        val.setAttribute('fill', '#2B1810');
+        val.setAttribute('text-anchor', 'middle');
+        val.setAttribute('font-weight', '700');
+        val.textContent = (b.value*100).toFixed(0) + '%';
+        g.appendChild(val);
+
+        // Label below
+        const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        lbl.setAttribute('x', bx + barW/2);
+        lbl.setAttribute('y', 256);
+        lbl.setAttribute('font-family', 'Sora');
+        lbl.setAttribute('font-size', '11');
+        lbl.setAttribute('fill', '#2B1810');
+        lbl.setAttribute('text-anchor', 'middle');
+        lbl.setAttribute('font-weight', '600');
+        lbl.textContent = b.label;
+        g.appendChild(lbl);
+      });
+    }
+
+    document.getElementById('pdp-insight').innerHTML = data.insight;
+  }
+
+  document.querySelectorAll('.pdp-feat').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.pdp-feat').forEach(f => f.classList.remove('active'));
+      el.classList.add('active');
+      renderPdp(el.dataset.feat);
+    });
+  });
+  renderPdp('idade');
+
+  // ====================================================================
+  // 4) TRAINIUM COST CALCULATOR
+  // ====================================================================
+  const TRN_GPU_HOURLY = 15.30; // R$/h GPU instance
+  const TRN_AWS_HOURLY = 7.70;  // R$/h Trn1 instance
+
+  const trnHoursSlider = document.getElementById('trn-hours');
+  const trnHoursVal = document.getElementById('trn-hours-val');
+  const gpuPriceEl = document.getElementById('gpu-price');
+  const trnPriceEl = document.getElementById('trn-price');
+  const trnSavingsEl = document.getElementById('trn-savings');
+  const trnPctEl = document.getElementById('trn-pct');
+
+  function fmtBRL(v){
+    return 'R$ ' + new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(Math.round(v));
+  }
+
+  function updateTrnCalc(){
+    const h = parseInt(trnHoursSlider.value, 10);
+    trnHoursVal.textContent = h + ' h';
+    const gpuCost = h * TRN_GPU_HOURLY;
+    const trnCost = h * TRN_AWS_HOURLY;
+    const savings = gpuCost - trnCost;
+    const pct = (savings / gpuCost) * 100;
+    gpuPriceEl.textContent = fmtBRL(gpuCost);
+    trnPriceEl.textContent = fmtBRL(trnCost);
+    trnSavingsEl.textContent = fmtBRL(savings);
+    trnPctEl.textContent = pct.toFixed(0);
+  }
+  trnHoursSlider.addEventListener('input', updateTrnCalc);
+  updateTrnCalc();
+
+  // ====================================================================
+  // 5) INFERENTIA COST CALCULATOR
+  // ====================================================================
+  const INF_GPU_PER_MILLION = 1200; // R$ per million requests on GPU
+  const INF_AWS_PER_MILLION = 400;  // R$ per million requests on Inf2
+
+  const infReqsSlider = document.getElementById('inf-reqs');
+  const infReqsVal = document.getElementById('inf-reqs-val');
+  const gpuInfPriceEl = document.getElementById('gpu-inf-price');
+  const infPriceEl = document.getElementById('inf-price');
+  const infSavingsEl = document.getElementById('inf-savings');
+  const infPctEl = document.getElementById('inf-pct');
+
+  function updateInfCalc(){
+    const millions = parseInt(infReqsSlider.value, 10);
+    infReqsVal.textContent = millions + ' milh' + (millions === 1 ? 'ão' : 'ões');
+    const gpuCost = millions * INF_GPU_PER_MILLION;
+    const infCost = millions * INF_AWS_PER_MILLION;
+    const savings = gpuCost - infCost;
+    const pct = (savings / gpuCost) * 100;
+    gpuInfPriceEl.textContent = fmtBRL(gpuCost);
+    infPriceEl.textContent = fmtBRL(infCost);
+    infSavingsEl.textContent = fmtBRL(savings);
+    infPctEl.textContent = pct.toFixed(0);
+  }
+  infReqsSlider.addEventListener('input', updateInfCalc);
+  updateInfCalc();
+</script>
+
+</body>
+</html>
