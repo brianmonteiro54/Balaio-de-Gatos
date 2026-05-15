@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Balaio de Gatos — Métricas de ML pra Escola da Nuvem</title>
+<title>Balaio de Gatos: Métricas de ML pra Escola da Nuvem</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -1316,7 +1316,7 @@
     <span class="chapter-number">05 · F1 Score</span>
     <h2>E se você <em style="color:var(--orange);font-style:normal">precisar dos dois</em>?</h2>
     <p class="lead">
-      Precisão e Recall puxam pra lados opostos. F1 é a "<strong>média harmônica</strong>" entre os dois — uma maneira de combinar em um número só, mas <strong>punindo desequilíbrios</strong>.
+      Precisão e Recall puxam pra lados opostos. F1 é a "<strong>média harmônica</strong>" entre os dois, uma maneira de combinar em um número só, mas <strong>punindo desequilíbrios</strong>.
     </p>
 
     <div class="metric-block">
@@ -1377,7 +1377,7 @@
           <strong>Lê assim:</strong> "0,82 de F1" = o modelo equilibra bem encontrar gatos sem chamar cachorros de gato.
         </p>
         <div class="bizz">
-          <strong>Quando usar?</strong> Quando precisão e recall importam, e quando há desbalanceamento de classes. F1 não considera os Verdadeiros Negativos — então é ótimo pra <strong>quando a classe positiva é a rara</strong> (fraude, doença, defeito).
+          <strong>Quando usar?</strong> Quando precisão e recall importam, e quando há desbalanceamento de classes. F1 não considera os Verdadeiros Negativos, então é ótimo pra <strong>quando a classe positiva é a rara</strong> (fraude, doença, defeito).
         </div>
       </div>
     </div>
@@ -1390,7 +1390,7 @@
     <span class="chapter-number">06 · Curva ROC e AUC</span>
     <h2>Quão <em style="color:var(--orange);font-style:normal">"esperto"</em> é o modelo, no geral?</h2>
     <p class="lead">
-      Os modelos de classificação não cospem "gato" ou "não-gato" direto — eles cospem um <strong>número de 0 a 1</strong> ("0,87 de probabilidade de ser gato"). Você escolhe um <strong>limiar (threshold)</strong>. Acima dele, é gato. <strong>Mexe no slider</strong> e veja o jogo virar.
+      Os modelos de classificação não cospem "gato" ou "não-gato" direto, eles cospem um <strong>número de 0 a 1</strong> ("0,87 de probabilidade de ser gato"). Você escolhe um <strong>limiar (threshold)</strong>. Acima dele, é gato. <strong>Mexe no slider</strong> e veja o jogo virar.
     </p>
 
     <div class="roc-wrap">
@@ -1478,7 +1478,7 @@
     <span class="chapter-number">07 · MAE (Mean Absolute Error)</span>
     <h2>Pera. <em style="color:var(--orange);font-style:normal">E se não for sim/não</em>?</h2>
     <p class="lead">
-      Até aqui falamos de <strong>classificação</strong> (é ou não é). Mas e quando o modelo prevê um <strong>número</strong> — peso do gato pra calcular a dose do remédio, idade do gato pra estimar adoção, preço do animal de raça?
+      Até aqui falamos de <strong>classificação</strong> (é ou não é). Mas e quando o modelo prevê um <strong>número</strong>, peso do gato pra calcular a dose do remédio, idade do gato pra estimar adoção, preço do animal de raça?
     </p>
     <p class="lead">
       Aí entra a <strong>regressão</strong>. E a métrica mais intuitiva pra regressão é o <strong>MAE</strong>: a média de quanto seu modelo erra, em valor absoluto, em cada previsão.
@@ -1526,7 +1526,7 @@
     <span class="chapter-number">08 · Métricas de negócio</span>
     <h2>No final do dia: <span class="accent">isso dá grana?</span></h2>
     <p class="lead">
-      Tudo isso é lindo, mas <strong>seu chefe não quer saber de F1</strong>. Ele quer saber se vale a pena rodar esse modelo. <strong>Mexe nos valores</strong> abaixo — o impacto financeiro recalcula em tempo real.
+      Tudo isso é lindo, mas <strong>seu chefe não quer saber de F1</strong>. Ele quer saber se vale a pena rodar esse modelo. <strong>Mexe nos valores</strong> abaixo, o impacto financeiro recalcula em tempo real.
     </p>
 
     <div class="biz-grid">
@@ -1663,7 +1663,7 @@
 <footer>
 <div>
   Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
-  uma aula visual pelos professor <a href="https://www.linkedin.com/in/brianrichard1/" target="_blank">Brian</a>, 
+  uma aula visual pelo professor <a href="https://www.linkedin.com/in/brianrichard1/" target="_blank">Brian</a>, 
   materializada em código.
 </div>  <div style="margin-top: 8px; opacity: 0.7;">Tudo neste site é interativo. Mexe nos sliders, clica nos quadrantes, brinca com os números do calculador de negócio. <em>"Os alunos que aprendam mexendo, não decorando."</em></div>
 </footer>
@@ -1672,22 +1672,22 @@
   // ====== CONFUSION MATRIX INTERACTION ======
   const cellData = {
     tp: {
-      title: "VP — Verdadeiro Positivo (acerto certo)",
+      title: "VP - Verdadeiro Positivo (acerto certo)",
       text: "O modelo disse \"é gato\" E era gato mesmo. Isso aqui é dinheiro no bolso. <strong>É o que você quer maximizar</strong>.",
       example: "Foto: 🐈 (era gato) → Modelo: <strong>\"É gato!\"</strong> → ✓ Acertou. 35 vezes."
     },
     fp: {
-      title: "FP — Falso Positivo (alarme falso)",
+      title: "FP - Falso Positivo (alarme falso)",
       text: "O modelo disse \"é gato\", mas <strong>não era</strong>. Cachorro disfarçado virou gato. Quando o custo de errar pra cima dói, esse número aqui precisa ser baixo.",
       example: "Foto: 🐶 (era cachorro) → Modelo: <strong>\"É gato!\"</strong> → ✗ Errou. 10 vezes."
     },
     fn: {
-      title: "FN — Falso Negativo (deixou escapar)",
+      title: "FN - Falso Negativo (deixou escapar)",
       text: "Era um <strong>gato de verdade</strong>, e o modelo passou batido. Quando o custo de perder algo importante é alto (câncer, fraude), <strong>esse é o erro que mais dói</strong>.",
       example: "Foto: 🐈 (era gato) → Modelo: <strong>\"Não é gato\"</strong> → ✗ Perdeu o gato. 5 vezes."
     },
     tn: {
-      title: "VN — Verdadeiro Negativo (recusa correta)",
+      title: "VN - Verdadeiro Negativo (recusa correta)",
       text: "O modelo disse \"não é gato\" e <strong>realmente não era</strong>. O cachorro não foi confundido. É bom, mas em muitas métricas (Precisão, Recall, F1) esse número <em>nem participa</em> do cálculo.",
       example: "Foto: 🐶 (era cachorro) → Modelo: <strong>\"Não é gato\"</strong> → ✓ Acertou. 50 vezes."
     }
