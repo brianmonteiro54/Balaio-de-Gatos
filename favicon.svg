@@ -1,0 +1,59 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="1" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.1"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="200" height="200" fill="#FF6B35"/>
+  
+  <!-- Face -->
+  <circle cx="100" cy="110" r="70" fill="#FBF3E2" filter="url(#softShadow)"/>
+  
+  <!-- Head shape (slightly angular at top) -->
+  <path d="M 60 80 L 50 110 Q 50 160 100 165 Q 150 160 150 110 L 140 80" fill="#FBF3E2" filter="url(#softShadow)"/>
+  
+  <!-- Left ear -->
+  <ellipse cx="60" cy="50" rx="22" ry="38" fill="#FBF3E2" filter="url(#softShadow)"/>
+  <!-- Left ear inner (pink) -->
+  <ellipse cx="60" cy="58" rx="12" ry="24" fill="#FF6B35" opacity="0.6"/>
+  
+  <!-- Right ear -->
+  <ellipse cx="140" cy="50" rx="22" ry="38" fill="#FBF3E2" filter="url(#softShadow)"/>
+  <!-- Right ear inner (pink) -->
+  <ellipse cx="140" cy="58" rx="12" ry="24" fill="#FF6B35" opacity="0.6"/>
+  
+  <!-- Left eye -->
+  <ellipse cx="75" cy="100" rx="12" ry="16" fill="white" stroke="#2B1810" stroke-width="1"/>
+  <ellipse cx="75" cy="104" rx="7" ry="10" fill="#2B1810"/>
+  <circle cx="78" cy="101" r="2.5" fill="white"/>
+  
+  <!-- Right eye -->
+  <ellipse cx="125" cy="100" rx="12" ry="16" fill="white" stroke="#2B1810" stroke-width="1"/>
+  <ellipse cx="125" cy="104" rx="7" ry="10" fill="#2B1810"/>
+  <circle cx="122" cy="101" r="2.5" fill="white"/>
+  
+  <!-- Nose -->
+  <ellipse cx="100" cy="125" rx="5" ry="5" fill="#FF6B35"/>
+  
+  <!-- Mouth -->
+  <path d="M 100 125 Q 92 135 85 132" stroke="#2B1810" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M 100 125 Q 108 135 115 132" stroke="#2B1810" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  
+  <!-- Left whiskers -->
+  <line x1="55" y1="105" x2="28" y2="100" stroke="#2B1810" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <line x1="55" y1="120" x2="25" y2="125" stroke="#2B1810" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  
+  <!-- Right whiskers -->
+  <line x1="145" y1="105" x2="172" y2="100" stroke="#2B1810" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <line x1="145" y1="120" x2="175" y2="125" stroke="#2B1810" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+</svg>
