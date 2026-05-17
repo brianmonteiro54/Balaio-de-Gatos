@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caixa de Ferramentas: IA Practitioner pra Escola da Nuvem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #FBF3E2;
+    --cream-2: #F5E9CF;
+    --paper: #FFF9EC;
+    --ink: #2B1810;
+    --ink-soft: #4A3528;
+    --orange: #FF6B35;
+    --orange-deep: #E54E1B;
+    --caramel: #D4A574;
+    --sage: #5C8D89;
+    --sage-deep: #3F6864;
+    --coral: #C73E1D;
+    --olive: #6B8E23;
+    --yellow: #F4D35E;
+    --purple: #9B6BAE;
+    --blue: #4A7C9E;
+    --shadow: rgba(43, 24, 16, 0.12);
+    --shadow-strong: rgba(43, 24, 16, 0.25);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:'Sora', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(92, 141, 137, 0.05) 0%, transparent 50%);
+  }
+
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:1;
+    opacity:0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, .display{
+    font-family:'Caprasimo', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .container{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position:relative;
+    z-index:2;
+  }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0;
+    z-index:100;
+    background: var(--cream);
+    border-bottom: 2px solid var(--ink);
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto;
+    padding: 14px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+  }
+  .nav-brand{
+    font-family:'Caprasimo', serif;
+    font-size:22px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-links{
+    display:flex; gap:6px; flex-wrap:wrap;
+  }
+  .nav-links a{
+    color:var(--ink);
+    text-decoration:none;
+    padding: 6px 12px;
+    font-size:13px;
+    font-weight:500;
+    border-radius: 20px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover{
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  /* HERO */
+  .hero{
+    padding: 90px 0 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero h1{
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: 0.95;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .hero h1 .accent{
+    color: var(--orange);
+    display:inline-block;
+    transform: rotate(-2deg);
+  }
+  .hero h1 .scratch{
+    position:relative;
+    display:inline-block;
+  }
+  .hero h1 .scratch::after{
+    content:'';
+    position:absolute;
+    bottom:8%; left:-3%;
+    width:106%; height:18%;
+    background: var(--yellow);
+    z-index:-1;
+    transform: skew(-8deg, -1deg);
+  }
+  .hero p{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin-bottom: 28px;
+  }
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+  }
+  .hero-cta{
+    display:inline-flex; align-items:center; gap:10px;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 16px 28px;
+    border-radius: 60px;
+    text-decoration:none;
+    font-weight:600;
+    font-size: 16px;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.15s;
+  }
+  .hero-cta:hover{
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .tool-pile{
+    position:relative;
+    height: 380px;
+    font-size: 80px;
+    line-height: 1;
+  }
+  .tool-pile .float-tool{
+    position: absolute;
+    animation: floatcat 6s ease-in-out infinite;
+    filter: drop-shadow(3px 4px 0 var(--ink-soft));
+  }
+  .tool-pile .c1{ top: 5%; left: 10%; font-size: 90px; animation-delay: 0s; transform: rotate(-8deg)}
+  .tool-pile .c2{ top: 0%; right: 5%; font-size: 70px; animation-delay: -1s; transform: rotate(12deg)}
+  .tool-pile .c3{ top: 40%; left: 35%; font-size: 110px; animation-delay: -2s}
+  .tool-pile .c4{ bottom: 8%; left: 5%; font-size: 60px; animation-delay: -3s; transform: rotate(-15deg)}
+  .tool-pile .c5{ bottom: 10%; right: 18%; font-size: 95px; animation-delay: -4s; transform: rotate(6deg)}
+  .tool-pile .c6{ top: 50%; right: 0%; font-size: 50px; animation-delay: -2.5s}
+
+  @keyframes floatcat{
+    0%, 100%{ translate: 0 0 }
+    50%{ translate: 0 -12px }
+  }
+
+  /* SECTION */
+  section.chapter{
+    padding: 70px 0;
+    position:relative;
+  }
+  section.chapter + section.chapter{
+    border-top: 2px dashed rgba(43,24,16,0.18);
+  }
+  .chapter-number{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--orange-deep);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .chapter h2{
+    font-size: clamp(34px, 4.8vw, 56px);
+    line-height: 1;
+    margin-bottom: 18px;
+    max-width: 800px;
+  }
+  .chapter > .container > .lead{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 720px;
+    margin-bottom: 36px;
+  }
+
+  /* CARD GENÉRICO */
+  .card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  /* CAT STRIP */
+  .cat-strip{
+    background: var(--orange);
+    color: var(--paper);
+    padding: 14px 0;
+    overflow: hidden;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    position: relative;
+  }
+  .cat-strip-inner{
+    display: flex;
+    gap: 40px;
+    animation: marquee 28s linear infinite;
+    white-space: nowrap;
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+  }
+  @keyframes marquee{
+    0%{ transform: translateX(0)}
+    100%{ transform: translateX(-50%)}
+  }
+
+  /* ========================================
+     SERVIÇO CARD (OpenSearch, SageMaker, etc.)
+     ======================================== */
+  .service-block{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: stretch;
+    margin-bottom: 28px;
+  }
+  .service-visual{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 6px 6px 0 var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 380px;
+  }
+  .service-info{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 6px 6px 0 var(--sage);
+    display: flex;
+    flex-direction: column;
+  }
+  .service-info h3{
+    font-size: 28px;
+    margin-bottom: 12px;
+    color: var(--sage-deep);
+  }
+  .service-info .tagline{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--orange-deep);
+    background: var(--cream-2);
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+  .service-info p{
+    margin-bottom: 12px;
+    font-size: 15.5px;
+    color: var(--ink-soft);
+  }
+  .service-info strong{ color: var(--ink); }
+  .service-info .usecase{
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: auto;
+    font-size: 14px;
+  }
+  .service-info .usecase::before{
+    content: "💼 Quando usar: ";
+    font-weight: 700;
+  }
+
+  /* ========================================
+     OPENSEARCH: campo de busca interativo
+     ======================================== */
+  .opensearch-demo{
+    width:100%;
+  }
+  .opensearch-demo h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+  .opensearch-input{
+    width: 100%;
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 50px;
+    padding: 14px 22px;
+    font-family:'Sora', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .opensearch-input:focus{
+    outline: none;
+    background: var(--paper);
+    box-shadow: 4px 4px 0 var(--orange);
+    transform: translate(-2px, -2px);
+  }
+  .opensearch-results{
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 200px;
+  }
+  .opensearch-result{
+    background: var(--cream-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    animation: slideIn 0.3s ease-out;
+  }
+  @keyframes slideIn{
+    from{ opacity: 0; transform: translateX(-10px); }
+    to{ opacity: 1; transform: translateX(0); }
+  }
+  .opensearch-result .title{
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .opensearch-result .desc{
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .opensearch-result .score{
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .opensearch-empty{
+    color: var(--ink-soft);
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  mark{
+    background: var(--yellow);
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+
+  /* ========================================
+     SAGEMAKER FAMILY: árvore
+     ======================================== */
+  .sagemaker-tree{
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: 6px 6px 0 var(--orange);
+    margin-bottom: 40px;
+  }
+  .sagemaker-tree h3{
+    color: var(--yellow);
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .sagemaker-tree > p{
+    color: var(--cream-2);
+    margin-bottom: 28px;
+    font-size: 15px;
+  }
+  .tree-root{
+    background: var(--orange);
+    color: var(--paper);
+    border-radius: 16px;
+    padding: 16px 24px;
+    text-align: center;
+    border: 2px solid var(--paper);
+    margin: 0 auto 16px;
+    max-width: 380px;
+    font-family: 'Caprasimo', serif;
+    font-size: 22px;
+    position: relative;
+  }
+  .tree-root::after{
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 16px;
+    background: var(--paper);
+  }
+  .tree-branches{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    position: relative;
+    padding-top: 8px;
+  }
+  .tree-branches::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16.66%;
+    right: 16.66%;
+    height: 2px;
+    background: var(--paper);
+  }
+  .tree-branch{
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid var(--cream-2);
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .tree-branch::before{
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 10px;
+    background: var(--paper);
+  }
+  .tree-branch:hover{
+    transform: translateY(-4px);
+    background: rgba(244, 211, 94, 0.15);
+  }
+  .tree-branch .name{
+    font-family: 'Caprasimo', serif;
+    font-size: 17px;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+  .tree-branch .who{
+    font-size: 12px;
+    color: var(--cream-2);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .tree-branch .what{
+    font-size: 13px;
+    color: var(--paper);
+    line-height: 1.4;
+  }
+
+  /* ========================================
+     STABLE DIFFUSION: processo visual
+     ======================================== */
+  .diffusion-demo{
+    width: 100%;
+  }
+  .diffusion-demo h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .diffusion-demo .subtitle{
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+  .diffusion-stages{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .diffusion-stage{
+    aspect-ratio: 1;
+    border-radius: 12px;
+    border: 2px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--cream-2);
+  }
+  .diffusion-stage .step-label{
+    background: var(--paper);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--ink);
+    z-index: 2;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+  .diffusion-stage svg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .diffusion-control{
+    margin-top: 16px;
+  }
+  .diffusion-control label{
+    display:flex; justify-content:space-between;
+    font-weight: 600; font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .diffusion-control input[type=range]{
+    width: 100%;
+    accent-color: var(--orange);
+  }
+  .diffusion-prompt{
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .diffusion-prompt::before{
+    content: '✏️';
+    font-size: 18px;
+  }
+
+  /* ========================================
+     CFG: slider
+     ======================================== */
+  .cfg-demo{ width: 100%; }
+  .cfg-demo h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .cfg-demo .subtitle{
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+  .cfg-scale-wrap{
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .cfg-emoji{
+    margin-bottom: 10px;
+    display: inline-block;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(4px 6px 0 rgba(43, 24, 16, 0.18));
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    line-height: 0;
+  }
+  .cfg-emoji img{
+    display: block;
+    width: 260px;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: opacity 0.25s ease;
+  }
+  .cfg-emoji.flipping img{
+    opacity: 0;
+  }
+  .cfg-label{
+    font-family: 'Caprasimo', serif;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .cfg-desc{
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .cfg-slider-label{
+    display: flex; justify-content: space-between;
+    font-weight: 600; font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .cfg-slider-label .value{
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--orange-deep);
+    font-weight: 700;
+  }
+  .cfg-slider{
+    width: 100%;
+    accent-color: var(--orange);
+  }
+  .cfg-zones{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 11px;
+  }
+  .cfg-zone{
+    padding: 6px 8px;
+    border-radius: 6px;
+    text-align: center;
+    border: 1.5px solid var(--ink);
+    font-weight: 600;
+  }
+  .cfg-zone.low{ background: #DDEEEC }
+  .cfg-zone.mid{ background: #DCE9C4 }
+  .cfg-zone.high{ background: #F5B7A4 }
+
+  /* ========================================
+     RAG: pipeline animado
+     ======================================== */
+  .rag-pipeline{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: 6px 6px 0 var(--ink);
+    overflow: hidden;
+  }
+  .rag-pipeline h3{
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .rag-pipeline > p{
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+  }
+  .rag-flow{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    align-items: stretch;
+    position: relative;
+  }
+  .rag-step{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .rag-step:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 6px 0 var(--ink);
+  }
+  .rag-step.active{
+    background: var(--orange);
+    color: var(--paper);
+  }
+  .rag-step.active .step-num{ background: var(--paper); color: var(--orange-deep); }
+  .rag-step.active .step-desc{ color: rgba(255,255,255,0.92); }
+  .rag-step .step-num{
+    background: var(--orange);
+    color: var(--paper);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Caprasimo', serif;
+    font-size: 16px;
+    margin: 0 auto 8px;
+    border: 2px solid var(--ink);
+  }
+  .rag-step .step-icon{
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+  .rag-step .step-title{
+    font-family: 'Caprasimo', serif;
+    font-size: 15px;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+  .rag-step .step-desc{
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.3;
+  }
+  .rag-arrow{
+    position: absolute;
+    top: 50%;
+    right: -7px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--ink);
+    z-index: 2;
+    background: var(--paper);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--ink);
+  }
+  .rag-step:last-child .rag-arrow{ display: none }
+
+  .rag-detail{
+    margin-top: 24px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 14px;
+    padding: 22px 26px;
+    box-shadow: 4px 4px 0 var(--orange);
+    min-height: 120px;
+  }
+  .rag-detail h4{
+    color: var(--yellow);
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .rag-detail p{
+    color: var(--cream-2);
+    font-size: 14.5px;
+    margin-bottom: 8px;
+  }
+  .rag-detail .example-line{
+    background: rgba(255,255,255,0.06);
+    border-left: 3px solid var(--yellow);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    margin-top: 10px;
+    color: var(--cream-2);
+  }
+
+  /* ========================================
+     CHUNKING: visualizador
+     ======================================== */
+  .chunk-demo{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .chunk-demo h4{
+    font-family: 'Caprasimo', serif;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  .chunk-controls{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+  }
+  .chunk-control label{
+    display: flex; justify-content: space-between;
+    font-size: 14px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .chunk-control label .value{
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--orange-deep);
+  }
+  .chunk-control input[type=range]{
+    width: 100%;
+    accent-color: var(--orange);
+  }
+  .chunk-text{
+    background: var(--cream-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.9;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 200px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+  .chunk-piece{
+    display: inline;
+    padding: 2px 4px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    margin-right: 1px;
+  }
+  .chunk-piece.c0{ background: rgba(255, 107, 53, 0.22); border-color: var(--orange) }
+  .chunk-piece.c1{ background: rgba(92, 141, 137, 0.25); border-color: var(--sage) }
+  .chunk-piece.c2{ background: rgba(244, 211, 94, 0.4); border-color: #C9A82A }
+  .chunk-piece.c3{ background: rgba(155, 107, 174, 0.22); border-color: var(--purple) }
+  .chunk-piece.c4{ background: rgba(199, 62, 29, 0.18); border-color: var(--coral) }
+  .chunk-piece.c5{ background: rgba(74, 124, 158, 0.22); border-color: var(--blue) }
+  .chunk-piece.overlap{
+    background: var(--ink) !important;
+    color: var(--yellow);
+    border-color: var(--ink) !important;
+  }
+  .chunk-summary{
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .chunk-stat{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .chunk-stat .v{
+    font-family: 'Caprasimo', serif;
+    font-size: 28px;
+    color: var(--orange-deep);
+    display: block;
+    line-height: 1;
+  }
+  .chunk-stat .l{
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+
+  /* CHEAT SHEET */
+  .cheatsheet{
+    background: var(--cream-2);
+    padding: 70px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .cheat-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .cheat-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .cheat-card .name{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .cheat-card .micro{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--orange-deep);
+    background: var(--cream-2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .cheat-card .q{ font-size: 14px; color: var(--ink-soft); font-style: italic; margin-bottom: 8px}
+  .cheat-card .what{ font-size: 14px; }
+
+  /* FOOTER */
+  footer{
+    text-align: center;
+    padding: 60px 32px 80px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    border-top: 2px solid var(--ink);
+  }
+  footer .heart{ color: var(--orange); display:inline-block; animation: heartbeat 1.4s ease-in-out infinite}
+  @keyframes heartbeat{ 0%, 100%{ transform: scale(1)} 50%{ transform: scale(1.18)}}
+
+  /* RESPONSIVE */
+  @media (max-width: 920px){
+    .hero-grid, .service-block{ grid-template-columns: 1fr }
+    .tool-pile{ height: 220px; font-size: 60px }
+    .nav-inner{ flex-direction: column; align-items: flex-start; padding: 12px 20px}
+    .nav-links a{ padding: 4px 8px; font-size: 11px}
+    .container{ padding: 0 20px}
+    .tree-branches{ grid-template-columns: 1fr; gap: 12px }
+    .tree-branches::before{ display: none }
+    .tree-branch::before{ display: none }
+    .rag-flow{ grid-template-columns: 1fr 1fr; }
+    .diffusion-stages{ grid-template-columns: repeat(5, 1fr); gap: 4px }
+    .chunk-controls{ grid-template-columns: 1fr }
+    .cfg-emoji img{ width: 220px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🧰 Caixa de Ferramentas<span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"></span></div>
+    <div class="nav-links">
+      <a href="#opensearch">OpenSearch</a>
+      <a href="#sagemaker">SageMaker</a>
+      <a href="#jumpstart">JumpStart</a>
+      <a href="#canvas">Canvas</a>
+      <a href="#studio">Studio</a>
+      <a href="#stable">Stable Diffusion</a>
+      <a href="#cfg">CFG</a>
+      <a href="#rag">RAG</a>
+      <a href="#chunking">Chunking</a>
+      <a href="#bedrock-kb">Bedrock KB</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula 10</div>
+        <h1>
+          Uma <span class="scratch">caixa</span><br>
+          de ferramentas<br>
+          pra entender<br>
+          <span class="accent">IA na AWS</span>.
+        </h1>
+        <p>
+          OpenSearch, SageMaker, JumpStart, Canvas, Studio, Stable Diffusion, CFG, RAG, Chunking, Bedrock Knowledge Bases. Tudo isso parece muita coisa? <strong>É porque é</strong>. Vamos abrir uma ferramenta de cada vez, ver pra que serve, e quando puxar do balaio.
+        </p>
+        <a href="#opensearch" class="hero-cta">Abrir a caixa 🛠️</a>
+      </div>
+      <div class="tool-pile">
+        <span class="float-tool c1">🔍</span>
+        <span class="float-tool c2">🧪</span>
+        <span class="float-tool c3">🚀</span>
+        <span class="float-tool c4">🎨</span>
+        <span class="float-tool c5">📚</span>
+        <span class="float-tool c6">🤖</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🔍 OPENSEARCH</span><span>🧪 SAGEMAKER</span><span>🚀 JUMPSTART</span><span>🎨 CANVAS</span><span>💻 STUDIO</span><span>🖼️ STABLE DIFFUSION</span><span>🎚️ CFG</span><span>📚 RAG</span><span>✂️ CHUNKING</span><span>🤖 BEDROCK KB</span><span>🔍 OPENSEARCH</span><span>🧪 SAGEMAKER</span><span>🚀 JUMPSTART</span><span>🎨 CANVAS</span><span>💻 STUDIO</span>
+  </div>
+</div>
+
+<!-- ============ OPENSEARCH ============ -->
+<section class="chapter" id="opensearch">
+  <div class="container">
+    <span class="chapter-number">01 · OpenSearch Service</span>
+    <h2>O <span style="color:var(--orange)">Ctrl+F</span> dos seus dados.</h2>
+    <p class="lead">
+      Pensa naquela busca rápida de email, busca de produto na Amazon, busca de logs da aplicação... Tudo isso precisa de um motor de busca de verdade. <strong>OpenSearch</strong> é o serviço gerenciado da AWS que entrega isso: ele indexa documentos, vetores e logs, e devolve resultado relevante em milissegundos.
+    </p>
+
+    <div class="service-block">
+      <div class="service-visual">
+        <div class="opensearch-demo">
+          <h4>🔍 Tenta buscar algo</h4>
+          <p style="font-size:13px;color:var(--ink-soft); margin-bottom: 12px;">Digita uma palavra-chave (ex.: "gato", "nuvem", "ml") e veja como o OpenSearch retorna resultados com um score de relevância.</p>
+          <input type="text" class="opensearch-input" id="os-input" placeholder="Buscar nos documentos..." autocomplete="off">
+          <div class="opensearch-results" id="os-results">
+            <div class="opensearch-empty">👆 Digita aí em cima pra ver a busca acontecer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-info">
+        <span class="tagline">amazon-opensearch-service</span>
+        <h3>OpenSearch Service</h3>
+        <p>Serviço <strong>gerenciado</strong> da AWS pra <strong>busca, análise e visualização</strong> de dados. É o sucessor do Elasticsearch na AWS.</p>
+        <p>Em IA, é muito usado como <strong>banco de vetores</strong> (vector database) pra guardar embeddings em pipelines de RAG. Você joga representações numéricas dos seus documentos lá e, na hora da busca, ele acha os documentos <em>semanticamente parecidos</em> com a pergunta do usuário.</p>
+        <p><strong>Capacidades-chave:</strong> busca por texto completo, busca vetorial (k-NN), agregações, análise de logs em tempo real, dashboards.</p>
+        <div class="usecase">App de e-commerce com busca inteligente, chatbot com RAG, análise de logs de aplicação, busca em base de documentos da empresa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SAGEMAKER FAMILY ============ -->
+<section class="chapter" id="sagemaker">
+  <div class="container">
+    <span class="chapter-number">02 · A família SageMaker</span>
+    <h2>O <span style="color:var(--orange)">canivete suíço</span> de ML da AWS.</h2>
+    <p class="lead">
+      Aqui mora a confusão. <strong>SageMaker</strong> não é UM serviço, é uma <strong>família inteira</strong>. Cada filho dela serve pra um tipo de pessoa e de problema. Vê a árvore genealógica:
+    </p>
+
+    <div class="sagemaker-tree">
+      <h3>🧪 Amazon SageMaker</h3>
+      <p>A plataforma da AWS pra construir, treinar e fazer deploy de modelos de ML. Pensa nela como o "Photoshop do ML": tem ferramenta pra todo perfil de usuário.</p>
+
+      <div class="tree-root">Amazon SageMaker</div>
+
+      <div class="tree-branches">
+        <div class="tree-branch">
+          <div class="name">🚀 JumpStart</div>
+          <div class="who">Pra quem quer começar AGORA</div>
+          <div class="what">Catálogo de <strong>modelos pré-treinados</strong> prontos pra deploy em 1 clique. Llama, Stable Diffusion, BERT, etc. Você pega, faz fine-tuning (opcional) e usa.</div>
+        </div>
+        <div class="tree-branch">
+          <div class="name">🎨 Canvas</div>
+          <div class="who">Pra analista de negócio (no-code)</div>
+          <div class="what">Interface <strong>sem código</strong>. Você joga um CSV, escolhe a coluna que quer prever, e o Canvas treina o modelo sozinho. ML pra quem não programa.</div>
+        </div>
+        <div class="tree-branch">
+          <div class="name">💻 Studio</div>
+          <div class="who">Pra cientista de dados (pro)</div>
+          <div class="what">IDE web <strong>completa</strong> pra ML. Notebooks Jupyter, debug, experimentos, pipelines, deploy. É o "VSCode do ML" na AWS.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JumpStart -->
+    <div class="service-block" id="jumpstart">
+      <div class="service-visual" style="box-shadow: 6px 6px 0 var(--orange);">
+        <div style="text-align:center;">
+          <div style="font-size: 100px; margin-bottom: 20px;">🚀</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 360px; margin: 0 auto;">
+            <div style="background: var(--cream-2); border: 2px solid var(--ink); border-radius: 10px; padding: 12px; font-size: 13px;">
+              <div style="font-family:'Caprasimo', serif; font-size: 18px;">🦙</div>
+              <strong>Llama</strong><br><span style="color:var(--ink-soft); font-size:11px">Text gen</span>
+            </div>
+            <div style="background: var(--cream-2); border: 2px solid var(--ink); border-radius: 10px; padding: 12px; font-size: 13px;">
+              <div style="font-family:'Caprasimo', serif; font-size: 18px;">🎨</div>
+              <strong>Stable Diffusion</strong><br><span style="color:var(--ink-soft); font-size:11px">Image gen</span>
+            </div>
+            <div style="background: var(--cream-2); border: 2px solid var(--ink); border-radius: 10px; padding: 12px; font-size: 13px;">
+              <div style="font-family:'Caprasimo', serif; font-size: 18px;">🧠</div>
+              <strong>BERT</strong><br><span style="color:var(--ink-soft); font-size:11px">NLP</span>
+            </div>
+            <div style="background: var(--cream-2); border: 2px solid var(--ink); border-radius: 10px; padding: 12px; font-size: 13px;">
+              <div style="font-family:'Caprasimo', serif; font-size: 18px;">👁️</div>
+              <strong>YOLO</strong><br><span style="color:var(--ink-soft); font-size:11px">Object detection</span>
+            </div>
+          </div>
+          <div style="margin-top: 20px; padding: 12px 16px; background: var(--orange); color: var(--paper); border: 2px solid var(--ink); border-radius: 12px; font-family:'JetBrains Mono', monospace; font-size: 13px;">
+            👉 1 clique pra deploy
+          </div>
+        </div>
+      </div>
+      <div class="service-info">
+        <span class="tagline">sagemaker-jumpstart</span>
+        <h3>SageMaker JumpStart</h3>
+        <p>Um <strong>catálogo de modelos prontos</strong> (foundation models e modelos clássicos). Imagina uma App Store, mas pra modelos de ML.</p>
+        <p>Você navega, escolhe um, e o JumpStart faz o deploy pra você em um endpoint. Pode usar como tá, ou fazer <strong>fine-tuning</strong> com seus próprios dados.</p>
+        <p><strong>Inclui:</strong> Llama, Mistral, Stable Diffusion, BERT, modelos da Hugging Face, e dezenas mais.</p>
+        <div class="usecase">Você quer testar um LLM rapidamente sem treinar do zero, ou prototipar uma POC. JumpStart entrega o modelo em minutos.</div>
+      </div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="service-block" id="canvas">
+      <div class="service-visual" style="box-shadow: 6px 6px 0 var(--sage);">
+        <div style="background: var(--cream-2); border: 2px solid var(--ink); border-radius: 12px; padding: 18px;">
+          <div style="font-family:'Caprasimo', serif; font-size: 18px; margin-bottom: 14px;">📊 Vendas.csv</div>
+          <table style="width:100%; font-size: 12px; border-collapse: collapse; font-family:'JetBrains Mono', monospace;">
+            <thead>
+              <tr style="background: var(--ink); color: var(--paper);">
+                <th style="padding: 6px 8px; text-align:left">cliente</th>
+                <th style="padding: 6px 8px; text-align:left">idade</th>
+                <th style="padding: 6px 8px; text-align:left">comprou?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--ink);">
+                <td style="padding: 6px 8px">Ana</td>
+                <td style="padding: 6px 8px">28</td>
+                <td style="padding: 6px 8px; color: var(--olive); font-weight: 600;">SIM</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--ink);">
+                <td style="padding: 6px 8px">Bruno</td>
+                <td style="padding: 6px 8px">45</td>
+                <td style="padding: 6px 8px; color: var(--coral); font-weight: 600;">NÃO</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--ink);">
+                <td style="padding: 6px 8px">Carla</td>
+                <td style="padding: 6px 8px">32</td>
+                <td style="padding: 6px 8px; color: var(--olive); font-weight: 600;">SIM</td>
+              </tr>
+              <tr style="background: var(--yellow);">
+                <td style="padding: 6px 8px">Diego</td>
+                <td style="padding: 6px 8px">38</td>
+                <td style="padding: 6px 8px; font-weight: 600;">❓</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="text-align: center; margin: 16px 0; font-size: 24px;">⬇️</div>
+        <div style="background: var(--sage); color: var(--paper); border: 2px solid var(--ink); border-radius: 12px; padding: 16px; text-align: center;">
+          <div style="font-family:'Caprasimo', serif; font-size: 17px;">🎨 Canvas treina sozinho</div>
+          <div style="font-size: 13px; margin-top: 6px; opacity: 0.95;">Sem código. Sem notebook. Sem terror.</div>
+        </div>
+      </div>
+      <div class="service-info" style="box-shadow: 6px 6px 0 var(--sage);">
+        <span class="tagline">sagemaker-canvas</span>
+        <h3>SageMaker Canvas</h3>
+        <p>ML <strong>sem código</strong>. Pensado pra <strong>analistas de negócio</strong> que entendem do dado mas não programam.</p>
+        <p>Você faz upload do CSV, escolhe a coluna que quer prever, e o Canvas treina vários modelos automaticamente. No final, mostra qual deu o melhor resultado e quais variáveis mais influenciam.</p>
+        <p>Também integra com <strong>foundation models</strong> (GenAI) pra tarefas de texto, sem programar.</p>
+        <div class="usecase">Equipe de marketing quer prever churn, mas não tem cientista de dados. Canvas resolve. Ou: analista financeiro quer prever vendas do próximo mês.</div>
+      </div>
+    </div>
+
+    <!-- Studio -->
+    <div class="service-block" id="studio">
+      <div class="service-visual" style="box-shadow: 6px 6px 0 var(--purple);">
+        <div style="background: var(--ink); border: 2px solid var(--ink); border-radius: 14px; overflow: hidden; font-family:'JetBrains Mono', monospace; font-size: 12px;">
+          <div style="background: #1a0e08; padding: 8px 14px; color: var(--cream-2); display: flex; gap: 6px; align-items: center; border-bottom: 1px solid #4A3528;">
+            <span style="width:10px; height:10px; border-radius:50%; background: #FF6B35; display: inline-block;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background: #F4D35E; display: inline-block;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background: #6B8E23; display: inline-block;"></span>
+            <span style="margin-left: 8px; font-size: 11px;">studio.ipynb</span>
+          </div>
+          <div style="padding: 16px; color: var(--cream-2);">
+            <div><span style="color: #9B6BAE;">import</span> sagemaker</div>
+            <div><span style="color: #9B6BAE;">from</span> sklearn.ensemble <span style="color: #9B6BAE;">import</span> RandomForestClassifier</div>
+            <div style="margin-top: 8px;"><span style="color: var(--sage);"># Train model</span></div>
+            <div>model = RandomForestClassifier()</div>
+            <div>model.fit(X_train, y_train)</div>
+            <div style="margin-top: 8px;"><span style="color: var(--sage);"># Deploy to endpoint</span></div>
+            <div>predictor = model.deploy(<br>&nbsp;&nbsp;instance_type=<span style="color: var(--yellow);">"ml.m5.large"</span><br>)</div>
+            <div style="margin-top: 14px; padding: 8px 12px; background: rgba(107, 142, 35, 0.18); border-left: 3px solid var(--olive); color: var(--cream-2);">
+              ✓ Endpoint deployed: <span style="color: var(--yellow);">model-prod-001</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="service-info" style="box-shadow: 6px 6px 0 var(--purple);">
+        <span class="tagline">sagemaker-studio</span>
+        <h3>SageMaker Studio</h3>
+        <p>A <strong>IDE web completa</strong> da AWS pra ML. É o ambiente unificado onde cientista de dados faz <em>tudo</em>: notebook, debug, treino, deploy, monitoramento.</p>
+        <p>Pensa no <strong>VSCode</strong>, mas:<br>1) roda no navegador<br>2) tem GPU sob demanda<br>3) integra com S3, Athena, Redshift<br>4) tem experimentos, pipelines e MLOps embutidos</p>
+        <p>É onde acontece o trabalho "sério" de ML.</p>
+        <div class="usecase">Time de ciência de dados precisa de um ambiente colaborativo, com acesso a GPU, versionamento de experimentos e pipelines de produção.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STABLE DIFFUSION ============ -->
+<section class="chapter" id="stable">
+  <div class="container">
+    <span class="chapter-number">03 · Stable Diffusion</span>
+    <h2>Como uma <span style="color:var(--orange)">imagem nasce</span> de ruído puro.</h2>
+    <p class="lead">
+      Stable Diffusion é um modelo de <strong>geração de imagens a partir de texto</strong>. A mágica dele: ele aprendeu a transformar <strong>TV antiga com chuvisco</strong> (ruído aleatório) em uma imagem coerente, passo a passo. Igual escultor revelando estátua no mármore.
+    </p>
+
+    <div class="service-block">
+      <div class="service-visual">
+        <div class="diffusion-demo">
+          <h4>🎬 O processo, passo a passo</h4>
+          <div class="subtitle">Arrasta o slider e vê o ruído virar imagem.</div>
+          <div class="diffusion-stages" id="diffusion-stages"></div>
+          <div class="diffusion-prompt" id="diffusion-prompt">"um gato astronauta no Rio de Janeiro"</div>
+          <div class="diffusion-control">
+            <label>
+              <span>🎚️ Passo de denoising</span>
+              <span id="diff-step-value" style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700;">5/5</span>
+            </label>
+            <input type="range" id="diff-slider" min="0" max="5" value="5" step="1">
+          </div>
+        </div>
+      </div>
+
+      <div class="service-info">
+        <span class="tagline">stable-diffusion</span>
+        <h3>Stable Diffusion</h3>
+        <p>Modelo de <strong>difusão latente</strong> que cria imagens a partir de uma descrição textual (prompt).</p>
+        <p><strong>Como funciona, simplificado:</strong></p>
+        <p>1️⃣ Começa com uma imagem 100% ruído (chuvisco)<br>2️⃣ A cada passo, ele <em>remove um pouco de ruído</em>, guiado pelo prompt<br>3️⃣ Depois de N passos (tipicamente 20-50), uma imagem coerente surge</p>
+        <p>O treino dele foi feito ao contrário: pegou imagens reais e foi <strong>adicionando ruído</strong> aos poucos. O modelo aprendeu o caminho de volta.</p>
+        <div class="usecase">Geração de arte, design, mockups, avatares, fotos de produto, ilustrações de marketing. Disponível no Bedrock e via JumpStart.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CFG ============ -->
+<section class="chapter" id="cfg">
+  <div class="container">
+    <span class="chapter-number">04 · CFG · Classifier-Free Guidance</span>
+    <h2>O <span style="color:var(--orange)">"obedecer ou ousar"</span> do modelo.</h2>
+    <p class="lead">
+      Quando Stable Diffusion gera uma imagem, ele precisa decidir: <strong>seguir o prompt à risca</strong> (literal, conservador) ou <strong>improvisar e ser criativo</strong>? O <strong>CFG Scale</strong> é o botão que controla isso.
+    </p>
+
+    <div class="service-block">
+      <div class="service-visual">
+        <div class="cfg-demo">
+          <h4>🎚️ Mexe no controle e vê o modelo mudar de personalidade</h4>
+          <div class="subtitle">Prompt: "um gato vestido de chef"</div>
+
+          <div class="cfg-scale-wrap">
+            <div class="cfg-emoji" id="cfg-emoji">
+              <img id="cfg-image" src="Equilibrado.png" alt="Equilibrado">
+            </div>
+            <div class="cfg-label" id="cfg-label">Equilibrado</div>
+            <div class="cfg-desc" id="cfg-desc">Bom mix entre criatividade e seguir o prompt. Sweet spot pra maioria dos casos.</div>
+          </div>
+
+          <div class="cfg-slider-label">
+            <span>CFG Scale</span>
+            <span class="value" id="cfg-value">7,5</span>
+          </div>
+          <input type="range" class="cfg-slider" id="cfg-slider" min="1" max="20" value="7" step="0.5">
+
+          <div class="cfg-zones">
+            <div class="cfg-zone low">1-5: criativo</div>
+            <div class="cfg-zone mid">6-12: equilibrado</div>
+            <div class="cfg-zone high">13-20: literal</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-info">
+        <span class="tagline">classifier-free-guidance</span>
+        <h3>CFG Scale</h3>
+        <p>Parâmetro que controla <strong>o quanto o modelo "ouve" o prompt</strong> ao gerar a imagem.</p>
+        <p><strong>CFG baixo (1-5):</strong> modelo improvisa muito, pode gerar coisas inesperadas. Imagens mais "artísticas" mas podem ignorar o prompt.</p>
+        <p><strong>CFG médio (6-12):</strong> equilíbrio entre criatividade e fidelidade. <strong>7-8 é o padrão.</strong></p>
+        <p><strong>CFG alto (13-20):</strong> modelo obedece o prompt literalmente. Pode gerar imagens "duras", saturadas, com artefatos. Em casos extremos, fica forçado.</p>
+        <div class="usecase">Você quer testar variações de uma ideia? CFG baixo. Você precisa de algo bem específico do prompt? CFG alto. Não sabe? Deixa em 7,5 e vai.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RAG ============ -->
+<section class="chapter" id="rag">
+  <div class="container">
+    <span class="chapter-number">05 · RAG · Retrieval-Augmented Generation</span>
+    <h2>Como dar ao LLM <span style="color:var(--orange)">conhecimento que ele não tem</span>.</h2>
+    <p class="lead">
+      Um LLM tipo Claude ou Llama é poderoso, mas <strong>não conhece os documentos da sua empresa</strong>. E retreinar custa caro. <strong>RAG</strong> resolve isso: antes de responder, o sistema <em>busca</em> os documentos relevantes e <em>aumenta</em> a pergunta com esse contexto. O modelo então gera a resposta usando esse material.
+    </p>
+
+    <div class="rag-pipeline">
+      <h3>📚 O pipeline RAG, etapa por etapa</h3>
+      <p>Clica em cada etapa pra entender o que acontece ali.</p>
+
+      <div class="rag-flow">
+        <div class="rag-step" data-step="1">
+          <div class="step-num">1</div>
+          <div class="step-icon">📄</div>
+          <div class="step-title">Ingestão</div>
+          <div class="step-desc">Documentos da empresa</div>
+          <div class="rag-arrow">→</div>
+        </div>
+        <div class="rag-step" data-step="2">
+          <div class="step-num">2</div>
+          <div class="step-icon">✂️</div>
+          <div class="step-title">Chunking</div>
+          <div class="step-desc">Quebrar em pedaços</div>
+          <div class="rag-arrow">→</div>
+        </div>
+        <div class="rag-step" data-step="3">
+          <div class="step-num">3</div>
+          <div class="step-icon">🔢</div>
+          <div class="step-title">Embedding</div>
+          <div class="step-desc">Virar vetor</div>
+          <div class="rag-arrow">→</div>
+        </div>
+        <div class="rag-step" data-step="4">
+          <div class="step-num">4</div>
+          <div class="step-icon">🔍</div>
+          <div class="step-title">Retrieval</div>
+          <div class="step-desc">Buscar similares</div>
+          <div class="rag-arrow">→</div>
+        </div>
+        <div class="rag-step" data-step="5">
+          <div class="step-num">5</div>
+          <div class="step-icon">🤖</div>
+          <div class="step-title">Geração</div>
+          <div class="step-desc">LLM responde</div>
+        </div>
+      </div>
+
+      <div class="rag-detail" id="rag-detail">
+        <h4 id="rag-d-title">👆 Clica em uma etapa pra ver o detalhe</h4>
+        <p id="rag-d-text">O RAG é a técnica mais comum hoje pra dar conhecimento específico (de empresa, de domínio, atualizado) pra um LLM, sem precisar retreinar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHUNKING ============ -->
+<section class="chapter" id="chunking">
+  <div class="container">
+    <span class="chapter-number">06 · RAG · Chunking</span>
+    <h2>Por que <span style="color:var(--orange)">quebrar o documento em pedaços</span>?</h2>
+    <p class="lead">
+      LLMs têm uma <strong>janela de contexto limitada</strong> (mesmo as grandes têm limite). E quando você busca documentos similares, faz mais sentido <strong>achar o parágrafo certo</strong> do que o livro inteiro. Por isso, antes de jogar tudo no banco vetorial, a gente <strong>quebra em pedaços</strong> -chunks.
+    </p>
+
+    <div class="chunk-demo">
+      <h4>✂️ Mexe nos parâmetros e vê como o texto é dividido</h4>
+
+      <div class="chunk-controls">
+        <div class="chunk-control">
+          <label>
+            <span>📏 Tamanho do chunk (caracteres)</span>
+            <span class="value" id="chunk-size-val">120</span>
+          </label>
+          <input type="range" id="chunk-size" min="50" max="250" value="120" step="10">
+        </div>
+        <div class="chunk-control">
+          <label>
+            <span>🔁 Overlap (sobreposição)</span>
+            <span class="value" id="chunk-overlap-val">20</span>
+          </label>
+          <input type="range" id="chunk-overlap" min="0" max="80" value="20" step="5">
+        </div>
+      </div>
+
+      <div class="chunk-text" id="chunk-text"></div>
+
+      <div class="chunk-summary">
+        <div class="chunk-stat">
+          <span class="v" id="chunk-count">5</span>
+          <div class="l">Chunks gerados</div>
+        </div>
+        <div class="chunk-stat">
+          <span class="v" id="chunk-avg">120</span>
+          <div class="l">Tamanho médio</div>
+        </div>
+        <div class="chunk-stat">
+          <span class="v" id="chunk-total-chars">580</span>
+          <div class="l">Caracteres totais</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; background: var(--yellow); border: 2px solid var(--ink); border-radius: 12px; padding: 18px; font-size: 14.5px;">
+        <strong>🎯 A regra geral:</strong> chunk pequeno = busca mais precisa, mas perde contexto. Chunk grande = mais contexto, mas busca menos precisa.
+        O <strong>overlap</strong> serve pra não perder informação que cai entre dois chunks (tipo uma frase importante que ficou cortada no meio). Tipicamente uns 10-20% do tamanho do chunk.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BEDROCK KB ============ -->
+<section class="chapter" id="bedrock-kb">
+  <div class="container">
+    <span class="chapter-number">07 · Bedrock Knowledge Bases</span>
+    <h2>RAG <span style="color:var(--orange)">sem você ter que montar tudo</span>.</h2>
+    <p class="lead">
+      Montar RAG do zero dá trabalho: precisa de banco vetorial, código de ingestão, embeddings, integração com LLM... <strong>Bedrock Knowledge Bases</strong> faz tudo isso pra você. É RAG-as-a-Service da AWS.
+    </p>
+
+    <div class="service-block">
+      <div class="service-visual">
+        <div style="text-align: center; width: 100%;">
+          <div style="background: var(--cream-2); border: 2px solid var(--ink); border-radius: 14px; padding: 16px; margin-bottom: 14px;">
+            <div style="font-family:'Caprasimo', serif; font-size: 16px; margin-bottom: 8px;">📦 Você só faz isso:</div>
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; font-size: 13px;">
+              <div style="background: var(--paper); padding: 6px 12px; border-radius: 6px; border: 1.5px solid var(--ink);">1️⃣ Aponta pro S3</div>
+              <div style="background: var(--paper); padding: 6px 12px; border-radius: 6px; border: 1.5px solid var(--ink);">2️⃣ Escolhe o LLM</div>
+              <div style="background: var(--paper); padding: 6px 12px; border-radius: 6px; border: 1.5px solid var(--ink);">3️⃣ Pronto</div>
+            </div>
+          </div>
+          <div style="font-size: 24px; margin: 14px 0;">⬇️</div>
+          <div style="background: var(--ink); color: var(--paper); border-radius: 14px; padding: 20px;">
+            <div style="font-family:'Caprasimo', serif; font-size: 16px; color: var(--yellow); margin-bottom: 12px;">🤖 Bedrock faz por baixo dos panos:</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; text-align: left;">
+              <div style="background: rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">✂️ Chunking automático</div>
+              <div style="background: rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">🔢 Gera embeddings</div>
+              <div style="background: rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">💾 Guarda em OpenSearch / Pinecone</div>
+              <div style="background: rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">🔄 Sincronização automática</div>
+              <div style="background: rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">🔍 Retrieval</div>
+              <div style="background: rgba(255,255,255,0.06); padding: 8px 10px; border-radius: 6px;">💬 Resposta com citação</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-info">
+        <span class="tagline">bedrock-knowledge-bases</span>
+        <h3>Bedrock Knowledge Bases</h3>
+        <p>Serviço <strong>totalmente gerenciado</strong> da AWS pra montar pipelines de RAG <strong>sem escrever código de orquestração</strong>.</p>
+        <p><strong>O que ele entrega:</strong></p>
+        <p>📂 <strong>Conexão direta com S3</strong> (e outras fontes): aponta a pasta com seus PDFs, e ele cuida do resto.<br>✂️ <strong>Chunking gerenciado</strong> (estratégias: fixed, hierarchical, semantic)<br>🔢 <strong>Embeddings automáticos</strong> via modelos do Bedrock (ex.: Titan, Cohere)<br>💾 <strong>Banco vetorial gerenciado</strong> (usa OpenSearch Serverless por padrão, ou Pinecone/Redis)<br>📎 <strong>Citações automáticas</strong>: a resposta vem com a fonte do documento</p>
+        <div class="usecase">Você quer um chatbot que responda sobre os manuais da empresa, ou um assistente que consulta documentos jurídicos. Bedrock KB monta isso em horas, sem você programar pipeline.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 28px; background: var(--ink); color: var(--paper); box-shadow: 6px 6px 0 var(--orange);">
+      <div style="font-family:'Caprasimo', serif; font-size: 24px; color: var(--yellow); margin-bottom: 14px;">🔄 RAG manual vs Bedrock KB</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <div style="font-weight: 700; color: var(--orange); margin-bottom: 8px; font-size: 15px;">🛠️ RAG manual (você monta)</div>
+          <ul style="margin-left: 18px; font-size: 14px; color: var(--cream-2);">
+            <li>Escreve código de ingestão</li>
+            <li>Escolhe e configura banco vetorial (OpenSearch, Pinecone)</li>
+            <li>Implementa estratégia de chunking</li>
+            <li>Gerencia sincronização</li>
+            <li>Mais flexível, mais trabalhoso</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-weight: 700; color: var(--yellow); margin-bottom: 8px; font-size: 15px;">⚡ Bedrock KB (AWS faz)</div>
+          <ul style="margin-left: 18px; font-size: 14px; color: var(--cream-2);">
+            <li>Aponta pro S3 e tá pronto</li>
+            <li>Banco vetorial gerenciado</li>
+            <li>Chunking automático configurável</li>
+            <li>Sync automático</li>
+            <li>Menos flexível, muito mais rápido de subir</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2 style="margin-bottom: 8px;">A cola visual.</h2>
+    <p style="font-size: 17px; color: var(--ink-soft); max-width: 700px; margin-bottom: 16px;">
+      Cada serviço/conceito numa frase só. Salva, imprime, tira print. Ideal pra revisar antes da prova.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">🔍 OpenSearch</div>
+        <div class="micro">amazon-opensearch-service</div>
+        <div class="q">"Onde guardar e buscar dados/vetores?"</div>
+        <div class="what">Motor de busca gerenciado. Usado como vector DB em RAG. Sucessor do Elasticsearch.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🧪 SageMaker</div>
+        <div class="micro">amazon-sagemaker</div>
+        <div class="q">"Plataforma completa de ML"</div>
+        <div class="what">A "mãe" de tudo. Treino, deploy, monitoramento. Família com JumpStart, Canvas e Studio.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🚀 JumpStart</div>
+        <div class="micro">sagemaker-jumpstart</div>
+        <div class="q">"Modelo pronto, em 1 clique"</div>
+        <div class="what">Catálogo de modelos pré-treinados (Llama, SD, BERT). Deploy rápido + fine-tuning opcional.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎨 Canvas</div>
+        <div class="micro">sagemaker-canvas</div>
+        <div class="q">"ML pra quem não programa"</div>
+        <div class="what">Interface no-code. Sobe CSV, escolhe a coluna, ele treina sozinho. Pra analista de negócio.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">💻 Studio</div>
+        <div class="micro">sagemaker-studio</div>
+        <div class="q">"IDE completa de ML"</div>
+        <div class="what">Notebook + GPU + deploy + experimentos. O "VSCode do ML" da AWS. Pra cientista de dados.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🖼️ Stable Diffusion</div>
+        <div class="micro">stable-diffusion</div>
+        <div class="q">"Como gera imagem de texto?"</div>
+        <div class="what">Modelo de difusão. Começa do ruído puro e vai limpando passo a passo guiado pelo prompt.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎚️ CFG</div>
+        <div class="micro">classifier-free-guidance</div>
+        <div class="q">"Obedecer ou ousar?"</div>
+        <div class="what">Quanto o modelo segue o prompt. Baixo = criativo. Alto = literal. Padrão ~7-8.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📚 RAG</div>
+        <div class="micro">retrieval-augmented-generation</div>
+        <div class="q">"LLM com conhecimento meu"</div>
+        <div class="what">Busca documentos relevantes ANTES de gerar resposta. Sem precisar retreinar o modelo.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">✂️ Chunking</div>
+        <div class="micro">document-chunking</div>
+        <div class="q">"Como quebrar os docs?"</div>
+        <div class="what">Dividir docs em pedaços pra caber no contexto. Use overlap pra não perder info nas bordas.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🤖 Bedrock KB</div>
+        <div class="micro">bedrock-knowledge-bases</div>
+        <div class="q">"RAG sem montar nada"</div>
+        <div class="what">RAG totalmente gerenciado. Aponta pro S3, escolhe LLM, pronto. Chunking + embeddings + retrieval automáticos.</div>
+      </div>
+      <div class="cheat-card" style="background: var(--orange); color: var(--paper);">
+        <div class="name" style="color: var(--paper);">🧰 Resumo do resumo</div>
+        <div class="q" style="color: rgba(255,255,255,0.85);">"Que ferramenta eu uso?"</div>
+        <div class="what" style="color: var(--paper);"><strong>Cada uma resolve uma dor diferente.</strong> Comece pela pergunta: tenho dado? quero modelo pronto? sei programar? Daí escolhe.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+<div>
+  Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
+  aula visual de IA Practitioner pelo professor <a href="https://www.linkedin.com/in/brianrichard1/" target="_blank">Brian</a>,
+  materializada em código.
+</div>
+<div style="margin-top: 8px; opacity: 0.7;">Tudo neste site é interativo. Mexe nos sliders, clica nas etapas, brinca com o chunking. <em>"Os alunos que aprendam mexendo, não decorando."</em></div>
+</footer>
+
+<script>
+/* ====== OPENSEARCH SIMULATED RESULTS ====== */
+const osDocuments = [
+  { title: "Introdução à computação em nuvem", desc: "O que é cloud computing e por que adotar AWS", tags: ["nuvem", "aws", "cloud", "introdução"] },
+  { title: "Fundamentos de Machine Learning", desc: "Conceitos básicos de ML: dados, modelo, treinamento", tags: ["ml", "machine learning", "modelo", "treino"] },
+  { title: "Amazon SageMaker para iniciantes", desc: "Como treinar seu primeiro modelo no SageMaker", tags: ["sagemaker", "ml", "treino", "aws"] },
+  { title: "Detector de gatos com YOLO", desc: "Pipeline completo de visão computacional", tags: ["gato", "visão", "yolo", "detecção"] },
+  { title: "RAG com Bedrock Knowledge Bases", desc: "Como montar RAG sem código de orquestração", tags: ["rag", "bedrock", "llm", "nuvem"] },
+  { title: "Gato preto, gato branco, gato vetorial", desc: "Embeddings e bancos vetoriais explicados com gatos", tags: ["gato", "embedding", "vetor", "rag"] },
+  { title: "Stable Diffusion na prática", desc: "Gere imagens com modelos no JumpStart", tags: ["stable diffusion", "imagem", "geração", "ml"] },
+  { title: "Métricas de ML: acurácia, F1, AUC", desc: "Como avaliar seu modelo de classificação", tags: ["métrica", "f1", "auc", "ml", "modelo"] },
+  { title: "OpenSearch como vector database", desc: "Use OpenSearch pra busca semântica", tags: ["opensearch", "vetor", "busca", "nuvem", "aws"] },
+  { title: "Foundation models e fine-tuning", desc: "Quando treinar do zero, quando fine-tunar", tags: ["llm", "fine-tuning", "ml", "modelo"] }
+];
+
+const osInput = document.getElementById('os-input');
+const osResults = document.getElementById('os-results');
+
+function highlight(text, q){
+  if (!q) return text;
+  const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+')', 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function searchOpenSearch(q){
+  if (!q.trim()) {
+    osResults.innerHTML = '<div class="opensearch-empty">👆 Digita aí em cima pra ver a busca acontecer</div>';
+    return;
+  }
+  const ql = q.toLowerCase();
+  const scored = osDocuments.map(d => {
+    let s = 0;
+    if (d.title.toLowerCase().includes(ql)) s += 5;
+    if (d.desc.toLowerCase().includes(ql)) s += 3;
+    d.tags.forEach(t => {
+      if (t.toLowerCase().includes(ql)) s += 4;
+      if (ql.includes(t.toLowerCase())) s += 2;
+    });
+    // partial match
+    ql.split(' ').forEach(word => {
+      if (word.length > 2){
+        if (d.title.toLowerCase().includes(word)) s += 1;
+        if (d.desc.toLowerCase().includes(word)) s += 0.5;
+      }
+    });
+    return {...d, score: s};
+  }).filter(d => d.score > 0).sort((a,b) => b.score - a.score).slice(0, 5);
+
+  if (scored.length === 0){
+    osResults.innerHTML = '<div class="opensearch-empty">😿 Nenhum documento encontrado. Tenta outra palavra (gato, ml, nuvem, rag...)</div>';
+    return;
+  }
+
+  const maxS = scored[0].score;
+  osResults.innerHTML = scored.map(d => `
+    <div class="opensearch-result">
+      <div>
+        <div class="title">${highlight(d.title, q)}</div>
+        <div class="desc">${highlight(d.desc, q)}</div>
+      </div>
+      <div class="score">${(d.score/maxS).toFixed(2).replace('.', ',')}</div>
+    </div>
+  `).join('');
+}
+osInput.addEventListener('input', e => searchOpenSearch(e.target.value));
+
+/* ====== STABLE DIFFUSION STAGES ====== */
+const diffusionStagesEl = document.getElementById('diffusion-stages');
+const diffSlider = document.getElementById('diff-slider');
+const diffStepValue = document.getElementById('diff-step-value');
+
+function buildDiffusionStage(idx, totalSteps){
+  // idx 0 = pure noise; idx totalSteps = final image
+  const noise = 1 - (idx / totalSteps);
+  return `
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="grain${idx}">
+          <feTurbulence type="fractalNoise" baseFrequency="${1.8 - idx * 0.18}" numOctaves="2" seed="${idx * 7}"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 ${0.18 + idx*0.04} 0 0 0 0 ${0.10 + idx*0.05} 0 0 0 0 ${0.05 + idx*0.04} 0 0 0 ${noise*1.2} 0"/>
+        </filter>
+        <radialGradient id="img${idx}" cx="50%" cy="55%" r="60%">
+          <stop offset="0%" stop-color="#F4D35E"/>
+          <stop offset="40%" stop-color="#FF6B35"/>
+          <stop offset="100%" stop-color="#4A7C9E"/>
+        </radialGradient>
+      </defs>
+      <rect width="100" height="100" fill="url(#img${idx})" opacity="${1 - noise * 0.7}"/>
+      ${ idx >= 3 ? `
+        <ellipse cx="50" cy="58" rx="22" ry="20" fill="#2B1810" opacity="${(idx-2)/3}"/>
+        <circle cx="42" cy="54" r="3" fill="#F4D35E" opacity="${(idx-2)/3}"/>
+        <circle cx="58" cy="54" r="3" fill="#F4D35E" opacity="${(idx-2)/3}"/>
+        <polygon points="35,42 42,32 48,42" fill="#2B1810" opacity="${(idx-2)/3}"/>
+        <polygon points="52,42 58,32 65,42" fill="#2B1810" opacity="${(idx-2)/3}"/>
+      ` : '' }
+      <rect width="100" height="100" filter="url(#grain${idx})"/>
+    </svg>
+  `;
+}
+
+function renderDiffusion(currentStep){
+  const total = 5;
+  diffusionStagesEl.innerHTML = '';
+  for (let i = 0; i <= total; i++){
+    if (i > currentStep) break;
+    const div = document.createElement('div');
+    div.className = 'diffusion-stage';
+    const label = i === 0 ? 'ruído' : (i === total ? 'imagem' : `passo ${i}`);
+    div.innerHTML = buildDiffusionStage(i, total) + `<span class="step-label">${label}</span>`;
+    diffusionStagesEl.appendChild(div);
+  }
+  diffStepValue.textContent = `${currentStep}/5`;
+}
+diffSlider.addEventListener('input', e => renderDiffusion(parseInt(e.target.value)));
+renderDiffusion(5);
+
+/* ====== CFG ====== */
+const cfgSlider = document.getElementById('cfg-slider');
+const cfgValue = document.getElementById('cfg-value');
+const cfgEmoji = document.getElementById('cfg-emoji');
+const cfgImage = document.getElementById('cfg-image');
+const cfgLabel = document.getElementById('cfg-label');
+const cfgDesc = document.getElementById('cfg-desc');
+
+// Pré-carrega as imagens pra trocar suave
+const CFG_IMAGES = {
+  'muito-criativo': 'Muitocriativo.png',
+  'criativo':       'Criativo.png',
+  'equilibrado':    'Equilibrado.png',
+  'literal':        'Literal.png',
+  'muito-literal':  'Muito_literal.png',
+  'forcado':        'Forçado_demais.png'
+};
+Object.values(CFG_IMAGES).forEach(src => { const im = new Image(); im.src = src; });
+
+let lastCfgKey = '';
+
+function updateCfg(){
+  const v = parseFloat(cfgSlider.value);
+  cfgValue.textContent = v.toFixed(1).replace('.', ',');
+
+  let key, label, desc;
+  if (v <= 3) {
+    key = 'muito-criativo'; label = 'Muito criativo'; desc = 'O modelo ignora boa parte do prompt. Pode gerar abstrações artísticas, mas pode sair do tema.';
+  } else if (v <= 5) {
+    key = 'criativo';       label = 'Criativo';       desc = 'Pouco controle do prompt. Mais variação e interpretação livre.';
+  } else if (v <= 9) {
+    key = 'equilibrado';    label = 'Equilibrado';    desc = 'Sweet spot. Mistura bem fidelidade ao prompt com criatividade visual. 7-8 é o padrão.';
+  } else if (v <= 13) {
+    key = 'literal';        label = 'Literal';        desc = 'Segue o prompt à risca. Bom pra prompts específicos. Pode perder um pouco de naturalidade.';
+  } else if (v <= 17) {
+    key = 'muito-literal';  label = 'Muito literal';  desc = 'Imagens saturadas, contrastes fortes. Risco de artefatos visuais ("queimado").';
+  } else {
+    key = 'forcado';        label = 'Forçado demais'; desc = 'Modelo "tenta demais" obedecer. Resultados podem ficar distorcidos, com cores ruins.';
+  }
+
+  // só troca a imagem se mudou de categoria, pra evitar piscar
+  if (key !== lastCfgKey){
+    cfgEmoji.classList.add('flipping');
+    setTimeout(() => {
+      cfgImage.src = CFG_IMAGES[key];
+      cfgImage.alt = label;
+      cfgEmoji.classList.remove('flipping');
+    }, 150);
+    lastCfgKey = key;
+  }
+
+  // dá um efeito sutil de escala conforme o CFG sobe
+  cfgEmoji.style.transform = `scale(${0.96 + Math.min(v, 18)/120})`;
+  cfgLabel.textContent = label;
+  cfgDesc.textContent = desc;
+}
+cfgSlider.addEventListener('input', updateCfg);
+updateCfg();
+
+/* ====== RAG STEP DETAILS ====== */
+const ragSteps = {
+  '1': {
+    title: '📄 Etapa 1 · Ingestão de documentos',
+    text: 'Você coleta os documentos que o LLM vai precisar consultar: PDFs de manual, artigos, base de conhecimento da empresa, FAQ, transcrições de reunião... Esses arquivos geralmente moram no S3.',
+    example: 'manuais/produto_X.pdf, faqs/atendimento.docx, politicas/RH.pdf'
+  },
+  '2': {
+    title: '✂️ Etapa 2 · Chunking',
+    text: 'Cada documento é dividido em pedaços menores (chunks) -tipicamente 300-1000 caracteres ou alguns parágrafos. Isso é necessário porque o LLM tem limite de contexto e queremos achar o trecho relevante, não o documento inteiro.',
+    example: 'PDF de 200 páginas → 600 chunks de ~500 caracteres cada'
+  },
+  '3': {
+    title: '🔢 Etapa 3 · Embedding (vetorização)',
+    text: 'Cada chunk passa por um modelo de embedding (ex.: Amazon Titan Embeddings, Cohere Embed) que transforma o texto em um vetor de números (ex.: 1024 dimensões). Textos com significado parecido viram vetores próximos no espaço.',
+    example: '"gato no Rio" → [0.23, -0.91, 0.45, ..., 0.12]'
+  },
+  '4': {
+    title: '🔍 Etapa 4 · Retrieval (busca)',
+    text: 'Quando o usuário faz uma pergunta, ela também é transformada em vetor. O sistema então busca no banco vetorial (OpenSearch, Pinecone) os K chunks mais parecidos. Esses são os candidatos a contexto.',
+    example: 'Pergunta: "como devolvo um produto?" → top 3 chunks de FAQ + manual'
+  },
+  '5': {
+    title: '🤖 Etapa 5 · Geração (com contexto)',
+    text: 'Os chunks recuperados são injetados no prompt junto com a pergunta original. O LLM responde usando esse contexto. Resultado: resposta personalizada, baseada nos documentos da empresa, com citações da fonte.',
+    example: 'Prompt final: "Use o seguinte contexto: [chunks]. Pergunta: como devolvo?"'
+  }
+};
+
+document.querySelectorAll('.rag-step').forEach(step => {
+  step.addEventListener('click', () => {
+    document.querySelectorAll('.rag-step').forEach(s => s.classList.remove('active'));
+    step.classList.add('active');
+    const data = ragSteps[step.dataset.step];
+    const detail = document.getElementById('rag-detail');
+    detail.innerHTML = `
+      <h4>${data.title}</h4>
+      <p>${data.text}</p>
+      <div class="example-line">📌 Exemplo: ${data.example}</div>
+    `;
+  });
+});
+// auto-activate step 1
+setTimeout(() => {
+  document.querySelector('.rag-step[data-step="1"]').click();
+}, 200);
+
+/* ====== CHUNKING ====== */
+const chunkText = `O OpenSearch Service é um motor de busca gerenciado da AWS. Ele indexa documentos e vetores em milissegundos. Em pipelines de RAG, ele guarda os embeddings dos seus documentos. Quando o usuário faz uma pergunta, a pergunta vira vetor e o OpenSearch acha os documentos semanticamente parecidos. Depois, esses documentos viram contexto para o LLM gerar a resposta final.`;
+
+const chunkSizeInput = document.getElementById('chunk-size');
+const chunkOverlapInput = document.getElementById('chunk-overlap');
+const chunkSizeVal = document.getElementById('chunk-size-val');
+const chunkOverlapVal = document.getElementById('chunk-overlap-val');
+const chunkTextEl = document.getElementById('chunk-text');
+const chunkCountEl = document.getElementById('chunk-count');
+const chunkAvgEl = document.getElementById('chunk-avg');
+const chunkTotalCharsEl = document.getElementById('chunk-total-chars');
+
+function renderChunks(){
+  const size = parseInt(chunkSizeInput.value);
+  const overlap = parseInt(chunkOverlapInput.value);
+  chunkSizeVal.textContent = size;
+  chunkOverlapVal.textContent = overlap;
+
+  // build chunks: positions of each character per chunk index
+  const chunks = [];
+  let start = 0;
+  while (start < chunkText.length) {
+    const end = Math.min(start + size, chunkText.length);
+    chunks.push({start, end});
+    if (end >= chunkText.length) break;
+    start = end - overlap;
+    if (start <= chunks[chunks.length-1].start) start = chunks[chunks.length-1].start + 1;
+  }
+
+  // each char gets the chunk indices it belongs to
+  // we will render: for each char, take the FIRST chunk index normally,
+  // but if it's also in chunk index+1 -> mark as overlap.
+  let html = '';
+  const N = chunkText.length;
+  for (let i = 0; i < N; i++){
+    const owners = chunks.map((c,idx) => (i >= c.start && i < c.end) ? idx : -1).filter(x => x >= 0);
+    const char = chunkText[i] === ' ' ? '&nbsp;' : (chunkText[i] === '\n' ? '<br>' : chunkText[i]);
+    if (owners.length > 1) {
+      html += `<span class="chunk-piece overlap">${char}</span>`;
+    } else if (owners.length === 1){
+      html += `<span class="chunk-piece c${owners[0] % 6}">${char}</span>`;
+    } else {
+      html += char;
+    }
+  }
+  chunkTextEl.innerHTML = html;
+
+  chunkCountEl.textContent = chunks.length;
+  const avg = Math.round(chunks.reduce((a,c) => a + (c.end - c.start), 0) / chunks.length);
+  chunkAvgEl.textContent = avg;
+  chunkTotalCharsEl.textContent = chunkText.length;
+}
+chunkSizeInput.addEventListener('input', renderChunks);
+chunkOverlapInput.addEventListener('input', renderChunks);
+renderChunks();
+</script>
+
+</body>
+</html>
