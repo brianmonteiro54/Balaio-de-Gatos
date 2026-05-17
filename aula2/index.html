@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos: Embeddings, Dados e Aprendizado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #FBF3E2;
+    --cream-2: #F5E9CF;
+    --paper: #FFF9EC;
+    --ink: #2B1810;
+    --ink-soft: #4A3528;
+    --orange: #FF6B35;
+    --orange-deep: #E54E1B;
+    --caramel: #D4A574;
+    --sage: #5C8D89;
+    --sage-deep: #3F6864;
+    --coral: #C73E1D;
+    --olive: #6B8E23;
+    --yellow: #F4D35E;
+    --purple: #7B6CA8;
+    --shadow: rgba(43, 24, 16, 0.12);
+    --shadow-strong: rgba(43, 24, 16, 0.25);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:'Sora', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(92, 141, 137, 0.05) 0%, transparent 50%);
+  }
+
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:1;
+    opacity:0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, .display{
+    font-family:'Caprasimo', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .container{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position:relative;
+    z-index:2;
+  }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0;
+    z-index:100;
+    background: var(--cream);
+    border-bottom: 2px solid var(--ink);
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto;
+    padding: 14px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+  }
+  .nav-brand{
+    font-family:'Caprasimo', serif;
+    font-size:22px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-links{
+    display:flex; gap:6px; flex-wrap:wrap;
+  }
+  .nav-links a{
+    color:var(--ink);
+    text-decoration:none;
+    padding: 6px 12px;
+    font-size:13px;
+    font-weight:500;
+    border-radius: 20px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover{
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  /* HERO */
+  .hero{
+    padding: 100px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero h1{
+    font-size: clamp(44px, 7vw, 86px);
+    line-height: 0.95;
+    margin-bottom: 28px;
+    color: var(--ink);
+  }
+  .hero h1 .accent{
+    color: var(--orange);
+    display:inline-block;
+    transform: rotate(-2deg);
+  }
+  .hero h1 .scratch{
+    position:relative;
+    display:inline-block;
+  }
+  .hero h1 .scratch::after{
+    content:'';
+    position:absolute;
+    bottom:8%; left:-3%;
+    width:106%; height:18%;
+    background: var(--yellow);
+    z-index:-1;
+    transform: skew(-8deg, -1deg);
+  }
+  .hero p{
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin-bottom: 32px;
+  }
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 28px;
+  }
+  .hero-cta{
+    display:inline-flex; align-items:center; gap:10px;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 16px 28px;
+    border-radius: 60px;
+    text-decoration:none;
+    font-weight:600;
+    font-size: 16px;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.15s;
+  }
+  .hero-cta:hover{
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  /* Floating vector cloud illustration */
+  .vector-cloud{
+    position:relative;
+    height: 380px;
+  }
+  .vector-cloud svg{ width: 100%; height: 100%; }
+
+  /* SECTIONS */
+  section.chapter{
+    padding: 80px 0;
+    position:relative;
+  }
+  section.chapter + section.chapter{
+    border-top: 2px dashed rgba(43,24,16,0.18);
+  }
+  .chapter-number{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--orange-deep);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .chapter h2{
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1;
+    margin-bottom: 18px;
+    max-width: 820px;
+  }
+  .chapter > .container > .lead{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+
+  /* Card */
+  .card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .card.tight{ padding: 22px }
+
+  /* DEFINITION CARD */
+  .def-card{
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--orange);
+  }
+  .def-card .tag{
+    display:inline-block;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .def-card h3{
+    font-size: 26px;
+    margin-bottom: 14px;
+    color: var(--yellow);
+  }
+  .def-card p{
+    color: var(--cream-2);
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+  .def-card ul{
+    list-style: none;
+    padding: 0;
+  }
+  .def-card ul li{
+    color: var(--cream-2);
+    font-size: 14.5px;
+    margin-bottom: 10px;
+    padding-left: 22px;
+    position: relative;
+  }
+  .def-card ul li::before{
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  /* TWO COLUMN BLOCK */
+  .two-col{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: stretch;
+  }
+  .two-col.flip > div:first-child{ order: 2}
+  .two-col.lean{ grid-template-columns: 1.3fr 1fr}
+  .two-col.lean-r{ grid-template-columns: 1fr 1.3fr}
+
+  /* Demo box (light bg with interactive content) */
+  .demo-box{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .demo-box h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .demo-box .demo-sub{
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .demo-box.sage{ box-shadow: 6px 6px 0 var(--sage)}
+  .demo-box.yellow{ box-shadow: 6px 6px 0 var(--yellow)}
+  .demo-box.caramel{ box-shadow: 6px 6px 0 var(--caramel)}
+
+  /* Input with neo style */
+  .neo-input{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--ink);
+    width: 100%;
+  }
+  .neo-input:focus{
+    outline: 3px solid var(--orange);
+    outline-offset: 2px;
+  }
+  textarea.neo-input{ resize: vertical; min-height: 70px; line-height: 1.5}
+
+  /* Vector display */
+  .vec-display{
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    word-break: break-word;
+    line-height: 1.6;
+  }
+  .vec-display .num{ color: var(--orange-deep); font-weight: 600}
+  .vec-display .num.neg{ color: var(--coral)}
+
+  /* CHIP */
+  .chip{
+    display:inline-flex; align-items:center;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 4px 4px 4px 0;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .chip.token{ background: var(--yellow)}
+  .chip.token-1{ background: #FFE8DD}
+  .chip.token-2{ background: #DDEEEC}
+  .chip.token-3{ background: #F4D35E}
+  .chip.token-4{ background: #DCE9C4}
+  .chip.token-5{ background: #F5B7A4}
+
+  /* 2D VECTOR SPACE PLOT */
+  .vec-space{
+    background: #FCF6E3;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    aspect-ratio: 1/1;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* 4 MODELS GRID */
+  .models-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .model-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 4px 4px 0 var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .model-card .icon-big{
+    font-size: 38px;
+    line-height:1;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .model-card h4{
+    font-family:'Caprasimo', serif;
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .model-card .flow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--orange-deep);
+    background: var(--cream-2);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 6px 0 10px;
+  }
+  .model-card p{
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .model-card.text{ background: #FFE8DD}
+  .model-card.image{ background: #DDEEEC}
+  .model-card.multi{ background: #F4D35E33}
+  .model-card.gen{ background: var(--ink); color: var(--paper); border-color: var(--ink)}
+  .model-card.gen h4{ color: var(--yellow)}
+  .model-card.gen p{ color: var(--cream-2)}
+  .model-card.gen .flow{ background: rgba(255,255,255,0.1); color: var(--yellow)}
+
+  /* TOKENIZER */
+  .tokenizer-stage{
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 80px;
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 4px;
+  }
+  .tokenizer-stage .empty{
+    color: var(--ink-soft);
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  /* BAG OF WORDS TABLE */
+  .bow-table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 12px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 14px;
+  }
+  .bow-table th, .bow-table td{
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .bow-table th{
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .bow-table th:first-child{ border-radius: 10px 0 0 0}
+  .bow-table th:last-child{ border-radius: 0 10px 0 0}
+  .bow-table tr:last-child td{ border-bottom: none}
+  .bow-table td.count{ color: var(--orange-deep); font-weight: 700; text-align: right; width: 60px}
+  .bow-bar{
+    background: var(--cream-2);
+    height: 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .bow-bar > div{
+    background: var(--orange);
+    height: 100%;
+    transition: width 0.4s ease;
+  }
+
+  /* CONTEXT WINDOW SLIDER */
+  .ctx-tokens{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin: 16px 0;
+    padding: 14px;
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+    line-height: 1.8;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .ctx-token{
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    padding: 3px 8px;
+    transition: all 0.2s;
+    font-size: 12px;
+  }
+  .ctx-token.inside{ background: #DCE9C4; border-color: var(--olive)}
+  .ctx-token.outside{ background: var(--cream-2); opacity: 0.4; text-decoration: line-through; color: var(--coral)}
+
+  /* CHUNKS VISUAL */
+  .doc-chunks{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .doc-chunk{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .doc-chunk .chunk-label{
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 1px 8px;
+    border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1.5px solid var(--ink);
+  }
+  .doc-chunk.c1{ background: #FFE8DD}
+  .doc-chunk.c2{ background: #DDEEEC}
+  .doc-chunk.c3{ background: #F4D35E33}
+  .doc-chunk.c4{ background: #DCE9C4}
+
+  /* DATA TYPES COMPARISON */
+  .compare-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .compare-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+  .compare-card.left{ background: #DDEEEC; box-shadow: 5px 5px 0 var(--sage-deep)}
+  .compare-card.right{ background: #FFE8DD; box-shadow: 5px 5px 0 var(--orange-deep)}
+  .compare-card h4{
+    font-family:'Caprasimo', serif;
+    font-size: 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .compare-card ul{
+    list-style: none;
+    padding: 0;
+  }
+  .compare-card ul li{
+    padding: 8px 0;
+    padding-left: 24px;
+    position: relative;
+    font-size: 14.5px;
+    border-bottom: 1px dashed rgba(43,24,16,0.18);
+  }
+  .compare-card ul li:last-child{ border-bottom: none}
+  .compare-card ul li::before{
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    font-weight: 700;
+    color: var(--olive);
+  }
+  .compare-card.right ul li::before{ color: var(--orange-deep)}
+  .compare-card .example-box{
+    background: var(--paper);
+    border: 1.5px dashed var(--ink);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  /* AURORA / pgvector visual */
+  .pg-stack{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .pg-layer{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .pg-layer .layer-icon{
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    flex-shrink: 0;
+  }
+  .pg-layer .layer-body strong{
+    display: block;
+    font-family:'Caprasimo', serif;
+    font-size: 17px;
+    margin-bottom: 2px;
+  }
+  .pg-layer .layer-body span{
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .pg-layer.aws{ background: #FFE8DD}
+  .pg-layer.aws .layer-icon{ background: var(--orange); color: var(--paper); border-color: var(--ink)}
+  .pg-layer.pg{ background: #DDEEEC}
+  .pg-layer.pg .layer-icon{ background: var(--sage); color: var(--paper)}
+  .pg-layer.vec{ background: #F4D35E33}
+  .pg-layer.vec .layer-icon{ background: var(--yellow)}
+
+  /* SQL CODE BLOCK */
+  .code-block{
+    background: var(--ink);
+    color: var(--cream-2);
+    border-radius: 14px;
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 18px;
+    overflow-x: auto;
+    border: 2px solid var(--ink);
+  }
+  .code-block .kw{ color: var(--orange) }
+  .code-block .str{ color: var(--yellow)}
+  .code-block .com{ color: rgba(255,255,255,0.4); font-style: italic}
+  .code-block .num{ color: #B8DC7A}
+
+  /* SIMILARITY SEARCH DEMO */
+  .sim-result{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--cream-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+  }
+  .sim-result.top{ background: #DCE9C4; border-color: var(--olive); box-shadow: 3px 3px 0 var(--olive)}
+  .sim-result .sim-emoji{ font-size: 26px}
+  .sim-result .sim-name{ flex: 1; font-weight: 600; font-size: 14px}
+  .sim-result .sim-score{
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--orange-deep);
+    font-size: 13px;
+  }
+
+  /* LABELING SECTION */
+  .label-flow{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .label-item{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .label-item .img{
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .label-item .arrow{
+    color: var(--orange-deep);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    margin: 6px 0;
+  }
+  .label-item .tag{
+    display: inline-block;
+    background: var(--yellow);
+    border: 1.5px solid var(--ink);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-weight: 600;
+    font-size: 13px;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  /* AWS service card */
+  .aws-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--orange);
+  }
+  .aws-card .aws-header{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 2px dashed var(--ink);
+  }
+  .aws-card .aws-logo{
+    width: 60px; height: 60px;
+    background: var(--ink);
+    color: var(--orange);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Caprasimo', serif;
+    font-size: 22px;
+    border: 2px solid var(--ink);
+    flex-shrink: 0;
+  }
+  .aws-card .aws-header h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 2px;
+  }
+  .aws-card .aws-header .sub{
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .aws-card ul{
+    list-style: none;
+    padding: 0;
+  }
+  .aws-card ul li{
+    padding: 6px 0 6px 22px;
+    position: relative;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .aws-card ul li::before{
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  /* 5 LEARNING TYPES */
+  .learning-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .learn-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 5px 5px 0 var(--ink);
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .learn-card:hover{
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .learn-card .num{
+    font-family: 'Caprasimo', serif;
+    font-size: 60px;
+    line-height: 1;
+    color: rgba(43,24,16,0.12);
+    position: absolute;
+    top: 8px; right: 16px;
+  }
+  .learn-card .icon{
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .learn-card h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .learn-card .tagline{
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .learn-card p{
+    font-size: 14px;
+  }
+  .learn-card .ex{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--orange-deep);
+    background: var(--cream-2);
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 12px;
+    display: block;
+  }
+  .learn-card.sup{ background: #DDEEEC}
+  .learn-card.unsup{ background: #FFE8DD}
+  .learn-card.rein{ background: #F4D35E33}
+  .learn-card.fed{ background: #DCE9C4}
+  .learn-card.trans{ background: var(--ink); color: var(--paper); border-color: var(--ink)}
+  .learn-card.trans h4{ color: var(--yellow)}
+  .learn-card.trans .ex{ background: rgba(255,255,255,0.1); color: var(--yellow)}
+  .learn-card.trans .tagline{ color: var(--cream-2)}
+  .learn-card.trans .num{ color: rgba(255,249,236,0.1)}
+
+  /* COMPARISON TABLE - learning */
+  .learn-table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 30px;
+    background: var(--paper);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .learn-table th, .learn-table td{
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1.5px solid rgba(43,24,16,0.12);
+    font-size: 14px;
+    vertical-align: top;
+  }
+  .learn-table th{
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .learn-table tr:last-child td{ border-bottom: none}
+  .learn-table td:first-child{
+    font-family: 'Caprasimo', serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  /* PIPELINE FOOTER */
+  .pipeline-section{
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 0;
+    margin-top: 80px;
+  }
+  .pipeline-section h2{ color: var(--paper)}
+  .pipeline-section h2 .accent{ color: var(--orange)}
+  .pipeline-section .lead{ color: var(--cream-2)}
+  .pipeline-section .chapter-number{ color: var(--yellow)}
+
+  .pipeline{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 30px;
+  }
+  .pipe-step{
+    background: rgba(255,255,255,0.05);
+    border: 2px solid var(--cream-2);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    position: relative;
+  }
+  .pipe-step .step-icon{
+    font-size: 32px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .pipe-step .step-num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+  .pipe-step h5{
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+    color: var(--paper);
+    margin-bottom: 8px;
+  }
+  .pipe-step p{
+    font-size: 12.5px;
+    color: var(--cream-2);
+    line-height: 1.4;
+  }
+  .pipe-step::after{
+    content: "→";
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--orange);
+    font-size: 22px;
+    font-weight: 700;
+    z-index: 2;
+  }
+  .pipe-step:last-child::after{ display: none}
+
+  /* CHEATSHEET */
+  .cheatsheet{
+    background: var(--cream-2);
+    padding: 80px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .cheat-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .cheat-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .cheat-card .name{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .cheat-card .micro{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--orange-deep);
+    background: var(--cream-2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .cheat-card .q{ font-size: 14px; color: var(--ink-soft); font-style: italic; margin-bottom: 8px}
+  .cheat-card .what{ font-size: 14px; }
+
+  /* MARQUEE strip */
+  .cat-strip{
+    background: var(--orange);
+    color: var(--paper);
+    padding: 14px 0;
+    overflow: hidden;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    position: relative;
+  }
+  .cat-strip-inner{
+    display: flex;
+    gap: 40px;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+  }
+  @keyframes marquee{
+    0%{ transform: translateX(0)}
+    100%{ transform: translateX(-50%)}
+  }
+
+  /* FOOTER */
+  footer{
+    text-align: center;
+    padding: 60px 32px 80px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    border-top: 2px solid var(--ink);
+  }
+  footer .heart{ color: var(--orange); display:inline-block; animation: heartbeat 1.4s ease-in-out infinite}
+  @keyframes heartbeat{ 0%, 100%{ transform: scale(1)} 50%{ transform: scale(1.18)}}
+
+  /* Floating cat in vector cloud */
+  @keyframes floatY{
+    0%, 100%{ transform: translateY(0)}
+    50%{ transform: translateY(-10px)}
+  }
+
+  /* HIGHLIGHT INSIGHT BOX */
+  .insight-box{
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-top: 24px;
+    font-size: 15px;
+    line-height: 1.6;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .insight-box::before{
+    content: "💡 ";
+    font-size: 18px;
+  }
+  .insight-box strong{ color: var(--orange-deep)}
+
+  /* Responsive */
+  @media (max-width: 920px){
+    .hero-grid, .two-col, .two-col.lean, .two-col.lean-r, .compare-grid{
+      grid-template-columns: 1fr;
+    }
+    .two-col.flip > div:first-child{ order: 0}
+    .pipeline{ grid-template-columns: 1fr; gap: 24px }
+    .pipe-step::after{
+      right: 50%; top: auto; bottom: -22px;
+      transform: translateX(50%) rotate(90deg);
+    }
+    .vector-cloud{ height: 280px}
+    .nav-inner{ flex-direction: column; align-items: flex-start; padding: 12px 20px}
+    .nav-links a{ padding: 4px 8px; font-size: 11px}
+    .container{ padding: 0 20px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos<span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"> · Embeddings & Aprendizado</span></div>
+    <div class="nav-links">
+      <a href="#embeddings">Embeddings</a>
+      <a href="#texto">Texto</a>
+      <a href="#dados">Dados</a>
+      <a href="#vetores">pgvector</a>
+      <a href="#rotulagem">Rotulagem</a>
+      <a href="#aprendizado">Aprendizado</a>
+      <a href="#resumo">Cola</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula 2</div>
+        <h1>
+          O gato<br>
+          virou <span class="scratch">vetor</span>.<br>
+          Agora a máquina<br>
+          <span class="accent">entende ele</span>.
+        </h1>
+        <p>
+          Embeddings, tokenização, bancos vetoriais, rotulagem, aprendizado supervisionado, federado... toda essa salada faz sentido quando você vê o gato virar um conjunto de números numa nuvem. <strong>Mexa nos controles. Veja a teoria acontecer.</strong>
+        </p>
+        <a href="#embeddings" class="hero-cta">Bora começar 🐾</a>
+      </div>
+      <div class="vector-cloud">
+        <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+          <!-- grid -->
+          <g stroke="#D4A574" stroke-width="0.8" opacity="0.4" fill="none">
+            <line x1="50" y1="50" x2="50" y2="330"/>
+            <line x1="50" y1="330" x2="370" y2="330"/>
+            <line x1="50" y1="190" x2="370" y2="190" stroke-dasharray="3 4"/>
+            <line x1="210" y1="50" x2="210" y2="330" stroke-dasharray="3 4"/>
+          </g>
+          <!-- axis labels -->
+          <text x="370" y="345" font-family="JetBrains Mono" font-size="10" fill="#4A3528" text-anchor="end">dim 1</text>
+          <text x="35" y="55" font-family="JetBrains Mono" font-size="10" fill="#4A3528" text-anchor="end">dim 2</text>
+
+          <!-- ANIMAL CLUSTER (top-left) -->
+          <circle cx="130" cy="115" r="38" fill="#FF6B35" fill-opacity="0.15" stroke="#FF6B35" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="100" y="93" font-family="Caprasimo" font-size="11" fill="#E54E1B">animais</text>
+          <g style="animation: floatY 5s ease-in-out infinite">
+            <circle cx="120" cy="105" r="4" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="128" y="109" font-family="Sora" font-size="13">🐈</text>
+          </g>
+          <g style="animation: floatY 5s ease-in-out infinite; animation-delay: -1s">
+            <circle cx="150" cy="120" r="4" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="158" y="124" font-family="Sora" font-size="13">🐶</text>
+          </g>
+          <g style="animation: floatY 5s ease-in-out infinite; animation-delay: -2s">
+            <circle cx="130" cy="135" r="4" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="138" y="139" font-family="Sora" font-size="13">🦁</text>
+          </g>
+
+          <!-- VEHICLES CLUSTER (bottom-right) -->
+          <circle cx="280" cy="240" r="40" fill="#5C8D89" fill-opacity="0.15" stroke="#5C8D89" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="280" y="296" font-family="Caprasimo" font-size="11" fill="#3F6864">veículos</text>
+          <g style="animation: floatY 5s ease-in-out infinite; animation-delay: -0.5s">
+            <circle cx="270" cy="230" r="4" fill="#5C8D89" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="278" y="234" font-family="Sora" font-size="13">🚗</text>
+          </g>
+          <g style="animation: floatY 5s ease-in-out infinite; animation-delay: -2.5s">
+            <circle cx="295" cy="248" r="4" fill="#5C8D89" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="303" y="252" font-family="Sora" font-size="13">🏍️</text>
+          </g>
+          <g style="animation: floatY 5s ease-in-out infinite; animation-delay: -3.5s">
+            <circle cx="265" cy="255" r="4" fill="#5C8D89" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="273" y="259" font-family="Sora" font-size="13">🚚</text>
+          </g>
+
+          <!-- FRUITS CLUSTER (top-right) -->
+          <circle cx="300" cy="120" r="32" fill="#F4D35E" fill-opacity="0.25" stroke="#D4A574" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="300" y="98" font-family="Caprasimo" font-size="11" fill="#4A3528">frutas</text>
+          <g style="animation: floatY 5s ease-in-out infinite; animation-delay: -1.5s">
+            <circle cx="295" cy="120" r="4" fill="#F4D35E" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="303" y="124" font-family="Sora" font-size="13">🍎</text>
+          </g>
+          <g style="animation: floatY 5s ease-in-out infinite; animation-delay: -3s">
+            <circle cx="310" cy="130" r="4" fill="#F4D35E" stroke="#2B1810" stroke-width="1.5"/>
+            <text x="318" y="134" font-family="Sora" font-size="13">🍌</text>
+          </g>
+
+          <!-- center note -->
+          <text x="210" y="200" font-family="Caprasimo" font-size="14" fill="#2B1810" text-anchor="middle">vetores</text>
+          <text x="210" y="217" font-family="Sora" font-size="11" fill="#4A3528" text-anchor="middle">conceitos parecidos ficam juntos</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🧮 EMBEDDINGS</span><span>✂️ TOKENIZAÇÃO</span><span>📦 BAG-OF-WORDS</span><span>🪟 JANELA DE CONTEXTO</span><span>📚 INTERVALOS</span><span>🗄️ pgvector</span><span>🏷️ ROTULAGEM</span><span>🤖 SUPERVISIONADO</span><span>🔍 NÃO-SUPERVISIONADO</span><span>🎮 REFORÇO</span><span>🌐 FEDERADO</span><span>🔄 TRANSFERÊNCIA</span><span>🧮 EMBEDDINGS</span><span>✂️ TOKENIZAÇÃO</span><span>📦 BAG-OF-WORDS</span>
+  </div>
+</div>
+
+<!-- ============ MÓDULO 1: EMBEDDINGS ============ -->
+<section class="chapter" id="embeddings">
+  <div class="container">
+    <span class="chapter-number">01 · Embeddings</span>
+    <h2>Como transformar um <span style="color:var(--orange)">gato</span> em um monte de números?</h2>
+    <p class="lead">
+      Um embedding é a tradução de um <strong>conceito</strong> (palavra, imagem, áudio) para um <strong>vetor numérico</strong>. Coisas parecidas viram vetores parecidos. Coisas diferentes ficam longe. Simples assim.
+    </p>
+
+    <div class="two-col lean">
+      <div class="demo-box yellow">
+        <h4>🧪 Veja o gato virar números</h4>
+        <p class="demo-sub">Clique numa palavra. Veja seu vetor (versão simplificada com 8 dimensões). Repare quais ficam parecidos.</p>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
+          <button class="chip token" data-word="gato" style="cursor:pointer">🐈 gato</button>
+          <button class="chip token" data-word="cão" style="cursor:pointer">🐶 cão</button>
+          <button class="chip token" data-word="leão" style="cursor:pointer">🦁 leão</button>
+          <button class="chip token" data-word="carro" style="cursor:pointer">🚗 carro</button>
+          <button class="chip token" data-word="moto" style="cursor:pointer">🏍️ moto</button>
+          <button class="chip token" data-word="maçã" style="cursor:pointer">🍎 maçã</button>
+        </div>
+
+        <div style="font-size: 13px; color: var(--ink-soft); margin-bottom: 6px;">Vetor (8 dimensões):</div>
+        <div class="vec-display" id="word-vector">
+          ← clique numa palavra acima
+        </div>
+
+        <div style="margin-top: 16px;">
+          <div style="font-size: 13px; color: var(--ink-soft); margin-bottom: 8px;">🔍 Os 3 mais parecidos no nosso "espaço":</div>
+          <div id="similar-words">
+            <div class="sim-result"><span class="sim-emoji">·</span><span class="sim-name">aguardando palavra...</span><span class="sim-score">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="def-card">
+        <span class="tag">Definição</span>
+        <h3>O que é um embedding</h3>
+        <p>É a <strong>representação numérica</strong> de um dado em um espaço vetorial.</p>
+        <ul>
+          <li>Converte texto, imagem, áudio em <strong>vetores</strong></li>
+          <li>Conceitos semelhantes ficam <strong>próximos</strong> no espaço</li>
+          <li>Conceitos diferentes ficam <strong>distantes</strong></li>
+          <li>Permite <strong>comparações</strong> por similaridade</li>
+          <li>É a base de <strong>busca semântica</strong>, recomendação e RAG</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Sacada:</strong> o computador não "entende" gato. Ele entende que o vetor do "gato" se parece com o vetor do "cão" (ambos animais peludos de quatro patas) e é totalmente diferente do vetor do "carro". <strong>O significado virou geometria.</strong>
+    </div>
+
+    <!-- 4 TIPOS DE MODELOS -->
+    <h3 style="font-size: 32px; margin-top: 60px; margin-bottom: 8px;">Os 4 tipos de modelos que você precisa conhecer</h3>
+    <p style="font-size: 16px; color: var(--ink-soft); margin-bottom: 8px;">Cada um pega um tipo de entrada e devolve um tipo de saída diferente. <strong>É só isso.</strong></p>
+
+    <div class="models-grid">
+      <div class="model-card text">
+        <span class="icon-big">📝</span>
+        <h4>Embedding de Texto</h4>
+        <span class="flow">texto → vetor</span>
+        <p>Recebe palavras, frases ou documentos. Devolve um vetor que captura significado, sinônimos e contexto. Base do RAG.</p>
+      </div>
+      <div class="model-card image">
+        <span class="icon-big">🖼️</span>
+        <h4>Embedding de Imagem</h4>
+        <span class="flow">imagem → vetor</span>
+        <p>Recebe pixels. Devolve vetor com características visuais (formas, cores, objetos). Usado em busca de imagens similares.</p>
+      </div>
+      <div class="model-card multi">
+        <span class="icon-big">🔗</span>
+        <h4>Embedding Multimodal</h4>
+        <span class="flow">texto + imagem → mesmo espaço</span>
+        <p>Coloca várias modalidades no <strong>mesmo</strong> espaço vetorial. Permite buscar imagem por texto e vice-versa.</p>
+      </div>
+      <div class="model-card gen">
+        <span class="icon-big">✨</span>
+        <h4>Geração Multimodal</h4>
+        <span class="flow">texto → imagem · imagem → texto</span>
+        <p>Não só representa, <strong>cria</strong> conteúdo novo. Texto vira imagem, imagem vira descrição, áudio vira vídeo.</p>
+      </div>
+    </div>
+
+    <!-- Embedding multimodal demo -->
+    <div class="demo-box sage" style="margin-top: 40px;">
+      <h4>🌅 Demo: Embedding multimodal em ação</h4>
+      <p class="demo-sub">Texto e imagem caem no MESMO espaço vetorial. Olha como os vetores são parecidos:</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center;">
+        <div style="background: var(--cream-2); border: 2px dashed var(--ink); border-radius: 12px; padding: 18px; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-soft); margin-bottom: 8px;">TEXTO</div>
+          <div style="font-family: 'Caprasimo', serif; font-size: 18px; margin-bottom: 12px;">"praia ao pôr do sol"</div>
+          <div class="vec-display" style="font-size: 12px; padding: 8px 10px;">
+            [<span class="num">0.81</span>, <span class="num">0.12</span>, <span class="num neg">-0.44</span>, <span class="num">0.67</span>, ...]
+          </div>
+        </div>
+        <div style="background: var(--cream-2); border: 2px dashed var(--ink); border-radius: 12px; padding: 18px; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-soft); margin-bottom: 8px;">IMAGEM</div>
+          <div style="font-size: 50px; line-height: 1; margin-bottom: 6px;">🏖️🌅</div>
+          <div class="vec-display" style="font-size: 12px; padding: 8px 10px;">
+            [<span class="num">0.79</span>, <span class="num">0.15</span>, <span class="num neg">-0.41</span>, <span class="num">0.69</span>, ...]
+          </div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 16px; font-family: 'Caprasimo', serif; font-size: 22px; color: var(--sage-deep);">
+        ↑ Os números são quase iguais! ↑
+      </div>
+      <p style="font-size: 14px; color: var(--ink-soft); text-align: center; margin-top: 6px;">
+        É por isso que você pode pesquisar fotos digitando texto. O texto e a foto ficam <strong>próximos</strong> no espaço.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 2: PROCESSAMENTO DE TEXTO ============ -->
+<section class="chapter" id="texto">
+  <div class="container">
+    <span class="chapter-number">02 · Processamento de texto</span>
+    <h2>Antes de virar vetor, o texto precisa ser <em style="color:var(--orange);font-style:normal">quebrado</em>.</h2>
+    <p class="lead">
+      O modelo não come uma frase inteira de boca aberta. Ela é cortada em <strong>tokens</strong>, contada, recortada, encaixada na <strong>janela de contexto</strong>. Aqui estão os blocos básicos.
+    </p>
+
+    <!-- TOKENIZAÇÃO -->
+    <div class="two-col" style="margin-bottom: 50px;">
+      <div class="demo-box">
+        <h4>✂️ Tokenizador ao vivo</h4>
+        <p class="demo-sub">Digite uma frase. Veja ela ser quebrada em tokens (palavras, neste exemplo simplificado).</p>
+        <textarea class="neo-input" id="tok-input" rows="2">O gato dorme na cama</textarea>
+        <div class="tokenizer-stage" id="tok-output"></div>
+        <div style="font-size: 13px; color: var(--ink-soft); margin-top: 10px;">
+          📊 <strong id="tok-count">5</strong> tokens · cada um vira um vetor depois.
+        </div>
+      </div>
+
+      <div class="def-card">
+        <span class="tag">Tokenização</span>
+        <h3>Quebrar o texto em pedaços</h3>
+        <p>É a <strong>primeira etapa</strong> do processamento de linguagem natural.</p>
+        <ul>
+          <li>Um token pode ser uma palavra, <strong>parte de palavra</strong> ou caractere</li>
+          <li>Permite que o modelo trabalhe com unidades padronizadas</li>
+          <li>A forma de tokenizar <strong>influencia o resultado</strong> do modelo</li>
+          <li>Em LLMs modernos, "tokenizar" custa dinheiro (você paga por token)</li>
+        </ul>
+        <p style="font-size: 13px; opacity: 0.85; margin-top: 12px;">
+          💡 No mundo real, "extraordinariamente" pode virar 4 tokens: ["extra", "ordin", "aria", "mente"]. Nem sempre é uma palavra inteira.
+        </p>
+      </div>
+    </div>
+
+    <!-- BAG OF WORDS -->
+    <div class="two-col flip" style="margin-bottom: 50px;">
+      <div class="def-card" style="box-shadow: 6px 6px 0 var(--sage);">
+        <span class="tag" style="background: var(--sage)">Bag-of-words</span>
+        <h3>Bag-of-words</h3>
+        <p>Técnica <strong>clássica</strong> e simplíssima: conta quantas vezes cada palavra aparece. Ignora ordem.</p>
+        <ul>
+          <li>Cada documento vira um <strong>vetor de contagens</strong></li>
+          <li>Útil, mas <strong>perde nuances</strong> (não vê "gato dorme" vs "dorme gato" como diferentes)</li>
+          <li>Base de variações como <strong>TF-IDF</strong></li>
+          <li>Hoje, embeddings semânticos resolvem isso, mas BoW ainda é usado em buscas simples e baselines</li>
+        </ul>
+      </div>
+      <div class="demo-box sage">
+        <h4>📦 BoW ao vivo</h4>
+        <p class="demo-sub">Digite um texto. Veja o saco se encher.</p>
+        <textarea class="neo-input" id="bow-input" rows="2">o gato dorme na cama, o gato adora a casa</textarea>
+        <table class="bow-table" id="bow-table">
+          <thead>
+            <tr><th>Palavra</th><th>Contagem</th><th>Frequência</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTAGEM DE FREQUÊNCIA - já está implícita no BoW, dou uma seção menor -->
+    <div style="background: var(--paper); border: 2px solid var(--ink); border-radius: 20px; padding: 28px; box-shadow: 6px 6px 0 var(--caramel); margin-bottom: 50px;">
+      <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 28px; align-items: center;">
+        <div>
+          <span class="chip token" style="margin-bottom: 12px;">📊 Contagem de frequência</span>
+          <h3 style="font-size: 28px; margin-bottom: 12px;">Palavra repetida = pista do tema</h3>
+          <p style="font-size: 15px; color: var(--ink-soft);">
+            Se a palavra <strong>"modelo"</strong> aparece 5 vezes num texto, ele provavelmente é sobre modelos. <strong>Trivial, mas poderoso.</strong> É a base do BoW e do TF-IDF.
+          </p>
+          <p style="font-size: 13px; color: var(--ink-soft); margin-top: 10px;">
+            💡 Palavras raras (que aparecem pouco) muitas vezes são <strong>mais informativas</strong> que palavras comuns ("a", "de", "que").
+          </p>
+        </div>
+        <div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: grid; grid-template-columns: 90px 1fr 40px; align-items: center; gap: 12px;">
+              <strong style="font-family: 'JetBrains Mono', monospace; font-size: 14px;">modelo</strong>
+              <div style="height: 24px; background: var(--cream-2); border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;">
+                <div style="width: 100%; height: 100%; background: var(--orange);"></div>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700; text-align: right">5</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 90px 1fr 40px; align-items: center; gap: 12px;">
+              <strong style="font-family: 'JetBrains Mono', monospace; font-size: 14px;">dados</strong>
+              <div style="height: 24px; background: var(--cream-2); border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;">
+                <div style="width: 80%; height: 100%; background: var(--orange);"></div>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700; text-align: right">4</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 90px 1fr 40px; align-items: center; gap: 12px;">
+              <strong style="font-family: 'JetBrains Mono', monospace; font-size: 14px;">treina</strong>
+              <div style="height: 24px; background: var(--cream-2); border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;">
+                <div style="width: 60%; height: 100%; background: var(--sage);"></div>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700; text-align: right">3</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 90px 1fr 40px; align-items: center; gap: 12px;">
+              <strong style="font-family: 'JetBrains Mono', monospace; font-size: 14px;">vetor</strong>
+              <div style="height: 24px; background: var(--cream-2); border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;">
+                <div style="width: 40%; height: 100%; background: var(--sage);"></div>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700; text-align: right">2</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 90px 1fr 40px; align-items: center; gap: 12px;">
+              <strong style="font-family: 'JetBrains Mono', monospace; font-size: 14px;">regra</strong>
+              <div style="height: 24px; background: var(--cream-2); border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;">
+                <div style="width: 20%; height: 100%; background: var(--caramel);"></div>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700; text-align: right">1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JANELA DE CONTEXTO -->
+    <div class="two-col lean-r" style="margin-bottom: 50px;">
+      <div class="def-card">
+        <span class="tag">Janela de contexto</span>
+        <h3>A memória de curto prazo do modelo</h3>
+        <p>É a <strong>quantidade máxima de tokens</strong> que o modelo consegue ver de uma vez. Entrada + resposta cabem aqui dentro.</p>
+        <ul>
+          <li>Janela maior = analisa documentos longos</li>
+          <li>Janela maior = <strong>maior custo</strong> de processamento</li>
+          <li>Tokens excedentes são <strong>truncados ou descartados</strong></li>
+          <li>Modelos modernos têm janelas enormes (Claude tem 200k+, Gemini 1M+)</li>
+        </ul>
+      </div>
+      <div class="demo-box yellow">
+        <h4>🪟 Mexa no tamanho da janela</h4>
+        <p class="demo-sub">Veja quais tokens entram, quais são descartados.</p>
+        <label style="display:flex; align-items:center; justify-content:space-between; font-weight: 600; margin-bottom: 10px; font-size: 14px;">
+          <span>Tamanho da janela</span>
+          <span style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700;" id="ctx-size">8 tokens</span>
+        </label>
+        <input type="range" id="ctx-slider" min="3" max="20" value="8" style="width: 100%; accent-color: var(--orange);">
+        <div class="ctx-tokens" id="ctx-display"></div>
+        <div style="display: flex; gap: 12px; font-size: 13px;">
+          <span><span style="display:inline-block; width:12px; height:12px; background:#DCE9C4; border:1.5px solid var(--olive); border-radius:3px; vertical-align: middle"></span> dentro da janela</span>
+          <span><span style="display:inline-block; width:12px; height:12px; background:var(--cream-2); border:1.5px solid var(--coral); border-radius:3px; vertical-align: middle; opacity:0.5"></span> truncado</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERVALO / CHUNK -->
+    <div class="two-col">
+      <div class="demo-box caramel">
+        <h4>📚 Documento → Intervalos (chunks)</h4>
+        <p class="demo-sub">Documento maior que a janela? Quebre em pedaços. Cada um vira um vetor.</p>
+        <div style="background: var(--ink); color: var(--cream-2); border-radius: 12px; padding: 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; margin-bottom: 16px;">
+          <span style="color: var(--yellow); font-size: 10px;">DOCUMENTO LONGO ↓</span><br>
+          "Os gatos são animais domésticos de pequeno porte. Eles dormem em média 16 horas por dia. Sua dieta é principalmente carnívora. Adoram brincar com novelos de lã e pontos de luz. Têm a capacidade de ronronar em diferentes frequências..."
+        </div>
+        <div class="doc-chunks">
+          <div class="doc-chunk c1">
+            <span class="chunk-label">chunk 1</span>
+            "Os gatos são animais domésticos de pequeno porte."
+          </div>
+          <div class="doc-chunk c2">
+            <span class="chunk-label">chunk 2</span>
+            "Eles dormem em média 16 horas por dia."
+          </div>
+          <div class="doc-chunk c3">
+            <span class="chunk-label">chunk 3</span>
+            "Sua dieta é principalmente carnívora."
+          </div>
+          <div class="doc-chunk c4">
+            <span class="chunk-label">chunk 4</span>
+            "Adoram brincar com novelos de lã..."
+          </div>
+        </div>
+        <div style="margin-top: 14px; font-size: 13px; color: var(--ink-soft);">
+          📌 Cada chunk vira um <strong>vetor independente</strong>, indexado no banco vetorial.
+        </div>
+      </div>
+      <div class="def-card" style="box-shadow: 6px 6px 0 var(--caramel)">
+        <span class="tag" style="background: var(--caramel); color: var(--ink)">Intervalo (chunk)</span>
+        <h3>O recorte estratégico</h3>
+        <p>É um <strong>trecho do documento</strong> com início e fim definidos. Permite trabalhar com partes sem processar tudo.</p>
+        <ul>
+          <li>Útil quando o documento é <strong>maior que a janela</strong></li>
+          <li>Cada chunk pode ser <strong>indexado separadamente</strong></li>
+          <li>Estratégia central em <strong>RAG</strong></li>
+          <li>Tamanho do chunk afeta a qualidade da busca: <strong>nem grande demais, nem pequeno demais</strong></li>
+        </ul>
+        <p style="font-size: 13px; opacity: 0.85; margin-top: 12px;">
+          💡 Pipelines RAG sofrem ou brilham dependendo de <strong>como você chunka</strong> os documentos. É arte.
+        </p>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>O fluxo completo:</strong> Texto → Tokenização → cada token vira embedding → embeddings agregados representam o texto inteiro → vai pro banco vetorial → será buscado por similaridade. <strong>Toda essa tubulação é o que faz o RAG funcionar.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 3: TIPOS DE DADOS ============ -->
+<section class="chapter" id="dados">
+  <div class="container">
+    <span class="chapter-number">03 · Tipos de dados</span>
+    <h2>Tudo é dado, mas <em style="color:var(--orange);font-style:normal">nem tudo</em> é igual.</h2>
+    <p class="lead">
+      A natureza dos seus dados decide <strong>como você guarda, busca e processa</strong>. Existem dois grandes grupos: os <em>arrumadinhos</em> (estruturados) e os <em>baguncinha</em> (não estruturados).
+    </p>
+
+    <div class="compare-grid">
+      <div class="compare-card left">
+        <h4>📊 Estruturados</h4>
+        <ul>
+          <li>Organizados em <strong>linhas e colunas</strong> (tabelas)</li>
+          <li>Esquema <strong>fixo e bem definido</strong></li>
+          <li>Fáceis de consultar com <strong>SQL</strong></li>
+          <li>Fáceis de validar e auditar</li>
+          <li>Vão para <strong>bancos relacionais</strong></li>
+        </ul>
+        <div class="example-box">
+          <strong>Exemplos:</strong> planilhas Excel, MySQL, PostgreSQL, cadastros de clientes, vendas, estoque.
+        </div>
+      </div>
+      <div class="compare-card right">
+        <h4>📄 Não estruturados</h4>
+        <ul>
+          <li>Sem formato tabular <strong>pré-definido</strong></li>
+          <li>Texto livre, imagens, áudio, vídeo, e-mails</li>
+          <li><strong>Maioria dos dados</strong> do mundo hoje</li>
+          <li>Difíceis de consultar com SQL tradicional</li>
+          <li>Vão para <strong>data lakes</strong> e <strong>S3</strong></li>
+        </ul>
+        <div class="example-box">
+          <strong>Exemplos:</strong> PDFs, transcrições, posts de redes sociais, fotos, mensagens de chat, áudios de call center.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <h3 style="font-size: 26px; margin-bottom: 18px;">Por que isso importa pra IA</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+        <div class="card tight" style="background: var(--paper)">
+          <div style="font-family:'Caprasimo', serif; font-size: 18px; color: var(--orange-deep); margin-bottom: 8px;">📍 Onde guardar</div>
+          <p style="font-size: 14px; color: var(--ink-soft);">Estruturados → banco relacional. Não estruturados → data lake / S3 / armazenamento de objetos.</p>
+        </div>
+        <div class="card tight" style="background: var(--paper)">
+          <div style="font-family:'Caprasimo', serif; font-size: 18px; color: var(--orange-deep); margin-bottom: 8px;">🔎 Como buscar</div>
+          <p style="font-size: 14px; color: var(--ink-soft);">Estruturados aceitam SQL. Não estruturados precisam de <strong>busca semântica via embeddings</strong>.</p>
+        </div>
+        <div class="card tight" style="background: var(--paper)">
+          <div style="font-family:'Caprasimo', serif; font-size: 18px; color: var(--orange-deep); margin-bottom: 8px;">🧠 Como modelar</div>
+          <p style="font-size: 14px; color: var(--ink-soft);">Modelos clássicos preferem estruturado. <strong>IA generativa</strong> lida muito bem com não estruturado.</p>
+        </div>
+        <div class="card tight" style="background: var(--paper)">
+          <div style="font-family:'Caprasimo', serif; font-size: 18px; color: var(--orange-deep); margin-bottom: 8px;">⚙️ Como processar</div>
+          <p style="font-size: 14px; color: var(--ink-soft);">Pré-processamento simples no estruturado. <strong>Sofisticado</strong> (tokenização, embeddings) no não estruturado.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Cerca de 80% dos dados do mundo são não estruturados.</strong> Por isso a explosão de modelos de embeddings: precisávamos de uma forma de fazer SQL-like em texto, imagem, áudio. Vetores resolveram isso.
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 4: BANCOS VETORIAIS ============ -->
+<section class="chapter" id="vetores">
+  <div class="container">
+    <span class="chapter-number">04 · Bancos de dados de vetores</span>
+    <h2>Onde os <span style="color:var(--orange)">vetores</span> moram, dormem e são procurados.</h2>
+    <p class="lead">
+      Você converteu mil documentos em vetores. Agora precisa guardar e <strong>buscar por similaridade</strong> rápido. Bancos relacionais clássicos não foram feitos pra isso. Entram os <strong>bancos vetoriais</strong>.
+    </p>
+
+    <div class="two-col">
+      <div class="def-card">
+        <span class="tag">Banco vetorial</span>
+        <h3>O lar dos embeddings</h3>
+        <p>Bancos <strong>especializados</strong> em armazenar e indexar vetores em grande escala.</p>
+        <ul>
+          <li>Permitem encontrar os vetores <strong>mais similares</strong> a uma consulta</li>
+          <li>Indexam vetores para <strong>busca eficiente</strong></li>
+          <li>Base de busca semântica, recomendação e <strong>RAG</strong></li>
+          <li>Comparam vetores por <strong>proximidade</strong> (cosseno, distância euclidiana)</li>
+          <li>Diferem dos relacionais no <strong>tipo de consulta</strong></li>
+        </ul>
+      </div>
+      <div class="demo-box">
+        <h4>🔍 Busca por similaridade</h4>
+        <p class="demo-sub">Você consulta "<strong>animal felino doméstico</strong>". O banco devolve os vetores mais próximos.</p>
+
+        <div style="background: var(--ink); color: var(--cream-2); border-radius: 10px; padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 16px;">
+          <span style="color: var(--yellow); font-size: 11px;">🎯 CONSULTA</span><br>
+          "animal felino doméstico"<br>
+          <span style="color: rgba(255,255,255,0.5); font-size: 11px;">→ vetor: [0.41, -0.22, 0.78, 0.31, ...]</span>
+        </div>
+
+        <div style="font-size: 12px; color: var(--ink-soft); margin-bottom: 8px;">📋 Resultados (mais similares primeiro):</div>
+        <div class="sim-result top">
+          <span class="sim-emoji">🐈</span>
+          <span class="sim-name">gato</span>
+          <span class="sim-score">0.94</span>
+        </div>
+        <div class="sim-result">
+          <span class="sim-emoji">🦁</span>
+          <span class="sim-name">leão</span>
+          <span class="sim-score">0.81</span>
+        </div>
+        <div class="sim-result">
+          <span class="sim-emoji">🐶</span>
+          <span class="sim-name">cão</span>
+          <span class="sim-score">0.72</span>
+        </div>
+        <div class="sim-result" style="opacity: 0.6">
+          <span class="sim-emoji">🐍</span>
+          <span class="sim-name">cobra</span>
+          <span class="sim-score">0.35</span>
+        </div>
+        <div class="sim-result" style="opacity: 0.4">
+          <span class="sim-emoji">🚗</span>
+          <span class="sim-name">carro</span>
+          <span class="sim-score">0.08</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AURORA PGVECTOR -->
+    <div class="aws-card" style="margin-top: 40px;">
+      <div class="aws-header">
+        <div class="aws-logo">aws</div>
+        <div>
+          <h4>Aurora PostgreSQL + pgvector</h4>
+          <div class="sub">Banco relacional com superpoderes vetoriais</div>
+        </div>
+      </div>
+      <div class="two-col" style="gap: 28px;">
+        <div>
+          <p style="margin-bottom: 14px;">A <strong>Amazon Aurora PostgreSQL</strong> é o serviço gerenciado da AWS para bancos PostgreSQL. A extensão <strong>pgvector</strong> adiciona suporte a tipos vetoriais.</p>
+          <ul>
+            <li>Armazena embeddings em <strong>colunas</strong> do banco</li>
+            <li>Consulta vetores por <strong>similaridade via SQL</strong></li>
+            <li>Une dados estruturados <strong>e</strong> vetores no mesmo banco</li>
+            <li>Reduz a complexidade de manter <strong>dois bancos separados</strong></li>
+            <li>Ideal para começar com vetores <strong>sem reinventar a infra</strong></li>
+          </ul>
+          </div>
+
+    <div class="insight-box">
+      <strong>Por que isso é poderoso:</strong> você pode rodar <em>"me dá os 5 produtos mais similares a este, mas só os que custam menos de R$100 E estão em estoque"</em> em <strong>uma única query</strong>. Vetor + SQL relacional juntos. Sem isso, você precisaria de 2 bancos e fazer join na aplicação.
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 5: ROTULAGEM ============ -->
+<section class="chapter" id="rotulagem">
+  <div class="container">
+    <span class="chapter-number">05 · Rotulagem de dados</span>
+    <h2>Pra <span style="color:var(--orange)">ensinar</span> um modelo, você precisa mostrar a resposta certa.</h2>
+    <p class="lead">
+      Modelos supervisionados aprendem com <strong>exemplos rotulados</strong>: dado e resposta. Mas rotular é caro, demorado, chato. Por isso a AWS tem serviços específicos pra isso.
+    </p>
+
+    <div class="label-flow">
+      <div class="label-item">
+        <div class="img">🐈</div>
+        <div class="arrow">↓ humano marca</div>
+        <span class="tag">gato</span>
+      </div>
+      <div class="label-item">
+        <div class="img">🐶</div>
+        <div class="arrow">↓ humano marca</div>
+        <span class="tag">cão</span>
+      </div>
+      <div class="label-item">
+        <div class="img">🦁</div>
+        <div class="arrow">↓ humano marca</div>
+        <span class="tag">leão</span>
+      </div>
+      <div class="label-item">
+        <div class="img">🚗</div>
+        <div class="arrow">↓ humano marca</div>
+        <span class="tag">carro</span>
+      </div>
+    </div>
+
+    <div class="compare-grid" style="margin-top: 40px;">
+      <div class="compare-card left">
+        <h4>🏷️ Dados rotulados</h4>
+        <ul>
+          <li>Cada exemplo vem com sua <strong>resposta correta</strong></li>
+          <li>Modelo aprende observando <strong>entrada e resposta esperada</strong></li>
+          <li>Necessários para <strong>aprendizado supervisionado</strong></li>
+          <li><strong>Caros e demorados</strong> de produzir em volume</li>
+          <li>Geralmente exigem <strong>revisão humana</strong></li>
+        </ul>
+        <div class="example-box">
+          📌 Exemplo: 10.000 fotos de animais, cada uma marcada com "gato", "cão", "ave", "réptil". Pode levar semanas pra produzir.
+        </div>
+      </div>
+      <div class="compare-card right">
+        <h4>📦 Dados não rotulados</h4>
+        <ul>
+          <li>Apenas a <strong>entrada</strong>, sem resposta associada</li>
+          <li><strong>Muito mais abundantes</strong> e baratos</li>
+          <li>Usados em <strong>aprendizado não supervisionado</strong></li>
+          <li>Modelo precisa <strong>descobrir padrões sozinho</strong></li>
+          <li>Servem como base para <strong>modelos pré-treinados</strong></li>
+        </ul>
+        <div class="example-box">
+          📌 Exemplo: 1 bilhão de páginas da web baixadas. Sem rótulos. Modelo aprende a língua só vendo o texto.
+        </div>
+      </div>
+    </div>
+
+    <!-- AWS SERVICES -->
+    <h3 style="font-size: 28px; margin-top: 60px; margin-bottom: 18px;">Os serviços da AWS pra resolver isso</h3>
+
+    <div class="two-col" style="gap: 24px;">
+      <div class="aws-card">
+        <div class="aws-header">
+          <div class="aws-logo">SGT</div>
+          <div>
+            <h4>SageMaker Ground Truth</h4>
+            <div class="sub">Rotulagem em escala, com qualidade</div>
+          </div>
+        </div>
+        <p style="font-size: 14.5px; margin-bottom: 14px;">Serviço gerenciado da AWS para <strong>construir datasets rotulados</strong> de alta qualidade.</p>
+        <ul>
+          <li>Apoia rotulagem de <strong>imagens, texto, vídeo</strong> e mais</li>
+          <li>Combina trabalho humano <strong>com automação</strong> (active learning)</li>
+          <li>Use equipes próprias, fornecedores ou <strong>Mechanical Turk</strong></li>
+          <li>Reduz tempo e custo de preparação de dados</li>
+          <li>Foco em <strong>governança</strong> e qualidade do dataset</li>
+        </ul>
+        <div style="background: var(--cream-2); border: 1.5px dashed var(--ink); border-radius: 10px; padding: 12px; margin-top: 14px; font-size: 13px; color: var(--ink-soft);">
+          🎯 <strong>Quando usar:</strong> Quando você tem milhares de exemplos pra rotular e precisa orquestrar isso com governança.
+        </div>
+      </div>
+
+      <div class="aws-card" style="box-shadow: 6px 6px 0 var(--sage)">
+        <div class="aws-header">
+          <div class="aws-logo" style="background: var(--sage); color: var(--paper)">MTk</div>
+          <div>
+            <h4>Amazon Mechanical Turk</h4>
+            <div class="sub">Força de trabalho humana sob demanda</div>
+          </div>
+        </div>
+        <p style="font-size: 14.5px; margin-bottom: 14px;">Plataforma da AWS onde <strong>humanos reais</strong> executam tarefas que máquinas fazem mal.</p>
+        <ul>
+          <li>Tarefas chamadas <strong>HITs</strong> (Human Intelligence Tasks)</li>
+          <li>Útil para rotulagem, validação e <strong>curadoria</strong></li>
+          <li>Pode ser integrado ao <strong>Ground Truth</strong></li>
+          <li>Escala <strong>em paralelo</strong>: milhares trabalhando ao mesmo tempo</li>
+          <li>Pagamento <strong>por tarefa concluída</strong></li>
+        </ul>
+        <div style="background: var(--cream-2); border: 1.5px dashed var(--ink); border-radius: 10px; padding: 12px; margin-top: 14px; font-size: 13px; color: var(--ink-soft);">
+          🎯 <strong>Quando usar:</strong> Você precisa de muitos humanos rotulando coisas simples, rápido, sem contratar ninguém formalmente.
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>A relação entre os dois:</strong> Ground Truth é a <em>plataforma de orquestração</em> da rotulagem; Mechanical Turk é uma das <em>fontes de mão de obra</em> que o Ground Truth pode usar. Você não escolhe um ou outro, geralmente usa os dois juntos.
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 6: TIPOS DE APRENDIZADO ============ -->
+<section class="chapter" id="aprendizado">
+  <div class="container">
+    <span class="chapter-number">06 · Tipos de aprendizado de máquina</span>
+    <h2>Cinco jeitos de uma máquina <em style="color:var(--orange);font-style:normal">aprender</em>.</h2>
+    <p class="lead">
+      Não existe "o" ML. Existem famílias diferentes, cada uma boa pra um problema. <strong>Clique em cada card</strong> pra ver o que muda.
+    </p>
+
+    <div class="learning-grid">
+      <div class="learn-card sup">
+        <span class="num">01</span>
+        <span class="icon">🎓</span>
+        <h4>Supervisionado</h4>
+        <p class="tagline">"Aprende com respostas certas"</p>
+        <p>Modelo recebe <strong>dados rotulados</strong> (entrada + resposta certa). Aprende a prever a saída para entradas novas.</p>
+        <span class="ex">Spam, preço, diagnóstico, fotos</span>
+      </div>
+      <div class="learn-card unsup">
+        <span class="num">02</span>
+        <span class="icon">🔍</span>
+        <h4>Não-supervisionado</h4>
+        <p class="tagline">"Aprende a organizar sozinho"</p>
+        <p>Modelo recebe <strong>dados sem rótulo</strong>. Descobre padrões, grupos, anomalias. Reduz dimensionalidade.</p>
+        <span class="ex">Clustering, segmentação, fraude</span>
+      </div>
+      <div class="learn-card rein">
+        <span class="num">03</span>
+        <span class="icon">🎮</span>
+        <h4>Por reforço</h4>
+        <p class="tagline">"Aprende com tentativa e erro"</p>
+        <p>Agente interage com um <strong>ambiente</strong>, toma ações, recebe recompensas. Aprende a estratégia que maximiza ganhos no longo prazo.</p>
+        <span class="ex">Jogos, robótica, trading, RLHF</span>
+      </div>
+      <div class="learn-card fed">
+        <span class="num">04</span>
+        <span class="icon">🌐</span>
+        <h4>Federado</h4>
+        <p class="tagline">"Treina sem mover os dados"</p>
+        <p>Treinamento <strong>distribuído</strong>. Dados ficam onde estão (no celular, no hospital). Só as atualizações do modelo viajam. Privacidade preservada.</p>
+        <span class="ex">Saúde, finanças, smartphones</span>
+      </div>
+      <div class="learn-card trans">
+        <span class="num">05</span>
+        <span class="icon">🔄</span>
+        <h4>Por transferência</h4>
+        <p class="tagline">"Reaproveita o que já foi aprendido"</p>
+        <p>Pega um modelo já treinado num problema gigante e <strong>ajusta</strong> para uma tarefa nova. Pouco dado, pouco tempo, resultados ótimos.</p>
+        <span class="ex">Fine-tuning, foundation models</span>
+      </div>
+    </div>
+
+    <!-- CHARACTER-BY-CHARACTER COMPARISON -->
+    <table class="learn-table">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Dados usados</th>
+          <th>Como aprende</th>
+          <th>Onde se aplica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Supervisionado</td>
+          <td>Rotulados</td>
+          <td>Mapeia entrada → resposta</td>
+          <td>Classificação, regressão</td>
+        </tr>
+        <tr>
+          <td>Não-supervisionado</td>
+          <td>Não rotulados</td>
+          <td>Descobre padrões sozinho</td>
+          <td>Clustering, anomalias</td>
+        </tr>
+        <tr>
+          <td>Por reforço</td>
+          <td>Interação com ambiente</td>
+          <td>Tentativa, erro, recompensa</td>
+          <td>Jogos, robótica, decisões</td>
+        </tr>
+        <tr>
+          <td>Federado</td>
+          <td>Distribuídos, locais</td>
+          <td>Treina sem centralizar dados</td>
+          <td>Privacidade, regulação</td>
+        </tr>
+        <tr>
+          <td>Por transferência</td>
+          <td>Modelo pré-treinado + ajuste</td>
+          <td>Reaproveita conhecimento</td>
+          <td>Foundation models, NLP, visão</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box">
+      <strong>Combinação real:</strong> a maioria dos modelos modernos (incluindo o que conversa com você) usa <strong>aprendizado por transferência</strong> (pega um foundation model gigante) <strong>+ supervisionado</strong> (fine-tuning com exemplos rotulados) <strong>+ por reforço</strong> (RLHF: humanos votam em respostas). Os tipos não são exclusivos, são <strong>combinados</strong>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ PIPELINE COMPLETO ============ -->
+<section class="pipeline-section">
+  <div class="container">
+    <span class="chapter-number">Síntese · Como tudo se conecta</span>
+    <h2>O <span class="accent">pipeline</span> de qualquer IA moderna.</h2>
+    <p class="lead">Tudo o que vimos aqui se encaixa nessa cadeia. Sem exceção.</p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="step-icon">📥</div>
+        <div class="step-num">01</div>
+        <h5>Dados</h5>
+        <p>Estruturados ou não estruturados</p>
+      </div>
+      <div class="pipe-step">
+        <div class="step-icon">✂️</div>
+        <div class="step-num">02</div>
+        <h5>Pré-processo</h5>
+        <p>Tokenização, BoW, chunks</p>
+      </div>
+      <div class="pipe-step">
+        <div class="step-icon">🧮</div>
+        <div class="step-num">03</div>
+        <h5>Embedding</h5>
+        <p>Vetor numérico de significado</p>
+      </div>
+      <div class="pipe-step">
+        <div class="step-icon">🗄️</div>
+        <div class="step-num">04</div>
+        <h5>Banco vetorial</h5>
+        <p>Aurora + pgvector armazena</p>
+      </div>
+      <div class="pipe-step">
+        <div class="step-icon">🧠</div>
+        <div class="step-num">05</div>
+        <h5>Aprendizado</h5>
+        <p>Treina e responde ao usuário</p>
+      </div>
+    </div>
+
+    <div style="background: rgba(244, 211, 94, 0.12); border-left: 4px solid var(--yellow); border-radius: 8px; padding: 20px; margin-top: 36px; font-size: 15px; color: var(--cream-2);">
+      <strong style="color: var(--yellow);">💡 A grande sacada:</strong> não existe pipeline mágico ou inteligente. <strong>Cada etapa é simples</strong>, isoladamente. O que parece mágica é a <strong>composição</strong> delas. Quem domina cada bloco, domina o sistema todo.
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2 style="margin-bottom: 8px;">A cola da aula 2.</h2>
+    <p style="font-size: 17px; color: var(--ink-soft); max-width: 700px; margin-bottom: 16px;">
+      Cada conceito numa frase. Salva, imprime, manda no grupo.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">🧮 Embedding</div>
+        <div class="micro">conceito → vetor</div>
+        <div class="q">"Como o computador 'entende' o gato?"</div>
+        <div class="what">Representação numérica em espaço vetorial. Coisas parecidas viram vetores parecidos.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔗 Multimodal</div>
+        <div class="micro">texto + imagem → mesmo espaço</div>
+        <div class="q">"Como buscar foto por texto?"</div>
+        <div class="what">Texto e imagem viram vetores no MESMO espaço, dá pra comparar entre si.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">✂️ Tokenização</div>
+        <div class="micro">texto → tokens</div>
+        <div class="q">"O modelo come palavra inteira?"</div>
+        <div class="what">Não. Quebra em tokens (palavras ou pedaços) antes de processar. Você paga por token.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📦 Bag-of-words</div>
+        <div class="micro">contagem por palavra</div>
+        <div class="q">"Versão simples de representar texto?"</div>
+        <div class="what">Conta quantas vezes cada palavra aparece. Ignora ordem. Útil em buscas simples.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🪟 Janela de contexto</div>
+        <div class="micro">limite de tokens</div>
+        <div class="q">"Quanto o modelo enxerga?"</div>
+        <div class="what">Quantidade máx de tokens que o modelo vê (entrada + saída). Excedente é truncado.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📚 Intervalo (chunk)</div>
+        <div class="micro">recorte de documento</div>
+        <div class="q">"Documento gigante, e agora?"</div>
+        <div class="what">Quebra em pedaços. Cada um vira embedding separado. Base do RAG.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📊 Estruturado vs ñ</div>
+        <div class="micro">tabelas vs texto/imagem</div>
+        <div class="q">"Onde guardo isso?"</div>
+        <div class="what">Estruturado = SQL. Não estruturado = data lake + embeddings.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🗄️ pgvector</div>
+        <div class="micro">PostgreSQL + vetor</div>
+        <div class="q">"Banco fácil pra começar com vetor?"</div>
+        <div class="what">Extensão do Aurora PostgreSQL. Junta SQL e busca vetorial num banco só.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏷️ Rotulagem</div>
+        <div class="micro">dado + resposta certa</div>
+        <div class="q">"Como ensinar a máquina?"</div>
+        <div class="what">Marcar cada exemplo com a resposta certa. Caro, demorado, essencial pra supervisionado.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎓 SageMaker GT</div>
+        <div class="micro">serviço de rotulagem AWS</div>
+        <div class="q">"AWS pra montar dataset?"</div>
+        <div class="what">Orquestra rotulagem em escala, com humanos + automação. Integra com Mechanical Turk.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">👷 Mechanical Turk</div>
+        <div class="micro">força de trabalho humana</div>
+        <div class="q">"Onde acho gente pra rotular?"</div>
+        <div class="what">Plataforma da AWS com humanos sob demanda. Pagamento por tarefa (HIT).</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎓 Supervisionado</div>
+        <div class="micro">dados rotulados</div>
+        <div class="q">"Como aprende?"</div>
+        <div class="what">Com exemplos + respostas certas. Classificação, regressão.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔍 Não-supervisionado</div>
+        <div class="micro">dados sem rótulo</div>
+        <div class="q">"E sem rótulos?"</div>
+        <div class="what">Descobre padrões e grupos sozinho. Clustering, anomalias.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎮 Por reforço</div>
+        <div class="micro">recompensa por ação</div>
+        <div class="q">"Como aprende um jogo?"</div>
+        <div class="what">Agente tenta, erra, recebe recompensa. Maximiza ganhos no longo prazo.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🌐 Federado</div>
+        <div class="micro">treino distribuído</div>
+        <div class="q">"E se eu não puder centralizar dados?"</div>
+        <div class="what">Cada dispositivo treina local. Só atualizações viajam. Preserva privacidade.</div>
+      </div>
+      <div class="cheat-card" style="background: var(--orange); color: var(--paper);">
+        <div class="name" style="color: var(--paper)">🔄 Transferência</div>
+        <div class="micro" style="background: rgba(255,255,255,0.15); color: var(--paper)">modelo pré-treinado + ajuste</div>
+        <div class="q" style="color: rgba(255,255,255,0.85)">"Reaproveitar conhecimento?"</div>
+        <div class="what" style="color: var(--paper)">Pega modelo gigante, especializa. Base dos foundation models modernos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
+    aula visual do aula 2 pelo professor <a href="https://www.linkedin.com/in/brianrichard1/" target="_blank">Brian</a>,
+    materializada em código.
+  </div>
+  <div style="margin-top: 8px; opacity: 0.7;">Tudo aqui é interativo. Mexa nos sliders, clica nas palavras, troque o texto. <em>"Os alunos que aprendam mexendo, não decorando."</em></div>
+</footer>
+
+<script>
+  // =================== WORD VECTOR DEMO ===================
+  // Each word has an 8-dim vector. Similar words have similar vectors.
+  const wordVectors = {
+    'gato':  { vec: [ 0.82, -0.31,  0.65,  0.12, -0.44,  0.27,  0.71, -0.18 ], cluster: 'animal' },
+    'cão':   { vec: [ 0.78, -0.28,  0.61,  0.15, -0.40,  0.30,  0.69, -0.20 ], cluster: 'animal' },
+    'leão':  { vec: [ 0.85, -0.35,  0.70,  0.08, -0.48,  0.25,  0.68, -0.16 ], cluster: 'animal' },
+    'carro': { vec: [-0.45,  0.72, -0.31,  0.65,  0.22, -0.18, -0.55,  0.41 ], cluster: 'veiculo' },
+    'moto':  { vec: [-0.42,  0.68, -0.28,  0.60,  0.18, -0.15, -0.52,  0.38 ], cluster: 'veiculo' },
+    'maçã':  { vec: [ 0.12,  0.05, -0.18, -0.62,  0.71,  0.55,  0.08, -0.45 ], cluster: 'fruta' }
+  };
+
+  const wordEmojis = {
+    'gato': '🐈', 'cão': '🐶', 'leão': '🦁',
+    'carro': '🚗', 'moto': '🏍️', 'maçã': '🍎'
+  };
+
+  function cosine(a, b) {
+    let dot = 0, mA = 0, mB = 0;
+    for (let i = 0; i < a.length; i++) {
+      dot += a[i] * b[i];
+      mA += a[i] * a[i];
+      mB += b[i] * b[i];
+    }
+    return dot / (Math.sqrt(mA) * Math.sqrt(mB));
+  }
+
+  function formatVector(vec) {
+    return '[' + vec.map(n => {
+      const sign = n < 0 ? 'neg' : '';
+      return `<span class="num ${sign}">${n.toFixed(2)}</span>`;
+    }).join(', ') + ']';
+  }
+
+  document.querySelectorAll('[data-word]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const w = btn.dataset.word;
+      const data = wordVectors[w];
+      document.getElementById('word-vector').innerHTML = `<strong>"${w}"</strong> → ` + formatVector(data.vec);
+
+      // compute similarity to all OTHER words
+      const sims = Object.keys(wordVectors)
+        .filter(k => k !== w)
+        .map(k => ({ word: k, sim: cosine(data.vec, wordVectors[k].vec) }))
+        .sort((a, b) => b.sim - a.sim)
+        .slice(0, 3);
+
+      const html = sims.map((s, i) => `
+        <div class="sim-result${i === 0 ? ' top' : ''}">
+          <span class="sim-emoji">${wordEmojis[s.word]}</span>
+          <span class="sim-name">${s.word}</span>
+          <span class="sim-score">${s.sim.toFixed(3)}</span>
+        </div>
+      `).join('');
+      document.getElementById('similar-words').innerHTML = html;
+
+      // Highlight the active chip
+      document.querySelectorAll('[data-word]').forEach(b => b.style.background = '');
+      btn.style.background = 'var(--orange)';
+      btn.style.color = 'var(--paper)';
+      setTimeout(() => {
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 1200);
+    });
+  });
+
+  // Click "gato" by default
+  setTimeout(() => {
+    const def = document.querySelector('[data-word="gato"]');
+    if (def) def.click();
+  }, 300);
+
+
+  // =================== TOKENIZER ===================
+  function tokenize() {
+    const text = document.getElementById('tok-input').value.trim();
+    const stage = document.getElementById('tok-output');
+    const counter = document.getElementById('tok-count');
+
+    if (!text) {
+      stage.innerHTML = '<span class="empty">Digite algo acima pra ver os tokens...</span>';
+      counter.textContent = '0';
+      return;
+    }
+    // simple split by spaces and punctuation
+    const tokens = text.toLowerCase().split(/[\s,;:!?.()"]+/).filter(t => t.length);
+    counter.textContent = tokens.length;
+    const colors = ['token-1', 'token-2', 'token-3', 'token-4', 'token-5'];
+    stage.innerHTML = tokens.map((t, i) => `<span class="chip ${colors[i % colors.length]}">${t}</span>`).join('');
+  }
+  document.getElementById('tok-input').addEventListener('input', tokenize);
+  tokenize();
+
+
+  // =================== BAG OF WORDS ===================
+  function updateBoW() {
+    const text = document.getElementById('bow-input').value.toLowerCase();
+    const tokens = text.split(/[\s,;:!?.()"]+/).filter(t => t.length);
+
+    const counts = {};
+    tokens.forEach(t => {
+      counts[t] = (counts[t] || 0) + 1;
+    });
+
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    const max = sorted.length ? sorted[0][1] : 1;
+    const tbody = document.querySelector('#bow-table tbody');
+
+    if (!sorted.length) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color: var(--ink-soft); font-style: italic;">vazio</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = sorted.map(([word, count]) => `
+      <tr>
+        <td>${word}</td>
+        <td class="count">${count}</td>
+        <td><div class="bow-bar"><div style="width: ${(count / max) * 100}%"></div></div></td>
+      </tr>
+    `).join('');
+  }
+  document.getElementById('bow-input').addEventListener('input', updateBoW);
+  updateBoW();
+
+
+  // =================== CONTEXT WINDOW ===================
+  const sampleTokens = [
+    "Os", "gatos", "são", "animais", "domésticos", "que",
+    "dormem", "muito", "durante", "o", "dia", "e", "adoram",
+    "brincar", "com", "novelos", "de", "lã", "à", "noite"
+  ];
+  function updateCtx() {
+    const size = parseInt(document.getElementById('ctx-slider').value, 10);
+    document.getElementById('ctx-size').textContent = size + ' tokens';
+    const display = document.getElementById('ctx-display');
+    display.innerHTML = sampleTokens.map((t, i) => {
+      const inside = i < size;
+      return `<span class="ctx-token ${inside ? 'inside' : 'outside'}">${t}</span>`;
+    }).join('');
+  }
+  document.getElementById('ctx-slider').addEventListener('input', updateCtx);
+  updateCtx();
+
+
+  // =================== LEARN CARDS (click to highlight) ===================
+  document.querySelectorAll('.learn-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.style.transform = 'translate(-3px, -3px) scale(1.02)';
+      setTimeout(() => {
+        card.style.transform = '';
+      }, 300);
+    });
+  });
+</script>
+
+</body>
+</html>
