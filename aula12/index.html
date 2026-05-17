@@ -1,0 +1,2636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos: Treinamento e Hiperparâmetros</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #FBF3E2;
+    --cream-2: #F5E9CF;
+    --paper: #FFF9EC;
+    --ink: #2B1810;
+    --ink-soft: #4A3528;
+    --orange: #FF6B35;
+    --orange-deep: #E54E1B;
+    --caramel: #D4A574;
+    --sage: #5C8D89;
+    --sage-deep: #3F6864;
+    --coral: #C73E1D;
+    --olive: #6B8E23;
+    --yellow: #F4D35E;
+    --shadow: rgba(43, 24, 16, 0.12);
+    --shadow-strong: rgba(43, 24, 16, 0.25);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:'Sora', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(92, 141, 137, 0.05) 0%, transparent 50%);
+  }
+
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:1;
+    opacity:0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, .display{
+    font-family:'Caprasimo', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .container{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position:relative;
+    z-index:2;
+  }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0;
+    z-index:100;
+    background: var(--cream);
+    border-bottom: 2px solid var(--ink);
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto;
+    padding: 14px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+  }
+  .nav-brand{
+    font-family:'Caprasimo', serif;
+    font-size:22px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-links{
+    display:flex; gap:6px; flex-wrap:wrap;
+  }
+  .nav-links a{
+    color:var(--ink);
+    text-decoration:none;
+    padding: 6px 12px;
+    font-size:13px;
+    font-weight:500;
+    border-radius: 20px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover{
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .nav-links a.home{
+    background: var(--orange);
+    color: var(--paper);
+  }
+  .nav-links a.home:hover{
+    background: var(--orange-deep);
+    color: var(--paper);
+  }
+
+  /* HERO */
+  .hero{
+    padding: 100px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero h1{
+    font-size: clamp(44px, 7vw, 86px);
+    line-height: 0.95;
+    margin-bottom: 28px;
+    color: var(--ink);
+  }
+  .hero h1 .accent{
+    color: var(--orange);
+    display:inline-block;
+    transform: rotate(-2deg);
+  }
+  .hero h1 .scratch{
+    position:relative;
+    display:inline-block;
+  }
+  .hero h1 .scratch::after{
+    content:'';
+    position:absolute;
+    bottom:8%; left:-3%;
+    width:106%; height:18%;
+    background: var(--yellow);
+    z-index:-1;
+    transform: skew(-8deg, -1deg);
+  }
+  .hero p{
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin-bottom: 32px;
+  }
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 28px;
+  }
+  .hero-cta{
+    display:inline-flex; align-items:center; gap:10px;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 16px 28px;
+    border-radius: 60px;
+    text-decoration:none;
+    font-weight:600;
+    font-size: 16px;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.15s;
+  }
+  .hero-cta:hover{
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .training-scene{
+    position:relative;
+    height: 400px;
+    line-height: 1;
+  }
+  .training-scene .float-cat{
+    position: absolute;
+    animation: floatcat 6s ease-in-out infinite;
+    filter: drop-shadow(3px 4px 0 var(--ink-soft));
+  }
+  .training-scene .c1{ top: 8%; left: 8%; font-size: 80px; animation-delay: 0s; transform: rotate(-8deg)}
+  .training-scene .c2{ top: 38%; left: 38%; font-size: 110px; animation-delay: -2s}
+  .training-scene .c3{ bottom: 12%; left: 12%; font-size: 70px; animation-delay: -3s; transform: rotate(-15deg)}
+  .training-scene .c4{ bottom: 5%; right: 18%; font-size: 90px; animation-delay: -4s; transform: rotate(6deg)}
+  .training-scene .c5{ top: 3%; right: 8%; font-size: 65px; animation-delay: -1.5s}
+  .training-scene .dumbbell{
+    position:absolute; font-size: 60px;
+    top: 50%; right: 0%;
+    animation: floatcat 5s ease-in-out infinite;
+    animation-delay: -1s;
+    filter: drop-shadow(2px 3px 0 var(--ink-soft));
+  }
+
+  @keyframes floatcat{
+    0%, 100%{ translate: 0 0 }
+    50%{ translate: 0 -12px }
+  }
+
+  /* SECTION BASE */
+  section.chapter{
+    padding: 80px 0;
+    position:relative;
+  }
+  section.chapter + section.chapter{
+    border-top: 2px dashed rgba(43,24,16,0.18);
+  }
+  .chapter-number{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--orange-deep);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .chapter h2{
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1;
+    margin-bottom: 18px;
+    max-width: 820px;
+  }
+  .chapter > .container > .lead{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+
+  .card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  /* === PRÉ-PROCESSAMENTO === */
+  .preproc-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  .pipeline{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .pipeline h3{
+    font-size: 24px; margin-bottom: 18px;
+  }
+  .pipe-step{
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 14px;
+    padding: 14px;
+    background: var(--cream-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  .pipe-step .num{
+    width: 38px; height: 38px;
+    background: var(--orange);
+    color: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Caprasimo', serif;
+    font-size: 18px;
+  }
+  .pipe-step .body strong{
+    display: block;
+    font-family: 'Caprasimo', serif;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  .pipe-step .body small{ font-size: 13px; color: var(--ink-soft); }
+
+  .before-after{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .ba-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 4px 4px 0 var(--ink);
+    text-align: center;
+  }
+  .ba-card .label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .ba-card.before{ background: #F9D5C2; }
+  .ba-card.before .label{ color: var(--coral); }
+  .ba-card.after{ background: #DCE9C4; }
+  .ba-card.after .label{ color: var(--olive); }
+  .ba-card .emoji{ font-size: 56px; line-height: 1; display:block; margin-bottom: 8px;}
+  .ba-card .desc{ font-size: 13px; color: var(--ink-soft); }
+
+  /* === ENGENHARIA DE ATRIBUTOS === */
+  .features-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .cat-anatomy{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .cat-anatomy h3{ font-size: 22px; margin-bottom: 16px; }
+  .anatomy-svg{
+    width: 100%;
+    aspect-ratio: 1.1/1;
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .anatomy-cat{
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 180px;
+    line-height: 1;
+    filter: drop-shadow(4px 4px 0 var(--ink-soft));
+  }
+  .feature-pin{
+    position: absolute;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 2px solid var(--paper);
+    box-shadow: 2px 2px 0 var(--orange);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .feature-pin:hover{ transform: scale(1.1); z-index: 10}
+  .pin-1{ top: 12%; left: 8%; }
+  .pin-2{ top: 28%; right: 6%; }
+  .pin-3{ bottom: 30%; left: 4%; }
+  .pin-4{ bottom: 10%; right: 8%; }
+
+  .feature-table{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 6px 6px 0 var(--sage);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  .ft-row{
+    display: grid;
+    grid-template-columns: 28px 1.2fr 1fr 0.8fr 0.8fr 0.9fr;
+    gap: 8px;
+    padding: 8px 6px;
+    border-bottom: 1px dashed rgba(43,24,16,0.18);
+    align-items: center;
+  }
+  .ft-row.h{
+    border-bottom: 2px solid var(--ink);
+    font-weight: 600;
+    color: var(--orange-deep);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .ft-row:last-child{ border-bottom: none; }
+  .ft-row.engineered{
+    background: rgba(244, 211, 94, 0.4);
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 8px;
+    border-bottom: none;
+    font-family: 'Caprasimo', serif;
+    font-size: 14px;
+    grid-template-columns: 28px 1fr;
+  }
+
+  .feat-note{
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'Sora', sans-serif;
+  }
+
+  .types-row{
+    margin-top: 30px;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .types-row > div{
+    border-right: 1px dashed var(--ink);
+    padding-right: 24px;
+  }
+  .types-row > div:last-child{ border-right: none; padding-right: 0;}
+  .types-row strong{
+    font-family:'Caprasimo', serif;
+    font-size: 20px;
+    display:block;
+    margin-bottom: 6px;
+  }
+  .types-row p{
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  /* === FEATURE STORE === */
+  .fs-section{
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 0;
+    margin: 80px 0 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .fs-section .chapter-number{ color: var(--yellow);}
+  .fs-section h2{ color: var(--paper); }
+  .fs-section .lead{ color: var(--cream-2); }
+
+  .pantry-grid{
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-top: 30px;
+  }
+  .pantry{
+    background: rgba(255,255,255,0.05);
+    border: 2px solid var(--cream);
+    border-radius: 20px;
+    padding: 30px;
+  }
+  .pantry-shelf{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--cream-2);
+  }
+  .pantry-shelf:last-child{ border-bottom: none; padding-bottom: 0; margin-bottom: 0;}
+  .jar{
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    transition: transform 0.2s;
+    border: 2px solid var(--paper);
+  }
+  .jar:hover{ transform: translateY(-3px); box-shadow: 0 4px 0 var(--orange);}
+  .jar .emoji{ font-size: 28px; line-height: 1; display:block; margin-bottom: 6px;}
+  .jar .name{ font-family:'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--orange-deep);}
+  .jar .val{ font-family:'Caprasimo', serif; font-size: 14px; margin-top: 2px; line-height: 1.1;}
+
+  .pantry-pitch h3{
+    font-size: 28px; color: var(--yellow); margin-bottom: 14px;
+  }
+  .pantry-pitch p{
+    color: var(--cream-2); font-size: 16px; margin-bottom: 14px;
+  }
+  .pantry-pitch ul{
+    list-style: none; padding: 0;
+  }
+  .pantry-pitch ul li{
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.06);
+    border-left: 3px solid var(--orange);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    color: var(--cream-2);
+    font-size: 14px;
+  }
+  .pantry-pitch ul li strong{ color: var(--yellow);}
+
+  /* === DATA AUGMENTATION === */
+  .aug-playground{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .aug-playground h3{ font-size: 22px; margin-bottom: 6px;}
+  .aug-playground p.sub{ color: var(--ink-soft); font-size: 14px; margin-bottom: 24px;}
+
+  .aug-controls{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .aug-btn{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    padding: 12px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.15s;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .aug-btn:hover{ transform: translateY(-2px); box-shadow: 0 3px 0 var(--ink);}
+  .aug-btn.active{
+    background: var(--orange);
+    color: var(--paper);
+    box-shadow: 0 3px 0 var(--ink);
+  }
+  .aug-btn .emoji{ font-size: 22px; display:block; margin-bottom: 4px;}
+
+  .aug-gallery{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .aug-frame{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 70px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .aug-frame .lbl{
+    position: absolute;
+    bottom: 6px; left: 6px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .aug-frame .ic{
+    transition: all 0.4s ease;
+    display: inline-block;
+  }
+
+  .aug-explain{
+    margin-top: 22px;
+    padding: 16px 20px;
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    font-size: 14.5px;
+  }
+
+  /* === TREINAMENTO === */
+  .train-flow{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+  .train-step{
+    display: grid;
+    grid-template-columns: 130px 1fr 210px;
+    gap: 20px;
+    align-items: center;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .train-step .stage{
+    background: var(--ink);
+    color: var(--yellow);
+    border-radius: 100px;
+    padding: 8px 14px;
+    text-align: center;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    width: fit-content;
+  }
+  .train-step .desc h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .train-step .desc p{ color: var(--ink-soft); font-size: 14px; }
+  .train-step .visu{
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    font-size: 28px;
+    line-height: 1;
+  }
+  .train-step .visu .tag{
+    display: block;
+    margin-top: 8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* === BENCHMARKS === */
+  .bench-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .bench-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.2s;
+  }
+  .bench-card:hover{
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .bench-card .trophy{ font-size: 36px; display:block; margin-bottom: 8px;}
+  .bench-card .name{ font-family:'Caprasimo', serif; font-size: 22px; margin-bottom: 4px;}
+  .bench-card .area{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--orange-deep);
+    background: var(--cream-2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .bench-card .what{ font-size: 14px; color: var(--ink-soft); margin-bottom: 10px;}
+  .bench-card .meta{ font-size: 12px; color: var(--ink-soft); font-style: italic;}
+
+  /* === PRE-TRAIN vs FINE-TUNE === */
+  .pt-ft-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .pt-card, .ft-card{
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .pt-card{ background: #DDEEEC; }
+  .ft-card{ background: #FFE8DD; }
+  .pt-card .icon, .ft-card .icon{
+    font-size: 56px; line-height: 1; display:block; margin-bottom: 10px;
+  }
+  .pt-card h3, .ft-card h3{ font-size: 26px; margin-bottom: 6px; }
+  .pt-card .tag{
+    background: var(--sage-deep);
+    color: var(--paper);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .ft-card .tag{
+    background: var(--orange-deep);
+    color: var(--paper);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .pt-card p, .ft-card p{ font-size: 14.5px; margin-bottom: 12px; }
+  .pt-card .meta, .ft-card .meta{
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  .pt-card .meta strong, .ft-card .meta strong{
+    display: block; font-family:'Caprasimo', serif; font-size: 14px;
+    margin-bottom: 4px; color: var(--ink);
+  }
+
+  .tuning-types{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 30px;
+  }
+  .tuning-mini{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .tuning-mini h5{
+    font-family:'Caprasimo', serif;
+    font-size: 18px; margin-bottom: 6px;
+  }
+  .tuning-mini p{ font-size: 13px; color: var(--ink-soft); margin-bottom: 8px;}
+  .tuning-mini .tag-mini{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: var(--cream-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--orange-deep);
+    font-weight: 600;
+  }
+
+  /* === HIPERPARÂMETROS === */
+  .hp-intro{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 6px 6px 0 var(--ink);
+    margin-bottom: 40px;
+  }
+  .hp-control-panel{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: center;
+  }
+  .hp-knobs{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .hp-knob{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+  }
+  .hp-knob .dial{
+    width: 70px; height: 70px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--paper), var(--cream-2));
+    border: 3px solid var(--ink);
+    position: relative;
+    box-shadow: inset -3px -3px 0 var(--shadow);
+  }
+  .hp-knob .dial::after{
+    content: '';
+    position: absolute;
+    width: 4px; height: 24px;
+    background: var(--ink);
+    top: 6px;
+    left: 50%;
+    border-radius: 2px;
+    transform-origin: 50% 28px;
+  }
+  .hp-knob.d1 .dial::after{ transform: translateX(-50%) rotate(-45deg); }
+  .hp-knob.d2 .dial::after{ transform: translateX(-50%) rotate(20deg); }
+  .hp-knob.d3 .dial::after{ transform: translateX(-50%) rotate(-15deg); }
+  .hp-knob.d4 .dial::after{ transform: translateX(-50%) rotate(50deg); }
+  .hp-knob .knob-name{
+    font-family:'Caprasimo', serif;
+    font-size: 15px;
+    line-height: 1.1;
+  }
+  .hp-knob .knob-mini{
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-family:'JetBrains Mono', monospace;
+    margin-top: 4px;
+  }
+
+  .hp-explain p{
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    margin-bottom: 12px;
+  }
+  .hp-explain .pull-quote{
+    background: var(--ink);
+    color: var(--yellow);
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-family:'Caprasimo', serif;
+    font-size: 20px;
+    line-height: 1.3;
+    margin-top: 16px;
+  }
+
+  /* HP DEMOS */
+  .hp-demo{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 6px 6px 0 var(--ink);
+    margin-bottom: 24px;
+  }
+  .hp-demo-head{
+    display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .hp-demo-head .ic{
+    font-size: 38px; line-height: 1;
+    width: 60px; height: 60px;
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hp-demo-head h3{ font-size: 28px; line-height: 1; margin-bottom: 2px;}
+  .hp-demo-head .sub{ font-family:'JetBrains Mono', monospace; font-size: 12px; color: var(--orange-deep);}
+  .hp-demo p.intro{ color: var(--ink-soft); margin-bottom: 18px; font-size: 15px;}
+
+  .hp-demo-body{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+  }
+
+  .hp-control{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .hp-control label{
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: 600; margin-bottom: 10px;
+  }
+  .hp-control input[type=range]{
+    width: 100%;
+    accent-color: var(--orange);
+    height: 6px;
+  }
+  .hp-control .val{
+    font-family:'Caprasimo', serif;
+    font-size: 28px;
+    color: var(--orange-deep);
+    line-height: 1;
+  }
+  .hp-control .preset{
+    margin-top: 14px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .hp-control .preset button{
+    flex: 1;
+    min-width: 60px;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family:'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .hp-control .preset button:hover{
+    background: var(--ink); color: var(--paper);
+  }
+  .hp-control .hint{
+    margin-top: 14px; font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+  }
+
+  /* TEMP/TOPK OUTPUT */
+  .temp-output{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 20px;
+    min-height: 320px;
+    display: flex; flex-direction: column;
+  }
+  .temp-output .prompt{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+    background: var(--paper);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-left: 3px solid var(--orange);
+  }
+  .temp-output .prompt::before{ content: "🐈 prompt: "; color: var(--orange-deep); font-weight: 700;}
+  .temp-bars{
+    display: flex; flex-direction: column;
+    gap: 6px;
+  }
+  .temp-bar{
+    display: grid;
+    grid-template-columns: 90px 1fr 50px;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    transition: opacity 0.3s;
+  }
+  .temp-bar .word{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .temp-bar .bar-wrap{
+    height: 22px;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .temp-bar .bar{
+    height: 100%;
+    background: var(--orange);
+    transition: width 0.4s ease;
+  }
+  .temp-bar.chosen .bar{ background: var(--olive); }
+  .temp-bar.cut{ opacity: 0.3; }
+  .temp-bar.cut .word{ text-decoration: line-through; color: var(--ink-soft);}
+  .temp-bar.cut .bar{ background: var(--coral); }
+  .temp-bar .pct{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+
+  .temp-result{
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 2px dashed var(--ink);
+    font-size: 14px;
+  }
+  .temp-result .label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--orange-deep);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .temp-result .text{
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  /* MAX TOKENS OUTPUT */
+  .tokens-output{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 22px;
+    min-height: 320px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    position: relative;
+  }
+  .tokens-output .count{
+    position: absolute;
+    top: 14px; right: 16px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tokens-output .body-txt{
+    margin-top: 30px;
+  }
+  .token{ transition: opacity 0.3s; }
+  .token.hidden{ opacity: 0.12; }
+  .token.cut-mark{ color: var(--coral); font-weight: 700; }
+
+  /* EPOCH SVG */
+  .epoch-demo-body{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  .epoch-chart-wrap{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .epoch-svg{
+    width: 100%;
+    aspect-ratio: 1.3/1;
+    background: var(--paper);
+    border-radius: 8px;
+  }
+  .epoch-state{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex; flex-direction: column;
+  }
+  .epoch-state .state-badge{
+    background: var(--orange);
+    color: var(--paper);
+    padding: 8px 14px;
+    border-radius: 100px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    width: fit-content;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .epoch-state .state-badge.underfit{ background: var(--sage);}
+  .epoch-state .state-badge.optimal{ background: var(--olive);}
+  .epoch-state .state-badge.overfit{ background: var(--coral);}
+  .epoch-state h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .epoch-state p{
+    color: var(--ink-soft); font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .epoch-state .quote{
+    background: var(--ink);
+    color: var(--yellow);
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-family:'Caprasimo', serif;
+    font-size: 16px;
+    line-height: 1.3;
+    margin-top: auto;
+  }
+
+  /* OVERFIT / UNDERFIT */
+  .fit-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .fit-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .fit-card.under{ background: #DDEEEC;}
+  .fit-card.good{ background: #DCE9C4;}
+  .fit-card.over{ background: #F9D5C2;}
+  .fit-card .scenario{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .fit-card h3{ font-size: 24px; margin-bottom: 8px; }
+  .fit-card .symptom{
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .fit-card .symptom strong{
+    display: block; font-family:'Caprasimo', serif; font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .fit-card .cat-vis{
+    background: var(--paper);
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .fit-card .cat-vis .quote{
+    font-family:'Caprasimo', serif;
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .fit-card .fix{
+    margin-top: auto;
+    padding: 12px 14px;
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    font-size: 13.5px;
+  }
+  .fit-card .fix::before{ content: "🔧 "; }
+
+  .detect-card{
+    margin-top: 40px;
+    background: var(--ink);
+    color: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    box-shadow: 6px 6px 0 var(--orange);
+    padding: 30px;
+  }
+  .detect-card > h3{
+    font-family:'Caprasimo', serif;
+    font-size: 28px;
+    color: var(--yellow);
+    margin-bottom: 14px;
+  }
+  .detect-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  .detect-grid > div{
+    border-right: 1px dashed rgba(255,255,255,0.2);
+    padding-right: 20px;
+  }
+  .detect-grid > div:last-child{ border-right: none; padding-right: 0;}
+  .detect-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .detect-grid p{ color: var(--cream-2); font-size: 14px;}
+  .detect-grid p strong{ color: var(--yellow); }
+  .detect-footer{
+    margin-top: 18px; padding-top: 18px;
+    border-top: 1px dashed rgba(255,255,255,0.2);
+    color: var(--cream-2); font-size: 14px;
+  }
+  .detect-footer strong{ color: var(--yellow); }
+
+  /* CHEAT SHEET */
+  .cheatsheet{
+    background: var(--cream-2);
+    padding: 80px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .cheat-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .cheat-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .cheat-card .name{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .cheat-card .micro{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--orange-deep);
+    background: var(--cream-2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .cheat-card .q{ font-size: 14px; color: var(--ink-soft); font-style: italic; margin-bottom: 8px}
+  .cheat-card .what{ font-size: 14px; }
+
+  /* CAT STRIP */
+  .cat-strip{
+    background: var(--orange);
+    color: var(--paper);
+    padding: 14px 0;
+    overflow: hidden;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .cat-strip-inner{
+    display: flex;
+    gap: 40px;
+    animation: marquee 30s linear infinite;
+    white-space: nowrap;
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+  }
+  @keyframes marquee{
+    0%{ transform: translateX(0)}
+    100%{ transform: translateX(-50%)}
+  }
+
+  /* FOOTER */
+  footer{
+    text-align: center;
+    padding: 60px 32px 80px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    border-top: 2px solid var(--ink);
+  }
+  footer .heart{ color: var(--orange); display:inline-block; animation: heartbeat 1.4s ease-in-out infinite}
+  @keyframes heartbeat{ 0%, 100%{ transform: scale(1)} 50%{ transform: scale(1.18)}}
+  footer a{ color: var(--orange-deep); }
+
+  /* Responsive */
+  @media (max-width: 920px){
+    .hero-grid, .preproc-grid, .features-grid, .pantry-grid,
+    .hp-control-panel, .hp-demo-body, .pt-ft-grid, .epoch-demo-body{
+      grid-template-columns: 1fr;
+    }
+    .training-scene{ height: 240px;}
+    .fit-grid, .detect-grid, .types-row{ grid-template-columns: 1fr;}
+    .types-row > div, .detect-grid > div{ border-right: none; padding-right: 0; padding-bottom: 14px; border-bottom: 1px dashed var(--ink); }
+    .types-row > div:last-child, .detect-grid > div:last-child{ border-bottom: none;}
+    .aug-gallery{ grid-template-columns: 1fr 1fr;}
+    .train-step{ grid-template-columns: 1fr; gap: 12px;}
+    .train-step .visu{ font-size: 24px;}
+    .nav-inner{ flex-direction: column; align-items: flex-start; padding: 12px 20px}
+    .nav-links a{ padding: 4px 8px; font-size: 11px}
+    .container{ padding: 0 20px}
+    .anatomy-cat{ font-size: 110px;}
+    .feature-pin{ font-size: 10px; padding: 4px 8px;}
+    .ft-row{ font-size: 11px; grid-template-columns: 22px 1.1fr 0.9fr 0.7fr 0.7fr 0.9fr;}
+  }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos<span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"> · Treinamento & Hiperparâmetros</span></div>
+    <div class="nav-links">
+      <a href="#preproc">Pré-proc</a>
+      <a href="#features">Atributos</a>
+      <a href="#feature-store">Feature Store</a>
+      <a href="#aug">Augmentation</a>
+      <a href="#train">Treinamento</a>
+      <a href="#bench">Benchmarks</a>
+      <a href="#pt-ft">Fine-tuning</a>
+      <a href="#hp">Hiperparâmetros</a>
+      <a href="#fit">Over/Underfit</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula 12</div>
+        <h1>
+          Como se <span class="scratch">adestra</span><br>
+          um <span class="accent">gato</span> de ML?
+        </h1>
+        <p>
+          Da limpeza do pelo (pré-processamento) até a hora de virar os botões do treino (hiperparâmetros), passando pelo grande dilema: gato que decorou tudo (<strong>overfit</strong>) vs gato que não aprendeu nada (<strong>underfit</strong>). Mexe nos sliders, vê o gatinho aprender ao vivo.
+        </p>
+        <a href="#preproc" class="hero-cta">Bora começar o treino 🏋️</a>
+      </div>
+      <div class="training-scene">
+        <span class="float-cat c1">🐈</span>
+        <span class="float-cat c2">😺</span>
+        <span class="float-cat c3">🐈‍⬛</span>
+        <span class="float-cat c4">😸</span>
+        <span class="float-cat c5">🐱</span>
+        <span class="dumbbell">🏋️</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🧼 PRÉ-PROCESSAMENTO</span><span>🔬 ENGENHARIA DE ATRIBUTOS</span><span>🏪 FEATURE STORE</span><span>📸 DATA AUGMENTATION</span><span>🏋️ TREINAMENTO</span><span>🏆 BENCHMARKS</span><span>🎓 FINE-TUNING</span><span>🎛️ HIPERPARÂMETROS</span><span>🌡️ TEMPERATURA</span><span>🎯 OVERFITTING</span><span>🧼 PRÉ-PROCESSAMENTO</span><span>🔬 ENGENHARIA DE ATRIBUTOS</span><span>🏪 FEATURE STORE</span><span>📸 DATA AUGMENTATION</span><span>🏋️ TREINAMENTO</span><span>🏆 BENCHMARKS</span><span>🎓 FINE-TUNING</span><span>🎛️ HIPERPARÂMETROS</span><span>🌡️ TEMPERATURA</span><span>🎯 OVERFITTING</span>
+  </div>
+</div>
+
+<!-- PRÉ-PROCESSAMENTO -->
+<section class="chapter" id="preproc">
+  <div class="container">
+    <span class="chapter-number">01 · Pré-processamento</span>
+    <h2>Dando <span style="color:var(--orange)">banho</span> nos dados antes do treino.</h2>
+    <p class="lead">
+      Você não bota um gato sujo, com pulga, e sem saber o nome direto na ringue de adestramento. Primeiro <strong>limpa, organiza, padroniza</strong>. Com dados é igualzinho: pré-processamento é o banho antes da escola.
+    </p>
+
+    <div class="preproc-grid">
+      <div class="pipeline">
+        <h3>🧼 Pipeline típico</h3>
+        <div class="pipe-step">
+          <div class="num">1</div>
+          <div class="body">
+            <strong>Limpeza</strong>
+            <small>Remover nulos, duplicados, valores fora do mundo (gato de 200kg? não rola)</small>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="num">2</div>
+          <div class="body">
+            <strong>Padronização de formato</strong>
+            <small>"3kg", "3 kg", "3,0 kg" → tudo vira o número 3.0</small>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="num">3</div>
+          <div class="body">
+            <strong>Normalização / Escalonamento</strong>
+            <small>Peso (1-10kg) e idade (0-20 anos) ficam na mesma escala (ex.: 0 a 1)</small>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="num">4</div>
+          <div class="body">
+            <strong>Codificação (Encoding)</strong>
+            <small>"siamês", "persa", "vira-lata" viram números que o modelo entende</small>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="num">5</div>
+          <div class="body">
+            <strong>Divisão treino/validação/teste</strong>
+            <small>Normalmente 70% / 15% / 15%. Você NÃO mostra todos os gatos no treino</small>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div class="before-after">
+          <div class="ba-card before">
+            <div class="label">Antes</div>
+            <span class="emoji">🐈‍⬛💩</span>
+            <div class="desc">Gato sujo, com pulga, sem coleira, com nome em 4 grafias diferentes</div>
+          </div>
+          <div class="ba-card after">
+            <div class="label">Depois</div>
+            <span class="emoji">😺✨</span>
+            <div class="desc">Limpo, vacinado, identificado, em formato padronizado</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:24px;">
+          <div style="font-family:'Caprasimo', serif; font-size: 20px; margin-bottom: 10px;">⚠️ Por que isso importa?</div>
+          <p style="font-size: 14.5px; color: var(--ink-soft); margin-bottom: 10px;">
+            <strong>Garbage in, garbage out.</strong> Se você botar dados sujos pra treinar, vai sair modelo sujo. Não tem mágica de algoritmo que conserte dado ruim.
+          </p>
+          <p style="font-size: 14.5px; color: var(--ink-soft);">
+            Estima-se que <strong>cientistas de dados gastam de 60 a 80% do tempo</strong> só nisso. Pré-processamento é o trabalho silencioso que segura todo o resto em pé.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGENHARIA DE ATRIBUTOS -->
+<section class="chapter" id="features">
+  <div class="container">
+    <span class="chapter-number">02 · Engenharia de Atributos (Feature Engineering)</span>
+    <h2>Que <em style="color:var(--orange);font-style:normal">características</em> a gente vai medir do gato?</h2>
+    <p class="lead">
+      Engenharia de atributos é decidir <strong>quais informações</strong> sobre o gato a gente vai usar pra ele aprender. E mais: criar atributos novos que ajudem o modelo a enxergar padrões que sozinho ele não veria.
+    </p>
+
+    <div class="features-grid">
+      <div class="cat-anatomy">
+        <h3>🔬 Atributos extraídos</h3>
+        <div class="anatomy-svg">
+          <div class="anatomy-cat">🐈</div>
+          <div class="feature-pin pin-1">📏 tamanho_orelha</div>
+          <div class="feature-pin pin-2">👁️ cor_olho</div>
+          <div class="feature-pin pin-3">⚖️ peso_kg</div>
+          <div class="feature-pin pin-4">🎂 idade_anos</div>
+        </div>
+        <p style="font-size: 13px; color: var(--ink-soft); margin-top: 14px;">Cada etiqueta é uma <strong>feature</strong> (atributo). O gato é o "exemplo". O conjunto de features é o <strong>vetor de atributos</strong> dele.</p>
+      </div>
+
+      <div class="feature-table">
+        <div class="ft-row h">
+          <div>#</div>
+          <div>nome</div>
+          <div>raça</div>
+          <div>peso</div>
+          <div>idade</div>
+          <div>adotado?</div>
+        </div>
+        <div class="ft-row">
+          <div>01</div>
+          <div>Mel</div>
+          <div>persa</div>
+          <div>3.2</div>
+          <div>2</div>
+          <div style="color: var(--olive); font-weight:600;">sim</div>
+        </div>
+        <div class="ft-row">
+          <div>02</div>
+          <div>Bento</div>
+          <div>vira-lata</div>
+          <div>4.5</div>
+          <div>5</div>
+          <div style="color: var(--coral); font-weight:600;">não</div>
+        </div>
+        <div class="ft-row">
+          <div>03</div>
+          <div>Pipoca</div>
+          <div>siamês</div>
+          <div>2.8</div>
+          <div>1</div>
+          <div style="color: var(--olive); font-weight:600;">sim</div>
+        </div>
+        <div class="ft-row">
+          <div>04</div>
+          <div>Salem</div>
+          <div>vira-lata</div>
+          <div>5.1</div>
+          <div>8</div>
+          <div style="color: var(--coral); font-weight:600;">não</div>
+        </div>
+        <div class="ft-row engineered">
+          <div>✨</div>
+          <div>NOVAS: <em>peso_por_idade</em> = peso ÷ idade · <em>é_filhote</em> = idade &lt; 1</div>
+        </div>
+        <div class="feat-note">
+          <strong>💡 A sacada da engenharia:</strong> a linha amarela são atributos <em>criados</em> a partir dos originais. "peso por idade" pode ser um sinal melhor de saúde do que peso sozinho. <strong>O modelo agradece</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="types-row">
+      <div>
+        <strong>🎯 Seleção</strong>
+        <p>Escolher só os atributos que <strong>importam</strong>. Cor da coleira não diz nada sobre adoção, fora.</p>
+      </div>
+      <div>
+        <strong>✨ Criação</strong>
+        <p>Inventar novos a partir dos antigos. <strong>"é_filhote"</strong>, <strong>"peso ÷ idade"</strong>, "raça × cor", etc.</p>
+      </div>
+      <div>
+        <strong>🔄 Transformação</strong>
+        <p>Converter formato: <strong>log(peso)</strong>, <strong>raça → one-hot</strong>, datas → "dias desde adoção".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE STORE -->
+<section class="fs-section" id="feature-store">
+  <div class="container">
+    <span class="chapter-number">03 · SageMaker Feature Store</span>
+    <h2>A <span style="color:var(--orange)">despensa</span> de petiscos pré-prontos.</h2>
+    <p class="lead">
+      Imagina que sua ONG de adoção tem 5 modelos diferentes (recomendação, score de adotabilidade, alerta de saúde...). Todos eles usam <strong>peso_por_idade</strong>, <strong>é_filhote</strong>, <strong>raça_id</strong>. Vai recalcular essas features 5 vezes? Não. Você cria uma <strong>despensa</strong>.
+    </p>
+
+    <div class="pantry-grid">
+      <div class="pantry">
+        <div style="font-family:'Caprasimo', serif; font-size: 22px; color: var(--yellow); margin-bottom: 16px; text-align: center;">🏪 Despensa de Atributos</div>
+
+        <div class="pantry-shelf">
+          <div class="jar"><span class="emoji">⚖️</span><div class="name">peso_kg</div><div class="val">3,2</div></div>
+          <div class="jar"><span class="emoji">🎂</span><div class="name">idade</div><div class="val">2 anos</div></div>
+          <div class="jar"><span class="emoji">🐈</span><div class="name">raça_id</div><div class="val">042</div></div>
+        </div>
+        <div class="pantry-shelf">
+          <div class="jar"><span class="emoji">✨</span><div class="name">peso/idade</div><div class="val">1,6</div></div>
+          <div class="jar"><span class="emoji">👶</span><div class="name">é_filhote</div><div class="val">false</div></div>
+          <div class="jar"><span class="emoji">💉</span><div class="name">vacinado</div><div class="val">true</div></div>
+        </div>
+        <div class="pantry-shelf">
+          <div class="jar"><span class="emoji">📍</span><div class="name">região</div><div class="val">SP</div></div>
+          <div class="jar"><span class="emoji">🏠</span><div class="name">dias_no_abrigo</div><div class="val">47</div></div>
+          <div class="jar"><span class="emoji">🎨</span><div class="name">cor_pelo</div><div class="val">caramelo</div></div>
+        </div>
+      </div>
+
+      <div class="pantry-pitch">
+        <h3>📦 O que faz uma Feature Store?</h3>
+        <p>
+          O <strong>SageMaker Feature Store</strong> é um <em>repositório central</em> de atributos, gerenciado pela AWS. Cada feature fica versionada, documentada e pronta pra ser puxada por qualquer modelo da empresa.
+        </p>
+        <ul>
+          <li><strong>Reutilização:</strong> calculou uma vez, qualquer modelo usa.</li>
+          <li><strong>Consistência:</strong> time A e time B usam <em>exatamente</em> a mesma feature. Sem versão divergente.</li>
+          <li><strong>Online + Offline:</strong> <em>Offline</em> pra treinar (dados em batch). <em>Online</em> pra inferência (consulta em milissegundos).</li>
+          <li><strong>Governança:</strong> rastreabilidade, lineage, controle de quem usa o quê.</li>
+          <li><strong>Treino ≡ Produção:</strong> evita o pesadelo do "no treino dava certo, em prod não". Mesma feature, mesma lógica.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA AUGMENTATION -->
+<section class="chapter" id="aug" style="padding-top: 80px;">
+  <div class="container">
+    <span class="chapter-number">04 · Data Augmentation</span>
+    <h2>Fotografa o <em style="color:var(--orange);font-style:normal">mesmo</em> gato de 10 ângulos.</h2>
+    <p class="lead">
+      Você só tem 100 fotos de gato e quer treinar um modelo melhor? <strong>Data augmentation</strong> vira essas 100 em milhares, criando variações sintéticas: foto espelhada, mais clara, girada, com ruído. <em>Não é trapaça, é eficiência</em>.
+    </p>
+
+    <div class="aug-playground">
+      <h3>📸 Brinque com as transformações</h3>
+      <p class="sub">Clica nos botões pra aplicar augmentations diferentes na foto. O <strong>modelo aprende a reconhecer gato em qualquer condição</strong>.</p>
+
+      <div class="aug-controls">
+        <button class="aug-btn active" data-aug="original"><span class="emoji">📷</span>Original</button>
+        <button class="aug-btn" data-aug="flip"><span class="emoji">🪞</span>Espelhar</button>
+        <button class="aug-btn" data-aug="rotate"><span class="emoji">🔄</span>Rotacionar</button>
+        <button class="aug-btn" data-aug="bright"><span class="emoji">☀️</span>Brilho ↑</button>
+        <button class="aug-btn" data-aug="dark"><span class="emoji">🌙</span>Brilho ↓</button>
+        <button class="aug-btn" data-aug="blur"><span class="emoji">💧</span>Borrar</button>
+        <button class="aug-btn" data-aug="crop"><span class="emoji">✂️</span>Cortar</button>
+        <button class="aug-btn" data-aug="noise"><span class="emoji">🎲</span>Ruído</button>
+      </div>
+
+      <div class="aug-gallery" id="aug-gallery">
+        <div class="aug-frame"><span class="ic">🐈</span><span class="lbl">original</span></div>
+        <div class="aug-frame"><span class="ic">🐈</span><span class="lbl">variação 1</span></div>
+        <div class="aug-frame"><span class="ic">🐈</span><span class="lbl">variação 2</span></div>
+        <div class="aug-frame"><span class="ic">🐈</span><span class="lbl">variação 3</span></div>
+      </div>
+
+      <div class="aug-explain">
+        <strong>💡 Por que isso ajuda?</strong> Na vida real, gatos aparecem em iluminação ruim, fotos tortas, longe da câmera. <strong>Augmentation ensina o modelo a generalizar</strong> -ele para de depender de "gato sempre no centro, com boa luz". De bônus: você dribla o overfitting (mais variedade = menos decoreba).
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TREINAMENTO -->
+<section class="chapter" id="train">
+  <div class="container">
+    <span class="chapter-number">05 · Treinamento</span>
+    <h2>Como o gato <span style="color:var(--orange)">aprende</span>, na prática.</h2>
+    <p class="lead">
+      Treinar um modelo é parecido com ensinar truque pra gato: mostra o estímulo, ele tenta, você corrige, ele tenta de novo. <strong>Milhões de vezes</strong>. É esse o loop básico.
+    </p>
+
+    <div class="train-flow">
+      <div class="train-step">
+        <div class="stage">PASSO 1</div>
+        <div class="desc">
+          <h4>🍽️ Mostrar o exemplo</h4>
+          <p>O modelo recebe uma entrada (foto, frase, conjunto de features). O <em>"olha esse gato aqui"</em>.</p>
+        </div>
+        <div class="visu">🐈→🤖<span class="tag">forward pass</span></div>
+      </div>
+
+      <div class="train-step">
+        <div class="stage">PASSO 2</div>
+        <div class="desc">
+          <h4>🤷 Modelo chuta</h4>
+          <p>Baseado nos pesos atuais (geralmente aleatórios no começo), o modelo dá uma resposta. No início é <em>quase sempre errada</em>.</p>
+        </div>
+        <div class="visu">🤖💭"cachorro?"<span class="tag">previsão</span></div>
+      </div>
+
+      <div class="train-step">
+        <div class="stage">PASSO 3</div>
+        <div class="desc">
+          <h4>📏 Medir o erro</h4>
+          <p>Compara a resposta do modelo com a resposta certa. A diferença é a <strong>loss</strong> (perda). Quanto maior, pior.</p>
+        </div>
+        <div class="visu">📐 erro = 0,87<span class="tag">loss function</span></div>
+      </div>
+
+      <div class="train-step">
+        <div class="stage">PASSO 4</div>
+        <div class="desc">
+          <h4>🔧 Ajustar os pesos</h4>
+          <p>O algoritmo (gradient descent, geralmente) volta atrás e <strong>ajusta os parâmetros internos</strong> do modelo pra errar menos da próxima vez.</p>
+        </div>
+        <div class="visu">⚙️←📉<span class="tag">backprop</span></div>
+      </div>
+
+      <div class="train-step">
+        <div class="stage">PASSO 5</div>
+        <div class="desc">
+          <h4>🔁 Repetir milhões de vezes</h4>
+          <p>Volta pro passo 1, agora com o gato 2, gato 3, ..., gato N. Quando passa por TODOS os exemplos uma vez, <strong>completou uma época</strong>.</p>
+        </div>
+        <div class="visu">🔄 ∞<span class="tag">epoch loop</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 24px;">
+      <div style="font-family:'Caprasimo', serif; font-size: 22px; margin-bottom: 8px;">🧠 Modelo = matemática + dados + tempo</div>
+      <p style="font-size: 15px; color: var(--ink-soft);">
+        No fim das contas, "treinar" é só encontrar os <strong>números mágicos</strong> (os pesos) que fazem o modelo errar o mínimo possível. Não tem inteligência, não tem alma. Tem <em>gradiente descendente repetido um zilhão de vezes</em>. O gato adestrado é o resultado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- BENCHMARKS -->
+<section class="chapter" id="bench">
+  <div class="container">
+    <span class="chapter-number">06 · Datasets de Benchmark</span>
+    <h2>Os <em style="color:var(--orange);font-style:normal">"concursos felinos"</em> oficiais.</h2>
+    <p class="lead">
+      Como saber se o seu gato é melhor que o gato do vizinho? Botando os dois no <strong>mesmo concurso</strong>, com as <strong>mesmas regras</strong>. Datasets de benchmark são exatamente isso: testes públicos e padronizados pra comparar modelos.
+    </p>
+
+    <div class="bench-grid">
+      <div class="bench-card">
+        <span class="trophy">🖼️</span>
+        <div class="name">ImageNet</div>
+        <div class="area">visão computacional</div>
+        <div class="what">14 milhões de imagens em 20 mil categorias. A "Olimpíada Felina" da classificação de imagens desde 2009.</div>
+        <div class="meta">Quem manda bem aqui consegue distinguir 120 raças de cachorro entre si. Imagina o que faz com gato.</div>
+      </div>
+
+      <div class="bench-card">
+        <span class="trophy">📚</span>
+        <div class="name">GLUE / SuperGLUE</div>
+        <div class="area">NLP</div>
+        <div class="what">Conjunto de tarefas de linguagem (similaridade, inferência, sentimento). Mede compreensão de texto em inglês.</div>
+        <div class="meta">Quase saturado hoje. LLMs modernos já passam de humanos.</div>
+      </div>
+
+      <div class="bench-card">
+        <span class="trophy">🎓</span>
+        <div class="name">MMLU</div>
+        <div class="area">LLM · conhecimento</div>
+        <div class="what">57 áreas (matemática, direito, medicina, história). Múltipla escolha. Equivalente ao "ENEM" dos modelos.</div>
+        <div class="meta">Hoje é o padrão pra anunciar nova LLM ("ganhei do GPT no MMLU!").</div>
+      </div>
+
+      <div class="bench-card">
+        <span class="trophy">🧮</span>
+        <div class="name">GSM8K</div>
+        <div class="area">LLM · raciocínio</div>
+        <div class="what">Problemas de matemática de nível escolar, com cadeia de raciocínio. Mede se o modelo <em>pensa</em>, não só <em>papagaia</em>.</div>
+        <div class="meta">Bom indicador de "chain of thought" e raciocínio passo a passo.</div>
+      </div>
+
+      <div class="bench-card">
+        <span class="trophy">💻</span>
+        <div class="name">HumanEval</div>
+        <div class="area">LLM · código</div>
+        <div class="what">164 problemas de programação em Python com testes unitários. Mede se o modelo escreve código que <em>de fato</em> funciona.</div>
+        <div class="meta">Padrão pra modelos que escrevem código (Copilot, Codestral, etc.).</div>
+      </div>
+
+      <div class="bench-card" style="background: var(--ink); color: var(--paper); box-shadow: 4px 4px 0 var(--orange);">
+        <span class="trophy">⚠️</span>
+        <div class="name" style="color: var(--yellow);">Cuidado: contaminação</div>
+        <div class="area" style="background: rgba(255,255,255,0.1); color: var(--yellow);">overfit no benchmark</div>
+        <div class="what" style="color: var(--cream-2);">Se o benchmark vazou no treino, o modelo "decora" as respostas. Métrica linda, modelo inútil no mundo real.</div>
+        <div class="meta" style="color: var(--cream-2); opacity: 0.85;">Sempre questione: "esse modelo viu esse teste antes?".</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRE-TRAIN vs FINE-TUNE -->
+<section class="chapter" id="pt-ft">
+  <div class="container">
+    <span class="chapter-number">07 · Pré-treino continuado & Fine-tuning</span>
+    <h2>Pegando um gato <em style="color:var(--orange);font-style:normal">adotado</em> e ensinando truques novos.</h2>
+    <p class="lead">
+      Treinar um modelo do zero custa milhões de dólares e meses de GPU. Por isso ninguém faz isso: todo mundo <strong>parte de um modelo pré-treinado</strong> (tipo Llama, Mistral, GPT-base) e ensina <em>só o que falta</em>. Tem dois caminhos.
+    </p>
+
+    <div class="pt-ft-grid">
+      <div class="pt-card">
+        <span class="icon">🧠</span>
+        <div class="tag">PRE-TRAINING CONTINUADO</div>
+        <h3>Ensina <em>vocabulário novo</em> pro gato</h3>
+        <p>Você pega um modelo já treinado (que entende português, sabe somar, conhece o mundo) e <strong>continua treinando-o</strong> em dados específicos do seu domínio.</p>
+        <p>Não muda a tarefa, só expande conhecimento. Ainda é "preenchimento da próxima palavra".</p>
+        <div class="meta">
+          <strong>Quando usar?</strong>
+          Você é um escritório de advocacia e quer que o modelo "respire jurisprudência brasileira" antes de qualquer pergunta. Joga 10GB de petições, leis, decisões e roda mais um pouco de pré-treino.<br>
+          <em>Resultado:</em> modelo que <em>conhece</em> seu domínio.
+        </div>
+      </div>
+
+      <div class="ft-card">
+        <span class="icon">🎯</span>
+        <div class="tag">FINE-TUNING (AJUSTE FINO)</div>
+        <h3>Ensina um <em>truque específico</em></h3>
+        <p>Você pega o modelo (já pré-treinado, ou já com pré-treino continuado) e o ensina <strong>a fazer uma tarefa específica</strong> usando exemplos de entrada-e-saída.</p>
+        <p>Muda o comportamento: "quando perguntarem X, responde no formato Y".</p>
+        <div class="meta">
+          <strong>Quando usar?</strong>
+          Você quer um chatbot que responde em tom amigável, sempre em bullet points, citando processos. Pega 1000 pares de "pergunta → resposta ideal" e faz fine-tune.<br>
+          <em>Resultado:</em> modelo que <em>se comporta</em> do jeito que você quer.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <div style="font-family:'Caprasimo', serif; font-size: 24px; margin-bottom: 8px;">🧪 Subtipos de fine-tuning</div>
+      <p style="color: var(--ink-soft); font-size: 15px;">Existem várias técnicas, escolhidas por custo, dados disponíveis e objetivo:</p>
+    </div>
+
+    <div class="tuning-types">
+      <div class="tuning-mini">
+        <h5>📋 Full fine-tuning</h5>
+        <p>Ajusta <strong>todos os parâmetros</strong> do modelo. Resultado top, mas caro em GPU e memória.</p>
+        <span class="tag-mini">caro · poderoso</span>
+      </div>
+      <div class="tuning-mini">
+        <h5>🪶 LoRA / QLoRA</h5>
+        <p>Treina <strong>só adaptadores pequenos</strong> "grudados" no modelo. ~1% do custo, qualidade parecida.</p>
+        <span class="tag-mini">leve · favorito atual</span>
+      </div>
+      <div class="tuning-mini">
+        <h5>📝 Instruction tuning</h5>
+        <p>Ensina o modelo a <strong>seguir instruções</strong>. Pares "Instrução → Resposta ideal".</p>
+        <span class="tag-mini">base de chatbots</span>
+      </div>
+      <div class="tuning-mini">
+        <h5>🎚️ RLHF / DPO</h5>
+        <p>Aprende com <strong>preferências humanas</strong>: "A é melhor que B". Alinha o modelo com o gosto humano.</p>
+        <span class="tag-mini">alinhamento</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HIPERPARÂMETROS -->
+<section class="chapter" id="hp">
+  <div class="container">
+    <span class="chapter-number">08 · Hiperparâmetros</span>
+    <h2>Os <span style="color:var(--orange)">botões</span> do controle remoto do treino.</h2>
+    <p class="lead">
+      <strong>Parâmetros</strong> são os pesos internos que o modelo <em>aprende sozinho</em>. <strong>Hiperparâmetros</strong> são as configurações que <em>você define antes</em> do treino: quantas voltas dar, tamanho do passo, "criatividade" na hora de gerar texto. <em>Mexer neles é meio caminho pra ter um bom modelo</em>.
+    </p>
+
+    <div class="hp-intro">
+      <div class="hp-control-panel">
+        <div class="hp-knobs">
+          <div class="hp-knob d1">
+            <div class="dial"></div>
+            <div class="knob-name">Épocas</div>
+            <div class="knob-mini">epochs</div>
+          </div>
+          <div class="hp-knob d2">
+            <div class="dial"></div>
+            <div class="knob-name">Learning Rate</div>
+            <div class="knob-mini">passo</div>
+          </div>
+          <div class="hp-knob d3">
+            <div class="dial"></div>
+            <div class="knob-name">Batch Size</div>
+            <div class="knob-mini">lote</div>
+          </div>
+          <div class="hp-knob d4">
+            <div class="dial"></div>
+            <div class="knob-name">Temperatura</div>
+            <div class="knob-mini">criatividade</div>
+          </div>
+        </div>
+        <div class="hp-explain">
+          <p>
+            Pensa numa <strong>mesa de som</strong>: cada botão muda algo diferente no resultado final. Gira muito num, distorce. Gira pouco, fica abafado. <strong>Achar a combinação ótima é arte + ciência + paciência</strong>.
+          </p>
+          <p>
+            Tem hiperparâmetros pra <strong>fase de treino</strong> (épocas, learning rate, batch size, dropout...) e pra <strong>fase de uso/inferência</strong> em LLMs (temperatura, top-k, top-p, máximo de tokens).
+          </p>
+          <div class="pull-quote">
+            "Métricas medem o gato.<br>Hiperparâmetros adestram o gato."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPOCHS DEMO -->
+    <div class="hp-demo" id="epoch-demo">
+      <div class="hp-demo-head">
+        <div class="ic">🔁</div>
+        <div>
+          <h3>Épocas (epochs)</h3>
+          <div class="sub">Quantas vezes o modelo vê o dataset inteiro</div>
+        </div>
+      </div>
+      <p class="intro">
+        Uma <strong>época</strong> = uma passagem completa por TODOS os exemplos do treino. Mexe no slider e vê o modelo aprender (ou enlouquecer):
+      </p>
+
+      <div class="epoch-demo-body">
+        <div class="epoch-chart-wrap">
+          <svg class="epoch-svg" viewBox="0 0 500 400" id="epoch-svg">
+            <g stroke="#D4A574" stroke-width="1" opacity="0.4" fill="none">
+              <line x1="50" y1="80" x2="470" y2="80"/>
+              <line x1="50" y1="160" x2="470" y2="160"/>
+              <line x1="50" y1="240" x2="470" y2="240"/>
+              <line x1="50" y1="320" x2="470" y2="320"/>
+            </g>
+            <line x1="50" y1="360" x2="470" y2="360" stroke="#2B1810" stroke-width="2"/>
+            <line x1="50" y1="40" x2="50" y2="360" stroke="#2B1810" stroke-width="2"/>
+
+            <path id="train-curve" d="" stroke="#5C8D89" stroke-width="3" fill="none"/>
+            <path id="val-curve" d="" stroke="#FF6B35" stroke-width="3" fill="none"/>
+
+            <line id="epoch-marker" x1="134" y1="40" x2="134" y2="360" stroke="#2B1810" stroke-width="2" stroke-dasharray="4 4" opacity="0.6"/>
+            <circle id="train-dot" cx="134" cy="200" r="7" fill="#3F6864" stroke="#FFF9EC" stroke-width="2.5"/>
+            <circle id="val-dot" cx="134" cy="200" r="7" fill="#E54E1B" stroke="#FFF9EC" stroke-width="2.5"/>
+
+            <text x="260" y="392" font-family="Sora" font-size="13" font-weight="600" fill="#2B1810" text-anchor="middle">Épocas →</text>
+            <text x="22" y="200" font-family="Sora" font-size="13" font-weight="600" fill="#2B1810" text-anchor="middle" transform="rotate(-90 22 200)">Erro (loss) →</text>
+
+            <g transform="translate(280, 50)">
+              <rect width="14" height="14" rx="3" fill="#5C8D89"/>
+              <text x="20" y="11" font-family="JetBrains Mono" font-size="11" fill="#2B1810">treino</text>
+              <rect x="80" y="0" width="14" height="14" rx="3" fill="#FF6B35"/>
+              <text x="100" y="11" font-family="JetBrains Mono" font-size="11" fill="#2B1810">validação</text>
+            </g>
+
+            <text x="260" y="26" font-family="Caprasimo" font-size="15" fill="#2B1810" text-anchor="middle">Curva de aprendizado do gatinho</text>
+          </svg>
+
+          <div style="margin-top: 16px;">
+            <label style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; font-size: 14px;">
+              <span>🔁 Épocas treinadas</span>
+              <span id="epoch-val" style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700;">10</span>
+            </label>
+            <input type="range" id="epoch-slider" min="1" max="50" value="10" style="width: 100%; accent-color: var(--orange);">
+          </div>
+        </div>
+
+        <div class="epoch-state" id="epoch-state">
+          <div class="state-badge optimal" id="epoch-badge">ótimo</div>
+          <h4 id="epoch-title">Aprendendo bem!</h4>
+          <p id="epoch-desc">Erro de treino e validação caem juntos. O gato está aprendendo, e generalizando bem pra gatos novos.</p>
+          <div class="quote" id="epoch-quote">
+            🐾 "Tô pegando o conceito de gato!"
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMPERATURE DEMO -->
+    <div class="hp-demo" id="temp-demo">
+      <div class="hp-demo-head">
+        <div class="ic">🌡️</div>
+        <div>
+          <h3>Temperatura</h3>
+          <div class="sub">Quanto de "ousadia criativa" na resposta</div>
+        </div>
+      </div>
+      <p class="intro">
+        <strong>Só vale pra LLMs (modelos generativos).</strong> Temperatura baixa = modelo sempre escolhe a palavra mais provável (chato, mas seguro). Temperatura alta = arrisca palavras menos prováveis (criativo, mas pode dar bobeira). Veja em ação:
+      </p>
+
+      <div class="hp-demo-body">
+        <div>
+          <div class="hp-control">
+            <label>
+              <span>🌡️ Temperatura</span>
+              <span class="val" id="temp-val">0,7</span>
+            </label>
+            <input type="range" id="temp-slider" min="0" max="200" value="70" style="width: 100%; accent-color: var(--orange);">
+            <div class="preset">
+              <button data-temp="0">0,0 · sem variação</button>
+              <button data-temp="40">0,4 · seguro</button>
+              <button data-temp="100">1,0 · padrão</button>
+              <button data-temp="180">1,8 · caos</button>
+            </div>
+            <div class="hint">
+              <strong>0,0</strong> = sempre a mesma resposta. Bom pra fatos, classificação.<br>
+              <strong>0,7</strong> = padrão de chat. Equilibra lógica e variedade.<br>
+              <strong>1,5+</strong> = poesia, brainstorm. Risco de delírio.
+            </div>
+          </div>
+        </div>
+
+        <div class="temp-output">
+          <div class="prompt">"O gato gosta de comer ____"</div>
+          <div class="temp-bars" id="temp-bars"></div>
+          <div class="temp-result">
+            <div class="label">resposta gerada</div>
+            <div class="text" id="temp-text">"O gato gosta de comer <strong style="color:var(--orange-deep)">ração</strong>"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP-K DEMO -->
+    <div class="hp-demo" id="topk-demo">
+      <div class="hp-demo-head">
+        <div class="ic">🔢</div>
+        <div>
+          <h3>Top-K</h3>
+          <div class="sub">Quantas opções entram no sorteio</div>
+        </div>
+      </div>
+      <p class="intro">
+        Em vez de considerar TODAS as palavras possíveis, o modelo olha só as <strong>K mais prováveis</strong> e sorteia entre elas. K=1 vira <em>"sempre a melhor"</em>. K=50 abre o leque. <strong>Mexe e vê quais palavras sobrevivem ao corte</strong>:
+      </p>
+
+      <div class="hp-demo-body">
+        <div>
+          <div class="hp-control">
+            <label>
+              <span>🔢 Valor de K</span>
+              <span class="val" id="topk-val">3</span>
+            </label>
+            <input type="range" id="topk-slider" min="1" max="8" value="3" style="width: 100%; accent-color: var(--orange);">
+            <div class="preset">
+              <button data-topk="1">K=1 · greedy</button>
+              <button data-topk="3">K=3 · focado</button>
+              <button data-topk="5">K=5 · variado</button>
+              <button data-topk="8">K=8 · solto</button>
+            </div>
+            <div class="hint">
+              <strong>K pequeno (1-3):</strong> respostas previsíveis, baixo risco.<br>
+              <strong>K médio (5-15):</strong> variedade saudável.<br>
+              <strong>K grande (50+):</strong> abre porta pra palavras estranhas. Pode quebrar o sentido.<br>
+              <em>Top-P (nucleus) é um primo: corta por probabilidade acumulada em vez de número fixo.</em>
+            </div>
+          </div>
+        </div>
+
+        <div class="temp-output">
+          <div class="prompt">"O nome do meu gato é ____"</div>
+          <div class="temp-bars" id="topk-bars"></div>
+          <div class="temp-result">
+            <div class="label">candidatos no sorteio</div>
+            <div class="text" id="topk-text">3 nomes podem ser sorteados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAX TOKENS DEMO -->
+    <div class="hp-demo" id="tokens-demo">
+      <div class="hp-demo-head">
+        <div class="ic">✂️</div>
+        <div>
+          <h3>Máximo de tokens</h3>
+          <div class="sub">Quantas "palavras" o modelo pode falar antes de calar a boca</div>
+        </div>
+      </div>
+      <p class="intro">
+        Um <strong>token</strong> é uma unidade de texto (mais ou menos, uma sílaba ou parte de palavra). Esse hiperparâmetro <em>limita o tamanho da resposta</em>. Aumenta o slider, vê o gato falar mais. Diminui, ele para no meio.
+      </p>
+
+      <div class="hp-demo-body">
+        <div>
+          <div class="hp-control">
+            <label>
+              <span>✂️ max_tokens</span>
+              <span class="val" id="tokens-val">40</span>
+            </label>
+            <input type="range" id="tokens-slider" min="5" max="80" value="40" style="width: 100%; accent-color: var(--orange);">
+            <div class="preset">
+              <button data-tk="10">10 · curtíssimo</button>
+              <button data-tk="40">40 · médio</button>
+              <button data-tk="80">80 · longo</button>
+            </div>
+            <div class="hint">
+              <strong>Por que importa?</strong> Tokens custam dinheiro na API e tempo de geração. Limitar evita custo absurdo e resposta enrolada.<br>
+              <strong>⚠️ Cuidado:</strong> limite muito baixo = resposta cortada no meio da frase.
+            </div>
+          </div>
+        </div>
+
+        <div class="tokens-output">
+          <span class="count" id="tokens-count">40 / 40</span>
+          <div class="body-txt" id="tokens-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AJUSTE DE HIPERPARÂMETROS -->
+    <div style="margin-top: 60px;">
+      <span class="chapter-number">09 · Ajuste de Hiperparâmetros (HPO)</span>
+      <h2 style="font-size: clamp(32px, 4.5vw, 50px);">Como <em style="color:var(--orange);font-style:normal">achar</em> a combinação certa?</h2>
+      <p class="lead" style="margin-top: 14px;">
+        Você não vai testar à mão 1000 combinações. Existem <strong>algoritmos pra explorar</strong> o espaço de hiperparâmetros e encontrar o melhor conjunto. No SageMaker chama-se <em>Automatic Model Tuning</em>.
+      </p>
+
+      <div class="tuning-types">
+        <div class="tuning-mini">
+          <h5>🟦 Grid Search</h5>
+          <p>Testa <strong>todas as combinações</strong> de uma grade pré-definida. Exaustivo. Caro. Garantido.</p>
+          <span class="tag-mini">força bruta</span>
+        </div>
+        <div class="tuning-mini">
+          <h5>🎲 Random Search</h5>
+          <p>Sorteia combinações <strong>aleatoriamente</strong>. Mais barato que grid, surpreendentemente bom na prática.</p>
+          <span class="tag-mini">surpresa boa</span>
+        </div>
+        <div class="tuning-mini">
+          <h5>🧠 Bayesian</h5>
+          <p>Aprende com tentativas anteriores: <strong>"essa região foi boa, vou explorar mais lá"</strong>. Convergência rápida.</p>
+          <span class="tag-mini">esperto · padrão</span>
+        </div>
+        <div class="tuning-mini">
+          <h5>🧬 Hyperband / Population</h5>
+          <p>Treina muitos modelos em paralelo, mata os ruins cedo, foca recursos nos promissores.</p>
+          <span class="tag-mini">paralelo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OVERFITTING vs UNDERFITTING -->
+<section class="chapter" id="fit">
+  <div class="container">
+    <span class="chapter-number">10 · Overfitting & Underfitting</span>
+    <h2>O grande <span style="color:var(--orange)">dilema</span> do gato adestrado.</h2>
+    <p class="lead">
+      Aqui mora 80% dos problemas de quem treina modelo. Tem o gato que <strong>não aprendeu nada</strong> (underfit), o gato que <strong>aprendeu certinho</strong> (good fit), e o gato que <strong>decorou o caderno</strong> (overfit). Cada um tem cara, sintomas e remédios diferentes.
+    </p>
+
+    <div class="fit-grid">
+      <div class="fit-card under">
+        <div class="scenario">cenário 1</div>
+        <h3>😴 Underfitting</h3>
+        <div class="symptom">
+          <strong>O gato preguiçoso</strong>
+          Não aprendeu nem o básico. Erra no treino, erra na vida. Modelo simples demais ou treinado de menos.
+        </div>
+        <div class="cat-vis">
+          <div class="quote">"Hmm... peixe?<br>Pode ser?"</div>
+          🐈 → 🤔 → 🐶?
+        </div>
+        <div class="fix">
+          <strong>Como sair:</strong> Modelo mais complexo (mais camadas, mais parâmetros). Treinar mais épocas. Melhorar features. Mais dados raramente resolve sozinho.
+        </div>
+      </div>
+
+      <div class="fit-card good">
+        <div class="scenario">cenário 2</div>
+        <h3>😺 Good fit</h3>
+        <div class="symptom">
+          <strong>O gato bem adestrado</strong>
+          Aprendeu a essência. Acerta no treino E em fotos nunca vistas. Aprendeu o <em>conceito de gato</em>, não fotos específicas.
+        </div>
+        <div class="cat-vis">
+          <div class="quote">"Esse aí é gato.<br>Esse não."</div>
+          🐈 → 😺 → 🐈 ✓
+        </div>
+        <div class="fix">
+          <strong>Como manter:</strong> Você chegou no ponto onde erro de treino e validação estão baixos E próximos. <em>Para de treinar agora</em>. Salva o modelo. Comemora.
+        </div>
+      </div>
+
+      <div class="fit-card over">
+        <div class="scenario">cenário 3</div>
+        <h3>🤓 Overfitting</h3>
+        <div class="symptom">
+          <strong>O gato que decorou</strong>
+          Manda super bem no treino. Erra feio em foto nova. Decorou cada exemplo em vez de aprender o padrão.
+        </div>
+        <div class="cat-vis">
+          <div class="quote">"Reconheço esse!<br>Mas esse...?"</div>
+          🐈 → 🧠 → 🐈‍⬛ ✗
+        </div>
+        <div class="fix">
+          <strong>Como sair:</strong> Mais dados (ou augmentation). Dropout. Regularização (L1/L2). Early stopping (parar antes). Modelo mais simples. Diminuir épocas.
+        </div>
+      </div>
+    </div>
+
+    <div class="detect-card">
+      <h3>🔍 Como detectar cada um?</h3>
+      <div class="detect-grid">
+        <div>
+          <div class="detect-tag" style="color: var(--sage);">underfit ↓</div>
+          <p>Erro de <strong>treino alto</strong> e erro de validação <strong>também alto</strong>. Os dois ruins.</p>
+        </div>
+        <div>
+          <div class="detect-tag" style="color: var(--olive);">good fit ✓</div>
+          <p>Erro de treino baixo, validação também baixa, <strong>e perto um do outro</strong>. Ponto ótimo.</p>
+        </div>
+        <div>
+          <div class="detect-tag" style="color: var(--coral);">overfit ↑</div>
+          <p>Erro de <strong>treino muito baixo</strong> mas validação <strong>subindo</strong>. <em>Gap grande</em> entre os dois.</p>
+        </div>
+      </div>
+      <div class="detect-footer">
+        💡 <strong>Volta lá no slider de Épocas</strong> e arrasta pra direita. Vê a curva laranja (validação) subindo enquanto a verde (treino) continua descendo? Isso é overfitting acontecendo ao vivo.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHEAT SHEET -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2 style="margin-bottom: 8px;">A cola visual.</h2>
+    <p style="font-size: 17px; color: var(--ink-soft); max-width: 700px; margin-bottom: 16px;">
+      Tudo do treinamento e dos hiperparâmetros num lugar só. Salva, imprime, tira print.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">🧼 Pré-processamento</div>
+        <div class="micro">limpar / normalizar / dividir</div>
+        <div class="q">"Os dados estão limpos?"</div>
+        <div class="what">Banho nos dados antes do treino. Gasta 60-80% do tempo do cientista.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔬 Eng. de atributos</div>
+        <div class="micro">selecionar / criar / transformar</div>
+        <div class="q">"O que medir do gato?"</div>
+        <div class="what">Escolher e inventar features que ajudam o modelo a enxergar padrões.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏪 Feature Store</div>
+        <div class="micro">despensa central de features</div>
+        <div class="q">"Como reusar features entre modelos?"</div>
+        <div class="what">SageMaker Feature Store: features versionadas, com online + offline.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📸 Data Augmentation</div>
+        <div class="micro">girar / espelhar / borrar</div>
+        <div class="q">"Como ter mais dados sem coletar mais?"</div>
+        <div class="what">Variações sintéticas do mesmo exemplo. Ajuda a generalizar.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏋️ Treinamento</div>
+        <div class="micro">forward → loss → backprop</div>
+        <div class="q">"O modelo já aprendeu?"</div>
+        <div class="what">Loop: mostra exemplo, calcula erro, ajusta pesos. Repete um zilhão de vezes.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏆 Benchmarks</div>
+        <div class="micro">ImageNet, MMLU, GLUE...</div>
+        <div class="q">"Meu modelo é bom comparado a outros?"</div>
+        <div class="what">Datasets padrão pra comparar modelos. Cuidado com contaminação.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🧠 Pre-train continuado</div>
+        <div class="micro">+ vocabulário de domínio</div>
+        <div class="q">"Quero o modelo respirando meu domínio."</div>
+        <div class="what">Continua o pré-treino em dados específicos. Expande conhecimento.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎯 Fine-tuning</div>
+        <div class="micro">aprende uma tarefa</div>
+        <div class="q">"Quero o modelo se comportando do meu jeito."</div>
+        <div class="what">Ensina comportamento. LoRA é a forma mais comum hoje (barata e boa).</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎛️ Hiperparâmetros</div>
+        <div class="micro">configs que você define</div>
+        <div class="q">"Como o modelo é treinado?"</div>
+        <div class="what">Botões do treino: épocas, learning rate, batch size, etc.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔁 Épocas</div>
+        <div class="micro">passagens completas no dataset</div>
+        <div class="q">"Quantas vezes ver tudo?"</div>
+        <div class="what">Poucas = underfit. Muitas = overfit. Use early stopping.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🌡️ Temperatura</div>
+        <div class="micro">criatividade na geração</div>
+        <div class="q">"Quão criativo?"</div>
+        <div class="what">0 = sempre igual. 0.7 = padrão. 1.5+ = caos criativo.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔢 Top-K / Top-P</div>
+        <div class="micro">quantas opções no sorteio</div>
+        <div class="q">"Quantas palavras entram?"</div>
+        <div class="what">K pequeno = focado. K grande = aberto. Top-P faz parecido por probabilidade.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">✂️ Max Tokens</div>
+        <div class="micro">limite de tamanho</div>
+        <div class="q">"Até onde pode falar?"</div>
+        <div class="what">Controla custo e tempo. Cuidado pra não cortar resposta no meio.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">😴 Underfitting</div>
+        <div class="micro">não aprendeu</div>
+        <div class="q">"Erra tudo?"</div>
+        <div class="what">Modelo simples demais. Aumente complexidade ou treine mais.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🤓 Overfitting</div>
+        <div class="micro">decorou</div>
+        <div class="q">"Acerta no treino, erra fora?"</div>
+        <div class="what">Decorou. Use augmentation, dropout, regularização, early stopping.</div>
+      </div>
+      <div class="cheat-card" style="background: var(--orange); color: var(--paper);">
+        <div class="name" style="color: var(--paper);">🐾 Resumo do resumo</div>
+        <div class="q" style="color: rgba(255,255,255,0.85);">"Por onde começo?"</div>
+        <div class="what" style="color: var(--paper);"><strong>Dados limpos primeiro. Depois modelo simples. Depois ajusta. Sempre olhe a curva de treino vs validação.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
+    uma aula visual pelo <a href="https://www.linkedin.com/in/brianrichard1/" target="_blank">professor Brian</a>,
+    materializada em código.
+  </div>
+  <div style="margin-top: 8px; opacity: 0.7;">Tudo neste site é interativo. Mexe nos sliders, clica nos botões, vê os números mudarem. <em>"Os alunos que aprendam mexendo, não decorando."</em></div>
+</footer>
+
+<script>
+// ===================== DATA AUGMENTATION =====================
+const augTransforms = {
+  original: [
+    { style: '', label: 'original' },
+    { style: '', label: 'original' },
+    { style: '', label: 'original' },
+    { style: '', label: 'original' }
+  ],
+  flip: [
+    { style: 'transform: scaleX(-1);', label: 'flip H' },
+    { style: 'transform: scaleY(-1);', label: 'flip V' },
+    { style: 'transform: scaleX(-1) scaleY(-1);', label: 'flip H+V' },
+    { style: '', label: 'original' }
+  ],
+  rotate: [
+    { style: 'transform: rotate(15deg);', label: '+15°' },
+    { style: 'transform: rotate(-25deg);', label: '−25°' },
+    { style: 'transform: rotate(45deg);', label: '+45°' },
+    { style: 'transform: rotate(-10deg);', label: '−10°' }
+  ],
+  bright: [
+    { style: 'filter: brightness(1.4);', label: '+40%' },
+    { style: 'filter: brightness(1.7);', label: '+70%' },
+    { style: 'filter: brightness(1.2) contrast(1.1);', label: '+20%' },
+    { style: 'filter: brightness(1.5) saturate(1.3);', label: 'vibrante' }
+  ],
+  dark: [
+    { style: 'filter: brightness(0.6);', label: '−40%' },
+    { style: 'filter: brightness(0.4);', label: '−60%' },
+    { style: 'filter: brightness(0.7) contrast(0.9);', label: '−30%' },
+    { style: 'filter: brightness(0.5) saturate(0.7);', label: 'sombra' }
+  ],
+  blur: [
+    { style: 'filter: blur(3px);', label: 'leve' },
+    { style: 'filter: blur(6px);', label: 'médio' },
+    { style: 'filter: blur(2px);', label: 'mínimo' },
+    { style: 'filter: blur(8px);', label: 'forte' }
+  ],
+  crop: [
+    { style: 'transform: scale(1.6) translateX(-10%);', label: 'esquerda' },
+    { style: 'transform: scale(1.5) translateY(-10%);', label: 'topo' },
+    { style: 'transform: scale(1.8);', label: 'zoom in' },
+    { style: 'transform: scale(1.4) translateX(10%);', label: 'direita' }
+  ],
+  noise: [
+    { style: 'filter: contrast(1.4) saturate(1.3);', label: 'ruído leve' },
+    { style: 'filter: contrast(1.6) hue-rotate(15deg);', label: 'cor desv.' },
+    { style: 'filter: grayscale(0.5) contrast(1.2);', label: 'parc. cinza' },
+    { style: 'filter: sepia(0.4) contrast(1.3);', label: 'sépia' }
+  ]
+};
+
+document.querySelectorAll('.aug-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.aug-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const augType = btn.dataset.aug;
+    const transforms = augTransforms[augType];
+    const frames = document.querySelectorAll('#aug-gallery .aug-frame');
+    frames.forEach((frame, i) => {
+      const ic = frame.querySelector('.ic');
+      const lbl = frame.querySelector('.lbl');
+      ic.setAttribute('style', transforms[i].style);
+      lbl.textContent = transforms[i].label;
+    });
+  });
+});
+
+// ===================== EPOCHS CURVE =====================
+// Generates a curve where:
+// - Train loss decreases monotonically (asymptotic to ~0.05)
+// - Val loss decreases up to optimal epoch, then increases (overfitting)
+const OPTIMAL_EPOCH = 15;
+function trainLossAt(epoch) {
+  // smooth exponential decay
+  return 0.92 * Math.exp(-epoch / 6) + 0.04;
+}
+function valLossAt(epoch) {
+  // similar decay but then quadratic increase after optimal
+  const base = 0.94 * Math.exp(-epoch / 5.5) + 0.08;
+  if (epoch > OPTIMAL_EPOCH) {
+    const over = (epoch - OPTIMAL_EPOCH);
+    return base + 0.013 * over + 0.0008 * over * over;
+  }
+  return base;
+}
+// SVG mapping: plot area x=50..470 (420px width), y=40..360 (320px height)
+// epoch 1 → x=50+8.4 ; epoch 50 → x=470
+// loss 0 → y=360 ; loss 1 → y=40 (max display)
+function epochToX(e) { return 50 + ((e - 1) / 49) * 420; }
+function lossToY(l) { return 360 - Math.min(l, 1) * 320; }
+
+function buildCurve(fn, maxEpoch) {
+  let d = '';
+  for (let e = 1; e <= maxEpoch; e += 0.5) {
+    const x = epochToX(e);
+    const y = lossToY(fn(e));
+    if (e === 1) d += `M ${x.toFixed(2)} ${y.toFixed(2)}`;
+    else d += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
+  }
+  return d;
+}
+
+const epochSlider = document.getElementById('epoch-slider');
+const epochVal = document.getElementById('epoch-val');
+const epochBadge = document.getElementById('epoch-badge');
+const epochTitle = document.getElementById('epoch-title');
+const epochDesc = document.getElementById('epoch-desc');
+const epochQuote = document.getElementById('epoch-quote');
+const epochMarker = document.getElementById('epoch-marker');
+const trainDot = document.getElementById('train-dot');
+const valDot = document.getElementById('val-dot');
+const trainCurve = document.getElementById('train-curve');
+const valCurve = document.getElementById('val-curve');
+
+function updateEpoch() {
+  const e = parseInt(epochSlider.value, 10);
+  epochVal.textContent = e;
+
+  // draw curves up to current epoch
+  trainCurve.setAttribute('d', buildCurve(trainLossAt, e));
+  valCurve.setAttribute('d', buildCurve(valLossAt, e));
+
+  // update marker and dots
+  const x = epochToX(e);
+  epochMarker.setAttribute('x1', x);
+  epochMarker.setAttribute('x2', x);
+  trainDot.setAttribute('cx', x);
+  trainDot.setAttribute('cy', lossToY(trainLossAt(e)));
+  valDot.setAttribute('cx', x);
+  valDot.setAttribute('cy', lossToY(valLossAt(e)));
+
+  // determine state
+  let state, title, desc, quote, badgeClass;
+  if (e <= 5) {
+    state = 'underfit';
+    badgeClass = 'underfit';
+    title = '😴 Underfitting';
+    desc = 'Treinou pouco. Os dois erros (treino e validação) ainda estão altos. O gato mal abriu o olho pro material.';
+    quote = '🥱 "Peixe, ração, sapato... sei lá, é tudo igual."';
+  } else if (e <= 20) {
+    state = 'optimal';
+    badgeClass = 'optimal';
+    title = '😺 Aprendendo bem!';
+    desc = 'Erro de treino e validação caem juntos. Esse é o sweet spot. O gato está aprendendo, e generalizando bem pra gatos novos.';
+    quote = '🐾 "Tô pegando o conceito de gato!"';
+  } else if (e <= 35) {
+    state = 'overfit';
+    badgeClass = 'overfit';
+    title = '🤓 Começando a decorar...';
+    desc = 'Atenção! Erro de treino continua caindo, mas a validação parou de melhorar. O gato começou a memorizar.';
+    quote = '😼 "Esse aí com mancha branca eu reconheço de cor!"';
+  } else {
+    state = 'overfit';
+    badgeClass = 'overfit';
+    title = '🚨 Overfit grave';
+    desc = 'Gap enorme entre treino e validação. O modelo está se especializando em fotos específicas, e falha em novas. Para o treino, AGORA.';
+    quote = '🤯 "Só conheço esses 100 gatos. Outro qualquer? Não sei."';
+  }
+
+  epochBadge.className = 'state-badge ' + badgeClass;
+  epochBadge.textContent = state === 'underfit' ? 'underfit' : state === 'optimal' ? 'ótimo' : 'overfit';
+  epochTitle.textContent = title;
+  epochDesc.textContent = desc;
+  epochQuote.innerHTML = quote;
+}
+epochSlider.addEventListener('input', updateEpoch);
+updateEpoch();
+
+// ===================== TEMPERATURE DEMO =====================
+// Word probabilities for "O gato gosta de comer ____"
+const tempWords = [
+  { word: 'ração', logit: 4.5, color: 'olive' },
+  { word: 'peixe', logit: 3.8 },
+  { word: 'frango', logit: 3.2 },
+  { word: 'atum', logit: 2.7 },
+  { word: 'pão', logit: 1.4 },
+  { word: 'salada', logit: 0.6 },
+  { word: 'aspirador', logit: -0.5 },
+  { word: 'meteoro', logit: -2.0 }
+];
+
+function softmax(logits, temperature) {
+  const t = Math.max(temperature, 0.01);
+  const scaled = logits.map(l => l / t);
+  const maxL = Math.max(...scaled);
+  const exps = scaled.map(s => Math.exp(s - maxL));
+  const sum = exps.reduce((a, b) => a + b, 0);
+  return exps.map(e => e / sum);
+}
+
+const tempBars = document.getElementById('temp-bars');
+const tempVal = document.getElementById('temp-val');
+const tempSlider = document.getElementById('temp-slider');
+const tempText = document.getElementById('temp-text');
+
+// initial render
+tempWords.forEach((w, i) => {
+  const row = document.createElement('div');
+  row.className = 'temp-bar' + (i === 0 ? ' chosen' : '');
+  row.innerHTML = `
+    <div class="word">${w.word}</div>
+    <div class="bar-wrap"><div class="bar" style="width: 0%"></div></div>
+    <div class="pct">0%</div>
+  `;
+  tempBars.appendChild(row);
+});
+
+function updateTemp() {
+  const t = parseInt(tempSlider.value, 10) / 100;
+  tempVal.textContent = t.toFixed(1).replace('.', ',');
+  const probs = softmax(tempWords.map(w => w.logit), t);
+
+  // find max for normalization
+  const maxP = Math.max(...probs);
+
+  // simulate "chosen" word: at low temp, always top1. at higher temp, weighted random simulation:
+  // we deterministically pick based on temperature for visual consistency
+  let chosenIdx = 0;
+  if (t < 0.3) chosenIdx = 0;
+  else if (t < 0.8) chosenIdx = 0; // still mostly top
+  else if (t < 1.3) chosenIdx = 1; // peixe
+  else if (t < 1.7) chosenIdx = 3; // atum
+  else chosenIdx = 6; // aspirador (caos)
+
+  const rows = tempBars.querySelectorAll('.temp-bar');
+  rows.forEach((row, i) => {
+    const widthPct = (probs[i] / maxP) * 100;
+    row.querySelector('.bar').style.width = widthPct + '%';
+    row.querySelector('.pct').textContent = (probs[i] * 100).toFixed(1) + '%';
+    row.classList.toggle('chosen', i === chosenIdx);
+    // cut bars that are negligible (< 0.5% relative to max)
+    row.classList.toggle('cut', probs[i] / maxP < 0.05);
+  });
+
+  const chosen = tempWords[chosenIdx].word;
+  tempText.innerHTML = `"O gato gosta de comer <strong style="color:var(--orange-deep)">${chosen}</strong>"`;
+}
+tempSlider.addEventListener('input', updateTemp);
+document.querySelectorAll('#temp-demo .preset button').forEach(b => {
+  b.addEventListener('click', () => {
+    tempSlider.value = b.dataset.temp;
+    updateTemp();
+  });
+});
+updateTemp();
+
+// ===================== TOP-K DEMO =====================
+const topkWords = [
+  { word: 'Mel', prob: 0.32 },
+  { word: 'Tom', prob: 0.21 },
+  { word: 'Bento', prob: 0.16 },
+  { word: 'Salem', prob: 0.11 },
+  { word: 'Pipoca', prob: 0.08 },
+  { word: 'Mingau', prob: 0.06 },
+  { word: 'Pretinha', prob: 0.04 },
+  { word: 'Bigode', prob: 0.02 }
+];
+
+const topkBars = document.getElementById('topk-bars');
+const topkVal = document.getElementById('topk-val');
+const topkSlider = document.getElementById('topk-slider');
+const topkText = document.getElementById('topk-text');
+
+topkWords.forEach((w, i) => {
+  const row = document.createElement('div');
+  row.className = 'temp-bar';
+  row.innerHTML = `
+    <div class="word">${w.word}</div>
+    <div class="bar-wrap"><div class="bar" style="width: ${(w.prob / topkWords[0].prob) * 100}%"></div></div>
+    <div class="pct">${(w.prob * 100).toFixed(0)}%</div>
+  `;
+  topkBars.appendChild(row);
+});
+
+function updateTopK() {
+  const k = parseInt(topkSlider.value, 10);
+  topkVal.textContent = k;
+  const rows = topkBars.querySelectorAll('.temp-bar');
+  rows.forEach((row, i) => {
+    row.classList.toggle('cut', i >= k);
+    row.classList.toggle('chosen', i === 0); // top-1 highlighted
+  });
+  const names = topkWords.slice(0, k).map(w => w.word).join(', ');
+  topkText.textContent = k === 1
+    ? `Sempre: "${topkWords[0].word}"`
+    : `${k} nomes no sorteio: ${names}`;
+}
+topkSlider.addEventListener('input', updateTopK);
+document.querySelectorAll('#topk-demo .preset button').forEach(b => {
+  b.addEventListener('click', () => {
+    topkSlider.value = b.dataset.topk;
+    updateTopK();
+  });
+});
+updateTopK();
+
+// ===================== MAX TOKENS DEMO =====================
+const fullStory = `O gato Mel acordou cedo, espreguiçou-se sobre o tapete laranja da sala e começou seu ritual matinal de patrulha pela cozinha, esperando que alguém finalmente abrisse a lata de ração premium que ela tanto adora desde filhote, enquanto observava os pássaros pela janela com aquele olhar fixo de predador frustrado que só gatos domésticos conseguem fazer com tanta dignidade.`.split(' ');
+
+const tokensSlider = document.getElementById('tokens-slider');
+const tokensVal = document.getElementById('tokens-val');
+const tokensCount = document.getElementById('tokens-count');
+const tokensText = document.getElementById('tokens-text');
+
+// render all tokens as spans
+fullStory.forEach((tk, i) => {
+  const span = document.createElement('span');
+  span.className = 'token';
+  span.textContent = tk + ' ';
+  span.dataset.idx = i;
+  tokensText.appendChild(span);
+});
+
+function updateTokens() {
+  const max = parseInt(tokensSlider.value, 10);
+  tokensVal.textContent = max;
+  tokensCount.textContent = `${Math.min(max, fullStory.length)} / ${max}`;
+  const spans = tokensText.querySelectorAll('.token');
+  spans.forEach((s, i) => {
+    s.classList.toggle('hidden', i >= max);
+    s.classList.toggle('cut-mark', i === max - 1 && max < fullStory.length);
+  });
+  // add ▌ cursor if cut
+  if (max < fullStory.length) {
+    let cursor = tokensText.querySelector('.cut-cursor');
+    if (!cursor) {
+      cursor = document.createElement('span');
+      cursor.className = 'cut-cursor';
+      cursor.style.color = 'var(--coral)';
+      cursor.style.fontWeight = '700';
+      cursor.textContent = '▌ [cortado]';
+      tokensText.appendChild(cursor);
+    }
+    // move cursor right after the last visible token
+    tokensText.appendChild(cursor);
+  } else {
+    const cursor = tokensText.querySelector('.cut-cursor');
+    if (cursor) cursor.remove();
+  }
+}
+tokensSlider.addEventListener('input', updateTokens);
+document.querySelectorAll('#tokens-demo .preset button').forEach(b => {
+  b.addEventListener('click', () => {
+    tokensSlider.value = b.dataset.tk;
+    updateTokens();
+  });
+});
+updateTokens();
+</script>
+
+</body>
+</html>
