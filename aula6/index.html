@@ -1,0 +1,2801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gataria de IA · Aula visual de IA Practitioner</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #FBF3E2;
+    --cream-2: #F5E9CF;
+    --paper: #FFF9EC;
+    --ink: #2B1810;
+    --ink-soft: #4A3528;
+    --orange: #FF6B35;
+    --orange-deep: #E54E1B;
+    --caramel: #D4A574;
+    --sage: #5C8D89;
+    --sage-deep: #3F6864;
+    --coral: #C73E1D;
+    --olive: #6B8E23;
+    --yellow: #F4D35E;
+    --lilac: #B19CD9;
+    --shadow: rgba(43, 24, 16, 0.12);
+    --shadow-strong: rgba(43, 24, 16, 0.25);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:'Sora', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(92, 141, 137, 0.05) 0%, transparent 50%);
+  }
+
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:1;
+    opacity:0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, .display{
+    font-family:'Caprasimo', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .container{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position:relative;
+    z-index:2;
+  }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0;
+    z-index:100;
+    background: var(--cream);
+    border-bottom: 2px solid var(--ink);
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto;
+    padding: 14px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+  }
+  .nav-brand{
+    font-family:'Caprasimo', serif;
+    font-size:22px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-links{
+    display:flex; gap:4px; flex-wrap:wrap;
+  }
+  .nav-links a{
+    color:var(--ink);
+    text-decoration:none;
+    padding: 6px 10px;
+    font-size:12px;
+    font-weight:500;
+    border-radius: 20px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover{
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  /* HERO */
+  .hero{
+    padding: 80px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero h1{
+    font-size: clamp(44px, 7vw, 86px);
+    line-height: 0.95;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .hero h1 .accent{
+    color: var(--orange);
+    display:inline-block;
+    transform: rotate(-2deg);
+  }
+  .hero h1 .scratch{
+    position:relative;
+    display:inline-block;
+  }
+  .hero h1 .scratch::after{
+    content:'';
+    position:absolute;
+    bottom:8%; left:-3%;
+    width:106%; height:18%;
+    background: var(--yellow);
+    z-index:-1;
+    transform: skew(-8deg, -1deg);
+  }
+  .hero p{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin-bottom: 28px;
+  }
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+  }
+  .hero-cta{
+    display:inline-flex; align-items:center; gap:10px;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 16px 28px;
+    border-radius: 60px;
+    text-decoration:none;
+    font-weight:600;
+    font-size: 16px;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.15s;
+    margin-right: 12px;
+  }
+  .hero-cta:hover{
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .hero-cta.ghost{
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .prev-link{
+    display:inline-flex;
+    align-items:center; gap:6px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+    background: var(--cream-2);
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1.5px solid var(--ink);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .prev-link:hover{
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* Cat illustration */
+  .cat-council{
+    position:relative;
+    height: 400px;
+  }
+  .cat-council .seat{
+    position: absolute;
+    font-size: 60px;
+    filter: drop-shadow(3px 4px 0 var(--ink-soft));
+    animation: bobble 4s ease-in-out infinite;
+  }
+  .cat-council .seat.tech{
+    background: var(--ink);
+    color: var(--yellow);
+    width: 90px; height: 90px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius: 50%;
+    font-size: 36px;
+    border: 3px solid var(--orange);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    animation: bobble 4s ease-in-out infinite;
+  }
+  .cat-council .c1{ top: 5%; left: 18%; font-size: 75px; animation-delay: 0s; transform: rotate(-6deg)}
+  .cat-council .c2{ top: 35%; left: 5%; animation-delay: -0.8s; transform: rotate(8deg)}
+  .cat-council .c3{ top: 55%; right: 8%; font-size: 80px; animation-delay: -1.5s; transform: rotate(-10deg)}
+  .cat-council .c4{ bottom: 5%; left: 35%; font-size: 70px; animation-delay: -2.2s}
+  .cat-council .c5{ top: 8%; right: 18%; animation-delay: -3s; transform: rotate(14deg)}
+  .cat-council .tech.brain{ top: 35%; left: 42%}
+  .cat-council .tech.chip{ bottom: 25%; right: 30%; background: var(--orange); color: var(--paper); border-color: var(--ink)}
+
+  @keyframes bobble{
+    0%, 100%{ translate: 0 0; }
+    50%{ translate: 0 -8px; }
+  }
+
+  /* SECTION */
+  section.chapter{
+    padding: 70px 0;
+    position:relative;
+  }
+  section.chapter + section.chapter{
+    border-top: 2px dashed rgba(43,24,16,0.18);
+  }
+  .chapter-number{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--orange-deep);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .chapter h2{
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1;
+    margin-bottom: 16px;
+    max-width: 800px;
+  }
+  .chapter > .container > .lead{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 700px;
+    margin-bottom: 36px;
+  }
+
+  /* CARDS */
+  .card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  /* DECISION TREE (When to use AI) */
+  .decision-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .decision-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 26px;
+    box-shadow: 6px 6px 0 var(--ink);
+    transition: all 0.2s;
+  }
+  .decision-card.use{
+    box-shadow: 6px 6px 0 var(--olive);
+  }
+  .decision-card.dont{
+    box-shadow: 6px 6px 0 var(--coral);
+  }
+  .decision-card h3{
+    font-size: 28px;
+    margin-bottom: 12px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .decision-card .verdict{
+    display:inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    border: 1.5px solid var(--ink);
+  }
+  .decision-card.use .verdict{ background: var(--olive); color: var(--paper); border-color: var(--olive)}
+  .decision-card.dont .verdict{ background: var(--coral); color: var(--paper); border-color: var(--coral)}
+  .decision-card .checklist{
+    list-style: none;
+    padding: 0;
+  }
+  .decision-card .checklist li{
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(43,24,16,0.12);
+    font-size: 14.5px;
+    display:flex; align-items:flex-start; gap: 8px;
+  }
+  .decision-card .checklist li:last-child{ border-bottom: none}
+  .decision-card .checklist li::before{
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1.5px solid var(--ink);
+    margin-top: 1px;
+  }
+  .decision-card.use .checklist li::before{
+    content: "✓";
+    background: var(--olive);
+    color: var(--paper);
+  }
+  .decision-card.dont .checklist li::before{
+    content: "✗";
+    background: var(--coral);
+    color: var(--paper);
+  }
+
+  /* ROI Calculator */
+  .roi-section{
+    background: var(--ink);
+    color: var(--paper);
+    padding: 60px 0;
+    margin-top: 50px;
+    border-radius: 24px;
+    box-shadow: 0 8px 0 var(--orange);
+  }
+  .roi-section .container{ padding: 0 32px;}
+  .roi-section h3{
+    color: var(--yellow);
+    font-size: 32px;
+    margin-bottom: 6px;
+  }
+  .roi-section .roi-sub{
+    color: var(--cream-2);
+    margin-bottom: 28px;
+    font-size: 15px;
+  }
+  .roi-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .roi-input-row{
+    margin-bottom: 16px;
+  }
+  .roi-input-row label{
+    display:flex; justify-content: space-between;
+    font-size: 13.5px;
+    color: var(--cream-2);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .roi-input-row label .val{
+    font-family:'JetBrains Mono', monospace;
+    color: var(--yellow);
+    font-weight: 600;
+  }
+  .roi-input-row input[type=range]{
+    width: 100%;
+    accent-color: var(--orange);
+    height: 6px;
+  }
+  .roi-verdict{
+    background: rgba(255,255,255,0.05);
+    border: 2px solid var(--cream-2);
+    border-radius: 16px;
+    padding: 22px;
+    text-align: center;
+  }
+  .roi-verdict.green{
+    background: var(--olive);
+    border-color: var(--paper);
+  }
+  .roi-verdict.red{
+    background: var(--coral);
+    border-color: var(--paper);
+  }
+  .roi-verdict .v{
+    font-family:'Caprasimo', serif;
+    font-size: 48px;
+    color: var(--paper);
+    display:block; line-height:1;
+  }
+  .roi-verdict .lbl{
+    color: var(--cream-2);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .roi-verdict.green .lbl, .roi-verdict.red .lbl{ color: rgba(255,255,255,0.9)}
+  .roi-recommendation{
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: rgba(244, 211, 94, 0.1);
+    border-left: 3px solid var(--yellow);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--cream-2);
+  }
+  .roi-recommendation strong{ color: var(--yellow)}
+
+  /* Problem Types Interactive */
+  .problems-tabs{
+    display:flex; gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .problems-tabs button{
+    padding: 10px 18px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--ink);
+  }
+  .problems-tabs button:hover{ transform: translateY(-2px)}
+  .problems-tabs button.active{
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 4px 4px 0 var(--orange);
+  }
+  .problem-canvas-wrap{
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 28px;
+    align-items: stretch;
+  }
+  .problem-canvas-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  #problem-svg{
+    width:100%;
+    height: 380px;
+    background: #FCF6E3;
+    border-radius: 12px;
+    border: 1.5px dashed rgba(43,24,16,0.25);
+  }
+  .problem-controls{
+    margin-top: 18px;
+    display:flex; gap: 10px; flex-wrap:wrap; align-items: center;
+  }
+  .problem-controls button{
+    padding: 8px 14px;
+    border: 2px solid var(--ink);
+    background: var(--cream-2);
+    border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .problem-controls button:hover{
+    background: var(--orange);
+    color: var(--paper);
+  }
+  .problem-explain{
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 20px;
+    padding: 26px;
+    box-shadow: 6px 6px 0 var(--orange);
+    display:flex; flex-direction: column;
+  }
+  .problem-explain .tag{
+    display:inline-block;
+    background: var(--orange);
+    color: var(--paper);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    width: fit-content;
+  }
+  .problem-explain h3{
+    font-size: 28px;
+    margin-bottom: 12px;
+    color: var(--yellow);
+  }
+  .problem-explain p{
+    color: var(--cream-2);
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .problem-explain .cat-analogy{
+    background: rgba(255,255,255,0.06);
+    border: 1.5px dashed rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: auto;
+    font-size: 14px;
+    color: var(--cream-2);
+    font-style: italic;
+  }
+  .problem-explain .cat-analogy strong{ color: var(--yellow); font-style: normal}
+
+  /* Prompt Lab */
+  .prompt-lab{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .prompt-lab .technique-bar{
+    display:flex; gap: 4px;
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 4px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .prompt-lab .technique-bar button{
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 8px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--ink-soft);
+    line-height: 1.2;
+  }
+  .prompt-lab .technique-bar button .label{
+    display:block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+    opacity: 0.6;
+  }
+  .prompt-lab .technique-bar button.active{
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 3px 0 var(--orange);
+  }
+  .prompt-lab .technique-bar button.active .label{ opacity: 1}
+  .prompt-display{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .prompt-box, .response-box{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 18px;
+    min-height: 240px;
+    position: relative;
+  }
+  .prompt-box .box-label, .response-box .box-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--orange-deep);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .response-box{
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .response-box .box-label{ color: var(--yellow)}
+  .prompt-box pre, .response-box pre{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .response-box pre{ color: var(--cream-2)}
+  .response-quality{
+    background: var(--cream-2);
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .response-quality .quality-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .response-quality .quality-row:last-child{ margin-bottom: 0}
+  .quality-bar{
+    flex: 1;
+    height: 10px;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+    margin: 0 12px;
+    overflow: hidden;
+  }
+  .quality-bar .fill{
+    height: 100%;
+    background: var(--orange);
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 4px;
+  }
+  .quality-bar .fill.green{ background: var(--olive)}
+  .quality-label{ font-weight: 600; min-width: 110px}
+  .quality-value{ font-family:'JetBrains Mono', monospace; min-width: 40px; text-align: right; font-weight: 600; color: var(--orange-deep)}
+  .prompt-explainer{
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: rgba(255, 107, 53, 0.08);
+    border-left: 3px solid var(--orange);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .prompt-explainer strong{ color: var(--orange-deep)}
+
+  /* Chain prompting */
+  .chain-flow{
+    display:flex; gap: 14px;
+    overflow-x: auto;
+    padding: 8px 4px 18px;
+    margin-top: 16px;
+  }
+  .chain-step{
+    flex-shrink: 0;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 14px 18px;
+    min-width: 180px;
+    box-shadow: 3px 3px 0 var(--ink);
+    position: relative;
+  }
+  .chain-step .step-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--orange-deep);
+    font-weight: 700;
+  }
+  .chain-step .step-title{
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+    margin: 4px 0;
+  }
+  .chain-step .step-desc{
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .chain-arrow{
+    flex-shrink: 0;
+    align-self: center;
+    font-size: 28px;
+    color: var(--orange);
+  }
+  .chain-step.active{
+    background: var(--orange);
+    color: var(--paper);
+  }
+  .chain-step.active .step-num,
+  .chain-step.active .step-desc{
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* === Chain prompting: clicáveis + layout 3 colunas === */
+.chain-step{ cursor: pointer; transition: all 0.2s; }
+.chain-step:hover{
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--orange);
+}
+.chain-step.active{
+  background: var(--orange);
+  color: var(--paper);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.chain-step.active .step-num,
+.chain-step.active .step-desc{ color: rgba(255,255,255,0.92); }
+
+.chain-btn{
+  padding: 8px 14px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 100px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.chain-btn:hover:not(:disabled){
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.chain-btn.primary{ background: var(--orange); color: var(--paper); }
+.chain-btn:disabled{ opacity: 0.35; cursor: not-allowed; }
+
+.chain-detail{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin-top: 20px;
+}
+.chain-box{
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 16px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+.chain-input-box{ background: var(--cream-2); }
+.chain-prompt-box{ background: var(--paper); border-style: dashed; }
+.chain-output-box{ background: var(--ink); color: var(--paper); }
+.chain-box-label{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--orange-deep);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.chain-output-box .chain-box-label{ color: var(--yellow); }
+.chain-box pre{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.55;
+  color: var(--ink);
+  flex: 1;
+}
+.chain-output-box pre{ color: var(--cream-2); }
+
+@media (max-width: 920px){
+  .chain-detail{ grid-template-columns: 1fr; }
+  .chain-box{ min-height: auto; }
+  .chain-flow{ flex-wrap: wrap; overflow-x: visible; }
+  .chain-step{ flex: 1 1 100%; min-width: 0; }
+  .chain-arrow{ width: 100%; text-align: center; transform: rotate(90deg); }
+}
+
+  /* ReAct demo */
+  .react-demo{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .react-question{
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 15px;
+  }
+  .react-question::before{
+    content: "🐱 ";
+  }
+  .react-question strong{ color: var(--orange-deep)}
+  .react-controls{
+    display:flex; gap: 10px;
+    margin-bottom: 18px;
+    align-items: center;
+  }
+  .react-controls button{
+    padding: 10px 20px;
+    border: 2px solid var(--ink);
+    background: var(--orange);
+    color: var(--paper);
+    border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .react-controls button:hover{
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .react-controls button.ghost{
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .react-steps{
+    display:flex; flex-direction: column;
+    gap: 12px;
+  }
+  .react-step{
+    display:grid;
+    grid-template-columns: 100px 1fr;
+    gap: 14px;
+    opacity: 0.25;
+    filter: blur(1.5px);
+    transition: opacity 0.5s, transform 0.5s, filter 0.5s;
+    transform: translateY(8px);
+  }
+  .react-step.shown{
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+  .react-step .tag{
+    display:flex; align-items: center; justify-content: center;
+    padding: 6px 10px;
+    border-radius: 100px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    height: fit-content;
+    margin-top: 8px;
+    border: 2px solid var(--ink);
+  }
+  .react-step.reason .tag{ background: var(--yellow); color: var(--ink)}
+  .react-step.act .tag{ background: var(--orange); color: var(--paper)}
+  .react-step.observe .tag{ background: var(--sage); color: var(--paper)}
+  .react-step.final .tag{ background: var(--ink); color: var(--paper)}
+  .react-step .content{
+    background: var(--cream-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+  .react-step.final .content{
+    background: var(--ink);
+    color: var(--paper);
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+    border-color: var(--ink);
+  }
+  .react-step pre{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-top: 8px;
+    white-space: pre-wrap;
+  }
+
+  /* Hallucination detector */
+  .hall-section{
+    background: var(--cream-2);
+    padding: 70px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .hall-question{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 14px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .hall-question .q{
+    font-family:'Caprasimo', serif;
+    font-size: 20px;
+    color: var(--orange-deep);
+    margin-bottom: 10px;
+    display:flex; align-items: center; gap: 8px;
+  }
+  .hall-options{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .hall-options button{
+    padding: 14px 16px;
+    border: 2px solid var(--ink);
+    background: var(--cream-2);
+    border-radius: 12px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .hall-options button:hover{
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .hall-options button.correct{
+    background: #DCE9C4;
+    border-color: var(--olive);
+    color: var(--ink);
+    box-shadow: 3px 3px 0 var(--olive);
+    pointer-events: none;
+  }
+  .hall-options button.wrong{
+    background: #F5B7A4;
+    border-color: var(--coral);
+    color: var(--ink);
+    box-shadow: 3px 3px 0 var(--coral);
+    pointer-events: none;
+  }
+  .hall-feedback{
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    display: none;
+  }
+  .hall-feedback.shown{ display:block}
+  .hall-feedback.right{ background: #DCE9C4; border-left: 4px solid var(--olive); color: var(--ink-soft)}
+  .hall-feedback.bad{ background: #F5B7A4; border-left: 4px solid var(--coral); color: var(--ink-soft)}
+  .hall-score{
+    margin-top: 28px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 16px;
+    padding: 22px 26px;
+    display:flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+  }
+  .hall-score .score-num{
+    font-family:'Caprasimo', serif;
+    font-size: 44px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+  .hall-score .score-label{
+    font-size: 13px;
+    color: var(--cream-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .hall-mitigation{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 22px;
+    box-shadow: 4px 4px 0 var(--orange);
+  }
+  .hall-mitigation h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .hall-mitigation ul{ list-style: none; padding-left: 0; }
+  .hall-mitigation li{
+    padding: 6px 0;
+    font-size: 14px;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .hall-mitigation li::before{
+    content: "🛡️";
+    flex-shrink: 0;
+  }
+
+  /* GAN demo */
+  .gan-arena{
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--orange);
+  }
+  .gan-grid{
+    display:grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+  .gan-side{
+    background: rgba(255,255,255,0.06);
+    border: 2px solid var(--cream-2);
+    border-radius: 16px;
+    padding: 22px;
+    min-height: 280px;
+    text-align: center;
+    display:flex; flex-direction: column;
+  }
+  .gan-side.generator{ border-color: var(--orange)}
+  .gan-side.discriminator{ border-color: var(--sage)}
+  .gan-side h3{
+    color: var(--yellow);
+    margin-bottom: 6px;
+    font-size: 24px;
+  }
+  .gan-side .role{
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cream-2);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .gan-canvas{
+    width: 100%; height: 140px;
+    background: var(--cream);
+    border-radius: 10px;
+    border: 2px solid var(--cream-2);
+    margin-bottom: 12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 56px;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .gan-canvas.generating{ animation: shake 0.5s ease-in-out }
+  @keyframes shake{
+    0%, 100%{ transform: translateX(0)}
+    25%{ transform: translateX(-3px)}
+    75%{ transform: translateX(3px)}
+  }
+  .gan-canvas .label{
+    position:absolute;
+    top: 6px; left: 8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .gan-status{
+    font-size: 13px;
+    color: var(--cream-2);
+    min-height: 36px;
+  }
+  .gan-middle{
+    display:flex; flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .gan-vs{
+    font-family:'Caprasimo', serif;
+    font-size: 32px;
+    color: var(--orange);
+  }
+  .gan-vs-text{
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cream-2);
+  }
+  .gan-controls{
+    margin-top: 22px;
+    display: flex; gap: 12px; flex-wrap:wrap;
+    align-items: center;
+  }
+  .gan-controls button{
+    padding: 12px 22px;
+    background: var(--orange);
+    color: var(--paper);
+    border: 2px solid var(--paper);
+    border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .gan-controls button:hover{
+    transform: translateY(-2px);
+  }
+  .gan-controls button:disabled{
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .gan-rounds-info{
+    color: var(--cream-2);
+    font-size: 13px;
+  }
+  .gan-rounds-info .num{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    color: var(--yellow);
+    display:inline-block; margin: 0 4px;
+  }
+  .gan-history{
+    margin-top: 18px;
+    display:flex; gap: 6px; flex-wrap: wrap;
+  }
+  .gan-history .h-item{
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-family:'JetBrains Mono', monospace;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--cream-2);
+    color: var(--cream-2);
+  }
+  .gan-history .h-item.fake{ border-color: var(--coral); color: #FFA590}
+  .gan-history .h-item.real{ border-color: var(--olive); color: #BBDC8F}
+
+  /* NLP */
+  .nlp-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .nlp-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .nlp-card h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .nlp-card p{ font-size: 14px; color: var(--ink-soft); margin-bottom: 8px}
+  .nlp-tasks{
+    display:flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 12px;
+  }
+  .nlp-task{
+    background: var(--cream-2);
+    border: 1.5px solid var(--ink);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* Real cases */
+  .cases-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+  }
+  .case-card{
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.2s;
+  }
+  .case-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 0 var(--orange);
+  }
+  .case-card .icon{
+    width: 50px; height: 50px;
+    background: var(--orange);
+    color: var(--paper);
+    border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 24px;
+    margin-bottom: 12px;
+    border: 2px solid var(--ink);
+  }
+  .case-card h4{
+    font-family:'Caprasimo', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .case-card .case-domain{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--orange-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .case-card p{
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .case-card .type-tag{
+    display:inline-block;
+    margin-top: 10px;
+    padding: 3px 10px;
+    background: var(--cream-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Recap final */
+  .recap-section{
+    background: var(--ink);
+    color: var(--paper);
+    padding: 70px 0;
+    margin-top: 50px;
+  }
+  .recap-section h2{ color: var(--paper)}
+  .recap-section .accent{ color: var(--orange)}
+  .recap-section > .container > .lead{ color: var(--cream-2)}
+  .recap-section .chapter-number{ color: var(--yellow)}
+  .recap-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .recap-card{
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid var(--cream-2);
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .recap-card .num{
+    font-family:'Caprasimo', serif;
+    font-size: 28px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+  .recap-card .name{
+    font-family:'Caprasimo', serif;
+    font-size: 20px;
+    color: var(--paper);
+    margin: 4px 0 8px;
+  }
+  .recap-card p{
+    font-size: 13.5px;
+    color: var(--cream-2);
+  }
+
+  /* Decorative cat strip */
+  .cat-strip{
+    background: var(--orange);
+    color: var(--paper);
+    padding: 14px 0;
+    overflow: hidden;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    position: relative;
+  }
+  .cat-strip-inner{
+    display: flex;
+    gap: 40px;
+    animation: marquee 30s linear infinite;
+    white-space: nowrap;
+    font-family:'Caprasimo', serif;
+    font-size: 18px;
+  }
+  @keyframes marquee{
+    0%{ transform: translateX(0)}
+    100%{ transform: translateX(-50%)}
+  }
+
+  /* FOOTER */
+  footer{
+    text-align: center;
+    padding: 60px 32px 80px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    border-top: 2px solid var(--ink);
+  }
+  footer .heart{
+    color: var(--orange); display:inline-block;
+    animation: heartbeat 1.4s ease-in-out infinite;
+  }
+  @keyframes heartbeat{
+    0%, 100%{ transform: scale(1)}
+    50%{ transform: scale(1.18)}
+  }
+  footer a{
+    color: var(--orange-deep);
+    font-weight: 600;
+  }
+
+  /* Responsive */
+  @media (max-width: 920px){
+    .hero-grid,
+    .decision-grid,
+    .roi-grid,
+    .problem-canvas-wrap,
+    .prompt-display,
+    .nlp-grid{
+      grid-template-columns: 1fr;
+    }
+    .gan-grid{
+      grid-template-columns: 1fr;
+    }
+    .gan-middle{ flex-direction: row; padding: 8px 0}
+    .cat-council{ height: 280px}
+    .nav-inner{ flex-direction: column; align-items: flex-start; padding: 12px 20px}
+    .nav-links{ font-size: 11px}
+    .nav-links a{ padding: 4px 8px; font-size: 11px}
+    .container{ padding: 0 20px}
+    .roi-section .container{ padding: 0 20px}
+    .react-step{ grid-template-columns: 80px 1fr}
+    .hall-options{ grid-template-columns: 1fr}
+  }
+
+/* === Hallucination simulation === */
+.hall-sim{
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 6px 6px 0 var(--ink);
+  max-width: 760px;
+  margin: 0 auto;
+}
+.hall-sim-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 2px dashed rgba(43, 24, 16, 0.18);
+}
+.hall-sim-dots{ display: flex; gap: 8px; }
+.hall-sim-dots .pdot{
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--cream-2);
+  border: 1.5px solid var(--ink);
+  transition: all 0.3s;
+}
+.hall-sim-dots .pdot.done{ background: var(--ink); }
+.hall-sim-dots .pdot.active{ background: var(--orange); transform: scale(1.35); }
+.hall-sim-counter{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.hall-sim-counter span{ color: var(--orange-deep); font-size: 15px; }
+.hall-sim-chat{
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.hall-bubble{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.45s, transform 0.45s;
+}
+.hall-bubble.shown{ opacity: 1; transform: translateY(0); }
+.hall-bubble.user{ flex-direction: row-reverse; }
+.hall-avatar{
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--cream-2);
+  border: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.hall-bubble.user .hall-avatar{ background: var(--sage); }
+.hall-bubble.ai .hall-avatar{ background: var(--ink); color: var(--paper); }
+.hall-msg{
+  background: var(--cream-2);
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  padding: 12px 16px;
+  max-width: 78%;
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.hall-bubble.user .hall-msg{
+  background: var(--sage);
+  color: var(--paper);
+  border-bottom-right-radius: 4px;
+}
+.hall-bubble.ai .hall-msg{
+  background: var(--paper);
+  border-bottom-left-radius: 4px;
+}
+.hall-bubble.typing .hall-msg{
+  display: flex;
+  gap: 5px;
+  padding: 14px 18px;
+  align-items: center;
+}
+.hall-bubble.typing .td{
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: typingdots 1.2s infinite;
+}
+.hall-bubble.typing .td:nth-child(2){ animation-delay: 0.2s; }
+.hall-bubble.typing .td:nth-child(3){ animation-delay: 0.4s; }
+@keyframes typingdots{
+  0%, 60%, 100%{ opacity: 0.3; transform: translateY(0); }
+  30%{ opacity: 1; transform: translateY(-4px); }
+}
+.hall-confidence{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(43, 24, 16, 0.25);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--olive);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.hall-reveal{
+  background: var(--coral);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-top: 8px;
+  box-shadow: 4px 4px 0 var(--ink);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.55s, transform 0.55s;
+}
+.hall-reveal.shown{ opacity: 1; transform: translateY(0); }
+.hall-reveal-tag{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  color: var(--yellow);
+}
+.hall-reveal-text{ font-size: 14px; line-height: 1.6; }
+.hall-reveal-text strong{ color: var(--yellow); }
+.hall-sim-footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 2px dashed rgba(43, 24, 16, 0.18);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.hall-sim-footer span{ color: var(--orange-deep); font-weight: 700; margin: 0 2px; }
+
+@media (max-width: 700px){
+  .hall-msg{ max-width: 86%; font-size: 13.5px; }
+  .hall-sim{ padding: 18px; }
+  .hall-sim-chat{ min-height: 380px; }
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"></span></div>
+    <div class="nav-links">
+      <a href="#valor">Onde IA agrega</a>
+      <a href="#nao-usar">Quando não usar</a>
+      <a href="#problemas">Tipos</a>
+      <a href="#prompt">Prompts</a>
+      <a href="#chain">Chaining</a>
+      <a href="#react">ReAct</a>
+      <a href="#alucinacao">Alucinação</a>
+      <a href="#gan">GAN</a>
+      <a href="#nlp">NLP</a>
+      <a href="#casos">Casos reais</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <a href="#" class="prev-link">🐈 vinha do Balaio de Gatos · Métricas</a>
+        <div class="hero-badge">Escola da Nuvem · Aula 6</div>
+        <h1>
+          O conselho<br>
+          dos <span class="scratch">gatos</span><br>
+          decide quando<br>
+          usar <span class="accent">IA</span>.
+        </h1>
+        <p>
+          Onde IA agrega valor (e onde não), tipos de problema, engenharia de prompt, alucinação, GAN, NLP... tudo o que tu precisa pra AI Practitioner, com gatos no comando. Sem decoreba, mexendo nos sliders, brincando com os exemplos.
+        </p>
+        <a href="#valor" class="hero-cta">Começa aqui 🐾</a>
+        <a href="#casos" class="hero-cta ghost">Casos reais</a>
+      </div>
+      <div class="cat-council">
+        <span class="seat c1">😼</span>
+        <span class="seat c2">🐈</span>
+        <span class="seat tech brain">AI</span>
+        <span class="seat c3">😺</span>
+        <span class="seat c4">🐈‍⬛</span>
+        <span class="seat c5">😻</span>
+        <span class="seat tech chip">ML</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🐈 ONDE IA AGREGA</span><span>🚫 QUANDO NÃO USAR</span><span>🧮 CLASSIFICAÇÃO</span><span>📈 REGRESSÃO</span><span>🐾 CLUSTERIZAÇÃO</span><span>💬 PROMPT</span><span>🔗 CHAINING</span><span>🧠 REACT</span><span>👻 ALUCINAÇÃO</span><span>⚔️ GAN</span><span>📖 NLP</span><span>🐈 ONDE IA AGREGA</span><span>🚫 QUANDO NÃO USAR</span><span>🧮 CLASSIFICAÇÃO</span><span>📈 REGRESSÃO</span><span>🐾 CLUSTERIZAÇÃO</span><span>💬 PROMPT</span><span>🔗 CHAINING</span><span>🧠 REACT</span><span>👻 ALUCINAÇÃO</span><span>⚔️ GAN</span><span>📖 NLP</span>
+  </div>
+</div>
+
+<!-- ONDE IA AGREGA VALOR -->
+<section class="chapter" id="valor">
+  <div class="container">
+    <span class="chapter-number">01 · Onde IA agrega valor</span>
+    <h2>A IA não é uma solução, é uma <em style="color:var(--orange);font-style:normal">ferramenta</em>.</h2>
+    <p class="lead">
+      O ponto de partida nunca é "a gente quer usar IA". É <strong>"que problema do negócio a gente quer resolver?"</strong>. A IA agrega valor quando a decisão é repetitiva, baseada em dados e escalável. Vamos ver onde isso aparece no dia a dia.
+    </p>
+
+    <div class="decision-grid">
+      <div class="decision-card use">
+        <span class="verdict">🎯 Usa IA</span>
+        <h3>Quando IA agrega valor</h3>
+        <ul class="checklist">
+          <li>Tem <strong>muito dado histórico</strong> disponível e qualidade razoável.</li>
+          <li>A decisão é <strong>repetitiva</strong> e precisa de <strong>escala</strong> (milhões de casos).</li>
+          <li>É difícil escrever uma <strong>regra fixa</strong> que cubra todos os cenários.</li>
+          <li>O <strong>valor de negócio</strong> está claro: receita, segurança ou experiência.</li>
+          <li>O sistema <strong>melhora</strong> à medida que novos dados chegam.</li>
+        </ul>
+      </div>
+      <div class="decision-card dont">
+        <span class="verdict">⛔ NÃO usa IA</span>
+        <h3>Quando NÃO usar IA</h3>
+        <ul class="checklist">
+          <li>Regra fixa resolve. Se um <strong>if/else</strong> funciona, vai de if/else.</li>
+          <li><strong>Baixo ROI</strong>: o custo de implementar supera o benefício.</li>
+          <li>Dados <strong>insuficientes, ruins ou enviesados</strong>. Lixo entra, lixo sai.</li>
+          <li>Decisão crítica <strong>sem supervisão humana</strong> (saúde, justiça).</li>
+          <li>O problema muda toda semana e <strong>não dá tempo</strong> de retreinar.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ROI Calculator -->
+    <div class="roi-section" id="nao-usar" style="margin-top: 50px;">
+      <div class="container">
+        <span class="chapter-number">02 · Decisão prática</span>
+        <h3>🐱 O conselho dos gatos faz a conta: vale o ROI?</h3>
+        <p class="roi-sub">Mexe nos parâmetros do seu caso e veja se compensa investir em IA. Conta tudo: custo de implementar, ganho por decisão automatizada e volume.</p>
+        <div class="roi-grid">
+          <div>
+            <div class="roi-input-row">
+              <label><span>📊 Volume de decisões / mês</span><span class="val" id="roi-vol-v">10.000</span></label>
+              <input type="range" id="roi-vol" min="100" max="100000" step="100" value="10000">
+            </div>
+            <div class="roi-input-row">
+              <label><span>💰 Ganho por decisão automatizada (R$)</span><span class="val" id="roi-gain-v">R$ 2</span></label>
+              <input type="range" id="roi-gain" min="0" max="50" step="0.5" value="2">
+            </div>
+            <div class="roi-input-row">
+              <label><span>🏗️ Custo de implementar (R$, único)</span><span class="val" id="roi-impl-v">R$ 50.000</span></label>
+              <input type="range" id="roi-impl" min="5000" max="500000" step="1000" value="50000">
+            </div>
+            <div class="roi-input-row">
+              <label><span>⚙️ Custo mensal de operar (R$)</span><span class="val" id="roi-op-v">R$ 3.000</span></label>
+              <input type="range" id="roi-op" min="500" max="20000" step="100" value="3000">
+            </div>
+            <div class="roi-input-row">
+              <label><span>⏱️ Período de análise (meses)</span><span class="val" id="roi-mo-v">12</span></label>
+              <input type="range" id="roi-mo" min="1" max="36" step="1" value="12">
+            </div>
+          </div>
+          <div>
+            <div class="roi-verdict green" id="roi-verdict-card">
+              <span class="lbl">ROI no período</span>
+              <span class="v" id="roi-result">+260%</span>
+              <div style="margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.9); font-family:'JetBrains Mono', monospace;">
+                Lucro líquido: <span id="roi-profit">R$ 166.000</span>
+              </div>
+            </div>
+            <div class="roi-recommendation" id="roi-rec">
+              <strong>🐾 Recomendação:</strong> <span id="roi-rec-text">Vai de IA! O retorno cobre o investimento com folga.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOS DE PROBLEMAS -->
+<section class="chapter" id="problemas">
+  <div class="container">
+    <span class="chapter-number">03 · Tipos de problemas</span>
+    <h2>Antes de tudo: que <em style="color:var(--orange);font-style:normal">tipo</em> de problema você tá resolvendo?</h2>
+    <p class="lead">
+      Três caminhos diferentes, três técnicas diferentes. Clique nos botões pra ver o gatil de cada um. Spoiler: o tipo do problema define quase tudo (qual modelo treinar, qual métrica usar, que tipo de dado precisa).
+    </p>
+
+    <div class="problems-tabs" id="prob-tabs">
+      <button class="active" data-tab="classification">🧮 Classificação</button>
+      <button data-tab="regression">📈 Regressão</button>
+      <button data-tab="clustering">🐾 Clusterização</button>
+    </div>
+
+    <div class="problem-canvas-wrap">
+      <div class="problem-canvas-card">
+        <svg id="problem-svg" viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg">
+          <!-- content rendered by JS -->
+        </svg>
+        <div class="problem-controls">
+          <button id="prob-reshuffle">🎲 Embaralhar dados</button>
+          <button id="prob-run">▶️ Rodar modelo</button>
+          <span style="font-size: 13px; color: var(--ink-soft); margin-left: auto;" id="prob-stats"></span>
+        </div>
+      </div>
+
+      <div class="problem-explain" id="prob-explain">
+        <span class="tag" id="pe-tag">CLASSIFICAÇÃO</span>
+        <h3 id="pe-title">Escolher uma categoria</h3>
+        <p id="pe-text">O modelo recebe uma entrada e atribui uma classe entre opções pré-definidas. A saída é discreta: ou é gato, ou não é gato.</p>
+        <p id="pe-use" style="font-size: 14px; opacity: 0.9;">
+          <strong style="color: var(--yellow);">Usos típicos:</strong> detecção de fraude, identificação de spam, diagnóstico de imagens, é/não é gato.
+        </p>
+        <div class="cat-analogy" id="pe-analogy">
+          <strong>Analogia do gato:</strong> Imagina uma caixa de e-mails. Cada um é classificado: spam ou não-spam. Duas categorias claras, decisão direta. Output discreto.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGENHARIA DE PROMPT -->
+<section class="chapter" id="prompt">
+  <div class="container">
+    <span class="chapter-number">04 · Engenharia de prompt</span>
+    <h2>O prompt é a <em style="color:var(--orange);font-style:normal">pergunta</em>. A qualidade do output começa aqui.</h2>
+    <p class="lead">
+      <strong>Prompt</strong> é a instrução que você envia pro modelo. <strong>Engenharia de prompt</strong> é o jeito de escrever essa instrução pra ter a melhor resposta possível, sem precisar retreinar o modelo. Vamos ver 4 técnicas, lado a lado, com a <em>mesma</em> tarefa: classificar um comentário como positivo/negativo/neutro.
+    </p>
+
+    <div class="prompt-lab">
+      <div class="technique-bar" id="prompt-tabs">
+        <button class="active" data-technique="zero">
+          <span class="label">Técnica 1</span>
+          Zero-shot
+        </button>
+        <button data-technique="one">
+          <span class="label">Técnica 2</span>
+          One-shot
+        </button>
+        <button data-technique="few">
+          <span class="label">Técnica 3</span>
+          Few-shot
+        </button>
+        <button data-technique="cot">
+          <span class="label">Técnica 4</span>
+          Chain-of-Thought
+        </button>
+      </div>
+
+      <div class="prompt-display">
+        <div class="prompt-box">
+          <div class="box-label">📝 Prompt enviado</div>
+          <pre id="prompt-text"></pre>
+        </div>
+        <div class="response-box">
+          <div class="box-label">🤖 Resposta do modelo</div>
+          <pre id="response-text"></pre>
+        </div>
+      </div>
+
+      <div class="response-quality">
+        <div class="quality-row">
+          <span class="quality-label">🎯 Precisão</span>
+          <div class="quality-bar"><div class="fill" id="q-precision" style="width:60%"></div></div>
+          <span class="quality-value" id="q-precision-v">60%</span>
+        </div>
+        <div class="quality-row">
+          <span class="quality-label">💸 Custo do prompt</span>
+          <div class="quality-bar"><div class="fill green" id="q-cost" style="width:15%"></div></div>
+          <span class="quality-value" id="q-cost-v">15%</span>
+        </div>
+        <div class="quality-row">
+          <span class="quality-label">🐛 Risco de erro</span>
+          <div class="quality-bar"><div class="fill" id="q-risk" style="width:55%"></div></div>
+          <span class="quality-value" id="q-risk-v">55%</span>
+        </div>
+      </div>
+
+      <div class="prompt-explainer" id="prompt-explainer">
+        <strong>Zero-shot:</strong> envia a instrução sem nenhum exemplo. É a forma mais simples e barata. Funciona bem em tarefas que o modelo já viu muito no treinamento (sentimento de texto, tradução). Pode falhar em tarefas específicas ou nicho.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAIN PROMPTING -->
+<section class="chapter" id="chain">
+  <div class="container">
+    <span class="chapter-number">05 · Encadeamento de prompts</span>
+    <h2>Tarefa grande? <em style="color:var(--orange);font-style:normal">Quebra em pedaços.</em></h2>
+    <p class="lead">
+      Em vez de pedir tudo de uma vez ("leia esse PDF gigante, resuma, traduza e formate"), você quebra em <strong>etapas sequenciais</strong>. A saída de cada passo vira a entrada do próximo. Cada etapa fica mais simples e mais fácil de validar. Clique nos passos pra ver o exemplo evoluir.
+    </p>
+
+    <div class="card">
+      <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+  <div style="font-family:'Caprasimo', serif; font-size: 22px;">🐈 Exemplo: feedback de adoção da Gataria</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button id="chain-prev" class="chain-btn">← Anterior</button>
+    <button id="chain-next" class="chain-btn">Próximo →</button>
+    <button id="chain-play" class="chain-btn primary">▶️ Rodar tudo</button>
+    <button id="chain-reset" class="chain-btn">↻ Reset</button>
+  </div>
+</div>
+
+<div style="font-size: 13.5px; color: var(--ink-soft); margin-bottom: 14px;">
+  💡 <strong>Clique em qualquer passo abaixo</strong> pra ver o que entra, o prompt usado e o que sai. A saída de cada etapa vira a entrada da próxima.
+</div>
+
+<div class="chain-flow" id="chain-flow">
+  <div class="chain-step active" data-step="0">
+    <div class="step-num">PASSO 1</div>
+    <div class="step-title">📥 Extrair</div>
+    <div class="step-desc">Tira o feedback bruto da planilha</div>
+  </div>
+  <div class="chain-arrow">→</div>
+  <div class="chain-step" data-step="1">
+    <div class="step-num">PASSO 2</div>
+    <div class="step-title">📝 Resumir</div>
+    <div class="step-desc">Reduz a uma frase central</div>
+  </div>
+  <div class="chain-arrow">→</div>
+  <div class="chain-step" data-step="2">
+    <div class="step-num">PASSO 3</div>
+    <div class="step-title">🌍 Traduzir</div>
+    <div class="step-desc">Converte pra inglês</div>
+  </div>
+  <div class="chain-arrow">→</div>
+  <div class="chain-step" data-step="3">
+    <div class="step-num">PASSO 4</div>
+    <div class="step-title">📋 Formatar</div>
+    <div class="step-desc">Estrutura como JSON pro BI</div>
+  </div>
+</div>
+
+<div class="chain-detail">
+  <div class="chain-box chain-input-box">
+    <div class="chain-box-label">📥 Entrada</div>
+    <pre id="chain-input"></pre>
+  </div>
+  <div class="chain-box chain-prompt-box">
+    <div class="chain-box-label">💬 Prompt enviado</div>
+    <pre id="chain-prompt"></pre>
+  </div>
+  <div class="chain-box chain-output-box">
+    <div class="chain-box-label">✨ Saída (vira a entrada do próximo)</div>
+    <pre id="chain-output"></pre>
+  </div>
+</div>
+
+<div class="prompt-explainer" style="margin-top: 18px;">
+  <strong>🐾 Por que isso funciona?</strong> Modelos generativos têm uma "janela de atenção" limitada. Pedindo coisas demais em um prompt só, eles esquecem detalhes ou misturam ordens. Quebrando em pedaços, você reduz a chance de erro e <strong>consegue validar cada saída antes da próxima entrada</strong>.
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ReAct -->
+<section class="chapter" id="react">
+  <div class="container">
+    <span class="chapter-number">06 · ReAct (Reasoning + Acting)</span>
+    <h2>Quando o modelo precisa <em style="color:var(--orange);font-style:normal">agir no mundo</em>, não só pensar.</h2>
+    <p class="lead">
+      O modelo sozinho não sabe a previsão do tempo de amanhã. Não sabe o valor do dólar agora. Não sabe quantos gatos foram adotados nesse mês na ONG. <strong>ReAct</strong> é o ciclo onde o modelo <strong>alterna pensar (Reason) ↔ agir (Act) ↔ observar (Observe)</strong> chamando ferramentas externas. É a base dos agentes inteligentes modernos.
+    </p>
+
+    <div class="react-demo">
+      <div class="react-question">
+        Pergunta do tutor: <strong>"Quantos gatos foram adotados na ONG no mês passado, e qual a média de idade deles?"</strong>
+      </div>
+      <div class="react-controls">
+        <button id="react-play">▶️ Ver o agente trabalhando</button>
+        <button id="react-reset" class="ghost">↻ Reiniciar</button>
+      </div>
+      <div class="react-steps" id="react-steps">
+        <div class="react-step reason" data-i="0">
+          <span class="tag">REASON</span>
+          <div class="content">
+            "Preciso descobrir quantos gatos foram adotados no mês passado. Não tenho essa info de cabeça. Vou consultar o banco de dados da ONG."
+          </div>
+        </div>
+        <div class="react-step act" data-i="1">
+          <span class="tag">ACT</span>
+          <div class="content">
+            Chamando ferramenta <strong>SQL</strong>:
+            <pre>SELECT COUNT(*), AVG(idade) FROM adocoes
+WHERE data >= '2025-10-01' AND data &lt; '2025-11-01';</pre>
+          </div>
+        </div>
+        <div class="react-step observe" data-i="2">
+          <span class="tag">OBSERVE</span>
+          <div class="content">
+            Resultado: <strong>34 adoções</strong>, idade média de <strong>2,3 anos</strong>.
+          </div>
+        </div>
+        <div class="react-step reason" data-i="3">
+          <span class="tag">REASON</span>
+          <div class="content">
+            "Tenho os dados. Agora vou formatar a resposta pro tutor de forma amigável."
+          </div>
+        </div>
+        <div class="react-step final" data-i="4">
+          <span class="tag">FINAL</span>
+          <div class="content">
+            🐾 No mês passado, 34 gatos foram adotados. Idade média: 2,3 anos.
+          </div>
+        </div>
+      </div>
+
+      <div class="prompt-explainer" style="margin-top: 20px;">
+        <strong>🛠️ Em produção (AWS):</strong> ReAct é o padrão que sustenta agentes como o <strong>Amazon Bedrock Agents</strong>. O modelo decide qual ferramenta chamar (uma Lambda, uma query no DynamoDB, uma API), executa, lê o retorno e decide o próximo passo. Sem ReAct, o modelo ficaria preso no que aprendeu em 2024.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALUCINAÇÃO -->
+<section class="hall-section" id="alucinacao">
+  <div class="container">
+    <span class="chapter-number">07 · Alucinação</span>
+    <h2>Quando o modelo <em style="color:var(--orange);font-style:normal">inventa</em> com confiança.</h2>
+    <p class="lead">
+      Alucinação é quando o LLM gera uma resposta <strong>plausível, bem escrita, segura...</strong> e <strong>completamente errada</strong>. É o erro mais perigoso porque parece certo. Senta e olha o conselho dos gatos pegando o modelo em flagrante, caso por caso:
+    </p>
+
+    <div class="hall-sim" id="hall-sim">
+      <div class="hall-sim-header">
+        <div class="hall-sim-dots" id="hall-dots"></div>
+        <div class="hall-sim-counter">
+          Caso <span id="hall-current">1</span> / <span id="hall-total">5</span>
+        </div>
+      </div>
+
+      <div class="hall-sim-chat">
+        <div class="hall-bubble user" id="hall-user">
+          <div class="hall-avatar">🧑</div>
+          <div class="hall-msg" id="hall-question"></div>
+        </div>
+
+        <div class="hall-bubble ai typing" id="hall-typing">
+          <div class="hall-avatar">🤖</div>
+          <div class="hall-msg">
+            <span class="td"></span><span class="td"></span><span class="td"></span>
+          </div>
+        </div>
+
+        <div class="hall-bubble ai" id="hall-ai">
+          <div class="hall-avatar">🤖</div>
+          <div class="hall-msg" id="hall-response"></div>
+        </div>
+
+        <div class="hall-reveal" id="hall-reveal">
+          <div class="hall-reveal-tag">🚨 VEREDITO DO CONSELHO DOS GATOS</div>
+          <div class="hall-reveal-text" id="hall-truth"></div>
+        </div>
+      </div>
+
+      <div class="hall-sim-footer">
+        🔄 Rodando em loop · próximo caso em <span id="hall-countdown">7</span>s
+      </div>
+    </div>
+
+    <div class="hall-mitigation">
+      <h4>🛡️ Como reduzir alucinação na prática</h4>
+      <ul>
+        <li><strong>Use ReAct + RAG:</strong> conecta o modelo a fontes reais (busca, banco de dados, documentos). Em vez de inventar, ele <em>consulta</em>.</li>
+        <li><strong>Peça citações:</strong> "responda E cite a fonte". Se ele não consegue citar, ele inventou.</li>
+        <li><strong>Use temperatura baixa:</strong> menos criatividade = menos invenção. Pra tarefas factuais, temperatura próxima de 0.</li>
+        <li><strong>Valide a saída:</strong> use um segundo modelo, regras ou revisão humana em decisões críticas.</li>
+        <li><strong>Forneça contexto rico:</strong> em vez de "fale sobre adoção", "com base neste documento da ONG, responda...".</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GAN -->
+<section class="chapter" id="gan">
+  <div class="container">
+    <span class="chapter-number">08 · GAN - Generative Adversarial Network (será ensinado na próxima aula) </span>
+    <h2>Dois gatos numa briga, e a IA fica <em style="color:var(--orange);font-style:normal">cada vez melhor</em>.</h2>
+    <p class="lead">
+      A GAN é um treinamento adversarial. Tem <strong>dois modelos competindo</strong>: o <strong>Gerador</strong> (tenta criar dados falsos que parecem reais) e o <strong>Discriminador</strong> (tenta detectar o que é falso). Cada vez que um melhora, o outro tem que melhorar também. É como falsificador vs perito de obra de arte: brigando, os dois ficam expert.
+    </p>
+    <p class="lead">
+      Aperta "Próximo round" e veja o gato gerador melhorando a falsificação a cada rodada.
+    </p>
+
+    <div class="gan-arena">
+      <div class="gan-grid">
+        <div class="gan-side generator">
+          <h3>🐈‍⬛ Gerador</h3>
+          <div class="role">O falsificador</div>
+          <div class="gan-canvas" id="gan-gen-canvas">
+            <span class="label">Gerador (output)</span>
+            <span id="gan-gen-art">🎨</span>
+          </div>
+          <div class="gan-status" id="gan-gen-status">Esperando primeiro round...</div>
+        </div>
+        <div class="gan-middle">
+          <div class="gan-vs">⚔️</div>
+          <div class="gan-vs-text">vs</div>
+        </div>
+        <div class="gan-side discriminator">
+          <h3>🐈 Discriminador</h3>
+          <div class="role">O fiscal</div>
+          <div class="gan-canvas" id="gan-disc-canvas">
+            <span class="label">Veredito</span>
+            <span id="gan-disc-art">🔍</span>
+          </div>
+          <div class="gan-status" id="gan-disc-status">Pronto pra inspecionar...</div>
+        </div>
+      </div>
+
+      <div class="gan-controls">
+        <button id="gan-next">▶️ Próximo round</button>
+        <button id="gan-reset" style="background: var(--paper); color: var(--ink);">↻ Reset</button>
+        <span class="gan-rounds-info">Round atual: <span class="num" id="gan-round">0</span> · Realismo: <span class="num" id="gan-realism">0%</span></span>
+      </div>
+
+      <div class="gan-history" id="gan-history"></div>
+
+      <div style="background: rgba(244, 211, 94, 0.12); border-left: 3px solid var(--yellow); border-radius: 8px; padding: 14px 16px; margin-top: 22px; font-size: 14px; color: var(--cream-2);">
+        <strong style="color: var(--yellow);">💡 Onde GAN aparece:</strong> deepfakes (faces realistas que não existem), aumento de dataset (criar mais exemplos pra treinar outros modelos), arte gerada por IA, geração de texturas em games, melhoria de imagens médicas (super-resolução).
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NLP -->
+<section class="chapter" id="nlp">
+  <div class="container">
+    <span class="chapter-number">09 · NLP - Natural Language Processing (será ensinado na próxima aula)</span>
+    <h2>Ensinar a máquina a <em style="color:var(--orange);font-style:normal">ler</em> e <em style="color:var(--orange);font-style:normal">escrever</em>.</h2>
+    <p class="lead">
+      NLP é o campo da IA dedicado a fazer máquinas entenderem e gerarem linguagem humana. Os LLMs (Llama, Claude, GPT...) são o auge atual do NLP, mas muito NLP útil rola sem LLM: análise de sentimento, extração de entidades, classificação de texto, etc.
+    </p>
+
+    <div class="nlp-grid">
+      <div class="nlp-card">
+        <h4>📖 NLP Clássico</h4>
+        <p>Técnicas tradicionais que ainda rodam muito em produção, geralmente mais baratas e rápidas que LLMs.</p>
+        <div class="nlp-tasks">
+          <span class="nlp-task">😊 Análise de sentimento</span>
+          <span class="nlp-task">🏷️ Extração de entidades (NER)</span>
+          <span class="nlp-task">🌐 Tradução automática</span>
+          <span class="nlp-task">📊 Classificação de texto</span>
+          <span class="nlp-task">🔤 Tokenização</span>
+          <span class="nlp-task">📝 Resumo extrativo</span>
+        </div>
+      </div>
+      <div class="nlp-card" style="box-shadow: 4px 4px 0 var(--orange);">
+        <h4>✨ NLP com LLMs</h4>
+        <p>Os modelos generativos atuais conseguem fazer tudo do clássico com uma única instrução, mais tarefas novas que antes precisavam de modelos especializados.</p>
+        <div class="nlp-tasks">
+          <span class="nlp-task" style="background: var(--orange); color: var(--paper); border-color: var(--orange);">💬 Chatbots</span>
+          <span class="nlp-task" style="background: var(--orange); color: var(--paper); border-color: var(--orange);">📄 Resumo abstrativo</span>
+          <span class="nlp-task" style="background: var(--orange); color: var(--paper); border-color: var(--orange);">❓ Q&amp;A</span>
+          <span class="nlp-task" style="background: var(--orange); color: var(--paper); border-color: var(--orange);">💻 Code generation</span>
+          <span class="nlp-task" style="background: var(--orange); color: var(--paper); border-color: var(--orange);">🎨 Criatividade</span>
+          <span class="nlp-task" style="background: var(--orange); color: var(--paper); border-color: var(--orange);">🔄 Reescrita</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: var(--paper); border: 2px solid var(--ink); border-radius: 16px; padding: 22px; margin-top: 20px; box-shadow: 4px 4px 0 var(--ink);">
+      <div style="font-family:'Caprasimo', serif; font-size: 22px; margin-bottom: 10px;">🧠 Como o NLP transforma texto em algo "computável"</div>
+      <p style="font-size: 14.5px; color: var(--ink-soft); margin-bottom: 14px;">
+        Computador não entende palavras, entende <strong>números</strong>. O coração do NLP moderno é converter texto em <strong>vetores (embeddings)</strong>: cada palavra/frase vira um conjunto de números que capturam o significado. Aí dá pra calcular distâncias, similaridades, classes...
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+        <div style="background: var(--cream-2); border: 1.5px solid var(--ink); padding: 12px; border-radius: 10px; font-family:'JetBrains Mono', monospace; font-size: 13px;">
+          <strong>"gato"</strong><br>
+          <span style="color: var(--orange-deep);">[0.21, 0.84, -0.13, ...]</span>
+        </div>
+        <div style="background: var(--cream-2); border: 1.5px solid var(--ink); padding: 12px; border-radius: 10px; font-family:'JetBrains Mono', monospace; font-size: 13px;">
+          <strong>"felino"</strong><br>
+          <span style="color: var(--orange-deep);">[0.24, 0.81, -0.11, ...]</span>
+        </div>
+        <div style="background: var(--cream-2); border: 1.5px solid var(--ink); padding: 12px; border-radius: 10px; font-family:'JetBrains Mono', monospace; font-size: 13px;">
+          <strong>"carro"</strong><br>
+          <span style="color: var(--orange-deep);">[-0.55, 0.12, 0.78, ...]</span>
+        </div>
+      </div>
+      <p style="font-size: 13px; color: var(--ink-soft); margin-top: 12px; font-style: italic;">
+        Os vetores de "gato" e "felino" são parecidos (mesmo "vizinhança"); "carro" tá longe. É assim que a máquina "entende" sinônimos.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CASOS REAIS -->
+<section class="chapter" id="casos">
+  <div class="container">
+    <span class="chapter-number">10 · Casos reais</span>
+    <h2>Onde tudo isso <em style="color:var(--orange);font-style:normal">aparece</em> de verdade.</h2>
+    <p class="lead">
+      Quatro aplicações cotidianas da IA - e o tipo de problema, técnica e serviço AWS por trás de cada uma.
+    </p>
+
+    <div class="cases-grid">
+      <div class="case-card">
+        <div class="icon">💳</div>
+        <div class="case-domain">FRAUDE</div>
+        <h4>Pagamentos seguros</h4>
+        <p>Modelos detectam padrões suspeitos em transações e bloqueiam fraudes em milissegundos. Recall é a métrica mais crítica (não pode perder fraude).</p>
+        <span class="type-tag">🧮 Classificação</span>
+        <span class="type-tag">☁️ Amazon Fraud Detector</span>
+      </div>
+      <div class="case-card">
+        <div class="icon">🎬</div>
+        <div class="case-domain">RECOMENDAÇÃO</div>
+        <h4>Conteúdo personalizado</h4>
+        <p>Netflix, Spotify, Amazon: sistemas que sugerem o próximo filme, música ou produto com base no histórico do usuário e perfis parecidos.</p>
+        <span class="type-tag">🐾 Clustering + Ranking</span>
+        <span class="type-tag">☁️ Amazon Personalize</span>
+      </div>
+      <div class="case-card">
+        <div class="icon">💬</div>
+        <div class="case-domain">CHATBOT</div>
+        <h4>Atendimento automatizado</h4>
+        <p>Assistentes conversacionais resolvem dúvidas comuns, abrem chamados e encaminham casos complexos. NLP + LLM + ReAct juntos.</p>
+        <span class="type-tag">📖 NLP / LLM</span>
+        <span class="type-tag">☁️ Amazon Lex / Bedrock</span>
+      </div>
+      <div class="case-card">
+        <div class="icon">👁️</div>
+        <div class="case-domain">VISÃO COMPUTACIONAL</div>
+        <h4>Imagens e vídeo</h4>
+        <p>Identifica objetos, pessoas, padrões em imagens e fluxos de câmeras. Detector de gatos, contagem de pessoas, controle de qualidade industrial.</p>
+        <span class="type-tag">🧮 Classificação de imagem</span>
+        <span class="type-tag">☁️ Amazon Rekognition</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECAP -->
+<section class="recap-section" id="recap">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2>O conselho dos gatos te <span class="accent">deu cola</span>.</h2>
+    <p class="lead">
+      Imprime, salva, tira print. Tudo o que cai num teste de AI Practitioner, em uma página.
+    </p>
+
+    <div class="recap-grid">
+      <div class="recap-card">
+        <div class="num">01</div>
+        <div class="name">Onde IA agrega</div>
+        <p>Muito dado + decisão repetitiva + escala + valor de negócio claro.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">02</div>
+        <div class="name">Quando NÃO usar</div>
+        <p>Regra fixa basta, ROI baixo, dados ruins, decisão crítica sem supervisão.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">03</div>
+        <div class="name">Classificação</div>
+        <p>Saída discreta. Categoria entre opções. (fraude, spam, é/não é gato)</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">04</div>
+        <div class="name">Regressão</div>
+        <p>Saída contínua. Um número. (preço, temperatura, demanda)</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">05</div>
+        <div class="name">Clusterização</div>
+        <p>Agrupa sem rótulo. Descobre grupos. (segmentação, anomalia)</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">06</div>
+        <div class="name">Zero-shot</div>
+        <p>Sem exemplo. Mais barato. Bom em tarefa comum.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">07</div>
+        <div class="name">One/Few-shot</div>
+        <p>1 ou poucos exemplos. Ajuda em formato e tarefas de nicho.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">08</div>
+        <div class="name">Chain-of-Thought</div>
+        <p>"Pense passo a passo". Melhora lógica e matemática.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">09</div>
+        <div class="name">Prompt chaining</div>
+        <p>Quebra a tarefa. Saída de um vira entrada do próximo.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">10</div>
+        <div class="name">ReAct</div>
+        <p>Pensa → age (chama ferramenta) → observa. Base dos agentes.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">11</div>
+        <div class="name">Alucinação</div>
+        <p>Resposta errada com cara de certa. Mitiga: RAG, citação, validação.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">12</div>
+        <div class="name">GAN</div>
+        <p>Gerador vs Discriminador. Treino adversarial. Deepfake, dataset.</p>
+      </div>
+      <div class="recap-card">
+        <div class="num">13</div>
+        <div class="name">NLP</div>
+        <p>Linguagem humana → vetores → IA entende. LLM é o "atual" do NLP.</p>
+      </div>
+      <div class="recap-card" style="background: var(--orange); border-color: var(--paper);">
+        <div class="num" style="color: var(--paper);">🐾</div>
+        <div class="name" style="color: var(--paper);">Resumo do resumo</div>
+        <p style="color: rgba(255,255,255,0.95);">Comece pelo problema de negócio. Sempre. Tudo o mais é detalhe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>, uma aula visual pelo professor <a href="https://www.linkedin.com/in/brianrichard1/" target="_blank">Brian</a>, materializada em código.
+  </div>
+  <div style="margin-top: 8px; opacity: 0.7;">
+    Tudo neste site é interativo. Mexa nos sliders, clique nos botões, brinque com o conselho dos gatos. <em>"Os alunos que aprendam mexendo, não decorando."</em>
+  </div>
+</footer>
+
+<script>
+/* ====== ROI CALCULATOR ====== */
+(function(){
+  const vol = document.getElementById('roi-vol');
+  const gain = document.getElementById('roi-gain');
+  const impl = document.getElementById('roi-impl');
+  const op = document.getElementById('roi-op');
+  const mo = document.getElementById('roi-mo');
+  const fmt = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
+  const fmtBRL = v => 'R$ ' + fmt.format(Math.round(v));
+
+  function update(){
+    const volV = +vol.value, gainV = +gain.value, implV = +impl.value, opV = +op.value, moV = +mo.value;
+    document.getElementById('roi-vol-v').textContent = fmt.format(volV);
+    document.getElementById('roi-gain-v').textContent = fmtBRL(gainV);
+    document.getElementById('roi-impl-v').textContent = fmtBRL(implV);
+    document.getElementById('roi-op-v').textContent = fmtBRL(opV);
+    document.getElementById('roi-mo-v').textContent = moV;
+
+    const ganho = volV * gainV * moV;
+    const custo = implV + opV * moV;
+    const lucro = ganho - custo;
+    const roi = custo > 0 ? (lucro / custo) * 100 : 0;
+
+    document.getElementById('roi-result').textContent = (roi >= 0 ? '+' : '') + Math.round(roi) + '%';
+    document.getElementById('roi-profit').textContent = (lucro >= 0 ? '' : '-') + fmtBRL(Math.abs(lucro));
+
+    const card = document.getElementById('roi-verdict-card');
+    const rec = document.getElementById('roi-rec-text');
+    if (roi > 100){
+      card.className = 'roi-verdict green';
+      rec.innerHTML = '<strong>🚀 Vai de IA!</strong> O retorno cobre o investimento com folga. Esse é o tipo de problema que a IA foi feita pra resolver.';
+    } else if (roi > 0){
+      card.className = 'roi-verdict';
+      rec.innerHTML = '<strong>🤔 Tá no limite.</strong> Compensa, mas com pouca margem. Vale negociar o custo ou aumentar o volume antes de investir.';
+    } else {
+      card.className = 'roi-verdict red';
+      rec.innerHTML = '<strong>🚫 Não vale.</strong> O retorno não cobre o investimento. Ou o problema não é grande o suficiente, ou o custo precisa baixar muito.';
+    }
+  }
+  [vol, gain, impl, op, mo].forEach(e => e.addEventListener('input', update));
+  update();
+})();
+
+/* ====== PROBLEM TYPES INTERACTIVE ====== */
+(function(){
+  const svg = document.getElementById('problem-svg');
+  let currentTab = 'classification';
+  let points = [];
+  let modelDrawn = false;
+
+  const explanations = {
+    classification: {
+      tag: 'CLASSIFICAÇÃO',
+      title: 'Escolher uma categoria',
+      text: 'O modelo recebe uma entrada e atribui uma classe entre opções pré-definidas. A saída é discreta: ou é gato laranja, ou não é.',
+      use: '<strong style="color: var(--yellow);">Usos típicos:</strong> detecção de fraude, identificação de spam, diagnóstico de imagens, é/não é gato.',
+      analogy: '<strong>Analogia do gato:</strong> Cada foto cai numa caixinha. Gato laranja ➜ caixa laranja. Gato preto ➜ caixa preta. <strong>Saída discreta</strong>: pertence ou não pertence à classe.'
+    },
+    regression: {
+      tag: 'REGRESSÃO',
+      title: 'Prever um número',
+      text: 'O modelo prevê um valor contínuo a partir das variáveis de entrada. A saída é um número, não uma categoria.',
+      use: '<strong style="color: var(--yellow);">Usos típicos:</strong> preço de imóvel, demanda de produtos, peso do gato, tempo estimado de entrega.',
+      analogy: '<strong>Analogia do gato:</strong> Quanto pesa esse gato em função da idade? A resposta é um número (kg), que pode variar livremente. <strong>Saída contínua</strong>.'
+    },
+    clustering: {
+      tag: 'CLUSTERIZAÇÃO',
+      title: 'Agrupar elementos semelhantes',
+      text: 'O modelo agrupa elementos parecidos SEM rótulos pré-definidos. Você não diz quais grupos existem; o modelo descobre.',
+      use: '<strong style="color: var(--yellow);">Usos típicos:</strong> segmentação de clientes, análise de comportamento, detecção de anomalias, organização de catálogos.',
+      analogy: '<strong>Analogia do gato:</strong> Tinha um monte de gatos misturados. O modelo, sozinho, separou em 3 grupos por pelagem parecida. <strong>Você não disse</strong> que existiam 3 grupos. Ele descobriu.'
+    }
+  };
+
+  function genPoints(){
+    points = [];
+    if (currentTab === 'classification'){
+      // 2 clusters (cats orange vs cats black)
+      for (let i = 0; i < 18; i++){
+        points.push({ x: 90 + Math.random()*150, y: 80 + Math.random()*100, cat: 'orange' });
+      }
+      for (let i = 0; i < 18; i++){
+        points.push({ x: 260 + Math.random()*150, y: 200 + Math.random()*120, cat: 'black' });
+      }
+    } else if (currentTab === 'regression'){
+      // points along a line with some noise
+      for (let i = 0; i < 32; i++){
+        const x = 60 + (i * 13);
+        const y = 320 - (x - 60) * 0.7 + (Math.random() - 0.5) * 50;
+        points.push({ x, y });
+      }
+    } else {
+      // clustering: 3 random clusters
+      const centers = [{x: 130, y: 110}, {x: 350, y: 150}, {x: 220, y: 280}];
+      centers.forEach((c, ci) => {
+        for (let i = 0; i < 14; i++){
+          points.push({
+            x: c.x + (Math.random()-0.5)*80,
+            y: c.y + (Math.random()-0.5)*80,
+            cluster: ci
+          });
+        }
+      });
+    }
+    modelDrawn = false;
+    render();
+  }
+
+  function render(){
+    svg.innerHTML = '';
+
+    // axes
+    const axes = `
+      <line x1="40" y1="350" x2="470" y2="350" stroke="#2B1810" stroke-width="1.5"/>
+      <line x1="40" y1="30" x2="40" y2="350" stroke="#2B1810" stroke-width="1.5"/>
+      <text x="455" y="368" font-family="JetBrains Mono" font-size="10" fill="#4A3528">x</text>
+      <text x="26" y="38" font-family="JetBrains Mono" font-size="10" fill="#4A3528">y</text>
+    `;
+    svg.insertAdjacentHTML('beforeend', axes);
+
+    if (currentTab === 'classification'){
+      if (modelDrawn){
+        // draw decision boundary
+        svg.insertAdjacentHTML('beforeend',
+          `<line x1="100" y1="60" x2="430" y2="340" stroke="#FF6B35" stroke-width="3" stroke-dasharray="6 4"/>
+           <text x="380" y="55" font-family="JetBrains Mono" font-size="11" fill="#E54E1B" font-weight="600">fronteira</text>`);
+      }
+      points.forEach(p => {
+        const color = p.cat === 'orange' ? '#FF6B35' : '#2B1810';
+        const emoji = p.cat === 'orange' ? '🟧' : '⬛';
+        svg.insertAdjacentHTML('beforeend',
+          `<circle cx="${p.x}" cy="${p.y}" r="9" fill="${color}" stroke="#2B1810" stroke-width="1.5"/>`);
+      });
+      document.getElementById('prob-stats').textContent = `${points.length} pontos · 2 classes`;
+    } else if (currentTab === 'regression'){
+      if (modelDrawn){
+        // best fit line approx
+        svg.insertAdjacentHTML('beforeend',
+          `<line x1="50" y1="307" x2="470" y2="13" stroke="#FF6B35" stroke-width="3" stroke-dasharray="6 4"/>
+           <text x="380" y="55" font-family="JetBrains Mono" font-size="11" fill="#E54E1B" font-weight="600">y = f(x)</text>`);
+      }
+      points.forEach(p => {
+        svg.insertAdjacentHTML('beforeend',
+          `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#5C8D89" stroke="#2B1810" stroke-width="1.5"/>`);
+      });
+      document.getElementById('prob-stats').textContent = `${points.length} pontos · 1 saída contínua`;
+    } else {
+      const colors = ['#FF6B35', '#5C8D89', '#B19CD9'];
+      const centers = [{x: 130, y: 110}, {x: 350, y: 150}, {x: 220, y: 280}];
+      if (modelDrawn){
+        centers.forEach((c, i) => {
+          svg.insertAdjacentHTML('beforeend',
+            `<circle cx="${c.x}" cy="${c.y}" r="55" fill="${colors[i]}" fill-opacity="0.13" stroke="${colors[i]}" stroke-width="2" stroke-dasharray="5 4"/>
+             <text x="${c.x}" y="${c.y - 60}" font-family="JetBrains Mono" font-size="11" fill="${colors[i]}" font-weight="700" text-anchor="middle">Grupo ${i+1}</text>`);
+        });
+      }
+      points.forEach(p => {
+        const color = modelDrawn ? colors[p.cluster] : '#888';
+        svg.insertAdjacentHTML('beforeend',
+          `<circle cx="${p.x}" cy="${p.y}" r="7" fill="${color}" stroke="#2B1810" stroke-width="1.5"/>`);
+      });
+      document.getElementById('prob-stats').textContent = `${points.length} pontos · ${modelDrawn ? '3 grupos descobertos' : 'sem rótulo ainda'}`;
+    }
+  }
+
+  function updateExplain(){
+    const e = explanations[currentTab];
+    document.getElementById('pe-tag').textContent = e.tag;
+    document.getElementById('pe-title').textContent = e.title;
+    document.getElementById('pe-text').textContent = e.text;
+    document.getElementById('pe-use').innerHTML = e.use;
+    document.getElementById('pe-analogy').innerHTML = e.analogy;
+  }
+
+  document.querySelectorAll('#prob-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#prob-tabs button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = btn.dataset.tab;
+      updateExplain();
+      genPoints();
+    });
+  });
+
+  document.getElementById('prob-reshuffle').addEventListener('click', genPoints);
+  document.getElementById('prob-run').addEventListener('click', () => {
+    modelDrawn = true;
+    render();
+  });
+
+  updateExplain();
+  genPoints();
+})();
+
+/* ====== PROMPT LAB ====== */
+(function(){
+  const data = {
+  zero: {
+    prompt: `Classifique o comportamento deste gato como FELIZ, ESTRESSADO ou NEUTRO:
+
+"A gata Mel aproximou-se ronronando, esfregou a cabeça na minha mão, mas quando tentei pegar no colo, fugiu correndo pra debaixo do sofá."`,
+    response: `Neutro.`,
+    precision: 60,
+    cost: 15,
+    risk: 55,
+    explain: '<strong>Zero-shot:</strong> envia a instrução sem nenhum exemplo. É a forma mais simples e barata. Funciona bem em tarefas que o modelo já viu muito no treinamento (sentimento de texto, tradução). Pode falhar em tarefas específicas ou nicho.'
+  },
+  one: {
+    prompt: `Veja o exemplo abaixo e classifique o comportamento seguinte:
+
+Comportamento: "O gato veio correndo, ronronou alto e deitou de barriga pra cima."
+Classe: Feliz
+
+Comportamento: "A gata Mel aproximou-se ronronando, esfregou a cabeça na minha mão, mas quando tentei pegar no colo, fugiu correndo pra debaixo do sofá."
+Classe:`,
+    response: `Misto / Neutro (começou positivo - ronronar e esfregar a cabeça - mas terminou em fuga, indicando desconforto com contato físico forçado).`,
+    precision: 75,
+    cost: 30,
+    risk: 35,
+    explain: '<strong>One-shot:</strong> apresenta UM exemplo antes da pergunta. Ajuda o modelo a entender o <strong>formato esperado</strong> da resposta. Mais preciso que zero-shot em cenários menos comuns.'
+  },
+  few: {
+    prompt: `Classifique cada comportamento como F, E ou N (Feliz, Estressado, Neutro):
+
+"Ronronou alto e deitou de barriga pra cima." → F
+"Orelhas pra trás, pelo arrepiado, rosnando baixinho." → E
+"Sentado na janela observando os pássaros, tranquilo." → N
+"A Mel veio ronronando, esfregou a cabeça na mão, mas fugiu quando tentei pegar no colo." →`,
+    response: `N`,
+    precision: 88,
+    cost: 50,
+    risk: 18,
+    explain: '<strong>Few-shot:</strong> apresenta VÁRIOS exemplos. O modelo aprende o padrão a partir deles. Melhora muito em tarefas de nicho. Custo do prompt aumenta (mais tokens), mas a precisão sobe forte.'
+  },
+  cot: {
+    prompt: `Classifique o comportamento abaixo como FELIZ, ESTRESSADO ou NEUTRO.
+Antes de dar a resposta, explique seu raciocínio passo a passo.
+
+Comportamento: "A gata Mel aproximou-se ronronando, esfregou a cabeça na minha mão, mas quando tentei pegar no colo, fugiu correndo pra debaixo do sofá."`,
+    response: `Passo 1: Identifico os sinais de linguagem corporal felina.
+ - "ronronando" → sinal POSITIVO de conforto
+ - "esfregou a cabeça" (bunting) → sinal POSITIVO de afeto e marcação amigável
+ - "fugiu pra debaixo do sofá" → sinal NEGATIVO de medo/estresse
+
+Passo 2: A SEQUÊNCIA importa. A Mel estava confortável socializando, mas o gatilho foi o contato físico forçado (pegar no colo).
+
+Passo 3: Não é estresse generalizado (ela veio voluntariamente), nem felicidade plena (fugiu ao primeiro toque invasivo).
+
+✅ Classificação final: NEUTRO - gata sociável, mas com limites claros de contato. Recomenda-se respeitar o tempo dela. 🐾`,
+    precision: 92,
+    cost: 65,
+    risk: 10,
+    explain: '<strong>Chain-of-Thought (CoT):</strong> pede pro modelo "pensar passo a passo" antes de responder. Reduz erros em tarefas que exigem lógica ou raciocínio. Output mais longo (custo maior) mas muito mais auditável.'
+  }
+};
+
+  function updateLab(tech){
+    const d = data[tech];
+    document.getElementById('prompt-text').textContent = d.prompt;
+    document.getElementById('response-text').textContent = d.response;
+    document.getElementById('q-precision').style.width = d.precision + '%';
+    document.getElementById('q-precision-v').textContent = d.precision + '%';
+    document.getElementById('q-cost').style.width = d.cost + '%';
+    document.getElementById('q-cost-v').textContent = d.cost + '%';
+    document.getElementById('q-risk').style.width = d.risk + '%';
+    document.getElementById('q-risk-v').textContent = d.risk + '%';
+    document.getElementById('prompt-explainer').innerHTML = d.explain;
+  }
+
+  document.querySelectorAll('#prompt-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#prompt-tabs button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateLab(btn.dataset.technique);
+    });
+  });
+
+  updateLab('zero');
+})();
+
+/* ====== CHAIN PROMPTING ====== */
+/* ====== CHAIN PROMPTING ====== */
+(function(){
+  const stepData = [
+    {
+      input: '📊 Linha da planilha de avaliações:\n\ncustomer_id: 4287\nrating: 5\nfeedback_raw: "Adotei a Mel há 3 meses\nna ONG, foi tudo super tranquilo. O\natendimento da equipe foi maravilhoso,\nme explicaram tudo sobre cuidados,\nvacinas, alimentação. A Mel chegou\nem casa muito feliz e saudável!\nRecomendo demais pra quem tá\npensando em adotar. ❤️"',
+      prompt: 'Extraia o campo "feedback_raw" da linha da planilha abaixo e retorne APENAS o texto puro do feedback, sem aspas, sem outros campos.',
+      output: 'Adotei a Mel há 3 meses na ONG, foi tudo super tranquilo. O atendimento da equipe foi maravilhoso, me explicaram tudo sobre cuidados, vacinas, alimentação. A Mel chegou em casa muito feliz e saudável! Recomendo demais pra quem tá pensando em adotar. ❤️'
+    },
+    {
+      input: 'Adotei a Mel há 3 meses na ONG, foi tudo super tranquilo. O atendimento da equipe foi maravilhoso, me explicaram tudo sobre cuidados, vacinas, alimentação. A Mel chegou em casa muito feliz e saudável! Recomendo demais pra quem tá pensando em adotar. ❤️',
+      prompt: 'Resuma o feedback abaixo em UMA frase curta (até 20 palavras), mantendo o tom e os pontos principais.',
+      output: 'Adoção da Mel foi excelente. Equipe atenciosa, processo claro, gata saudável e bem adaptada. Cliente recomenda.'
+    },
+    {
+      input: 'Adoção da Mel foi excelente. Equipe atenciosa, processo claro, gata saudável e bem adaptada. Cliente recomenda.',
+      prompt: 'Traduza o texto abaixo do português para o inglês, mantendo o tom natural e a concisão.',
+      output: 'Adoption of Mel was excellent. Caring team, clear process, healthy and well-adjusted cat. Customer recommends.'
+    },
+    {
+      input: 'Adoption of Mel was excellent. Caring team, clear process, healthy and well-adjusted cat. Customer recommends.',
+      prompt: 'Estruture o resumo abaixo em JSON válido com os campos:\n- customer_id (4287)\n- sentiment ("positive" / "neutral" / "negative")\n- rating (5)\n- summary (o texto)\n- topics (lista de tags)\n- lang ("en")',
+      output: '{\n  "customer_id": 4287,\n  "sentiment": "positive",\n  "rating": 5,\n  "summary": "Adoption of Mel was excellent. Caring team, clear process, healthy and well-adjusted cat. Customer recommends.",\n  "topics": ["adoption", "team", "cat_health"],\n  "lang": "en"\n}'
+    }
+  ];
+
+  let current = 0;
+  let isPlaying = false;
+
+  const steps = document.querySelectorAll('.chain-step');
+  const inputEl = document.getElementById('chain-input');
+  const promptEl = document.getElementById('chain-prompt');
+  const outputEl = document.getElementById('chain-output');
+  const prevBtn = document.getElementById('chain-prev');
+  const nextBtn = document.getElementById('chain-next');
+  const playBtn = document.getElementById('chain-play');
+  const resetBtn = document.getElementById('chain-reset');
+
+  function render(){
+    steps.forEach((s, i) => s.classList.toggle('active', i === current));
+    const d = stepData[current];
+    inputEl.textContent = d.input;
+    promptEl.textContent = d.prompt;
+    outputEl.textContent = d.output;
+    prevBtn.disabled = current === 0 || isPlaying;
+    nextBtn.disabled = current === stepData.length - 1 || isPlaying;
+
+    // centraliza passo ativo no scroll horizontal (desktop)
+    const flow = document.getElementById('chain-flow');
+    const activeStep = steps[current];
+    if (flow && activeStep && flow.scrollWidth > flow.clientWidth){
+      const target = activeStep.offsetLeft - (flow.clientWidth - activeStep.offsetWidth) / 2;
+      flow.scrollTo({ left: target, behavior: 'smooth' });
+    }
+  }
+
+  steps.forEach((s, i) => {
+    s.addEventListener('click', () => {
+      if (isPlaying) return;
+      current = i;
+      render();
+    });
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (current > 0 && !isPlaying){ current--; render(); }
+  });
+  nextBtn.addEventListener('click', () => {
+    if (current < stepData.length - 1 && !isPlaying){ current++; render(); }
+  });
+  resetBtn.addEventListener('click', () => {
+    if (isPlaying) return;
+    current = 0; render();
+  });
+
+  playBtn.addEventListener('click', async () => {
+    if (isPlaying) return;
+    isPlaying = true;
+    playBtn.disabled = true;
+    resetBtn.disabled = true;
+
+    for (let i = 0; i < stepData.length; i++){
+      current = i;
+      render();
+      await new Promise(r => setTimeout(r, 2800));
+    }
+
+    isPlaying = false;
+    playBtn.disabled = false;
+    resetBtn.disabled = false;
+    render();
+  });
+
+  render();
+})();
+
+/* ====== REACT ====== */
+(function(){
+  document.getElementById('react-play').addEventListener('click', async () => {
+    const steps = document.querySelectorAll('.react-step');
+    steps.forEach(s => s.classList.remove('shown'));
+    for (let i = 0; i < steps.length; i++){
+      await new Promise(r => setTimeout(r, 900));
+      steps[i].classList.add('shown');
+    }
+  });
+  document.getElementById('react-reset').addEventListener('click', () => {
+    document.querySelectorAll('.react-step').forEach(s => s.classList.remove('shown'));
+  });
+})();
+
+/* ====== HALLUCINATION DETECTOR ====== */
+/* ====== HALLUCINATION SIMULATION ====== */
+(function(){
+  const cases = [
+    {
+      question: 'Qual a idade do gato mais velho já registrado oficialmente?',
+      response: 'O gato mais velho registrado oficialmente foi <strong>Whiskers III</strong>, do Egito, que viveu <strong>47 anos e 3 meses</strong>, certificado pelo Guinness World Records em 1998. Era um Maine Coon adotado por uma família de Cairo e ganhou fama por sua dieta exclusiva à base de peixe do Nilo.',
+      truth: 'TUDO inventado. O recordista REAL é a <strong>Creme Puff</strong>, do Texas, que viveu 38 anos. O LLM fabricou nome ("Whiskers III"), local, idade absurda (47 anos é fisiologicamente impossível pra gato), certificação e até a história da dieta. Quando o modelo não sabe, ele cria <strong>detalhes específicos</strong> pra parecer convincente.'
+    },
+    {
+      question: 'Me conta sobre a raça Persa-Siberiano-Imperial. Vale a pena adotar?',
+      response: 'A <strong>Persa-Siberiano-Imperial</strong> é um cruzamento desenvolvido nos anos 1970 na Rússia, reconhecido pela TICA em 1985. Tem pelagem tripla, olhos heterocromáticos, pesa entre 8-12kg e vive de 18 a 22 anos. É hipoalergênico e excelente com crianças.',
+      truth: 'Essa raça <strong>NÃO EXISTE</strong>. Eu inventei o nome juntando palavras plausíveis. Mas o LLM mordeu a isca e construiu data, país, peso, expectativa de vida - tudo do zero. Esse é o "teste do nome falso": se você nunca ouviu mas o modelo responde detalhado, <strong>desconfie sempre</strong>.'
+    },
+    {
+      question: 'Em que frequência exata os gatos ronronam?',
+      response: 'Os gatos ronronam em uma frequência de exatos <strong>27,3 Hz</strong>, que ativa o nervo vago e libera dopamina no cérebro humano. Foi descoberto pela <strong>Universidade de Stanford em 2003</strong> e publicado no Journal of Feline Acoustics.',
+      truth: 'A frequência real é uma <strong>faixa</strong> de 25-150 Hz (varia por gato), não um valor preciso. A "descoberta de Stanford 2003" e o "Journal of Feline Acoustics" foram <strong>inventados</strong>. O LLM partiu de um fato real (ronronar tem efeito terapêutico) e enfeitou com número preciso + universidade famosa + nome de journal. Receita clássica de alucinação credível.'
+    },
+    {
+      question: 'Quantos gatos domésticos existem no mundo hoje?',
+      response: 'Segundo o último levantamento da <strong>OMS em 2024</strong>, existem exatamente <strong>643.829.117 gatos domésticos</strong> no mundo, distribuídos em 197 países. O Brasil ocupa a 4ª posição com cerca de 27 milhões de exemplares.',
+      truth: 'A <strong>OMS NÃO faz esse levantamento</strong> - ela cuida de saúde HUMANA. Estimativas reais ficam em torno de 600-700 milhões, <strong>sem precisão de dígito</strong>. O LLM combinou autoridade falsa + número absurdamente exato = parece científico, é fake. Regra de ouro: número com 9 dígitos sobre população animal é quase sempre invenção.'
+    },
+    {
+      question: 'O que é a Síndrome de Felinopatia Cortical Felídea?',
+      response: 'É uma condição neurológica rara em gatos da família Felidae, caracterizada por episódios de <strong>catalepsia diurna</strong> e hipersensibilidade auditiva. Afeta cerca de <strong>0,003% dos felinos</strong> e foi descrita pela primeira vez em 1987 pela veterinária <strong>Dra. Helena Vasconcelos</strong>, no Instituto Pasteur.',
+      truth: 'Essa síndrome <strong>NÃO EXISTE</strong>. O nome foi inventado juntando palavras médicas em português. O LLM construiu uma resposta inteira em cima do vazio - sintomas, prevalência, ano, pesquisadora, instituição. Sempre que o termo técnico soar suspeito demais e você nunca ouviu, <strong>peça a fonte primária</strong>. Sem fonte = invenção.'
+    }
+  ];
+
+  let idx = 0;
+  let timers = [];
+  let countdownTimer = null;
+
+  const userEl = document.getElementById('hall-user');
+  const typingEl = document.getElementById('hall-typing');
+  const aiEl = document.getElementById('hall-ai');
+  const revealEl = document.getElementById('hall-reveal');
+  const questionEl = document.getElementById('hall-question');
+  const responseEl = document.getElementById('hall-response');
+  const truthEl = document.getElementById('hall-truth');
+  const currentEl = document.getElementById('hall-current');
+  const dotsEl = document.getElementById('hall-dots');
+  const countdownEl = document.getElementById('hall-countdown');
+
+  document.getElementById('hall-total').textContent = cases.length;
+
+  cases.forEach(() => {
+    const d = document.createElement('span');
+    d.className = 'pdot';
+    dotsEl.appendChild(d);
+  });
+
+  function updateDots(){
+    const dots = dotsEl.querySelectorAll('.pdot');
+    dots.forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i < idx) d.classList.add('done');
+      if (i === idx) d.classList.add('active');
+    });
+  }
+
+  function clearAllTimers(){
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+    if (countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+  }
+
+  function schedule(fn, ms){
+    const t = setTimeout(fn, ms);
+    timers.push(t);
+  }
+
+  function reset(){
+    userEl.classList.remove('shown');
+    typingEl.classList.remove('shown');
+    aiEl.classList.remove('shown');
+    revealEl.classList.remove('shown');
+  }
+
+  function playCase(){
+    clearAllTimers();
+    reset();
+    const c = cases[idx];
+    currentEl.textContent = idx + 1;
+    updateDots();
+
+    questionEl.textContent = c.question;
+    responseEl.innerHTML = c.response +
+      '<div class="hall-confidence"><span>✓</span><span>Resposta gerada com confiança alta</span></div>';
+    truthEl.innerHTML = c.truth;
+
+    schedule(() => userEl.classList.add('shown'), 400);
+    schedule(() => typingEl.classList.add('shown'), 1400);
+    schedule(() => typingEl.classList.remove('shown'), 3200);
+    schedule(() => aiEl.classList.add('shown'), 3400);
+    schedule(() => revealEl.classList.add('shown'), 6000);
+
+    schedule(() => {
+      let cd = 30;
+      countdownEl.textContent = cd;
+      countdownTimer = setInterval(() => {
+        cd--;
+        countdownEl.textContent = cd;
+        if (cd <= 0){
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          idx = (idx + 1) % cases.length;
+          playCase();
+        }
+      }, 1000);
+    }, 6500);
+  }
+
+  // Só começa quando o usuário rolar até a seção
+  let started = false;
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !started){
+        started = true;
+        playCase();
+      }
+    });
+  }, { threshold: 0.25 });
+  observer.observe(document.getElementById('hall-sim'));
+})();
+
+/* ====== GAN ARENA ====== */
+(function(){
+  const cats = ['😼', '🐱', '🐈', '🐈‍⬛', '😸', '😺', '😻', '🙀'];
+  const fakeArtsBad = ['🐈🌀', '?🐱?', '🐉?🐈', '◔̯◔', '⚆_⚆', 'ʕ•ᴥ•ʔ', '(=ↀᆽↀ=)'];
+  let round = 0;
+  let history = [];
+
+  const realismCurve = (r) => Math.min(100, Math.round(15 + r * 12 + (Math.random() - 0.5) * 4));
+
+  const genStatuses = [
+    'Tentando gerar primeiro gato a partir de ruído puro...',
+    'Aprendendo o que é uma orelha pontuda...',
+    'Olha, agora tem bigode! Mas o olho ainda tá torto...',
+    'Bigode + olhos no lugar certo. Ficando convincente!',
+    'Quase indistinguível. Discriminador suando...',
+    'Discriminador caiu! Foi taxado como real!',
+    'Treino convergiu. Gerador produz fake quase perfeito.',
+    'Gerador domina. Pode parar.'
+  ];
+  const discStatuses = [
+    'Isso é gato? Tá mais pra Picasso bêbado. FAKE óbvio.',
+    'Estranho. Algo não bate. FAKE.',
+    'Hmm, parece gato mas tem algo errado... FAKE.',
+    'Bigode bom, mas pelo ainda inconsistente. FAKE.',
+    'Difícil... 51% fake, 49% real. FAKE no chute.',
+    'Confundi! Achei que era real. CAÍ.',
+    'Não consigo mais distinguir. Eu mereço aposentadoria.',
+    'Aceito derrota. Equilíbrio adversarial atingido.'
+  ];
+
+  function next(){
+    if (round >= 8) return;
+    round++;
+    const genCanvas = document.getElementById('gan-gen-canvas');
+    const discCanvas = document.getElementById('gan-disc-canvas');
+    const genArt = document.getElementById('gan-gen-art');
+    const discArt = document.getElementById('gan-disc-art');
+
+    genCanvas.classList.add('generating');
+    setTimeout(() => genCanvas.classList.remove('generating'), 500);
+
+    // pick generator art
+    let art;
+    if (round <= 2) art = fakeArtsBad[Math.floor(Math.random() * fakeArtsBad.length)];
+    else if (round <= 4) art = '🐱?';
+    else if (round <= 6) art = cats[Math.floor(Math.random() * cats.length)];
+    else art = cats[Math.floor(Math.random() * cats.length)];
+
+    genArt.textContent = art;
+
+    // discriminator verdict
+    const fooled = round >= 5 && Math.random() < (round - 4) * 0.3;
+    discArt.textContent = fooled ? '✅' : '❌';
+
+    document.getElementById('gan-gen-status').textContent = genStatuses[round - 1] || '';
+    document.getElementById('gan-disc-status').textContent = discStatuses[round - 1] || '';
+
+    const realism = realismCurve(round);
+    document.getElementById('gan-round').textContent = round;
+    document.getElementById('gan-realism').textContent = realism + '%';
+
+    history.push({ round, fooled });
+    const histDom = document.getElementById('gan-history');
+    histDom.innerHTML = history.map(h => `<span class="h-item ${h.fooled ? 'real' : 'fake'}">R${h.round}: ${h.fooled ? 'FOOLED (real)' : 'caught (fake)'}</span>`).join('');
+
+    if (round >= 8){
+      document.getElementById('gan-next').disabled = true;
+    }
+  }
+
+  function reset(){
+    round = 0;
+    history = [];
+    document.getElementById('gan-gen-art').textContent = '🎨';
+    document.getElementById('gan-disc-art').textContent = '🔍';
+    document.getElementById('gan-gen-status').textContent = 'Esperando primeiro round...';
+    document.getElementById('gan-disc-status').textContent = 'Pronto pra inspecionar...';
+    document.getElementById('gan-round').textContent = 0;
+    document.getElementById('gan-realism').textContent = '0%';
+    document.getElementById('gan-history').innerHTML = '';
+    document.getElementById('gan-next').disabled = false;
+  }
+
+  document.getElementById('gan-next').addEventListener('click', next);
+  document.getElementById('gan-reset').addEventListener('click', reset);
+})();
+</script>
+
+</body>
+</html>
