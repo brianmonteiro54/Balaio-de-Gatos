@@ -733,26 +733,27 @@
     font-size: 14px;
     display:flex; align-items:center; gap:4px;
   }
-  .mae-bar-wrap{
-    height: 36px;
+.mae-bar-wrap{
+    height: 42px;              /* aumenta de 36px pra 42px */
     background: var(--cream-2);
     border: 1.5px solid var(--ink);
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-  }
-  .mae-bar-actual, .mae-bar-pred{
-    position:absolute; top: 0; bottom: 0;
-    border-radius: 6px;
-    display:flex; align-items:center;
+}
+.mae-bar-actual, .mae-bar-pred{
+    position: absolute;
+    border-radius: 5px;
+    display: flex; align-items: center;
     padding: 0 8px;
     font-size: 12px;
     font-weight: 600;
     color: var(--paper);
     transition: width 0.4s ease;
-  }
-  .mae-bar-actual{ background: var(--sage); height: 50%; top: 0}
-  .mae-bar-pred{ background: var(--orange); height: 50%; bottom: 0}
+    white-space: nowrap;       /* evita quebra do texto */
+}
+.mae-bar-actual{ background: var(--sage);   top: 3px;    height: 16px; }
+.mae-bar-pred{   background: var(--orange); bottom: 3px; height: 16px; }
   .mae-err{
     text-align: right;
     font-family:'JetBrains Mono', monospace;
