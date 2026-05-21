@@ -6,12 +6,10 @@
 <title>Balaio de Gatos · Aulas visuais de IA pra Escola da Nuvem</title>
 <meta name="description" content="Aulas visuais e interativas de IA Practitioner. Você aprende mexendo, não decorando. Cobre IA/ML/DL, embeddings, métricas, prompt engineering, RAG, treino e ética.">
 
-<!-- Favicon -->
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="shortcut icon" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 
-<!-- Open Graph -->
 <meta property="og:title" content="Balaio de Gatos · Aulas visuais de IA">
 <meta property="og:description" content="Aulas visuais e interativas de IA Practitioner pra Escola da Nuvem. Você aprende mexendo, não decorando">
 <meta property="og:image" content="cat-thumbnail.png">
@@ -379,6 +377,181 @@
   .aula-card:hover .aula-link{ gap: 14px; }
   .aula-link svg{ width: 18px; height: 18px; }
 
+  /* ═══════════════════════════════════════
+     GAME CARD — special full-width treatment
+     ═══════════════════════════════════════ */
+  .aula-game {
+    grid-column: 1 / -1;
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    box-shadow: 8px 8px 0 #39D353;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+  }
+  .aula-game::before {
+    background: #39D353;
+    height: 5px;
+  }
+  .aula-game:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 11px 11px 0 #39D353;
+  }
+
+  /* CRT scanline effect */
+  .game-scanline {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 3px,
+      rgba(57, 211, 83, 0.02) 3px,
+      rgba(57, 211, 83, 0.02) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .aula-game .aula-head {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  /* Override the ::before pseudo for the number */
+  .aula-game .game-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 48px;
+    line-height: 1;
+    color: #C73E1D;
+    letter-spacing: -0.02em;
+    animation: alarm-pulse 2s ease-in-out infinite;
+  }
+  .aula-game .game-num::before {
+    content: none; /* remove "Aula" label */
+  }
+
+  @keyframes alarm-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .game-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 36px;
+    align-items: start;
+  }
+
+  .aula-game .aula-title {
+    color: var(--paper);
+    font-size: 30px;
+    margin-bottom: 12px;
+  }
+  .aula-game .aula-desc {
+    color: rgba(251,243,226,0.78);
+    font-size: 15px;
+  }
+  .aula-game .aula-tag {
+    background: transparent;
+    color: #39D353;
+    border-color: rgba(57,211,83,0.4);
+    font-size: 11px;
+  }
+  .aula-game .aula-link {
+    color: var(--paper);
+    margin-top: 8px;
+  }
+
+  /* Game meta pills */
+  .game-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .game-pill {
+    background: rgba(57,211,83,0.12);
+    color: #39D353;
+    border: 1.5px solid rgba(57,211,83,0.35);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  /* Mini terminal widget */
+  .game-terminal {
+    background: #0d1117;
+    border: 2px solid rgba(57,211,83,0.35);
+    border-radius: 14px;
+    min-width: 300px;
+    max-width: 340px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(57,211,83,0.12);
+    flex-shrink: 0;
+  }
+  .terminal-bar {
+    background: #161b22;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgba(57,211,83,0.2);
+  }
+  .terminal-bar span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .terminal-bar span:nth-child(1) { background: #C73E1D; }
+  .terminal-bar span:nth-child(2) { background: #F4D35E; }
+  .terminal-bar span:nth-child(3) { background: #39D353; }
+  .terminal-bar small {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(57,211,83,0.6);
+    letter-spacing: 0.06em;
+  }
+  .terminal-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .t-line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .t-ts { color: rgba(57,211,83,0.45); flex-shrink: 0; }
+  .t-err { color: #C73E1D; font-weight: 700; flex-shrink: 0; }
+  .t-wrn { color: #F4D35E; font-weight: 700; flex-shrink: 0; }
+  .t-ok  { color: #39D353; font-weight: 700; flex-shrink: 0; }
+  .t-line span:last-child { color: rgba(251,243,226,0.75); }
+  .t-line b { color: var(--paper); font-weight: 700; }
+
+  @keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .t-blink span:last-child::after {
+    content: '█';
+    color: #39D353;
+    animation: cursor-blink 1s step-end infinite;
+    margin-left: 2px;
+  }
+
   /* CTA FINAL */
   .final-cta{
     background: var(--ink);
@@ -437,6 +610,10 @@
     .aula-num{ font-size: 52px; }
     .final-cta{ padding: 40px 24px; }
     .nav-links{ display:none; }
+
+    .game-inner { grid-template-columns: 1fr; }
+    .game-terminal { min-width: 100%; max-width: 100%; }
+    .aula-game .aula-title { font-size: 26px; }
   }
   @media (max-width: 500px){
     .container{ padding: 0 20px; }
@@ -482,12 +659,9 @@
 
       <div class="hero-art">
         <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <!-- Background pile -->
           <circle cx="200" cy="220" r="170" fill="#F5E9CF" stroke="#2B1810" stroke-width="2.5"/>
           <circle cx="200" cy="220" r="130" fill="#FBD9C5" stroke="#2B1810" stroke-width="2"/>
-
           <g class="cat-pile">
-            <!-- Sage cat back-left -->
             <g transform="translate(80,160)">
               <ellipse cx="40" cy="60" rx="42" ry="38" fill="#5C8D89" stroke="#2B1810" stroke-width="2.5"/>
               <polygon points="10,32 22,12 30,32" fill="#5C8D89" stroke="#2B1810" stroke-width="2.5"/>
@@ -496,21 +670,16 @@
               <circle class="blink-eye" cx="52" cy="56" r="3.5" fill="#2B1810"/>
               <ellipse cx="40" cy="68" rx="3" ry="2" fill="#FF6B35"/>
             </g>
-
-            <!-- Orange tabby center-back -->
             <g transform="translate(170,120)">
               <ellipse cx="40" cy="65" rx="48" ry="44" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
               <polygon points="8,38 22,14 32,38" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
               <polygon points="48,38 58,14 72,38" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
-              <!-- Stripes -->
               <path d="M 20 30 Q 25 26 30 30" stroke="#C73E1D" stroke-width="2" fill="none"/>
               <path d="M 50 30 Q 55 26 60 30" stroke="#C73E1D" stroke-width="2" fill="none"/>
               <circle class="blink-eye" cx="28" cy="62" r="4" fill="#2B1810"/>
               <circle class="blink-eye" cx="52" cy="62" r="4" fill="#2B1810"/>
               <ellipse cx="40" cy="75" rx="3.5" ry="2.5" fill="#2B1810"/>
             </g>
-
-            <!-- Purple cat right -->
             <g transform="translate(260,180)">
               <ellipse cx="40" cy="60" rx="42" ry="38" fill="#8A6FB1" stroke="#2B1810" stroke-width="2.5"/>
               <polygon points="10,32 22,12 30,32" fill="#8A6FB1" stroke="#2B1810" stroke-width="2.5"/>
@@ -519,8 +688,6 @@
               <circle class="blink-eye" cx="52" cy="56" r="3.5" fill="#2B1810"/>
               <ellipse cx="40" cy="68" rx="3" ry="2" fill="#FF6B35"/>
             </g>
-
-            <!-- Yellow cat front-left lying down -->
             <g transform="translate(95,260)">
               <ellipse cx="50" cy="35" rx="55" ry="25" fill="#F4D35E" stroke="#2B1810" stroke-width="2.5"/>
               <circle cx="22" cy="22" r="22" fill="#F4D35E" stroke="#2B1810" stroke-width="2.5"/>
@@ -530,8 +697,6 @@
               <path d="M 26 20 Q 28 22 30 20" stroke="#2B1810" stroke-width="2" fill="none"/>
               <ellipse cx="22" cy="28" rx="2" ry="1.5" fill="#FF6B35"/>
             </g>
-
-            <!-- Coral kitten front-right -->
             <g transform="translate(225,275)">
               <ellipse cx="40" cy="40" rx="42" ry="30" fill="#C73E1D" stroke="#2B1810" stroke-width="2.5"/>
               <polygon points="14,18 22,4 30,18" fill="#C73E1D" stroke="#2B1810" stroke-width="2.5"/>
@@ -543,8 +708,6 @@
               <ellipse cx="40" cy="48" rx="3" ry="2" fill="#FBF3E2"/>
             </g>
           </g>
-
-          <!-- Floating decoration -->
           <text x="60" y="80" font-size="22">✨</text>
           <text x="330" y="100" font-size="20">🐾</text>
           <text x="340" y="320" font-size="22">✨</text>
@@ -788,6 +951,85 @@
         <span class="aula-link">Abrir aula
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </span>
+      </a>
+
+      <!-- ══════════════════════════════════════════════════════
+           JOGO ESPECIAL: AI INCIDENT · On-call Simulator
+           ══════════════════════════════════════════════════════ -->
+      <a class="aula-card aula-game" href="game/" style="--card-color: #39D353;">
+        <div class="game-scanline"></div>
+
+        <div class="aula-head">
+          <div class="game-num">🚨</div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span class="aula-kicker" style="background:#39D353; color:#0d1117;">JOGO</span>
+            <span class="aula-kicker" style="background:#C73E1D;">SEV-0 BOSS</span>
+          </div>
+        </div>
+
+        <div class="game-inner">
+          <div class="game-text">
+            <h3 class="aula-title">AI INCIDENT · <span style="color:#39D353;">On-call Simulator</span></h3>
+            <p class="aula-desc">
+              3:17h da manhã. A produção tá pegando fogo. Bedrock alucinando, custo subindo $400/min, cliente reclamando no Twitter.
+              Em vez de decorar flashcard, você apaga incêndio. Cada uma das 19 missões é um incidente real em prod com dashboards ao vivo, logs de terminal e decisões, e cada decisão te ensina um pedaço da AWS porque você <em>viu</em> a coisa quebrar.
+              Tem XP, streak, leaderboard. O exame é só consequência.
+            </p>
+            <div class="aula-tags">
+              <span class="aula-tag">Bedrock · Guardrails</span>
+              <span class="aula-tag">Comprehend · PII</span>
+              <span class="aula-tag">Rekognition</span>
+              <span class="aula-tag">RAG · Knowledge Bases</span>
+              <span class="aula-tag">Clarify · Bias</span>
+              <span class="aula-tag">Transcribe · Polly · Lex</span>
+              <span class="aula-tag">IA Responsável</span>
+            </div>
+            <div class="game-pills">
+              <span class="game-pill">🔥 19 missões</span>
+              <span class="game-pill">⚡ XP · Junior → Principal</span>
+              <span class="game-pill">🏆 Leaderboard global</span>
+              <span class="game-pill">🎯 Desafio diário 2× XP</span>
+              <span class="game-pill">🏅 12 conquistas</span>
+            </div>
+            <span class="aula-link" style="border-bottom-color:#39D353;">Entrar na war room
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+
+          <div class="game-terminal" aria-hidden="true">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <small>prod · war-room</small>
+            </div>
+            <div class="terminal-body">
+              <div class="t-line">
+                <span class="t-ts">03:17:01</span>
+                <span class="t-err">ERR</span>
+                <span>PagerDuty escalou · SEV-1</span>
+              </div>
+              <div class="t-line">
+                <span class="t-ts">03:17:04</span>
+                <span class="t-wrn">WRN</span>
+                <span>Hallucination rate <b>34.2%</b> ↑</span>
+              </div>
+              <div class="t-line">
+                <span class="t-ts">03:17:09</span>
+                <span class="t-err">ERR</span>
+                <span>Custo acumulado <b>$5.847</b></span>
+              </div>
+              <div class="t-line">
+                <span class="t-ts">03:17:12</span>
+                <span class="t-wrn">WRN</span>
+                <span>+$412/min · sem parar</span>
+              </div>
+              <div class="t-line t-blink">
+                <span class="t-ts">03:17:15</span>
+                <span class="t-ok">OK&nbsp;</span>
+                <span>Aguardando sua decisão</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </a>
 
     </div>
