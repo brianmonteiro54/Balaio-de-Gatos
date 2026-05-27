@@ -969,247 +969,247 @@
 // ═══════════════════════════════════════════════════════
 const QUESTIONS = [
   // ─── DOMÍNIO 1: Fundamentos AI/ML (12 questões) ───
-  { d:1, t:"Classificação vs Regressão", q:"Uma empresa de varejo quer prever o VALOR EXATO de vendas do próximo trimestre com base em dados históricos. Que tipo de problema de ML é esse?",
+  { d:1, t:"", q:"Uma empresa de varejo quer prever o VALOR EXATO de vendas do próximo trimestre com base em dados históricos. Que tipo de problema de ML é esse?",
     opts:["Classificação binária","Classificação multi-classe","Regressão","Clustering"], c:2,
     why:"Prever um valor numérico contínuo (como vendas em R$) é <strong>regressão</strong>. Classificação prediz categorias. Clustering agrupa sem rótulos." },
 
-  { d:1, t:"Tipos de aprendizado", q:"Você quer agrupar clientes parecidos sem ter rótulos pré-definidos. Qual abordagem usar?",
+  { d:1, t:"", q:"Você quer agrupar clientes parecidos sem ter rótulos pré-definidos. Qual abordagem usar?",
     opts:["Aprendizado supervisionado","Aprendizado não-supervisionado","Aprendizado por reforço","Transferência de aprendizado"], c:1,
     why:"Sem rótulos + descoberta de grupos = <strong>não-supervisionado</strong> (tipicamente clustering, ex: K-means)." },
 
-  { d:1, t:"Precision", q:"Um modelo classifica e-mails como spam. De 100 e-mails marcados como spam pelo modelo, 90 são spam de verdade. Que métrica isso representa?",
+  { d:1, t:"", q:"Um modelo classifica e-mails como spam. De 100 e-mails marcados como spam pelo modelo, 90 são spam de verdade. Que métrica isso representa?",
     opts:["Recall","Precision","Acurácia","F1-score"], c:1,
     why:"<strong>Precision</strong> = TP / (TP + FP). 'Dos que eu disse que era spam, quantos eram?' Recall seria: 'de TODOS os spams existentes, quantos peguei?'." },
 
-  { d:1, t:"Recall em caso crítico", q:"Um hospital usa IA pra detectar câncer. Falsos negativos (perder um caso real) são desastrosos. Que métrica priorizar?",
+  { d:1, t:"", q:"Um hospital usa IA pra detectar câncer. Falsos negativos (perder um caso real) são desastrosos. Que métrica priorizar?",
     opts:["Precision","Recall","Acurácia","AUC"], c:1,
     why:"Falso negativo = câncer não detectado. <strong>Recall</strong> mede quantos casos reais foram capturados. Maximizar recall reduz falsos negativos." },
 
-  { d:1, t:"Dataset desbalanceado", q:"Um modelo tem 99% de acurácia, mas o dataset tem 99% de classe A e 1% de classe B. O modelo é confiável?",
+  { d:1, t:"", q:"Um modelo tem 99% de acurácia, mas o dataset tem 99% de classe A e 1% de classe B. O modelo é confiável?",
     opts:["Sim, 99% é excelente","Não, pode estar só prevendo a classe majoritária","Sim, mas precisa de mais dados","Não, acurácia nunca é válida"], c:1,
     why:"Em dataset desbalanceado, um modelo que sempre prevê 'A' tem 99% de acurácia sem ter aprendido nada. Use <strong>F1, precision/recall ou AUC</strong>." },
 
-  { d:1, t:"Overfitting", q:"Seu modelo acerta 99% no treino mas só 60% em dados novos. Qual o problema?",
+  { d:1, t:"", q:"Seu modelo acerta 99% no treino mas só 60% em dados novos. Qual o problema?",
     opts:["Underfitting","Overfitting","Falta de dados","Bias"], c:1,
     why:"Decorou o treino, não generaliza. Clássico <strong>overfitting</strong>. Soluções: regularização, mais dados, modelo mais simples, dropout, early stopping." },
 
-  { d:1, t:"Embeddings", q:"Você converte a frase 'o gato dormiu' em [0.21, -0.45, 0.78, ...]. O que é esse vetor?",
+  { d:1, t:"", q:"Você converte a frase 'o gato dormiu' em [0.21, -0.45, 0.78, ...]. O que é esse vetor?",
     opts:["Hash","Embedding","Token","Checksum"], c:1,
     why:"<strong>Embedding</strong> é a representação vetorial densa de significado. Tokens são unidades de texto ANTES de virarem embeddings." },
 
-  { d:1, t:"Validação", q:"Você divide o dataset em treino, validação e teste. Pra que serve o conjunto de validação?",
+  { d:1, t:"", q:"Você divide o dataset em treino, validação e teste. Pra que serve o conjunto de validação?",
     opts:["Treinar o modelo final","Ajustar hiperparâmetros e escolher o melhor modelo","Avaliar performance final","Limpar os dados"], c:1,
     why:"Validação serve pra <strong>ajustar hiperparâmetros</strong> e escolher modelo. Treino treina. Teste só avalia no final, intocado durante o treino." },
 
-  { d:1, t:"Bias vs Variance", q:"Modelo linear simples: erro alto no treino. Deep net complexa: erro baixo no treino, alto no teste. Diagnóstico?",
+  { d:1, t:"", q:"Modelo linear simples: erro alto no treino. Deep net complexa: erro baixo no treino, alto no teste. Diagnóstico?",
     opts:["Os dois fazem overfitting","Linear: underfitting. Deep: overfitting","Os dois fazem underfitting","Linear: overfitting. Deep: underfitting"], c:1,
     why:"Erro alto no treino = <strong>underfit</strong> (modelo simples demais). Erro baixo no treino mas alto no teste = <strong>overfit</strong> (complexo demais)." },
 
-  { d:1, t:"Reinforcement Learning", q:"Um agente joga xadrez e aprende com recompensas (vitória) e punições (derrota). Que tipo de aprendizado?",
+  { d:1, t:"", q:"Um agente joga xadrez e aprende com recompensas (vitória) e punições (derrota). Que tipo de aprendizado?",
     opts:["Supervisionado","Não-supervisionado","Por reforço","Auto-supervisionado"], c:2,
     why:"Recompensa/punição via interação com ambiente = <strong>reinforcement learning</strong>." },
 
-  { d:1, t:"Matriz de confusão", q:"Matriz: 80 TP, 10 FP, 5 FN, 100 TN. Qual a precision?",
+  { d:1, t:"", q:"Matriz: 80 TP, 10 FP, 5 FN, 100 TN. Qual a precision?",
     opts:["80/85","80/90","80/100","80/195"], c:1,
     why:"Precision = TP / (TP + FP) = 80 / (80 + 10) = <strong>80/90</strong> ≈ 0.89." },
 
-  { d:1, t:"Métricas de regressão", q:"Pra avaliar modelo de regressão, qual métrica é MAIS sensível a outliers grandes?",
+  { d:1, t:"", q:"Pra avaliar modelo de regressão, qual métrica é MAIS sensível a outliers grandes?",
     opts:["MAE (erro absoluto médio)","MSE / RMSE (erro quadrático)","R²","Precision"], c:1,
     why:"<strong>MSE/RMSE</strong> eleva o erro ao quadrado, então erros grandes pesam muito mais. MAE é linear e mais robusto a outliers." },
 
 
   // ─── DOMÍNIO 2: GenAI Fundamentos (14 questões) ───
-  { d:2, t:"Foundation Model", q:"O que é um Foundation Model?",
+  { d:2, t:"", q:"O que é um Foundation Model?",
     opts:["Modelo pequeno especializado em uma tarefa","Modelo grande pré-treinado em dados massivos, adaptável a várias tarefas","Modelo de árvore de decisão","Modelo de regressão linear"], c:1,
     why:"<strong>Foundation Model</strong> = grande, pré-treinado em escala, base pra tarefas diversas com ou sem adaptação. Ex: Claude, GPT, Titan, Llama." },
 
-  { d:2, t:"Alucinação", q:"O modelo inventa uma referência bibliográfica que não existe. Isso é:",
+  { d:2, t:"", q:"O modelo inventa uma referência bibliográfica que não existe. Isso é:",
     opts:["Bias","Overfitting","Alucinação","Drift"], c:2,
     why:"<strong>Alucinação</strong> = LLM gera informação plausível mas factualmente errada. Risco clássico de LLM." },
 
-  { d:2, t:"Mitigar alucinação", q:"Qual abordagem é MAIS eficaz pra reduzir alucinação num chatbot que responde sobre documentos internos da empresa?",
+  { d:2, t:"", q:"Qual abordagem é MAIS eficaz pra reduzir alucinação num chatbot que responde sobre documentos internos da empresa?",
     opts:["Aumentar a temperature","Implementar RAG com os documentos da empresa","Usar modelo menor","Fine-tuning com 5 exemplos"], c:1,
     why:"<strong>RAG</strong> ancora respostas em fonte de verdade. Alucinação cai drasticamente quando o modelo 'lê' o doc antes de responder." },
 
-  { d:2, t:"LLM vs SLM", q:"A diferença principal entre LLM e SLM (Small Language Model) é:",
+  { d:2, t:"", q:"A diferença principal entre LLM e SLM (Small Language Model) é:",
     opts:["LLM só funciona em inglês","SLM tem menos parâmetros, é mais barato e rápido, mas menos capaz em tarefas gerais","SLM é open-source, LLM é fechado","LLM é mais novo"], c:1,
     why:"<strong>SLM</strong> tem menos parâmetros, custo/latência menores, ideal pra tarefas específicas e edge. LLM é mais geral, mais caro." },
 
-  { d:2, t:"Tokens", q:"O que são tokens em LLMs?",
+  { d:2, t:"", q:"O que são tokens em LLMs?",
     opts:["Senhas de autenticação","Unidades de texto (palavras ou pedaços) que o modelo processa","Recompensas em reinforcement learning","Erros do modelo"], c:1,
     why:"<strong>Tokens</strong> são unidades de texto. 'gato' pode ser 1 token, 'gatinho' 2. Modelos cobram POR TOKEN." },
 
-  { d:2, t:"Multimodal", q:"Sua empresa quer um modelo que entenda imagens e texto juntos pra gerar legendas. Que tipo de modelo?",
+  { d:2, t:"", q:"Sua empresa quer um modelo que entenda imagens e texto juntos pra gerar legendas. Que tipo de modelo?",
     opts:["Unimodal","Multimodal","Linear","Tabular"], c:1,
     why:"<strong>Multimodal</strong> processa múltiplas modalidades (texto + imagem + áudio etc.)." },
 
-  { d:2, t:"Limitações GenAI", q:"Qual é uma LIMITAÇÃO importante de GenAI pra cenários de negócio?",
+  { d:2, t:"", q:"Qual é uma LIMITAÇÃO importante de GenAI pra cenários de negócio?",
     opts:["Não escala","Risco de alucinação, custo, latência e privacidade","Só funciona em inglês","Requer hardware quântico"], c:1,
     why:"As <strong>4 limitações canônicas</strong> da GenAI: alucinação, custo, latência, privacidade. Sempre são respostas certas em questões de 'limitações'." },
 
-  { d:2, t:"Diffusion", q:"Stable Diffusion gera imagens a partir de texto. Que tipo de arquitetura?",
+  { d:2, t:"", q:"Stable Diffusion gera imagens a partir de texto. Que tipo de arquitetura?",
     opts:["Transformer puro","Modelo de difusão","GAN","Rede recorrente (RNN)"], c:1,
     why:"<strong>Modelos de difusão</strong> adicionam ruído progressivamente e aprendem a reverter o processo, gerando imagens a partir de ruído + texto." },
 
-  { d:2, t:"Transformer", q:"Qual arquitetura é a base dos LLMs modernos?",
+  { d:2, t:"", q:"Qual arquitetura é a base dos LLMs modernos?",
     opts:["CNN (Convolutional)","RNN (Recurrent)","Transformer (com atenção)","Decision Tree"], c:2,
     why:"<strong>Transformer</strong> com self-attention. Base do GPT, Claude, Llama, Titan, etc." },
 
-  { d:2, t:"Custo de tokens", q:"Quanto mais tokens no prompt e na resposta:",
+  { d:2, t:"", q:"Quanto mais tokens no prompt e na resposta:",
     opts:["Maior precisão garantida","Maior custo e latência","Menor risco de alucinação","Modelo fica mais inteligente"], c:1,
     why:"Pricing e tempo são <strong>por token</strong>. Não importa o conteúdo: mais tokens = mais $ e mais espera." },
 
-  { d:2, t:"Context window", q:"O que é o 'context window' de um LLM?",
+  { d:2, t:"", q:"O que é o 'context window' de um LLM?",
     opts:["Janela gráfica do app","Quantidade máxima de tokens que ele processa de uma vez (entrada + saída)","Tempo entre chamadas","Cache do modelo"], c:1,
     why:"<strong>Context window</strong> = limite total de tokens (prompt + resposta). Modelos modernos chegam a 200k+ tokens." },
 
-  { d:2, t:"Caso ideal GenAI", q:"Para qual caso GenAI é mais adequada?",
+  { d:2, t:"", q:"Para qual caso GenAI é mais adequada?",
     opts:["Cálculo financeiro exato","Geração de rascunhos, brainstorming, sumarização","Diagnóstico médico definitivo","Decisão judicial automatizada"], c:1,
     why:"GenAI brilha em <strong>rascunho, ideação, sumarização, conversação</strong>. Mal pra cálculo exato e decisões críticas sem revisão humana." },
 
-  { d:2, t:"Regulamentação que muda", q:"Você monta um Q&A sobre regulamentação que muda toda semana. Qual a melhor abordagem?",
+  { d:2, t:"", q:"Você monta um Q&A sobre regulamentação que muda toda semana. Qual a melhor abordagem?",
     opts:["Fine-tuning semanal","RAG buscando os documentos mais recentes","Continued pre-training mensal","Treinar modelo do zero"], c:1,
     why:"Dados que mudam frequentemente = <strong>RAG</strong>. Só atualiza o vector DB. Fine-tuning semanal seria caro e lento." },
 
-  { d:2, t:"GAN", q:"O que é uma GAN (Generative Adversarial Network)?",
+  { d:2, t:"", q:"O que é uma GAN (Generative Adversarial Network)?",
     opts:["Um tipo de Foundation Model","Gerador + discriminador competindo: um gera, outro tenta detectar fakes","Tipo de banco de dados","Algoritmo de otimização"], c:1,
     why:"<strong>GAN</strong> = duas redes em jogo. O gerador cria, o discriminador tenta detectar se é falso. Base de muita imagem sintética." },
 
 
   // ─── DOMÍNIO 3: Foundation Models Apps (17 questões) ───
-  { d:3, t:"Bedrock", q:"Qual serviço AWS oferece acesso via API a Foundation Models de Anthropic, Meta, Mistral, Amazon, etc., SEM gerenciar infraestrutura?",
+  { d:3, t:"", q:"Qual serviço AWS oferece acesso via API a Foundation Models de Anthropic, Meta, Mistral, Amazon, etc., SEM gerenciar infraestrutura?",
     opts:["SageMaker","Amazon Bedrock","Amazon Q","Lambda"], c:1,
     why:"<strong>Amazon Bedrock</strong> = Foundation Models como serviço. API única pra vários providers. Zero infra." },
 
-  { d:3, t:"Knowledge Bases", q:"Você quer que o modelo responda usando os PDFs internos da empresa, sem re-treinar nada. Qual recurso do Bedrock?",
+  { d:3, t:"", q:"Você quer que o modelo responda usando os PDFs internos da empresa, sem re-treinar nada. Qual recurso do Bedrock?",
     opts:["Bedrock Agents","Bedrock Knowledge Bases","Bedrock Guardrails","Bedrock Custom Models"], c:1,
     why:"<strong>Bedrock Knowledge Bases</strong> = RAG gerenciado. Aponta pro S3 com seus docs, configura embeddings, pronto." },
 
-  { d:3, t:"Bedrock Agents", q:"O chatbot precisa CHAMAR uma API externa pra reservar um voo. Que recurso usar?",
+  { d:3, t:"", q:"O chatbot precisa CHAMAR uma API externa pra reservar um voo. Que recurso usar?",
     opts:["Bedrock Knowledge Bases","Bedrock Agents (com Action Groups)","Bedrock Guardrails","Prompt engineering só"], c:1,
     why:"<strong>Bedrock Agents</strong> executam AÇÕES via APIs. Knowledge Bases só recuperam info. Agents agem no mundo." },
 
-  { d:3, t:"Guardrails", q:"Você quer filtrar conteúdo tóxico e PII das respostas do LLM. Solução?",
+  { d:3, t:"", q:"Você quer filtrar conteúdo tóxico e PII das respostas do LLM. Solução?",
     opts:["IAM policy","Bedrock Guardrails","CloudTrail","Lambda function"], c:1,
     why:"<strong>Bedrock Guardrails</strong> = filtros de conteúdo (toxicidade, PII, tópicos proibidos) antes do prompt E antes da resposta." },
 
-  { d:3, t:"Temperature baixa", q:"Você quer respostas FACTUAIS e consistentes (não criativas). Como ajustar?",
+  { d:3, t:"", q:"Você quer respostas FACTUAIS e consistentes (não criativas). Como ajustar?",
     opts:["Temperature alta","Temperature baixa (ex: 0.1)","Top-k = 100","Aumentar tokens"], c:1,
     why:"<strong>Temperature baixa</strong> = determinístico, focado, repetível. Alta = criativo, variado, surpreendente." },
 
-  { d:3, t:"Top-p", q:"O que faz o parâmetro top-p (nucleus sampling)?",
+  { d:3, t:"", q:"O que faz o parâmetro top-p (nucleus sampling)?",
     opts:["Limita o custo","Limita o tamanho da resposta","Faz o modelo amostrar só dos tokens que somam probabilidade p","Define a temperatura"], c:2,
     why:"<strong>Top-p</strong> escolhe do 'núcleo' de tokens mais prováveis. Top-p=0.9 = só dos tokens que somam 90% de probabilidade." },
 
-  { d:3, t:"Few-shot", q:"No prompt você inclui 3 exemplos de tradução PT→EN antes de pedir a 4ª. Isso é:",
+  { d:3, t:"", q:"No prompt você inclui 3 exemplos de tradução PT→EN antes de pedir a 4ª. Isso é:",
     opts:["Zero-shot","Few-shot","Fine-tuning","RAG"], c:1,
     why:"<strong>Few-shot</strong> = exemplos no prompt. Zero-shot = nenhum exemplo. Nada disso modifica o modelo." },
 
-  { d:3, t:"Chain of Thought", q:"Você adiciona 'Pense passo a passo antes de responder' no prompt. Que técnica é essa?",
+  { d:3, t:"", q:"Você adiciona 'Pense passo a passo antes de responder' no prompt. Que técnica é essa?",
     opts:["Few-shot","Chain-of-Thought (CoT)","RAG","Fine-tuning"], c:1,
     why:"<strong>Chain-of-Thought</strong> = induzir raciocínio explícito. Melhora muito em problemas que exigem múltiplas etapas." },
 
-  { d:3, t:"Q Business", q:"Sua empresa quer um assistente que responde perguntas usando dados do SharePoint, Confluence e Slack. Solução pronta?",
+  { d:3, t:"", q:"Sua empresa quer um assistente que responde perguntas usando dados do SharePoint, Confluence e Slack. Solução pronta?",
     opts:["Amazon Q Business","Amazon Q Developer","SageMaker JumpStart","Bedrock direto"], c:0,
     why:"<strong>Amazon Q Business</strong> = assistente corporativo com conectores prontos pra ferramentas de trabalho. Zero código." },
 
-  { d:3, t:"Q Developer", q:"Desenvolvedor quer autocomplete inteligente de código no VS Code. Serviço?",
+  { d:3, t:"", q:"Desenvolvedor quer autocomplete inteligente de código no VS Code. Serviço?",
     opts:["Amazon Q Business","Amazon Q Developer (ex-CodeWhisperer)","SageMaker","Bedrock Knowledge Bases"], c:1,
     why:"<strong>Amazon Q Developer</strong> = copiloto de código. Antes chamado CodeWhisperer." },
 
-  { d:3, t:"Fine-tuning (tom)", q:"Empresa quer adaptar um FM pra usar o TOM DE VOZ da marca (informal, com gírias). Melhor abordagem?",
+  { d:3, t:"", q:"Empresa quer adaptar um FM pra usar o TOM DE VOZ da marca (informal, com gírias). Melhor abordagem?",
     opts:["Prompt engineering com 1 exemplo","RAG","Fine-tuning com exemplos do tom desejado","Continued pre-training"], c:2,
     why:"Tom/estilo específico → <strong>fine-tuning</strong>. RAG não muda como o modelo escreve. Prompt funciona pequeno mas não escala." },
 
-  { d:3, t:"Fine-tuning vs Continued pre-training", q:"Diferença entre fine-tuning e continued pre-training?",
+  { d:3, t:"", q:"Diferença entre fine-tuning e continued pre-training?",
     opts:["São a mesma coisa","Fine-tuning usa dados ROTULADOS poucos; continued pre-training usa dados NÃO rotulados em massa","Fine-tuning é supervisionado, pre-training é por reforço","Continued pre-training é mais barato"], c:1,
     why:"Distinção clássica. <strong>Rotulado e pouco</strong> = fine-tune. <strong>Não-rotulado e muito</strong> = continued pre-train." },
 
-  { d:3, t:"Vector DB", q:"Onde armazenar embeddings pra busca semântica em RAG?",
+  { d:3, t:"", q:"Onde armazenar embeddings pra busca semântica em RAG?",
     opts:["DynamoDB","Vector database (OpenSearch, Aurora pgvector, Pinecone)","S3","RDS MySQL"], c:1,
     why:"<strong>Vector database</strong> suporta busca por similaridade vetorial (cosseno, euclidiana). BDs tradicionais não." },
 
-  { d:3, t:"Chunking", q:"Documento de 200 páginas precisa virar embeddings pra RAG. Primeiro passo?",
+  { d:3, t:"", q:"Documento de 200 páginas precisa virar embeddings pra RAG. Primeiro passo?",
     opts:["Indexar tudo num único embedding","Chunking: quebrar em pedaços (ex: 500 tokens) e embeddar cada um","Resumir em 1 página","Fine-tunar o modelo"], c:1,
     why:"<strong>Chunking</strong> = quebra docs em pedaços pra cada um virar um embedding. O tamanho do chunk é hiperparâmetro do RAG." },
 
-  { d:3, t:"JumpStart", q:"Catálogo de FMs pré-treinados acessíveis pelo SageMaker pra você deployar?",
+  { d:3, t:"", q:"Catálogo de FMs pré-treinados acessíveis pelo SageMaker pra você deployar?",
     opts:["SageMaker JumpStart","SageMaker Canvas","SageMaker Clarify","SageMaker Model Monitor"], c:0,
     why:"<strong>SageMaker JumpStart</strong> = catálogo de modelos prontos, demos e notebooks. Atalho dentro do SageMaker." },
 
-  { d:3, t:"Canvas", q:"Analista de negócio sem código precisa criar modelo de classificação. Ferramenta AWS?",
+  { d:3, t:"", q:"Analista de negócio sem código precisa criar modelo de classificação. Ferramenta AWS?",
     opts:["SageMaker Studio (notebooks)","SageMaker Canvas","Bedrock","EMR"], c:1,
     why:"<strong>SageMaker Canvas</strong> = interface visual no-code pra ML. Pra analistas, não pra cientistas de dados." },
 
-  { d:3, t:"SageMaker vs Bedrock", q:"Empresa precisa treinar modelo CUSTOMIZADO de detecção de fraude do zero, com seus próprios dados rotulados. Serviço?",
+  { d:3, t:"", q:"Empresa precisa treinar modelo CUSTOMIZADO de detecção de fraude do zero, com seus próprios dados rotulados. Serviço?",
     opts:["Bedrock","SageMaker (treinar, deployar, monitorar)","Amazon Q","Lex"], c:1,
     why:"<strong>SageMaker</strong> = ciclo completo de ML customizado. Bedrock só oferece FMs prontos, não treina modelo de fraude do zero." },
 
 
   // ─── DOMÍNIO 4: Responsible AI (8 questões) ───
-  { d:4, t:"Clarify", q:"Como detectar viés nos dados de treino ou nas predições do modelo?",
+  { d:4, t:"", q:"Como detectar viés nos dados de treino ou nas predições do modelo?",
     opts:["CloudTrail","SageMaker Clarify","Bedrock Guardrails","Macie"], c:1,
     why:"<strong>SageMaker Clarify</strong> = ferramenta padrão pra bias detection + explicabilidade (XAI)." },
 
-  { d:4, t:"Model Monitor", q:"Modelo em produção começa a errar mais com o tempo porque o mundo real mudou. Como detectar?",
+  { d:4, t:"", q:"Modelo em produção começa a errar mais com o tempo porque o mundo real mudou. Como detectar?",
     opts:["SageMaker Clarify","SageMaker Model Monitor (detecta data drift / model drift)","CloudTrail","Comprehend"], c:1,
     why:"<strong>SageMaker Model Monitor</strong> monitora qualidade do modelo em produção e detecta drift." },
 
-  { d:4, t:"A2I", q:"Decisões sensíveis do modelo (ex: aprovar crédito) precisam de revisão humana antes. Serviço?",
+  { d:4, t:"", q:"Decisões sensíveis do modelo (ex: aprovar crédito) precisam de revisão humana antes. Serviço?",
     opts:["Amazon A2I (Augmented AI)","SageMaker Pipelines","Step Functions","Lambda"], c:0,
     why:"<strong>Amazon A2I</strong> orquestra workflows de human-in-the-loop pra decisões de ML." },
 
-  { d:4, t:"Model Cards", q:"Você quer documentar transparentemente como um modelo foi treinado, em quais dados, com quais limitações. Recurso?",
+  { d:4, t:"", q:"Você quer documentar transparentemente como um modelo foi treinado, em quais dados, com quais limitações. Recurso?",
     opts:["IAM Roles","SageMaker Model Cards","CloudTrail","Tags"], c:1,
     why:"<strong>SageMaker Model Cards</strong> = documentação estruturada do modelo pra transparência e governança." },
 
-  { d:4, t:"Explicabilidade", q:"O que significa 'explicabilidade' em IA?",
+  { d:4, t:"", q:"O que significa 'explicabilidade' em IA?",
     opts:["Modelo é grátis","Você consegue entender POR QUE o modelo tomou aquela decisão (quais features pesaram, etc.)","Modelo é open-source","Modelo é simples"], c:1,
     why:"<strong>Explicabilidade</strong> (XAI) = transparência da decisão. Clarify gera explicações usando SHAP e técnicas similares." },
 
-  { d:4, t:"Bias em RH", q:"Modelo de contratação rejeita mais candidatas mulheres apesar de qualificação igual. Problema?",
+  { d:4, t:"", q:"Modelo de contratação rejeita mais candidatas mulheres apesar de qualificação igual. Problema?",
     opts:["Overfitting","Bias — dados de treino refletem desigualdade histórica","Drift","Underfitting"], c:1,
     why:"<strong>Bias</strong> clássico. Modelo amplifica desigualdade dos dados. Solução: rebalancear, Clarify, fairness metrics." },
 
-  { d:4, t:"Filtrar tóxico", q:"Pra mitigar conteúdo tóxico GERADO pelo modelo (na saída), qual ferramenta?",
+  { d:4, t:"", q:"Pra mitigar conteúdo tóxico GERADO pelo modelo (na saída), qual ferramenta?",
     opts:["IAM Policy","Bedrock Guardrails (filtros de conteúdo)","SageMaker Clarify","Macie"], c:1,
     why:"<strong>Guardrails</strong> filtra a saída (e entrada). Clarify só detecta bias nos dados/modelo, não filtra geração." },
 
-  { d:4, t:"Princípios IA Responsável", q:"Os princípios de IA Responsável da AWS incluem:",
+  { d:4, t:"", q:"Os princípios de IA Responsável da AWS incluem:",
     opts:["Só performance e velocidade","Justiça, explicabilidade, robustez, privacidade, governança e transparência","Só open-source","Só baixo custo"], c:1,
     why:"Os 6 <strong>princípios canônicos</strong> da AWS para IA responsável. Cai sempre quando o assunto é diretrizes." },
 
 
   // ─── DOMÍNIO 5: Security & Governance (8 questões) ───
-  { d:5, t:"IAM", q:"Quem pode invocar um modelo no Bedrock? Como controlar?",
+  { d:5, t:"", q:"Quem pode invocar um modelo no Bedrock? Como controlar?",
     opts:["Public por padrão","IAM (políticas e roles)","Senha do modelo","ACL no S3"], c:1,
     why:"<strong>IAM</strong> controla acesso na AWS. Sempre. Quem chama, quem vê logs, quem gerencia recursos." },
 
-  { d:5, t:"KMS", q:"Dados sensíveis no S3 usados pra treino precisam de criptografia em repouso com chaves gerenciadas. Serviço?",
+  { d:5, t:"", q:"Dados sensíveis no S3 usados pra treino precisam de criptografia em repouso com chaves gerenciadas. Serviço?",
     opts:["IAM","AWS KMS (Key Management Service)","CloudTrail","Macie"], c:1,
     why:"<strong>KMS</strong> = Key Management Service. Gerencia chaves de criptografia. SSE-KMS é o padrão pra S3, EBS, etc." },
 
-  { d:5, t:"VPC Endpoints", q:"Tráfego entre sua aplicação e o Bedrock NÃO PODE passar pela internet pública. Solução?",
+  { d:5, t:"", q:"Tráfego entre sua aplicação e o Bedrock NÃO PODE passar pela internet pública. Solução?",
     opts:["VPN","VPC Endpoints (PrivateLink)","Public IP fixo","Internet Gateway"], c:1,
     why:"<strong>VPC Endpoints (PrivateLink)</strong> = comunicação privada com serviços AWS sem sair pra internet." },
 
-  { d:5, t:"CloudTrail", q:"Auditoria precisa saber QUEM chamou QUE API QUANDO. Onde olhar?",
+  { d:5, t:"", q:"Auditoria precisa saber QUEM chamou QUE API QUANDO. Onde olhar?",
     opts:["CloudWatch Metrics","CloudTrail","X-Ray","AWS Config"], c:1,
     why:"<strong>CloudTrail</strong> registra todas as chamadas de API: quem, quando, de onde, com qual resultado." },
 
-  { d:5, t:"Macie", q:"Você precisa DESCOBRIR onde há PII (CPF, e-mail, etc.) nos buckets S3 da empresa. Serviço?",
+  { d:5, t:"", q:"Você precisa DESCOBRIR onde há PII (CPF, e-mail, etc.) nos buckets S3 da empresa. Serviço?",
     opts:["Amazon Macie","GuardDuty","Inspector","IAM Access Analyzer"], c:0,
     why:"<strong>Amazon Macie</strong> = descoberta automatizada de dados sensíveis (PII) em buckets S3." },
 
-  { d:5, t:"Shared Responsibility (Bedrock)", q:"No modelo de responsabilidade compartilhada da AWS pra serviços gerenciados de IA (como Bedrock), o CLIENTE é responsável por:",
+  { d:5, t:"", q:"No modelo de responsabilidade compartilhada da AWS pra serviços gerenciados de IA (como Bedrock), o CLIENTE é responsável por:",
     opts:["Manter o hardware","Patchear o sistema operacional","Dados, prompts, configuração de acesso, escolha de modelo e governança de uso","Atualizar o foundation model"], c:2,
     why:"AWS cuida da infra/modelo. <strong>Cliente cuida de dados, acesso, uso correto, conformidade contextual</strong>." },
 
-  { d:5, t:"S3 encryption default", q:"Padrão de criptografia DEFAULT para S3 hoje (2024+)?",
+  { d:5, t:"", q:"Padrão de criptografia DEFAULT para S3 hoje (2024+)?",
     opts:["SSE-S3 com criptografia automática","Sem criptografia","Cliente precisa habilitar manualmente","Só com KMS"], c:0,
     why:"Desde 2023, todos os buckets S3 têm <strong>SSE-S3 ativado por default</strong>. KMS é opcional pra controle mais fino." },
 
-  { d:5, t:"Compliance", q:"Sua empresa precisa atender GDPR e LGPD para uma aplicação de IA. Que práticas ajudam?",
+  { d:5, t:"", q:"Sua empresa precisa atender GDPR e LGPD para uma aplicação de IA. Que práticas ajudam?",
     opts:["Ignorar — IA é exceção","Minimização de dados, criptografia, gestão de consentimento, direito a remoção, auditoria via CloudTrail","Só ter logs","Treinar o modelo só uma vez"], c:1,
     why:"<strong>Compliance</strong> = combinação de práticas e múltiplos serviços. Nunca é uma só coisa." }
 ];
