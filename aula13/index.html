@@ -454,6 +454,28 @@
   footer a{color:var(--orange-deep);font-weight:600}
   @keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
 
+  /* AMT CONVERGENCE chart + winner panel */
+  .amt-convergence{margin-top:12px;padding:12px;background:var(--cream-2);border:1.5px solid var(--ink);border-radius:10px}
+  .amt-conv-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+  .amt-conv-header .title{font-family:'Caprasimo',serif;font-size:14px;color:var(--ink)}
+  .amt-compare-btn{padding:6px 12px;border:1.5px solid var(--ink);background:var(--paper);border-radius:100px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11px;transition:all 0.15s;color:var(--ink)}
+  .amt-compare-btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--ink)}
+  .amt-compare-btn.active{background:var(--plum);color:var(--paper);border-color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px)}
+  .amt-compare-btn:disabled{opacity:0.5;cursor:not-allowed}
+  .amt-conv-svg{width:100%;height:120px;background:var(--paper);border:1.5px solid var(--ink);border-radius:6px;display:block}
+  .amt-conv-legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-soft);min-height:14px;align-items:center}
+  .amt-conv-legend .legend-item{display:flex;align-items:center;gap:5px}
+  .amt-conv-legend .legend-item.winner{font-weight:700;color:var(--ink)}
+  .amt-conv-legend .dot{width:10px;height:10px;border-radius:50%;display:inline-block;border:1px solid var(--ink);flex-shrink:0}
+  .amt-conv-legend .empty{font-style:italic}
+  .amt-winner{margin-top:10px;background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;opacity:0;transform:translateY(6px);transition:all 0.4s ease;pointer-events:none}
+  .amt-winner.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .amt-winner .lbl{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--yellow);text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:6px}
+  .amt-winner .config{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--cream-2);display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .amt-winner .config .pair{display:flex;align-items:baseline;gap:4px}
+  .amt-winner .config .key{color:var(--cream-2);opacity:0.7;font-size:11px}
+  .amt-winner .config .val{color:var(--aws);font-weight:700;font-size:14px;font-family:'Caprasimo',serif}
+
   /* RESPONSIVE */
   @media (max-width:920px){
     .amt-wrap,.dom-wrap,.dr-wrap,.bleu-wrap,.bert-wrap,.rouge-wrap,.endpoint-wrap,.deepar-wrap,.exp-wrap,.deploy-wrap,.monitor-wrap{grid-template-columns:1fr}
@@ -600,6 +622,20 @@
 
         <div class="amt-runs" id="amt-runs">
           <div style="text-align:center;padding:30px;color:var(--ink-soft);font-style:italic;font-size:13px">Clica em "Rodar tuning" pra começar.</div>
+        </div>
+
+        <div class="amt-convergence">
+          <div class="amt-conv-header">
+            <span class="title">📈 Curva de convergência <em style="color:var(--ink-soft);font-size:11px;font-style:normal;font-family:'JetBrains Mono',monospace">· best-so-far</em></span>
+            <button class="amt-compare-btn" id="amt-compare-btn">⚡ Comparar 3 estratégias</button>
+          </div>
+          <svg class="amt-conv-svg" id="amt-conv-svg" viewBox="0 0 360 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"></svg>
+          <div class="amt-conv-legend" id="amt-conv-legend"><span class="empty">Rode um tuning pra ver a curva</span></div>
+        </div>
+
+        <div class="amt-winner" id="amt-winner">
+          <div class="lbl">🏆 melhor config encontrada</div>
+          <div class="config" id="amt-winner-config">—</div>
         </div>
 
         <div class="amt-info">
@@ -2146,18 +2182,30 @@
   const runsTbody = document.getElementById('amt-runs');
   const runBtn = document.getElementById('amt-run-btn');
   const stratBtns = document.querySelectorAll('.amt-strategy');
+  const compareBtn = document.getElementById('amt-compare-btn');
+  const convSvg = document.getElementById('amt-conv-svg');
+  const convLegend = document.getElementById('amt-conv-legend');
+  const winnerBox = document.getElementById('amt-winner');
+  const winnerConfig = document.getElementById('amt-winner-config');
+
   let strategy = 'bayes';
+  let convCurves = {};   // strategy -> [best-so-far per job]
+  let comparing = false;
+  let running = false;
+
+  const STRAT_COLORS = {grid:'#5C8D89', random:'#F4D35E', bayes:'#FF6B35'};
+  const STRAT_LABELS = {grid:'Grid', random:'Random', bayes:'Bayes'};
 
   stratBtns.forEach(b => {
     b.addEventListener('click', () => {
+      if(running) return;
       stratBtns.forEach(x => x.classList.remove('active'));
       b.classList.add('active');
       strategy = b.dataset.strat;
     });
   });
 
-  // The "true" function: best near lr=0.03 (x=180), batch=64 (y=160)
-  // Returns simulated accuracy 0.65-0.94
+  // True objective: best near lr=0.03 (x=200), batch=64 (y=160)
   function evalPoint(x, y){
     const cx = 200, cy = 160;
     const dx = (x - cx) / 180;
@@ -2179,43 +2227,27 @@
     const pts = [];
     const xs = [70, 130, 190, 250, 310];
     const ys = [60, 130, 200, 270];
-    for(const x of xs){
-      for(const y of ys){
-        if(pts.length >= 20) break;
-        pts.push({x, y});
-      }
+    for(const x of xs) for(const y of ys){
+      if(pts.length >= 20) break;
+      pts.push({x, y});
     }
     return pts;
   }
 
   function genRandom(){
     const pts = [];
-    for(let i=0;i<20;i++){
-      pts.push({
-        x: 50 + Math.random()*300,
-        y: 30 + Math.random()*260
-      });
-    }
+    for(let i=0;i<20;i++) pts.push({x:50+Math.random()*300, y:30+Math.random()*260});
     return pts;
   }
 
   function genBayes(){
     const pts = [];
-    // first 5 random exploration
-    for(let i=0;i<5;i++){
-      pts.push({
-        x: 50 + Math.random()*300,
-        y: 30 + Math.random()*260
-      });
-    }
-    // evaluate them and find best so far
-    let best = pts[0];
-    let bestA = evalPoint(best.x, best.y);
+    for(let i=0;i<5;i++) pts.push({x:50+Math.random()*300, y:30+Math.random()*260});
+    let best = pts[0]; let bestA = evalPoint(best.x, best.y);
     for(let i=1;i<5;i++){
       const a = evalPoint(pts[i].x, pts[i].y);
       if(a > bestA){ bestA = a; best = pts[i]; }
     }
-    // then 15 more concentrated near best, getting tighter
     for(let i=0;i<15;i++){
       const spread = 80 - i*4;
       pts.push({
@@ -2226,54 +2258,136 @@
     return pts;
   }
 
-  function clear(){
+  function clearScatter(){
     pointsG.innerHTML = '';
     bestG.style.display = 'none';
     runsTbody.innerHTML = '';
     bestAcc.textContent = '—';
     cost.textContent = '0';
+    winnerBox.classList.remove('show');
   }
 
-  function run(){
-    clear();
+  function drawConvergence(){
+    // grid background (always rebuilt)
+    const grid = `
+      <g stroke="#2B1810" stroke-opacity="0.08" stroke-width="1">
+        <line x1="36" y1="20" x2="354" y2="20"/>
+        <line x1="36" y1="45" x2="354" y2="45"/>
+        <line x1="36" y1="70" x2="354" y2="70"/>
+        <line x1="36" y1="95" x2="354" y2="95"/>
+      </g>
+      <line x1="36" y1="105" x2="354" y2="105" stroke="#2B1810" stroke-width="1.2"/>
+      <line x1="36" y1="10" x2="36" y2="105" stroke="#2B1810" stroke-width="1.2"/>
+      <g font-family="JetBrains Mono" font-size="8" fill="#4A3528">
+        <text x="33" y="23" text-anchor="end">.95</text>
+        <text x="33" y="73" text-anchor="end">.78</text>
+        <text x="33" y="108" text-anchor="end">.62</text>
+        <text x="38" y="118">job 1</text>
+        <text x="354" y="118" text-anchor="end">job 20</text>
+      </g>`;
+    let curves = '';
+    let dots = '';
+    const entries = Object.entries(convCurves);
+    entries.forEach(([strat, arr]) => {
+      if(!arr.length) return;
+      let d = '';
+      arr.forEach((v, i) => {
+        const x = 36 + (i / 19) * 318;
+        const y = Math.max(10, Math.min(105, 105 - ((v - 0.62) / 0.33) * 95));
+        d += (i === 0 ? 'M ' : ' L ') + x.toFixed(1) + ' ' + y.toFixed(1);
+      });
+      curves += `<path d="${d}" fill="none" stroke="${STRAT_COLORS[strat]}" stroke-width="2.2" stroke-linejoin="round"/>`;
+      const li = arr.length - 1;
+      const lx = 36 + (li / 19) * 318;
+      const ly = Math.max(10, Math.min(105, 105 - ((arr[li] - 0.62) / 0.33) * 95));
+      dots += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="3.5" fill="${STRAT_COLORS[strat]}" stroke="#2B1810" stroke-width="1"/>`;
+    });
+    convSvg.innerHTML = grid + curves + dots;
+  }
+
+  function updateLegend(){
+    const strats = Object.keys(convCurves);
+    if(!strats.length){
+      convLegend.innerHTML = '<span class="empty">Rode um tuning pra ver a curva</span>';
+      return;
+    }
+    // find overall winner
+    let winnerStrat = strats[0];
+    let winnerScore = convCurves[strats[0]].length ? convCurves[strats[0]][convCurves[strats[0]].length-1] : 0;
+    strats.forEach(s => {
+      const arr = convCurves[s];
+      if(arr.length && arr[arr.length-1] > winnerScore){
+        winnerScore = arr[arr.length-1];
+        winnerStrat = s;
+      }
+    });
+    convLegend.innerHTML = strats.map(s => {
+      const arr = convCurves[s];
+      const final = arr.length ? arr[arr.length-1].toFixed(3) : '—';
+      const cls = (s === winnerStrat && strats.length > 1) ? 'legend-item winner' : 'legend-item';
+      const crown = (s === winnerStrat && strats.length > 1) ? '👑 ' : '';
+      return `<span class="${cls}"><span class="dot" style="background:${STRAT_COLORS[s]}"></span>${crown}${STRAT_LABELS[s]} · ${final}</span>`;
+    }).join('');
+  }
+
+  function showWinner(best){
+    const winLr = ((best.x - 50) / 300 * 0.099 + 0.001).toFixed(4);
+    const winBs = Math.round((290 - best.y) / 260 * 240 + 16);
+    winnerConfig.innerHTML =
+      `<span class="pair"><span class="key">lr=</span><span class="val">${winLr}</span></span>` +
+      `<span class="pair"><span class="key">batch=</span><span class="val">${winBs}</span></span>` +
+      `<span class="pair"><span class="key">strategy=</span><span class="val">${STRAT_LABELS[strategy]}</span></span>` +
+      `<span class="pair"><span class="key">acc=</span><span class="val">${best.acc.toFixed(3)}</span></span>`;
+    winnerBox.classList.add('show');
+  }
+
+  function run(onComplete){
+    if(running) return;
+    running = true;
+    clearScatter();
+    if(!comparing){
+      convCurves = {};
+      drawConvergence();
+      updateLegend();
+    }
     runBtn.disabled = true;
-    runBtn.textContent = '⟳ rodando...';
+    if(!comparing) compareBtn.disabled = true;
+    runBtn.textContent = '⟳ rodando ' + STRAT_LABELS[strategy] + '...';
 
-    let pts;
-    if(strategy === 'grid') pts = genGrid();
-    else if(strategy === 'random') pts = genRandom();
-    else pts = genBayes();
-
+    const pts = strategy === 'grid' ? genGrid() : strategy === 'random' ? genRandom() : genBayes();
     const evaluated = pts.map(p => ({...p, acc: evalPoint(p.x, p.y)}));
     let best = evaluated[0];
     evaluated.forEach(e => { if(e.acc > best.acc) best = e; });
+
+    convCurves[strategy] = [];
+    let bestSoFar = 0;
+    const stepDelay = comparing ? 70 : 110;
 
     let i = 0;
     const interval = setInterval(() => {
       if(i >= evaluated.length){
         clearInterval(interval);
-        // draw best marker (polygon star) — use transform
         bestG.style.display = '';
         bestG.setAttribute('transform', `translate(${best.x}, ${best.y - 18})`);
         bestAcc.textContent = best.acc.toFixed(3);
         cost.textContent = (evaluated.length * 0.30).toFixed(2);
+        if(!comparing) showWinner(best);
+        running = false;
         runBtn.disabled = false;
+        if(!comparing) compareBtn.disabled = false;
         runBtn.textContent = '▶ Rodar tuning (20 jobs)';
+        if(onComplete) onComplete(best);
         return;
       }
       const p = evaluated[i];
       const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      c.setAttribute('cx', p.x);
-      c.setAttribute('cy', p.y);
-      c.setAttribute('r', 0);
+      c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', 0);
       c.setAttribute('fill', accColor(p.acc));
-      c.setAttribute('stroke', '#2B1810');
-      c.setAttribute('stroke-width', '1.2');
+      c.setAttribute('stroke', '#2B1810'); c.setAttribute('stroke-width', '1.2');
       c.style.transition = 'r 0.25s';
       pointsG.appendChild(c);
       requestAnimationFrame(() => c.setAttribute('r', '6'));
 
-      // add row
       const row = document.createElement('div');
       row.className = 'amt-run-row';
       const lr = ((p.x - 50) / 300 * 0.099 + 0.001).toFixed(4);
@@ -2284,14 +2398,63 @@
       runsTbody.appendChild(row);
       runsTbody.scrollTop = runsTbody.scrollHeight;
 
-      bestAcc.textContent = Math.max(...evaluated.slice(0,i+1).map(e => e.acc)).toFixed(3);
-      cost.textContent = ((i+1) * 0.30).toFixed(2);
+      bestSoFar = Math.max(bestSoFar, p.acc);
+      convCurves[strategy].push(bestSoFar);
+      drawConvergence();
+      updateLegend();
 
+      bestAcc.textContent = bestSoFar.toFixed(3);
+      cost.textContent = ((i+1) * 0.30).toFixed(2);
       i++;
-    }, 120);
+    }, stepDelay);
   }
 
-  runBtn.addEventListener('click', run);
+  function runAll(){
+    if(comparing || running) return;
+    comparing = true;
+    compareBtn.disabled = true;
+    compareBtn.classList.add('active');
+    runBtn.disabled = true;
+    convCurves = {};
+    drawConvergence();
+    updateLegend();
+    winnerBox.classList.remove('show');
+
+    const strats = ['grid', 'random', 'bayes'];
+    const winners = {};
+    let idx = 0;
+    function next(prevBest){
+      if(prevBest) winners[strategy] = prevBest;
+      if(idx >= strats.length){
+        // pick overall winner
+        let bestKey = strats[0];
+        Object.entries(winners).forEach(([k, v]) => {
+          if(v.acc > winners[bestKey].acc) bestKey = k;
+        });
+        strategy = bestKey;
+        stratBtns.forEach(x => x.classList.toggle('active', x.dataset.strat === bestKey));
+        showWinner(winners[bestKey]);
+        comparing = false;
+        compareBtn.disabled = false;
+        compareBtn.classList.remove('active');
+        runBtn.disabled = false;
+        runBtn.textContent = '▶ Rodar tuning (20 jobs)';
+        return;
+      }
+      strategy = strats[idx];
+      stratBtns.forEach(x => x.classList.toggle('active', x.dataset.strat === strategy));
+      idx++;
+      run(next);
+    }
+    next(null);
+  }
+
+  runBtn.addEventListener('click', () => run());
+  compareBtn.addEventListener('click', runAll);
+
+  // initial empty state
+  drawConvergence();
+  updateLegend();
 })();
 
 /* -----------------------------------------------
