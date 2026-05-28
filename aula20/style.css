@@ -383,8 +383,110 @@ section.chapter.alt-bg{background:var(--cream-2);border-top:2px solid var(--ink)
 @media (max-width:880px){.when-quiz{grid-template-columns:1fr}}
 
 /* ═══════════════════════════════════════
-   6. CONFUSION MATRIX
+   6+7. CONFUSION MATRIX + METRICS (combined)
    ═══════════════════════════════════════ */
+.cmm-lab{
+  display:grid;
+  grid-template-columns:0.9fr 0.9fr 1.4fr;
+  gap:28px;align-items:stretch;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;
+  padding:24px;box-shadow:6px 6px 0 var(--ink);margin-bottom:18px;
+  position:relative;
+}
+.cmm-lab > div{
+  position:relative;
+  padding-right:14px;
+}
+.cmm-lab > div + div{
+  padding-left:14px;
+}
+.cmm-lab > div + div::before{
+  content:'';
+  position:absolute;
+  top:6px;bottom:6px;left:-14px;
+  width:0;
+  border-left:2px dashed rgba(43,24,16,0.22);
+}
+.cmm-lab > div + div::after{
+  content:'';
+  position:absolute;
+  top:50%;left:-19px;
+  width:10px;height:10px;
+  background:var(--orange);
+  border:1.5px solid var(--ink);
+  border-radius:50%;
+  transform:translateY(-50%);
+}
+.cmm-lab > div > h4{
+  font-family:'Caprasimo',serif;font-weight:400;font-size:16px;
+  margin-bottom:10px;
+  display:inline-flex;align-items:center;
+  background:var(--ink);color:var(--yellow);
+  padding:4px 12px;border-radius:100px;
+  letter-spacing:0.02em;
+}
+
+.cmm-controls{display:flex;flex-direction:column;gap:10px}
+.cmm-controls .cm-field{
+  background:var(--cream-2);border:1.5px solid var(--ink);border-radius:10px;
+  padding:8px 12px;
+}
+.cmm-controls .cm-field label{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Sora',sans-serif;font-weight:700;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;
+}
+.cmm-controls .cm-field small{
+  display:block;font-size:11px;color:var(--ink-soft);font-style:italic;
+  margin-top:3px;line-height:1.3;
+}
+.cmm-controls input[type=range]{height:5px}
+
+.cmm-matrix-wrap{display:flex;flex-direction:column;gap:8px}
+.cmm-matrix-wrap .cm-matrix{align-self:stretch}
+.cmm-matrix-wrap .cm-cell{min-height:88px;padding:10px}
+.cmm-matrix-wrap .cm-num{font-size:30px}
+.cmm-matrix-wrap .cm-mini{font-size:10.5px}
+
+.cmm-metrics .metrics-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0;
+}
+.cmm-metrics .metric-card{padding:12px 14px;gap:4px}
+.cmm-metrics .m-value{font-size:32px}
+.cmm-metrics .m-q{font-size:11.5px;line-height:1.4}
+.cmm-metrics .m-warn{font-size:10.5px;line-height:1.4;padding:5px 9px}
+
+@media (max-width:1100px){
+  .cmm-lab{grid-template-columns:1fr 1fr;gap:24px}
+  .cmm-metrics{grid-column:1/-1}
+  .cmm-lab > div + div::before{
+    top:auto;bottom:auto;left:6px;right:6px;
+    height:0;width:auto;
+    border-left:none;border-top:2px dashed rgba(43,24,16,0.22);
+  }
+  .cmm-lab > div + div::after{display:none}
+  .cmm-metrics::before{
+    top:-12px !important;left:6px !important;right:6px !important;
+    height:0 !important;width:auto !important;bottom:auto !important;
+    border-left:none !important;
+    border-top:2px dashed rgba(43,24,16,0.22);
+  }
+}
+@media (max-width:760px){
+  .cmm-lab{grid-template-columns:1fr;gap:20px}
+  .cmm-metrics .metrics-grid{grid-template-columns:1fr}
+  .cmm-metrics{grid-column:auto}
+  .cmm-lab > div{padding-right:0;padding-left:0}
+  .cmm-lab > div + div{padding-left:0;padding-top:14px}
+  .cmm-lab > div + div::before{
+    top:0;left:10%;right:10%;
+    border-top:2px dashed rgba(43,24,16,0.22);
+    border-left:none;
+    height:0;width:auto;
+  }
+}
+
+/* legacy .cm-lab (caso ainda apareça) */
 .cm-lab{
   display:grid;grid-template-columns:1fr 1.1fr;gap:24px;align-items:stretch;
   background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;
