@@ -36,8 +36,7 @@
       <a href="#similaridade">Similaridade</a>
       <a href="#vector-db">Vector DB</a>
       <a href="#quando-emb">Quando usar</a>
-      <a href="#matriz">Matriz</a>
-      <a href="#class-metrics">Class. Métricas</a>
+      <a href="#matriz">Matriz × Métricas</a>
       <a href="#threshold">Threshold</a>
       <a href="#reg-metrics">Reg. Métricas</a>
       <a href="#negocio">Negócio</a>
@@ -428,17 +427,18 @@
   </div>
 </section>
 
-<!-- 6. MATRIZ DE CONFUSÃO -->
+<!-- 6+7. MATRIZ DE CONFUSÃO + MÉTRICAS -->
 <section class="chapter" id="matriz">
   <div class="container">
-    <span class="chapter-number">06 · Matriz de confusão</span>
-    <h2>A base de <span style="color:var(--orange)">tudo</span> em classificação.</h2>
+    <span class="chapter-number">06 + 07 · Matriz de confusão · Acurácia · Precisão · Recall · F1</span>
+    <h2>A base <span style="color:var(--orange)">e</span> as quatro métricas que ela <span style="color:var(--orange)">explica</span>.</h2>
     <p class="lead">
-      Quatro caixas. <strong>VP</strong> e <strong>VN</strong> são acertos. <strong>FP</strong> (alarme falso) e <strong>FN</strong> (deixou passar) são os dois jeitos diferentes de errar — e quase sempre custam coisas diferentes. Ajusta os sliders e veja as métricas mexerem.
+      Quatro caixas: <strong>VP</strong> e <strong>VN</strong> são acertos, <strong>FP</strong> (alarme falso) e <strong>FN</strong> (deixou passar) são os dois jeitos diferentes de errar — e quase sempre custam coisas diferentes. Mexa nos sliders e veja a matriz reagir junto com as <strong>4 métricas de classificação</strong>. Cada métrica responde a uma pergunta de negócio diferente.
     </p>
 
-    <div class="cm-lab">
-      <div class="cm-controls">
+    <div class="cmm-lab">
+      <div class="cmm-controls">
+        <h4>🎛️ Ajuste a matriz</h4>
         <div class="cm-field">
           <label>Verdadeiros Positivos (VP) <span class="cm-val" id="cm-tp-v">85</span></label>
           <input type="range" id="cm-tp" min="0" max="100" value="85">
@@ -461,93 +461,88 @@
         </div>
       </div>
 
-      <div class="cm-matrix">
-        <div class="cm-headers">
-          <div class="cm-corner"></div>
-          <div class="cm-htop">Predito: 🐈</div>
-          <div class="cm-htop">Predito: 🐕</div>
+      <div class="cmm-matrix-wrap">
+        <h4>🟧 Matriz de confusão</h4>
+        <div class="cm-matrix">
+          <div class="cm-headers">
+            <div class="cm-corner"></div>
+            <div class="cm-htop">Predito: 🐈</div>
+            <div class="cm-htop">Predito: 🐕</div>
+          </div>
+          <div class="cm-row">
+            <div class="cm-side">Real: 🐈</div>
+            <div class="cm-cell tp" id="cm-cell-tp">
+              <span class="cm-label">VP</span>
+              <span class="cm-num" id="cm-num-tp">85</span>
+              <span class="cm-mini">acertou ✅</span>
+            </div>
+            <div class="cm-cell fn" id="cm-cell-fn">
+              <span class="cm-label">FN</span>
+              <span class="cm-num" id="cm-num-fn">15</span>
+              <span class="cm-mini">deixou passar ❌</span>
+            </div>
+          </div>
+          <div class="cm-row">
+            <div class="cm-side">Real: 🐕</div>
+            <div class="cm-cell fp" id="cm-cell-fp">
+              <span class="cm-label">FP</span>
+              <span class="cm-num" id="cm-num-fp">5</span>
+              <span class="cm-mini">alarme falso ❌</span>
+            </div>
+            <div class="cm-cell tn" id="cm-cell-tn">
+              <span class="cm-label">VN</span>
+              <span class="cm-num" id="cm-num-tn">95</span>
+              <span class="cm-mini">acertou ✅</span>
+            </div>
+          </div>
         </div>
-        <div class="cm-row">
-          <div class="cm-side">Real: 🐈</div>
-          <div class="cm-cell tp" id="cm-cell-tp">
-            <span class="cm-label">VP</span>
-            <span class="cm-num" id="cm-num-tp">85</span>
-            <span class="cm-mini">acertou ✅</span>
+      </div>
+
+      <div class="cmm-metrics">
+        <h4>📐 As 4 métricas, ao vivo</h4>
+        <div class="metrics-grid">
+          <div class="metric-card acc">
+            <div class="m-tag">📊 Acurácia</div>
+            <div class="m-formula">(VP + VN) / Total</div>
+            <div class="m-value" id="m-acc">90%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-acc-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "De todas as previsões, quantas acertei?"</p>
+            <p class="m-warn">⚠️ Mente em dataset desbalanceado.</p>
           </div>
-          <div class="cm-cell fn" id="cm-cell-fn">
-            <span class="cm-label">FN</span>
-            <span class="cm-num" id="cm-num-fn">15</span>
-            <span class="cm-mini">deixou passar ❌</span>
+
+          <div class="metric-card prec">
+            <div class="m-tag">🎯 Precisão</div>
+            <div class="m-formula">VP / (VP + FP)</div>
+            <div class="m-value" id="m-prec">94.4%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-prec-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "Dos que <em>previ</em> como positivos, quantos eram?"</p>
+            <p class="m-warn">⚠️ Use quando <strong>FP é caro</strong>: spam, denúncia de fraude.</p>
+          </div>
+
+          <div class="metric-card rec">
+            <div class="m-tag">🪤 Recall</div>
+            <div class="m-formula">VP / (VP + FN)</div>
+            <div class="m-value" id="m-rec">85%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-rec-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "Dos casos <em>reais</em> positivos, quantos peguei?"</p>
+            <p class="m-warn">⚠️ Use quando <strong>FN é caro</strong>: detecção de tumor, gato perdido.</p>
+          </div>
+
+          <div class="metric-card f1">
+            <div class="m-tag">⚖️ F1 Score</div>
+            <div class="m-formula">2 · (P · R) / (P + R)</div>
+            <div class="m-value" id="m-f1">89.5%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-f1-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "Tô equilibrado entre Precisão e Recall?"</p>
+            <p class="m-warn">✅ Boa <strong>métrica única</strong> em dataset desbalanceado.</p>
           </div>
         </div>
-        <div class="cm-row">
-          <div class="cm-side">Real: 🐕</div>
-          <div class="cm-cell fp" id="cm-cell-fp">
-            <span class="cm-label">FP</span>
-            <span class="cm-num" id="cm-num-fp">5</span>
-            <span class="cm-mini">alarme falso ❌</span>
-          </div>
-          <div class="cm-cell tn" id="cm-cell-tn">
-            <span class="cm-label">VN</span>
-            <span class="cm-num" id="cm-num-tn">95</span>
-            <span class="cm-mini">acertou ✅</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 7. MÉTRICAS DE CLASSIFICAÇÃO -->
-<section class="chapter alt-bg" id="class-metrics">
-  <div class="container">
-    <span class="chapter-number">07 · Acurácia · Precisão · Recall · F1</span>
-    <h2>Quatro fórmulas, <span style="color:var(--orange)">quatro perguntas</span> diferentes.</h2>
-    <p class="lead">
-      Os números são calculados a partir da matriz da seção anterior. Mexa lá e veja aqui em tempo real. Cada métrica responde a uma pergunta de negócio diferente — escolha errado e o modelo passa em validação mas falha em produção.
-    </p>
-
-    <div class="metrics-grid">
-      <div class="metric-card acc">
-        <div class="m-tag">📊 Acurácia</div>
-        <div class="m-formula">(VP + VN) / Total</div>
-        <div class="m-value" id="m-acc">90%</div>
-        <div class="m-bar"><div class="m-bar-fill" id="m-acc-bar"></div></div>
-        <p class="m-q"><strong>Pergunta:</strong> "De todas as previsões, quantas acertei?"</p>
-        <p class="m-warn">⚠️ Mente em dataset desbalanceado. Se 99% das fotos são "não-gato", chutar "não-gato" sempre dá 99% de acurácia.</p>
-      </div>
-
-      <div class="metric-card prec">
-        <div class="m-tag">🎯 Precisão</div>
-        <div class="m-formula">VP / (VP + FP)</div>
-        <div class="m-value" id="m-prec">94.4%</div>
-        <div class="m-bar"><div class="m-bar-fill" id="m-prec-bar"></div></div>
-        <p class="m-q"><strong>Pergunta:</strong> "Dos que <em>previ</em> como positivos, quantos eram mesmo?"</p>
-        <p class="m-warn">⚠️ Use quando <strong>FP é caro</strong>: filtro de spam (não quer marcar e-mail importante como spam), denúncia de fraude.</p>
-      </div>
-
-      <div class="metric-card rec">
-        <div class="m-tag">🪤 Recall</div>
-        <div class="m-formula">VP / (VP + FN)</div>
-        <div class="m-value" id="m-rec">85%</div>
-        <div class="m-bar"><div class="m-bar-fill" id="m-rec-bar"></div></div>
-        <p class="m-q"><strong>Pergunta:</strong> "Dos casos <em>reais</em> positivos, quantos eu peguei?"</p>
-        <p class="m-warn">⚠️ Use quando <strong>FN é caro</strong>: detecção de tumor (não quer deixar passar), achar gato perdido.</p>
-      </div>
-
-      <div class="metric-card f1">
-        <div class="m-tag">⚖️ F1 Score</div>
-        <div class="m-formula">2 · (P · R) / (P + R)</div>
-        <div class="m-value" id="m-f1">89.5%</div>
-        <div class="m-bar"><div class="m-bar-fill" id="m-f1-bar"></div></div>
-        <p class="m-q"><strong>Pergunta:</strong> "Tô equilibrado entre Precisão e Recall?"</p>
-        <p class="m-warn">✅ Boa <strong>métrica única</strong> em datasets desbalanceados. Penaliza se uma das duas anda mal.</p>
       </div>
     </div>
 
     <div class="m-tradeoff">
       <h4>🎢 O trade-off Precisão × Recall</h4>
-      <p>Quase sempre <strong>aumentar uma diminui a outra</strong>. Exemplo: deixar o modelo "mais agressivo" (chutar positivo com pouca certeza) sobe Recall mas derruba Precisão. F1 é o equilíbrio. ROC-AUC é a métrica resumo da capacidade do modelo em <em>qualquer</em> threshold.</p>
+      <p>Quase sempre <strong>aumentar uma diminui a outra</strong>. Deixar o modelo "mais agressivo" (chutar positivo com pouca certeza) sobe Recall mas derruba Precisão. F1 é o equilíbrio. ROC-AUC é a métrica resumo da capacidade do modelo em <em>qualquer</em> threshold.</p>
     </div>
   </div>
 </section>
