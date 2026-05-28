@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 17: Segurança e Privacidade em IA</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<meta name="description" content="Aula 17 do Balaio de Gatos: Safety vs Security, prompt injection, jailbreak, adversarial prompting, Bedrock Guardrails, PII, residência de dados, governança, Model Cards, logging, isolamento de rede, ciclo de vida e auditoria. Aula visual e interativa pra AWS AI Practitioner.">
+<meta name="keywords" content="prompt injection, jailbreak, adversarial prompting, Bedrock Guardrails, PII, data residency, Model Cards, CloudTrail, Macie, KMS, IAM, VPC isolation, data governance, retention, audit, AWS AI Practitioner">
+<meta name="author" content="Escola da Nuvem">
+<meta name="theme-color" content="#FF6B35">
+
+<meta property="og:title" content="Aula 17 · Segurança e Privacidade em IA">
+<meta property="og:description" content="Ataque o seu próprio gato pra aprender defesa: prompt injection, jailbreak, adversarial. Veja Guardrails segurar a peteca, calibre PII, residência e retenção.">
+<meta property="og:image" content="../cat-thumbnail.png">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span class="pt">aula 17</span></div>
+    <div class="nav-links">
+      <a href="#safety-security">Safety × Security</a>
+      <a href="#ataques">Lab de Ataques</a>
+      <a href="#guardrails">Guardrails</a>
+      <a href="#pii">PII</a>
+      <a href="#residencia">Residência</a>
+      <a href="#retencao">Retenção</a>
+      <a href="#defesa">Defesa</a>
+      <a href="#governanca">Governança</a>
+      <a href="#monitor">Monitor</a>
+      <a href="#cola">Cola</a>
+      <a href="../index.html">← Aulas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · AI Practitioner <span class="v2">aula 17</span></div>
+        <h1>
+          O gato é fofo.<br>
+          O <span class="scratch">atacante</span><br>
+          <span class="accent">não é.</span>
+        </h1>
+        <p>
+          Aula 16 mostrou as ferramentas de confiança. Aula 17 te coloca <strong>do outro lado</strong>: como <strong>atacam</strong> sistemas de IA (prompt injection, jailbreak, adversarial), como <strong>defender</strong> com Guardrails, PII, criptografia, isolamento de rede e Model Cards, e como manter a <strong>governança de dados</strong> em pé pra auditoria não te pegar.
+        </p>
+        <a href="#ataques" class="hero-cta">⚔️ Atacar pra defender</a>
+        <a href="#cola" class="hero-cta ghost">Cola final</a>
+      </div>
+      <div class="cat-lab">
+        <span class="float-cat c1">🛡️</span>
+        <span class="float-cat c2">🥷</span>
+        <span class="float-cat c3">😼</span>
+        <span class="float-cat c4">🔐</span>
+        <span class="float-cat c5">📜</span>
+        <span class="chip">Safety ≠ Security</span>
+        <span class="chip2">Prompt Injection</span>
+        <span class="chip3">Guardrails</span>
+        <span class="chip4">Model Cards ⚡</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🛡️ SAFETY × SECURITY</span><span>🥷 PROMPT INJECTION</span><span>🔓 JAILBREAK</span><span>👻 ADVERSARIAL</span><span>🚪 GUARDRAILS</span><span>🆔 PII</span><span>🌎 RESIDÊNCIA</span><span>♻️ RETENÇÃO</span><span>🧅 DEFESA EM PROFUNDIDADE</span><span>📋 MODEL CARDS</span><span>📜 LOGGING</span><span>🔍 AUDITORIA</span><span>🛡️ SAFETY × SECURITY</span><span>🥷 PROMPT INJECTION</span>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!-- 1. SAFETY × SECURITY -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 1 · A diferença que ninguém te explicou</span>
+    <h2>
+      <span class="accent">Safety</span> protege a <span class="yel">pessoa.</span><br>
+      <span class="accent">Security</span> protege o <span class="yel">sistema.</span>
+    </h2>
+    <p>
+      Em português a gente usa "segurança" pra tudo. Em inglês, no contexto de IA, são duas coisas distintas — e cair na pegadinha custa pontos na prova.
+    </p>
+  </div>
+</section>
+
+<section class="chapter" id="safety-security">
+  <div class="container">
+    <span class="chapter-number">01 · Safety × Security</span>
+    <h2>Toggle os dois lados pra ver <span style="color:var(--orange)">a diferença na prática</span>.</h2>
+    <p class="lead">
+      Os dois precisam coexistir. Você pode ter um sistema super seguro tecnicamente (security) mas que recomenda dieta tóxica pra criança (safety quebrada). E vice-versa.
+    </p>
+
+    <div class="ss-toggle">
+      <button class="ss-side active" data-side="safety">
+        <span class="ss-emoji">🛡️</span>
+        <span class="ss-name">SAFETY</span>
+        <span class="ss-tagline">Salvaguarda · resguardar a pessoa</span>
+      </button>
+      <button class="ss-side" data-side="security">
+        <span class="ss-emoji">🔐</span>
+        <span class="ss-name">SECURITY</span>
+        <span class="ss-tagline">Segurança · resguardar o sistema</span>
+      </button>
+    </div>
+
+    <div class="ss-content" id="ss-content">
+      <!-- preenchido pelo JS -->
+    </div>
+
+    <div class="ss-overlap">
+      <strong>🔁 Onde se encontram:</strong>
+      Um sistema com <em>safety boa mas security ruim</em> dá respostas certas, mas vaza dados de pessoas. Um sistema com <em>security boa mas safety ruim</em> nunca vaza nada — só que recomenda coisas perigosas. <strong>IA responsável precisa dos dois.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 2. LAB DE ATAQUES -->
+<!-- ============================ -->
+<section class="part-banner alt">
+  <div class="container">
+    <span class="chapter-number">Parte 2 · Hora de atacar (em ambiente seguro)</span>
+    <h2>
+      Aprenda <span class="accent">os ataques</span><br>
+      pra saber como <span class="yel">defender.</span>
+    </h2>
+    <p>
+      Tem 3 categorias de ataque que sempre caem: <strong>prompt injection</strong>, <strong>jailbreak</strong> e <strong>adversarial prompting</strong>. Vamos disparar cada um contra um chatbot simulado, com e sem Guardrails ativados.
+    </p>
+  </div>
+</section>
+
+<section class="chapter" id="ataques">
+  <div class="container">
+    <span class="chapter-number">02 · Lab de ataques · Red team felino</span>
+    <h2>Liga e desliga o <span style="color:var(--orange)">Bedrock Guardrails</span> pra ver a diferença.</h2>
+    <p class="lead">
+      Cenário: chatbot de uma clínica veterinária ("Dr. Bigodes") respondendo perguntas de tutores. Selecione um ataque pra disparar. Veja a resposta com Guardrails desativado e ativado.
+    </p>
+
+    <div class="attack-lab" id="attack-lab">
+      <div class="attack-controls">
+        <h4>Selecione o ataque</h4>
+
+        <button class="attack-btn" data-attack="prompt-injection">
+          <span class="atk-tag">PROMPT INJECTION</span>
+          <span class="atk-desc">Inserir instruções escondidas no input pra manipular o modelo</span>
+        </button>
+        <button class="attack-btn" data-attack="jailbreak">
+          <span class="atk-tag">JAILBREAK</span>
+          <span class="atk-desc">Enganar o modelo pra ele violar suas próprias regras</span>
+        </button>
+        <button class="attack-btn" data-attack="adversarial">
+          <span class="atk-tag">ADVERSARIAL</span>
+          <span class="atk-desc">Input projetado pra fazer o modelo errar de forma específica</span>
+        </button>
+        <button class="attack-btn" data-attack="data-leak">
+          <span class="atk-tag">VAZAMENTO</span>
+          <span class="atk-desc">Tentativa de extrair dados sensíveis dos prompts anteriores</span>
+        </button>
+
+        <div class="guardrails-toggle">
+          <span class="lbl">Bedrock Guardrails:</span>
+          <label class="switch">
+            <input type="checkbox" id="guard-on" checked>
+            <span class="slider"></span>
+          </label>
+          <span class="state" id="guard-state">ATIVO</span>
+        </div>
+      </div>
+
+      <div class="attack-terminal" id="attack-terminal">
+        <div class="term-bar">
+          <span></span><span></span><span></span>
+          <small>balaio-vet-chat · session 0xCAFE</small>
+        </div>
+        <div class="term-body" id="term-body">
+          <div class="term-line">
+            <span class="prompt">$</span>
+            <span class="muted">Selecione um ataque acima pra começar a sessão</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="attack-explain" id="attack-explain">
+      <div class="ae-empty">
+        <span class="big">👈</span>
+        <p>Quando disparar um ataque, aqui aparece a explicação técnica do que aconteceu, por que é perigoso e como o Guardrails (e outras camadas) defendem.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 3. GUARDRAILS DEEP DIVE -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="guardrails">
+  <div class="container">
+    <span class="chapter-number">03 · Bedrock Guardrails · 6 camadas de filtro</span>
+    <h2>Não é <span style="color:var(--orange)">um filtro só</span>. São seis trabalhando juntos.</h2>
+    <p class="lead">
+      Bedrock Guardrails aplica até 6 categorias de filtro, em entrada e saída. Clica em cada um pra ver o que faz e exemplo de configuração.
+    </p>
+
+    <div class="guard-grid" id="guard-grid">
+      <button class="guard-card" data-guard="topics">
+        <span class="emoji">🚫</span>
+        <h4>Denied topics</h4>
+        <p>Tópicos proibidos definidos pela empresa</p>
+      </button>
+      <button class="guard-card" data-guard="content">
+        <span class="emoji">⚠️</span>
+        <h4>Content filters</h4>
+        <p>Hate, insults, sexual, violence (input + output)</p>
+      </button>
+      <button class="guard-card" data-guard="words">
+        <span class="emoji">🔤</span>
+        <h4>Word filters</h4>
+        <p>Lista de palavras-chave bloqueadas</p>
+      </button>
+      <button class="guard-card" data-guard="pii">
+        <span class="emoji">🆔</span>
+        <h4>PII filters</h4>
+        <p>Block ou redact de dados pessoais</p>
+      </button>
+      <button class="guard-card" data-guard="grounding">
+        <span class="emoji">📚</span>
+        <h4>Contextual grounding</h4>
+        <p>Detecta alucinação contra fontes do RAG</p>
+      </button>
+      <button class="guard-card" data-guard="prompt">
+        <span class="emoji">💉</span>
+        <h4>Prompt attack</h4>
+        <p>Detecta prompt injection e jailbreak</p>
+      </button>
+    </div>
+
+    <div class="guard-detail" id="guard-detail">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 4. PII DETECTOR -->
+<!-- ============================ -->
+<section class="chapter" id="pii">
+  <div class="container">
+    <span class="chapter-number">04 · PII · Personally Identifiable Information</span>
+    <h2>Cola um texto e veja o gato <span style="color:var(--orange)">caçar dados pessoais</span> em tempo real.</h2>
+    <p class="lead">
+      PII = qualquer dado que identifica uma pessoa: CPF, e-mail, telefone, endereço, RG, cartão. Em IA isso é veneno: aparece no log, vaza no prompt, treina o modelo. Tem que detectar e tratar.
+    </p>
+
+    <div class="pii-lab">
+      <div class="pii-input">
+        <label>📝 Texto pra analisar</label>
+        <textarea id="pii-text" rows="6">Olá, meu nome é João Silva, CPF 123.456.789-00. Pode me ligar no (11) 98765-4321 ou no e-mail joao@empresa.com.br. Meu cartão é 4532 1234 5678 9010 e moro na Rua dos Felinos, 42, São Paulo.</textarea>
+
+        <div class="pii-actions">
+          <span class="pii-counter" id="pii-counter">0 PII detectadas</span>
+          <div class="pii-mode">
+            <button class="active" data-mode="highlight">🔍 Destacar</button>
+            <button data-mode="redact">🚫 Redactar</button>
+            <button data-mode="mask">🎭 Mascarar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pii-output">
+        <label>👁️ Resultado</label>
+        <div class="pii-result" id="pii-result"></div>
+        <div class="pii-legend" id="pii-legend"></div>
+      </div>
+    </div>
+
+    <div class="pii-tools">
+      <div class="pii-tool">
+        <span class="emoji">🔎</span>
+        <h4>Amazon Macie</h4>
+        <p>Descobre PII em <strong>buckets S3</strong>. Use antes de qualquer ingestão pra IA.</p>
+      </div>
+      <div class="pii-tool">
+        <span class="emoji">📝</span>
+        <h4>Comprehend DetectPiiEntities</h4>
+        <p>Detecta PII em <strong>texto livre</strong> via API. Retorna posição e tipo.</p>
+      </div>
+      <div class="pii-tool">
+        <span class="emoji">🚪</span>
+        <h4>Bedrock Guardrails PII</h4>
+        <p>Bloqueia ou redacta PII em <strong>entrada e saída</strong> de FMs no Bedrock.</p>
+      </div>
+      <div class="pii-tool">
+        <span class="emoji">🎤</span>
+        <h4>Transcribe PII Redaction</h4>
+        <p>Redacta PII em <strong>áudio transcrito</strong> antes do texto sair do serviço.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 5. RESIDÊNCIA -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="residencia">
+  <div class="container">
+    <span class="chapter-number">05 · Residência de dados (data residency)</span>
+    <h2>Onde os dados <span style="color:var(--orange)">moram</span> não é detalhe — é lei.</h2>
+    <p class="lead">
+      Cada país tem suas regras: LGPD (Brasil), GDPR (Europa), HIPAA (EUA saúde), PIPEDA (Canadá). Algumas empresas SÃO obrigadas a manter dados dentro de uma jurisdição específica. Clica nas regiões pra ver os requisitos típicos.
+    </p>
+
+    <div class="residency-wrap">
+      <div class="region-grid" id="region-grid">
+        <button class="region-card" data-region="br">
+          <span class="region-flag">🇧🇷</span>
+          <h4>Brasil</h4>
+          <span class="region-aws">sa-east-1 (São Paulo)</span>
+          <span class="region-law">LGPD</span>
+        </button>
+        <button class="region-card" data-region="eu">
+          <span class="region-flag">🇪🇺</span>
+          <h4>Europa</h4>
+          <span class="region-aws">eu-west-1, eu-central-1, etc.</span>
+          <span class="region-law">GDPR</span>
+        </button>
+        <button class="region-card" data-region="us">
+          <span class="region-flag">🇺🇸</span>
+          <h4>Estados Unidos</h4>
+          <span class="region-aws">us-east-1, us-west-2, etc.</span>
+          <span class="region-law">HIPAA · CCPA</span>
+        </button>
+        <button class="region-card" data-region="apac">
+          <span class="region-flag">🌏</span>
+          <h4>Ásia-Pacífico</h4>
+          <span class="region-aws">ap-southeast-1, ap-northeast-1</span>
+          <span class="region-law">PDPA · APPI</span>
+        </button>
+        <button class="region-card" data-region="govcloud">
+          <span class="region-flag">🏛️</span>
+          <h4>AWS GovCloud</h4>
+          <span class="region-aws">us-gov-west-1, us-gov-east-1</span>
+          <span class="region-law">FedRAMP · ITAR</span>
+        </button>
+      </div>
+
+      <div class="region-detail" id="region-detail">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+
+    <div class="residency-tips">
+      <h3>🎯 Como controlar residência na prática</h3>
+      <div class="rt-grid">
+        <div class="rt-card">
+          <strong>1. Escolha a região certa</strong>
+          <span>Bedrock, S3, SageMaker — todos têm Region em todo recurso. Use a região onde a lei manda.</span>
+        </div>
+        <div class="rt-card">
+          <strong>2. Bloqueie outras regiões via SCP</strong>
+          <span>Service Control Policy no AWS Organizations. Ninguém cria recurso fora da região permitida.</span>
+        </div>
+        <div class="rt-card">
+          <strong>3. Cuidado com cross-region replication</strong>
+          <span>S3 Cross-Region Replication, Aurora Global Database — ótimos pra DR, péssimos pra residência. Configure com cuidado.</span>
+        </div>
+        <div class="rt-card">
+          <strong>4. Modelos do Bedrock</strong>
+          <span>Nem todo FM está em todas as regiões. Confira a tabela de model availability antes de prometer compliance.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 6. CICLO DE VIDA E RETENÇÃO -->
+<!-- ============================ -->
+<section class="chapter" id="retencao">
+  <div class="container">
+    <span class="chapter-number">06 · Ciclo de vida & retenção de dados</span>
+    <h2>O dado tem <span style="color:var(--orange)">prazo de validade</span>.</h2>
+    <p class="lead">
+      Mantém o que precisa, descarta o resto. Reduz custo, reduz superfície de ataque, atende compliance. Escolha o tipo de dado e veja a recomendação de retenção.
+    </p>
+
+    <div class="retention-wrap">
+      <div class="retention-picker" id="retention-picker">
+        <button class="ret-btn active" data-data="prompts">💬 Prompts e respostas</button>
+        <button class="ret-btn" data-data="training">📚 Dataset de treino</button>
+        <button class="ret-btn" data-data="logs">📜 Logs de aplicação</button>
+        <button class="ret-btn" data-data="audit">🔍 CloudTrail / audit</button>
+        <button class="ret-btn" data-data="pii">🆔 Dados pessoais (PII)</button>
+        <button class="ret-btn" data-data="model">🤖 Versões de modelo</button>
+      </div>
+
+      <div class="retention-result" id="retention-result">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+
+    <div class="retention-pipeline">
+      <h3>♻️ S3 Lifecycle ilustrado</h3>
+      <div class="pipe-flow">
+        <div class="pipe-stage">
+          <span class="emoji">🆕</span>
+          <strong>0–30 dias</strong>
+          <span>S3 Standard</span>
+          <small>Acesso frequente · custo alto</small>
+        </div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-stage">
+          <span class="emoji">📦</span>
+          <strong>30–90 dias</strong>
+          <span>S3 Standard-IA</span>
+          <small>Acesso eventual · custo médio</small>
+        </div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-stage">
+          <span class="emoji">🧊</span>
+          <strong>90+ dias</strong>
+          <span>S3 Glacier</span>
+          <small>Arquivo · custo mínimo</small>
+        </div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-stage delete">
+          <span class="emoji">🗑️</span>
+          <strong>Após retenção</strong>
+          <span>Delete</span>
+          <small>Apaga ou move pra archive legal</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 7. DEFESA EM PROFUNDIDADE -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="defesa">
+  <div class="container">
+    <span class="chapter-number">07 · Defesa em profundidade</span>
+    <h2>Uma <span style="color:var(--orange)">cebola</span> de proteções, não um muro só.</h2>
+    <p class="lead">
+      Nenhuma camada sozinha resolve. Defesa em profundidade combina rede, identidade, criptografia, dados, modelo e monitoramento. Clica em cada camada pra ver os controles e os serviços AWS.
+    </p>
+
+    <div class="defense-onion" id="defense-onion">
+      <div class="onion-svg-wrap">
+        <svg viewBox="0 0 400 400" class="onion-svg">
+          <g class="onion-ring" data-layer="data">
+            <circle cx="200" cy="200" r="200" fill="#FBF3E2" stroke="#2B1810" stroke-width="2"/>
+          </g>
+          <g class="onion-ring" data-layer="model">
+            <circle cx="200" cy="200" r="160" fill="#F5E9CF" stroke="#2B1810" stroke-width="2"/>
+          </g>
+          <g class="onion-ring" data-layer="api">
+            <circle cx="200" cy="200" r="120" fill="#FBD9C5" stroke="#2B1810" stroke-width="2"/>
+          </g>
+          <g class="onion-ring" data-layer="net">
+            <circle cx="200" cy="200" r="80" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+          </g>
+          <g class="onion-ring" data-layer="iam">
+            <circle cx="200" cy="200" r="40" fill="#FF6B35" stroke="#2B1810" stroke-width="2"/>
+          </g>
+          <text x="200" y="205" text-anchor="middle" font-family="Caprasimo" font-size="14" fill="#FBF3E2">IAM</text>
+          <text x="200" y="135" text-anchor="middle" font-family="Caprasimo" font-size="14" fill="#2B1810">Rede</text>
+          <text x="200" y="95" text-anchor="middle" font-family="Caprasimo" font-size="13" fill="#2B1810">API/Modelo</text>
+          <text x="200" y="55" text-anchor="middle" font-family="Caprasimo" font-size="13" fill="#2B1810">Modelo</text>
+          <text x="200" y="20" text-anchor="middle" font-family="Caprasimo" font-size="12" fill="#2B1810">Dados</text>
+        </svg>
+      </div>
+
+      <div class="onion-detail" id="onion-detail">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 8. GOVERNANÇA -->
+<!-- ============================ -->
+<section class="chapter" id="governanca">
+  <div class="container">
+    <span class="chapter-number">08 · Estratégias de governança de dados</span>
+    <h2>Decora o <span style="color:var(--orange)">framework</span>, não o detalhe.</h2>
+    <p class="lead">
+      Governança não é "ter regra escrita num PDF". É um sistema vivo de pessoas, processos e tecnologia. Clica em cada pilar pra ver como implementar com AWS.
+    </p>
+
+    <div class="gov-pillars" id="gov-pillars">
+      <button class="gov-pillar" data-gov="ownership">
+        <span class="gov-num">1</span>
+        <span class="emoji">👤</span>
+        <h4>Ownership</h4>
+        <p>Cada dataset tem <strong>dono</strong> nomeado</p>
+      </button>
+      <button class="gov-pillar" data-gov="quality">
+        <span class="gov-num">2</span>
+        <span class="emoji">✅</span>
+        <h4>Qualidade</h4>
+        <p>Schema, validação, perfilagem</p>
+      </button>
+      <button class="gov-pillar" data-gov="catalog">
+        <span class="gov-num">3</span>
+        <span class="emoji">🗂️</span>
+        <h4>Catálogo</h4>
+        <p>Inventário central de dados</p>
+      </button>
+      <button class="gov-pillar" data-gov="lineage">
+        <span class="gov-num">4</span>
+        <span class="emoji">📜</span>
+        <h4>Linhagem</h4>
+        <p>De onde veio, quem mexeu</p>
+      </button>
+      <button class="gov-pillar" data-gov="access">
+        <span class="gov-num">5</span>
+        <span class="emoji">🔐</span>
+        <h4>Acesso</h4>
+        <p>Quem pode ver, com que regra</p>
+      </button>
+      <button class="gov-pillar" data-gov="lifecycle">
+        <span class="gov-num">6</span>
+        <span class="emoji">♻️</span>
+        <h4>Lifecycle</h4>
+        <p>Retenção, descarte, archive</p>
+      </button>
+      <button class="gov-pillar" data-gov="privacy">
+        <span class="gov-num">7</span>
+        <span class="emoji">🛡️</span>
+        <h4>Privacidade</h4>
+        <p>Consentimento, minimização, redação</p>
+      </button>
+      <button class="gov-pillar" data-gov="audit">
+        <span class="gov-num">8</span>
+        <span class="emoji">🔍</span>
+        <h4>Auditoria</h4>
+        <p>Logs imutáveis, evidências</p>
+      </button>
+    </div>
+
+    <div class="gov-detail" id="gov-detail">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 9. MONITORAMENTO E AUDITORIA -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="monitor">
+  <div class="container">
+    <span class="chapter-number">09 · Monitoramento, logging e Model Cards</span>
+    <h2>Sem <span style="color:var(--orange)">log</span> e <span style="color:var(--orange)">documentação</span>, é confiança cega.</h2>
+    <p class="lead">
+      Quem chamou, quando, com qual prompt, com qual resposta — tudo precisa estar registrado e auditável. Veja a simulação de eventos chegando ao vivo.
+    </p>
+
+    <div class="monitor-grid">
+      <div class="monitor-stream">
+        <div class="ms-head">
+          <span class="ms-title">📡 Live event stream</span>
+          <button class="ms-toggle" id="ms-toggle">⏸ Pausar</button>
+        </div>
+        <div class="ms-body" id="ms-body">
+          <!-- preenchido pelo JS -->
+        </div>
+      </div>
+
+      <div class="monitor-side">
+        <div class="card-mini">
+          <h4>📋 SageMaker Model Cards</h4>
+          <p>Documentação estruturada do modelo que <strong>vive junto dele</strong>. Inclui:</p>
+          <ul>
+            <li>Dados de treino (origem, período, tamanho)</li>
+            <li>Casos de uso pretendidos</li>
+            <li>Limitações conhecidas</li>
+            <li>Métricas de performance e bias</li>
+            <li>Histórico de aprovações e revisões</li>
+          </ul>
+        </div>
+
+        <div class="card-mini">
+          <h4>📜 Logging de invocação no Bedrock</h4>
+          <p>Habilita logging em <strong>S3 e/ou CloudWatch Logs</strong>:</p>
+          <ul>
+            <li>Prompt enviado (com PII redacted)</li>
+            <li>Resposta gerada</li>
+            <li>Tokens consumidos (input + output)</li>
+            <li>Latência</li>
+            <li>Identidade da chamada (IAM principal)</li>
+          </ul>
+        </div>
+
+        <div class="card-mini">
+          <h4>🛡️ Bedrock Custom Service Role</h4>
+          <p>Em vez de IAM "wide-open", crie uma <strong>role dedicada</strong> com escopo mínimo:</p>
+          <ul>
+            <li>Permite só os modelos que sua app usa</li>
+            <li>Limita ações (Invoke vs ListModels)</li>
+            <li>Condicionada a tags, IPs, horários</li>
+            <li>Auditável via CloudTrail</li>
+          </ul>
+        </div>
+
+        <div class="card-mini">
+          <h4>🌐 SageMaker Network Isolation</h4>
+          <p>Roda jobs de treino e endpoints em <strong>VPC privada sem internet</strong>:</p>
+          <ul>
+            <li>Sem acesso a S3 público</li>
+            <li>Sem download externo de pacotes</li>
+            <li>Comunicação via VPC Endpoints</li>
+            <li>Obrigatório em ambientes regulados</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- COLA -->
+<!-- ============================ -->
+<section class="chapter cola-section" id="cola">
+  <div class="container">
+    <span class="chapter-number">10 · Cola final pra prova</span>
+    <h2>O que <span style="color:var(--orange)">decorar</span>.</h2>
+
+    <div class="cola-grid">
+      <div class="cola-card">
+        <h4>🛡️ Safety × Security</h4>
+        <p><strong>Safety</strong> resguarda a pessoa (não recomendar dieta perigosa). <strong>Security</strong> resguarda o sistema (não vazar dados, não deixar invadir). IA responsável precisa dos dois.</p>
+      </div>
+      <div class="cola-card">
+        <h4>💉 Prompt Injection</h4>
+        <p>Atacante insere instruções no input pra <strong>sequestrar</strong> o modelo ("ignore as instruções anteriores..."). Defesa: <strong>Bedrock Guardrails (Prompt attack)</strong>, validação de input/output.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔓 Jailbreak</h4>
+        <p>Engana o modelo pra <strong>quebrar suas próprias regras</strong> (DAN, role-play, hipóteses). Defesa: prompt template fechado + Guardrails + revisão de output.</p>
+      </div>
+      <div class="cola-card">
+        <h4>👻 Adversarial Prompting</h4>
+        <p>Input projetado pra fazer o modelo <strong>errar de forma específica</strong> — ex.: token sutil que muda classificação. Defesa: testing adversarial, ensemble, monitoramento.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🚪 Bedrock Guardrails</h4>
+        <p>6 categorias: <strong>denied topics, content filters, word filters, PII, contextual grounding, prompt attack</strong>. Aplica entrada e saída.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🆔 PII</h4>
+        <p>Trio: <strong>Macie</strong> (descoberta em S3), <strong>Comprehend</strong> (texto livre), <strong>Bedrock Guardrails</strong> (FMs). Detecta + redacta antes de virar log/treino.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🌎 Residência</h4>
+        <p>Cada dado precisa ficar na <strong>Region certa</strong>. Use SCPs no Organizations pra forçar. Cuidado com cross-region replication automática.</p>
+      </div>
+      <div class="cola-card">
+        <h4>♻️ Retenção</h4>
+        <p><strong>S3 Lifecycle</strong> faz a transição automática (Standard → IA → Glacier → Delete). Definir prazo por tipo de dado é base de governança.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📋 Model Cards</h4>
+        <p>Documentação <strong>estruturada</strong> do modelo (treino, uso, limitações, métricas). Vive no SageMaker, parte de IA responsável e governança.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📜 Logging Bedrock</h4>
+        <p>Habilita em <strong>S3 ou CloudWatch Logs</strong>. Registra prompt + resposta + tokens + identidade. Imprescindível pra auditoria e debug.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🛡️ Custom Service Role</h4>
+        <p>IAM role <strong>dedicada</strong> ao Bedrock com escopo mínimo (modelos específicos, ações limitadas, condicionais). Princípio do least privilege.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🌐 Network Isolation</h4>
+        <p>SageMaker treino e endpoints rodam <strong>sem acesso à internet</strong>. Comunicação só via VPC Endpoints. Padrão em setores regulados.</p>
+      </div>
+    </div>
+
+    <div class="exam-tips">
+      <h3>🎯 Pegadinhas que caem na prova</h3>
+      <ul>
+        <li><strong>Safety vs Security</strong> não é mesma coisa — questões de prova testam a distinção.</li>
+        <li><strong>"Ignore as instruções anteriores e ..."</strong> → <strong>prompt injection</strong>. Mitigação: <strong>Bedrock Guardrails (Prompt attack)</strong>.</li>
+        <li><strong>"Filtrar PII em S3"</strong> → <strong>Macie</strong>. <strong>"Filtrar PII em texto"</strong> → <strong>Comprehend</strong>. <strong>"Filtrar PII em entrada/saída de FM"</strong> → <strong>Bedrock Guardrails</strong>.</li>
+        <li><strong>Empresa regulada precisa que dados não saiam da Europa</strong> → escolher <strong>Region eu-*</strong> + <strong>SCP</strong> bloqueando outras regiões.</li>
+        <li><strong>"Documentar transparentemente o modelo"</strong> → <strong>SageMaker Model Cards</strong>. Não é só metadata, é documentação estruturada.</li>
+        <li><strong>SageMaker job não pode acessar internet pública</strong> → <strong>Network Isolation Mode</strong> + VPC Endpoints.</li>
+        <li><strong>Auditoria pede log de quem chamou Bedrock</strong> → <strong>CloudTrail</strong> (chamadas API) + <strong>Bedrock invocation logging</strong> (prompt/resposta) + <strong>CloudWatch Logs</strong>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="aula-footer">
+  <div class="container">
+    <p>Feito com 🧡 pra <strong>Escola da Nuvem</strong> · <a href="../index.html">Balaio de Gatos</a> · <a href="../mapa/">📍 Mapa</a> · <a href="../mapa/v2.html">🎯 Treinar</a></p>
+    <p class="src">Fontes: <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html" target="_blank" rel="noopener">Bedrock Guardrails</a> · <a href="https://aws.amazon.com/macie/" target="_blank" rel="noopener">Amazon Macie</a> · <a href="https://docs.aws.amazon.com/sagemaker/latest/dg/model-cards.html" target="_blank" rel="noopener">SageMaker Model Cards</a> · <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-invocation-logging.html" target="_blank" rel="noopener">Bedrock Invocation Logging</a></p>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

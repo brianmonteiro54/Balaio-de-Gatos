@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 19: Revisão geral — IA, ML, GenAI, prompts e RAG</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<meta name="description" content="Aula 19 do Balaio de Gatos: revisão geral em formato interativo. IA × ML × DL × GenAI, tipos de aprendizado, overfitting, LLM × SLM, tokenização, janela de contexto, parâmetros de geração, alucinação, zero/one/few-shot, Chain-of-Thought, prompt chaining vs ReAct, RAG e chunking.">
+<meta name="keywords" content="AI, ML, Deep Learning, GenAI, supervised, unsupervised, reinforcement learning, classification, regression, clustering, overfitting, LLM, SLM, tokenization, context window, temperature, top-k, hallucination, zero-shot, few-shot, chain-of-thought, ReAct, RAG, chunking, AWS AI Practitioner">
+<meta name="author" content="Escola da Nuvem">
+<meta name="theme-color" content="#FF6B35">
+
+<meta property="og:title" content="Aula 19 · Revisão geral interativa">
+<meta property="og:description" content="Mexe nos sliders, brinca com prompts, monta um pipeline RAG e revisa tudo o que cai na prova num só lugar.">
+<meta property="og:image" content="../cat-thumbnail.png">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span class="pt">aula 19</span></div>
+    <div class="nav-links">
+      <a href="#hierarquia">Hierarquia</a>
+      <a href="#aprendizado">Aprendizado</a>
+      <a href="#tarefas">Tarefas ML</a>
+      <a href="#fit">Over/Under</a>
+      <a href="#llm-slm">LLM × SLM</a>
+      <a href="#tokens">Tokens</a>
+      <a href="#contexto">Contexto</a>
+      <a href="#params">Parâmetros</a>
+      <a href="#alucinacao">Alucinação</a>
+      <a href="#shots">Shots</a>
+      <a href="#cot">CoT</a>
+      <a href="#chain-react">Chain × ReAct</a>
+      <a href="#rag">RAG</a>
+      <a href="#cola">Cola</a>
+      <a href="../index.html">← Aulas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · AI Practitioner <span class="v2">aula 19 · revisão</span></div>
+        <h1>
+          Tudo que <span class="scratch">cai na prova</span><br>
+          em <span class="accent">um lugar só</span>,<br>
+          mexendo.
+        </h1>
+        <p>
+          Os 17 conceitos que aparecem mais nas questões: hierarquia <strong>IA / ML / DL / GenAI</strong>, tipos de aprendizado, <strong>over/underfitting</strong>, <strong>LLMs e SLMs</strong>, tokens e janela de contexto, parâmetros de geração, <strong>alucinação</strong>, técnicas de prompting (zero/one/few-shot, CoT, chaining, ReAct), e <strong>RAG</strong> de ponta a ponta. Cada conceito vem com um widget interativo. Bora.
+        </p>
+        <a href="#hierarquia" class="hero-cta">Começa a revisão 🐾</a>
+        <a href="#cola" class="hero-cta ghost">Cola final</a>
+      </div>
+      <div class="cat-lab">
+        <span class="float-cat c1">🪆</span>
+        <span class="float-cat c2">😼</span>
+        <span class="float-cat c3">🧠</span>
+        <span class="float-cat c4">🎯</span>
+        <span class="float-cat c5">📚</span>
+        <span class="chip">IA ⊃ ML ⊃ DL</span>
+        <span class="chip2">Tokens · Context</span>
+        <span class="chip3">Few-shot · CoT</span>
+        <span class="chip4">RAG ⚡</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🪆 IA × ML × DL × GENAI</span><span>🎓 SUP × NÃO-SUP × REFORÇO</span><span>📊 CLAS × REG × CLUST</span><span>🎯 OVER × UNDERFITTING</span><span>🤖 LLM × SLM</span><span>🔤 TOKENIZAÇÃO</span><span>📦 CONTEXT WINDOW</span><span>🌡️ PARÂMETROS</span><span>👻 ALUCINAÇÃO</span><span>🎲 ZERO/ONE/FEW-SHOT</span><span>🧠 CHAIN-OF-THOUGHT</span><span>🔗 PROMPT CHAINING</span><span>⚡ ReAct</span><span>📚 RAG</span><span>✂️ CHUNKING</span>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!-- PARTE 1: FUNDAMENTOS -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 1 · Fundamentos</span>
+    <h2>
+      As <span class="accent">bonecas russas</span> da IA<br>
+      e como o gato <span class="yel">aprende.</span>
+    </h2>
+    <p>
+      Antes de qualquer prompt ou RAG, vamos firmar o vocabulário. A hierarquia que aparece em <em>toda</em> prova, os 3 tipos de aprendizado, os 3 tipos de tarefa de ML e o eterno tradeoff de over/underfitting.
+    </p>
+  </div>
+</section>
+
+<!-- 1. HIERARQUIA -->
+<section class="chapter" id="hierarquia">
+  <div class="container">
+    <span class="chapter-number">01 · Hierarquia IA / ML / DL / GenAI</span>
+    <h2>Onde cada tecnologia <span style="color:var(--orange)">se encaixa</span>?</h2>
+    <p class="lead">
+      Joga cada tecnologia do balaio na camada certa. <strong>IA</strong> é o guarda-chuva. <strong>ML</strong> aprende com dados. <strong>Deep Learning</strong> usa redes neurais profundas. <strong>GenAI</strong> gera conteúdo novo. Acerta os 12 e o gato te aplaude.
+    </p>
+
+    <div class="classifier-wrap">
+      <div class="cl-header">
+        <div class="cl-progress">
+          <span id="cl-counter">Item 1 de 12</span>
+          <div class="cl-bar"><div class="cl-fill" id="cl-fill"></div></div>
+          <span class="cl-score" id="cl-score">🎯 0/0</span>
+        </div>
+        <button class="cl-reset" id="cl-reset" type="button">↺ Reiniciar</button>
+      </div>
+
+      <div class="cl-main">
+        <div class="cl-stage" id="cl-stage">
+          <!-- card central preenchido pelo JS -->
+        </div>
+
+        <aside class="cl-diagram" aria-label="Diagrama da hierarquia">
+          <h4>🪆 Boneca russa ao vivo</h4>
+          <p class="cl-diagram-hint">Cada acerto preenche a camada certa</p>
+          <svg class="cl-diagram-svg" id="cl-diagram-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- Camadas concêntricas -->
+            <g class="dl-ring" data-cat="ai">
+              <circle cx="160" cy="160" r="155" fill="#F5E9CF" stroke="#2B1810" stroke-width="2"/>
+            </g>
+            <g class="dl-ring" data-cat="ml">
+              <circle cx="160" cy="160" r="120" fill="#FBD9C5" stroke="#2B1810" stroke-width="2"/>
+            </g>
+            <g class="dl-ring" data-cat="dl">
+              <circle cx="160" cy="160" r="85" fill="#FF9966" stroke="#2B1810" stroke-width="2"/>
+            </g>
+            <g class="dl-ring" data-cat="genai">
+              <circle cx="160" cy="160" r="50" fill="#FF6B35" stroke="#2B1810" stroke-width="2"/>
+            </g>
+
+            <!-- Labels das camadas (no topo de cada anel, sem sobrepor itens) -->
+            <text x="160" y="22"  text-anchor="middle" font-family="Caprasimo" font-size="13" fill="#2B1810" pointer-events="none">IA</text>
+            <text x="160" y="56"  text-anchor="middle" font-family="Caprasimo" font-size="12" fill="#2B1810" pointer-events="none">ML</text>
+            <text x="160" y="91"  text-anchor="middle" font-family="Caprasimo" font-size="11" fill="#2B1810" pointer-events="none">Deep</text>
+            <text x="160" y="155" text-anchor="middle" font-family="Caprasimo" font-size="14" fill="#FBF3E2" font-weight="700" pointer-events="none">GenAI</text>
+            <text x="160" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="9"  fill="#FBF3E2" pointer-events="none">(LLMs · diffusion)</text>
+
+            <!-- emojis dos itens classificados — preenchidos pelo JS -->
+            <g id="cl-diagram-items"></g>
+          </svg>
+          <div class="cl-diagram-legend">
+            <div class="dl-leg"><span class="dot ai"></span><span>IA <small id="dl-c-ai">0</small></span></div>
+            <div class="dl-leg"><span class="dot ml"></span><span>ML <small id="dl-c-ml">0</small></span></div>
+            <div class="dl-leg"><span class="dot dl"></span><span>DL <small id="dl-c-dl">0</small></span></div>
+            <div class="dl-leg"><span class="dot genai"></span><span>GenAI <small id="dl-c-genai">0</small></span></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="cl-options">
+        <button class="cl-opt ai" data-cat="ai" type="button">
+          <span class="cl-key">1</span>
+          <span class="cl-opt-emoji">🪆</span>
+          <strong>IA</strong>
+          <small>regras, sem aprender</small>
+        </button>
+        <button class="cl-opt ml" data-cat="ml" type="button">
+          <span class="cl-key">2</span>
+          <span class="cl-opt-emoji">🧠</span>
+          <strong>ML clássico</strong>
+          <small>aprende, sem deep</small>
+        </button>
+        <button class="cl-opt dl" data-cat="dl" type="button">
+          <span class="cl-key">3</span>
+          <span class="cl-opt-emoji">🕸️</span>
+          <strong>Deep Learning</strong>
+          <small>rede profunda, NÃO gera</small>
+        </button>
+        <button class="cl-opt genai" data-cat="genai" type="button">
+          <span class="cl-key">4</span>
+          <span class="cl-opt-emoji">✨</span>
+          <strong>GenAI</strong>
+          <small>GERA conteúdo novo</small>
+        </button>
+      </div>
+
+      <div class="cl-action-bar">
+        <button class="cl-action-btn hint" id="cl-hint" type="button">💡 Dica</button>
+        <span class="cl-shortcuts">Atalhos: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> · <kbd>H</kbd> dica · <kbd>S</kbd> pular · <kbd>Enter</kbd> próximo · <kbd>A</kbd> auto</span>
+        <label class="cl-auto-toggle" title="Avança automaticamente após o feedback">
+          <input type="checkbox" id="cl-auto" checked>
+          <span class="cl-auto-track"><span class="cl-auto-thumb"></span></span>
+          <span class="cl-auto-label">Auto <small>7s</small></span>
+        </label>
+        <button class="cl-action-btn skip" id="cl-skip" type="button">⏭ Pular</button>
+      </div>
+    </div>
+
+    <div class="hierarchy-summary">
+      <div class="hs-item ai">
+        <span class="hs-emoji">🪆</span>
+        <strong>IA</strong>
+        <p>Guarda-chuva. Inclui ML, busca, planejamento, sistemas especialistas.</p>
+      </div>
+      <div class="hs-arrow">⊃</div>
+      <div class="hs-item ml">
+        <span class="hs-emoji">🧠</span>
+        <strong>ML</strong>
+        <p>Subconjunto de IA. Aprende com dados em vez de regras programadas.</p>
+      </div>
+      <div class="hs-arrow">⊃</div>
+      <div class="hs-item dl">
+        <span class="hs-emoji">🕸️</span>
+        <strong>Deep Learning</strong>
+        <p>Subconjunto de ML. Usa redes neurais com muitas camadas.</p>
+      </div>
+      <div class="hs-arrow">⊂</div>
+      <div class="hs-item genai">
+        <span class="hs-emoji">✨</span>
+        <strong>GenAI</strong>
+        <p>Aplicação que gera conteúdo. Geralmente usa Deep Learning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. APRENDIZADO -->
+<section class="chapter alt-bg" id="aprendizado">
+  <div class="container">
+    <span class="chapter-number">02 · Tipos de aprendizado</span>
+    <h2>Como o gato <span style="color:var(--orange)">aprende</span>?</h2>
+    <p class="lead">
+      Leia o cenário e adivinhe qual tipo de aprendizado se aplica. Errou? Não tem problema, o feedback explica. Acertar 5 seguidas = sequência mestre.
+    </p>
+
+    <div class="learn-quiz" id="learn-quiz">
+      <div class="lq-card">
+        <div class="lq-head">
+          <span class="lq-counter" id="lq-counter">1 / 6</span>
+          <span class="lq-streak" id="lq-streak">🔥 0</span>
+        </div>
+        <div class="lq-scenario" id="lq-scenario">
+          O abrigo tem 5.000 fotos de gatos rotuladas como "saudável" ou "doente" pelo veterinário. Você quer treinar um modelo pra classificar fotos novas.
+        </div>
+        <div class="lq-opts" id="lq-opts">
+          <button data-v="supervised">🏷️ Supervisionado</button>
+          <button data-v="unsupervised">🔍 Não-supervisionado</button>
+          <button data-v="reinforcement">🎮 Por reforço</button>
+        </div>
+        <div class="lq-feedback" id="lq-feedback" hidden></div>
+        <button class="lq-next" id="lq-next" hidden>Próximo cenário →</button>
+      </div>
+
+      <div class="learn-cheat">
+        <h4>📋 Cheatsheet rápido</h4>
+        <div class="lc-row">
+          <span class="lc-tag sup">🏷️ Supervisionado</span>
+          <span class="lc-text"><strong>Tem rótulos.</strong> Aprende mapeamento input→output. Classificação, regressão.</span>
+        </div>
+        <div class="lc-row">
+          <span class="lc-tag uns">🔍 Não-supervisionado</span>
+          <span class="lc-text"><strong>Sem rótulos.</strong> Descobre padrões. Clustering, redução de dimensionalidade.</span>
+        </div>
+        <div class="lc-row">
+          <span class="lc-tag rl">🎮 Reforço</span>
+          <span class="lc-text"><strong>Recompensa/punição.</strong> Aprende por interação com ambiente. Jogos, robótica, RLHF.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. TAREFAS ML -->
+<section class="chapter" id="tarefas">
+  <div class="container">
+    <span class="chapter-number">03 · Classificação · Regressão · Clustering</span>
+    <h2>Os <span style="color:var(--orange)">três tipos</span> de saída.</h2>
+    <p class="lead">
+      A diferença é só sobre o que o modelo cospe na ponta. Clica nas abas pra explorar cada tipo com um dataset visual.
+    </p>
+
+    <div class="task-tabs" id="task-tabs">
+      <button class="task-tab active" data-task="classification">
+        <span class="emoji">🏷️</span>
+        <strong>Classificação</strong>
+        <span>saída categórica</span>
+      </button>
+      <button class="task-tab" data-task="regression">
+        <span class="emoji">📈</span>
+        <strong>Regressão</strong>
+        <span>saída numérica</span>
+      </button>
+      <button class="task-tab" data-task="clustering">
+        <span class="emoji">🔍</span>
+        <strong>Clustering</strong>
+        <span>agrupamento</span>
+      </button>
+    </div>
+
+    <div class="task-viz" id="task-viz">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- 4. OVER × UNDER -->
+<section class="chapter alt-bg" id="fit">
+  <div class="container">
+    <span class="chapter-number">04 · Over × Underfitting</span>
+    <h2>Modelo <span style="color:var(--orange)">simples demais</span> ou <span style="color:var(--orange)">complexo demais</span>?</h2>
+    <p class="lead">
+      Mexe no slider de complexidade e veja as duas linhas (erro de treino e erro de teste) responderem. O ponto doce é onde o erro de teste é mínimo — nem antes (underfit) nem depois (overfit).
+    </p>
+
+    <div class="fit-lab">
+      <div class="fit-controls">
+        <label>Complexidade do modelo</label>
+        <input type="range" id="fit-slider" min="1" max="100" value="50">
+        <div class="fit-axis">
+          <span>← simples</span>
+          <span>complexo →</span>
+        </div>
+
+        <div class="fit-state" id="fit-state">
+          <span class="fs-tag" id="fs-tag">⚖️ Bem ajustado</span>
+          <p id="fs-desc">Performance similar em treino e teste. O modelo aprendeu o padrão sem decorar nem ignorar.</p>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 600 320" class="fit-chart" id="fit-chart">
+        <defs>
+          <pattern id="fit-grid" width="60" height="32" patternUnits="userSpaceOnUse">
+            <path d="M 60 0 L 0 0 0 32" fill="none" stroke="rgba(43,24,16,0.08)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="600" height="320" fill="url(#fit-grid)"/>
+        <line x1="50" y1="280" x2="580" y2="280" stroke="#2B1810" stroke-width="2"/>
+        <line x1="50" y1="20" x2="50" y2="280" stroke="#2B1810" stroke-width="2"/>
+        <text x="20" y="30" font-family="JetBrains Mono" font-size="11" fill="#4A3528">erro alto</text>
+        <text x="20" y="285" font-family="JetBrains Mono" font-size="11" fill="#4A3528">baixo</text>
+        <text x="55" y="305" font-family="JetBrains Mono" font-size="11" fill="#4A3528">simples</text>
+        <text x="510" y="305" font-family="JetBrains Mono" font-size="11" fill="#4A3528">complexo</text>
+
+        <!-- Curva de erro de treino: começa alta, cai monotonicamente -->
+        <path id="train-curve" d="M 60 70 Q 200 90 350 180 Q 480 240 580 270" stroke="#5C8D89" stroke-width="3" fill="none"/>
+        <text x="430" y="265" font-family="Sora" font-size="12" font-weight="700" fill="#5C8D89">treino</text>
+
+        <!-- Curva de erro de teste: começa alta, cai, depois sobe (U-shape) -->
+        <path id="test-curve" d="M 60 60 Q 200 80 320 130 Q 460 180 580 80" stroke="#C73E1D" stroke-width="3" fill="none"/>
+        <text x="450" y="120" font-family="Sora" font-size="12" font-weight="700" fill="#C73E1D">teste</text>
+
+        <!-- Sweet spot marker -->
+        <line id="sweet-line" x1="320" y1="20" x2="320" y2="280" stroke="#FF6B35" stroke-width="2" stroke-dasharray="6,4"/>
+        <text id="sweet-label" x="290" y="35" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#FF6B35">sweet spot</text>
+
+        <!-- Cursor (movido pelo slider) -->
+        <line id="cursor-line" x1="320" y1="20" x2="320" y2="280" stroke="#2B1810" stroke-width="2" stroke-dasharray="3,3" opacity="0.4"/>
+        <circle id="cursor-train" cx="320" cy="135" r="6" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+        <circle id="cursor-test" cx="320" cy="130" r="6" fill="#C73E1D" stroke="#2B1810" stroke-width="2"/>
+
+        <!-- Zonas -->
+        <rect x="50" y="20" width="120" height="260" fill="rgba(244,211,94,0.15)" stroke="none"/>
+        <text x="65" y="45" font-family="Sora" font-size="11" font-weight="700" fill="#8B6E45">UNDERFIT</text>
+        <rect x="430" y="20" width="150" height="260" fill="rgba(199,62,29,0.1)" stroke="none"/>
+        <text x="445" y="45" font-family="Sora" font-size="11" font-weight="700" fill="#C73E1D">OVERFIT</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 2: MODELOS DE LINGUAGEM -->
+<!-- ============================ -->
+<section class="part-banner alt">
+  <div class="container">
+    <span class="chapter-number">Parte 2 · Modelos de linguagem</span>
+    <h2>
+      Como o gato <span class="accent">processa palavras</span><br>
+      e <span class="yel">cobra por isso.</span>
+    </h2>
+    <p>
+      Tudo no LLM é tokens. Pricing é por token. Janela de contexto é em tokens. Bora destrinchar.
+    </p>
+  </div>
+</section>
+
+<!-- 5. LLM × SLM -->
+<section class="chapter" id="llm-slm">
+  <div class="container">
+    <span class="chapter-number">05 · LLM × SLM</span>
+    <h2>Quando vale a pena o <span style="color:var(--orange)">modelo grande</span>?</h2>
+    <p class="lead">
+      Selecione o cenário e o gato te diz qual escolher.
+    </p>
+
+    <div class="llm-picker" id="llm-picker">
+      <button class="llm-scenario active" data-s="raciocinio">
+        <span class="emoji">🧠</span>
+        <strong>Raciocínio multi-step</strong>
+        <span>Análise de contrato, planejamento</span>
+      </button>
+      <button class="llm-scenario" data-s="classificacao">
+        <span class="emoji">🏷️</span>
+        <strong>Classificação simples</strong>
+        <span>Tagging de tickets</span>
+      </button>
+      <button class="llm-scenario" data-s="edge">
+        <span class="emoji">📱</span>
+        <strong>Mobile / Edge</strong>
+        <span>Roda no celular sem internet</span>
+      </button>
+      <button class="llm-scenario" data-s="latencia">
+        <span class="emoji">⚡</span>
+        <strong>Latência crítica</strong>
+        <span>Resposta em &lt; 200ms</span>
+      </button>
+      <button class="llm-scenario" data-s="custo">
+        <span class="emoji">💸</span>
+        <strong>Volume gigante, custo apertado</strong>
+        <span>Milhões de chamadas/dia</span>
+      </button>
+      <button class="llm-scenario" data-s="criativo">
+        <span class="emoji">🎨</span>
+        <strong>Geração criativa longa</strong>
+        <span>Roteiro, copy, brainstorm</span>
+      </button>
+    </div>
+
+    <div class="llm-result" id="llm-result">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- 6. TOKENS -->
+<section class="chapter alt-bg" id="tokens">
+  <div class="container">
+    <span class="chapter-number">06 · Tokenização</span>
+    <h2>O modelo <span style="color:var(--orange)">não vê palavras</span>. Vê tokens.</h2>
+    <p class="lead">
+      Cada token é uma unidade que o modelo processa. Pode ser palavra inteira, pedaço, pontuação, espaço. <strong>Você paga por token.</strong> Cola um texto e veja como ele vira tokens (aproximação BPE simplificada).
+    </p>
+
+    <div class="token-lab">
+      <div class="token-input">
+        <label>Texto pra tokenizar</label>
+        <textarea id="token-text" rows="4">O gato laranja dormiu na janela. Tokenização não é mágica — é só quebrar texto em pedacinhos que o modelo entende.</textarea>
+      </div>
+
+      <div class="token-output">
+        <div class="token-stats">
+          <div class="ts-item">
+            <span class="ts-label">Caracteres</span>
+            <span class="ts-value" id="ts-chars">0</span>
+          </div>
+          <div class="ts-item">
+            <span class="ts-label">Palavras</span>
+            <span class="ts-value" id="ts-words">0</span>
+          </div>
+          <div class="ts-item highlight">
+            <span class="ts-label">Tokens (≈)</span>
+            <span class="ts-value" id="ts-tokens">0</span>
+          </div>
+          <div class="ts-item">
+            <span class="ts-label">Custo (Sonnet)</span>
+            <span class="ts-value" id="ts-cost">$0.0000</span>
+          </div>
+        </div>
+
+        <div class="token-viz" id="token-viz">
+          <!-- preenchido pelo JS com tokens coloridos -->
+        </div>
+
+        <div class="token-tips">
+          <strong>📏 Regra de bolso:</strong>
+          <ul>
+            <li>1 token ≈ <strong>4 caracteres</strong> em português/inglês</li>
+            <li>1 token ≈ <strong>0.75 palavra</strong></li>
+            <li>1 página de texto ≈ <strong>500 tokens</strong></li>
+            <li>Bíblia inteira ≈ <strong>1.2 milhão de tokens</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. JANELA DE CONTEXTO -->
+<section class="chapter" id="contexto">
+  <div class="container">
+    <span class="chapter-number">07 · Janela de contexto (context window)</span>
+    <h2>O que <span style="color:var(--orange)">cabe</span> no prompt?</h2>
+    <p class="lead">
+      Cada modelo tem uma janela máxima — o limite total de tokens que entra (input + system prompt + saída). Passou disso, o que não cabe é <strong>cortado</strong>. Veja diferentes modelos lado a lado.
+    </p>
+
+    <div class="window-lab">
+      <div class="window-models" id="window-models">
+        <!-- gerado pelo JS -->
+      </div>
+
+      <div class="window-input">
+        <label>Quanto você quer enviar?</label>
+        <div class="window-quick">
+          <button data-tokens="500">📄 1 página (500)</button>
+          <button data-tokens="5000">📑 10 páginas (5k)</button>
+          <button data-tokens="50000">📚 1 livro curto (50k)</button>
+          <button data-tokens="200000">📖 Livro grande (200k)</button>
+          <button data-tokens="1000000">🧠 Toda obra de Shakespeare (1M)</button>
+        </div>
+        <div class="window-custom">
+          <input type="range" id="window-slider" min="100" max="2000000" step="100" value="5000">
+          <div class="window-val" id="window-val">5.000 tokens</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. PARÂMETROS -->
+<section class="chapter alt-bg" id="params">
+  <div class="container">
+    <span class="chapter-number">08 · Parâmetros de geração</span>
+    <h2>Os 3 botões que mudam <span style="color:var(--orange)">tudo</span>.</h2>
+    <p class="lead">
+      <strong>Temperature</strong> aleatoriedade. <strong>Top-k</strong> de quantos tokens amostra. <strong>Max tokens</strong> teto da resposta. Mexe nos sliders e veja a "personalidade" do modelo mudar.
+    </p>
+
+    <div class="param-lab">
+      <div class="param-controls">
+        <div class="pc-field">
+          <label>Temperature <span class="pc-val" id="pc-temp-v">0.20</span></label>
+          <input type="range" id="pc-temp" min="0" max="100" value="20">
+          <div class="pc-hint"><span>0 · determinístico</span><span>1 · criativo</span></div>
+        </div>
+
+        <div class="pc-field">
+          <label>Top-k <span class="pc-val" id="pc-topk-v">50</span></label>
+          <input type="range" id="pc-topk" min="1" max="200" value="50">
+          <div class="pc-hint"><span>1 · greedy</span><span>200 · diverso</span></div>
+        </div>
+
+        <div class="pc-field">
+          <label>Max tokens <span class="pc-val" id="pc-max-v">200</span></label>
+          <input type="range" id="pc-max" min="20" max="1000" step="10" value="200">
+          <div class="pc-hint"><span>curto</span><span>longo</span></div>
+        </div>
+      </div>
+
+      <div class="param-preview" id="param-preview">
+        <div class="pp-label">Pergunta de exemplo</div>
+        <div class="pp-question">Como você descreveria um gato laranja?</div>
+        <div class="pp-divider">↓ resposta com esses parâmetros ↓</div>
+        <div class="pp-answer" id="pp-answer">
+          <em>Mexa nos sliders pra ver a resposta gerada com cada combinação.</em>
+        </div>
+        <div class="pp-personality" id="pp-personality"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. ALUCINAÇÃO -->
+<section class="chapter" id="alucinacao">
+  <div class="container">
+    <span class="chapter-number">09 · Alucinação</span>
+    <h2>Quando o modelo <span style="color:var(--orange)">inventa</span>.</h2>
+    <p class="lead">
+      Alucinação não é "modelo com bug". É consequência natural de como LLMs funcionam: eles preveem o token mais provável, não consultam fonte. Se a resposta certa não está nos pesos, ele inventa algo plausível. Veja exemplos clássicos e as 4 estratégias de mitigação.
+    </p>
+
+    <div class="halu-grid">
+      <div class="halu-example">
+        <div class="he-tag">Exemplo clássico</div>
+        <div class="he-prompt">"Liste 3 papers do Geoffrey Hinton sobre redes neurais com DOI"</div>
+        <div class="he-response">
+          <strong>Resposta alucinada:</strong>
+          <ol>
+            <li>"Backpropagation Revisited" (2018) — DOI: 10.1234/<span class="invented">567890</span> ❌</li>
+            <li>"Capsule Networks for Vision" (2019) — DOI: 10.5678/<span class="invented">111213</span> ❌</li>
+            <li>"Distributed Representations" (2020) — DOI: 10.9876/<span class="invented">141516</span> ❌</li>
+          </ol>
+          <p class="he-note">⚠️ Os papers <em>parecem</em> plausíveis mas os DOIs são inventados. O modelo nunca consultou nenhuma base. Cuidado em domínio jurídico, médico, acadêmico.</p>
+        </div>
+      </div>
+
+      <div class="halu-mitigations">
+        <h4>🛡️ As 4 estratégias de mitigação</h4>
+        <button class="hm-card" data-mit="rag">
+          <span class="hm-num">1</span>
+          <strong>RAG grounding</strong>
+          <span>Modelo só responde com base em fontes reais recuperadas</span>
+        </button>
+        <button class="hm-card" data-mit="prompt">
+          <span class="hm-num">2</span>
+          <strong>Prompt restritivo</strong>
+          <span>"Se não souber, diga 'não sei'. Não invente."</span>
+        </button>
+        <button class="hm-card" data-mit="human">
+          <span class="hm-num">3</span>
+          <strong>Human-in-the-loop</strong>
+          <span>Revisão humana em decisões sensíveis (Amazon A2I)</span>
+        </button>
+        <button class="hm-card" data-mit="validation">
+          <span class="hm-num">4</span>
+          <strong>Output validation</strong>
+          <span>Checa fatos contra fontes conhecidas antes de devolver</span>
+        </button>
+
+        <div class="hm-detail" id="hm-detail">
+          <em>Clica numa estratégia pra ver detalhes</em>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 3: PROMPT ENGINEERING -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 3 · Prompt engineering</span>
+    <h2>
+      O <span class="accent">jeito que você pede</span><br>
+      muda a <span class="yel">resposta inteira.</span>
+    </h2>
+    <p>
+      Mesmo modelo, mesmo problema. Mude a forma do prompt e a qualidade do output muda. Aqui as técnicas que caem na prova.
+    </p>
+  </div>
+</section>
+
+<!-- 10. SHOTS -->
+<section class="chapter" id="shots">
+  <div class="container">
+    <span class="chapter-number">10 · Zero / One / Few-shot</span>
+    <h2>Quantos <span style="color:var(--orange)">exemplos</span> o modelo precisa?</h2>
+    <p class="lead">
+      "Shot" = exemplo no prompt. Zero exemplos = zero-shot. Um exemplo = one-shot. Dois ou mais = few-shot. Compare lado a lado:
+    </p>
+
+    <div class="shots-tabs" id="shots-tabs">
+      <button class="shot-tab active" data-shot="zero">
+        <strong>Zero-shot</strong>
+        <span>0 exemplos</span>
+      </button>
+      <button class="shot-tab" data-shot="one">
+        <strong>One-shot</strong>
+        <span>1 exemplo</span>
+      </button>
+      <button class="shot-tab" data-shot="few">
+        <strong>Few-shot</strong>
+        <span>2-5 exemplos</span>
+      </button>
+    </div>
+
+    <div class="shots-viz" id="shots-viz">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- 11. CHAIN-OF-THOUGHT -->
+<section class="chapter alt-bg" id="cot">
+  <div class="container">
+    <span class="chapter-number">11 · Chain-of-Thought (CoT)</span>
+    <h2>"Pense <span style="color:var(--orange)">passo a passo</span>" muda o jogo.</h2>
+    <p class="lead">
+      Em problemas que exigem raciocínio multi-step, mandar o modelo "pensar antes de responder" melhora drasticamente a acurácia. Compare lado a lado a mesma pergunta com e sem CoT.
+    </p>
+
+    <div class="cot-compare" id="cot-compare">
+      <div class="cot-side normal">
+        <div class="cot-tag">❌ Sem CoT</div>
+        <div class="cot-prompt">
+          <strong>Prompt:</strong> "Tenho 3 caixas com 4 gatos cada. Cada gato come 2 latas/dia. Tenho 24 latas. Sobra ração até o fim do dia?"
+        </div>
+        <div class="cot-response">
+          <strong>Resposta direta:</strong>
+          <p class="cot-text">"Sim, sobra ração."</p>
+          <div class="cot-verdict wrong">❌ Errado. Vamos checar: 3×4 = 12 gatos. 12×2 = 24 latas/dia. 24÷24 = 0 sobra (zerou exatamente). Resposta certa seria "não sobra, zerou".</div>
+        </div>
+      </div>
+
+      <div class="cot-side cot">
+        <div class="cot-tag">✅ Com CoT</div>
+        <div class="cot-prompt">
+          <strong>Prompt:</strong> "Tenho 3 caixas com 4 gatos cada... <strong>Pense passo a passo antes de responder.</strong>"
+        </div>
+        <div class="cot-response">
+          <strong>Raciocínio do modelo:</strong>
+          <p class="cot-text">
+            <em>Passo 1: Total de gatos = 3 × 4 = 12.<br>
+            Passo 2: Consumo diário = 12 × 2 = 24 latas.<br>
+            Passo 3: Estoque = 24 latas. Sobra = 24 - 24 = 0.<br>
+            Resposta: Não sobra, mas dá certinho.</em>
+          </p>
+          <div class="cot-verdict right">✅ Correto. Forçar o raciocínio explícito evitou o atalho mental e a alucinação.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cot-tips">
+      <h4>💡 Quando usar CoT</h4>
+      <ul>
+        <li><strong>Matemática e contas</strong> com múltiplas etapas</li>
+        <li><strong>Lógica</strong> e silogismos</li>
+        <li><strong>Planejamento</strong> de tarefas</li>
+        <li><strong>Análise</strong> de causa e efeito</li>
+      </ul>
+      <p class="cot-warn">
+        <strong>⚠️ Custo:</strong> CoT aumenta os tokens da resposta (porque o raciocínio fica visível). Use só quando vale o custo extra.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 12. CHAIN × ReAct -->
+<section class="chapter" id="chain-react">
+  <div class="container">
+    <span class="chapter-number">12 · Prompt Chaining × ReAct</span>
+    <h2>Duas formas de <span style="color:var(--orange)">orquestrar</span> múltiplas chamadas.</h2>
+    <p class="lead">
+      Quando uma chamada só não resolve, você precisa encadear. <strong>Chaining</strong> é sequencial e fixo. <strong>ReAct</strong> é o modelo decidindo o próximo passo dinamicamente, com ferramentas externas.
+    </p>
+
+    <div class="chain-react-grid">
+      <div class="cr-card chain">
+        <div class="cr-tag">🔗 Prompt Chaining</div>
+        <h3>Sequência fixa de prompts</h3>
+        <p>Você define os passos. Saída do passo 1 vira entrada do passo 2. Determinístico, fácil de debugar, mas inflexível.</p>
+
+        <div class="cr-flow">
+          <div class="cr-step">
+            <span class="cr-num">1</span>
+            <strong>Extrair</strong>
+            <small>"Liste os tópicos do texto"</small>
+          </div>
+          <span class="cr-arrow">→</span>
+          <div class="cr-step">
+            <span class="cr-num">2</span>
+            <strong>Resumir</strong>
+            <small>"Resume cada tópico em 1 frase"</small>
+          </div>
+          <span class="cr-arrow">→</span>
+          <div class="cr-step">
+            <span class="cr-num">3</span>
+            <strong>Formatar</strong>
+            <small>"Monte tabela markdown"</small>
+          </div>
+        </div>
+
+        <div class="cr-when">
+          <strong>Use quando:</strong> fluxo conhecido, passos bem definidos, precisa de previsibilidade.
+        </div>
+      </div>
+
+      <div class="cr-card react">
+        <div class="cr-tag">⚡ ReAct (Reason + Act)</div>
+        <h3>Modelo decide as ações</h3>
+        <p>O modelo alterna <strong>Pensamento → Ação → Observação</strong> em loop, usando ferramentas externas (APIs, busca, calculadora). Flexível e poderoso, mas pode loopar ou alucinar passos.</p>
+
+        <div class="cr-react-loop">
+          <div class="cr-rl">
+            <span class="cr-rl-tag thought">🧠 Thought</span>
+            <small>"Pra responder, preciso saber o estoque atual"</small>
+          </div>
+          <div class="cr-rl">
+            <span class="cr-rl-tag action">🛠️ Action</span>
+            <small>chama API <code>get_stock(item="ração")</code></small>
+          </div>
+          <div class="cr-rl">
+            <span class="cr-rl-tag obs">👁️ Observation</span>
+            <small>resposta = "12 caixas em estoque"</small>
+          </div>
+          <div class="cr-rl">
+            <span class="cr-rl-tag thought">🧠 Thought</span>
+            <small>"Agora calculo se dá pra duas semanas"</small>
+          </div>
+          <div class="cr-rl">
+            <span class="cr-rl-tag final">✅ Final answer</span>
+            <small>"Sim, com 12 caixas dá pra 14 dias"</small>
+          </div>
+        </div>
+
+        <div class="cr-when">
+          <strong>Use quando:</strong> caminho não é conhecido a priori, precisa de ferramentas externas. Base do <strong>Bedrock Agents</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13. BOAS PRÁTICAS -->
+<section class="chapter alt-bg" id="praticas">
+  <div class="container">
+    <span class="chapter-number">13 · Boas práticas de prompt engineering</span>
+    <h2>Os <span style="color:var(--orange)">7 mandamentos</span> do prompt.</h2>
+    <p class="lead">
+      Não é mística. É um conjunto de práticas que melhora a qualidade da resposta de qualquer LLM. Clica em cada um pra ver exemplo bom × ruim.
+    </p>
+
+    <div class="practices-grid" id="practices-grid">
+      <button class="prac-card" data-prac="specific">
+        <span class="prac-num">1</span>
+        <span class="emoji">🎯</span>
+        <h4>Seja específico</h4>
+        <p>Vago entra, vago sai</p>
+      </button>
+      <button class="prac-card" data-prac="role">
+        <span class="prac-num">2</span>
+        <span class="emoji">🎭</span>
+        <h4>Defina papel</h4>
+        <p>"Você é um veterinário..."</p>
+      </button>
+      <button class="prac-card" data-prac="format">
+        <span class="prac-num">3</span>
+        <span class="emoji">📋</span>
+        <h4>Especifique formato</h4>
+        <p>JSON, tabela, lista, etc.</p>
+      </button>
+      <button class="prac-card" data-prac="examples">
+        <span class="prac-num">4</span>
+        <span class="emoji">🐾</span>
+        <h4>Use few-shot</h4>
+        <p>2–5 exemplos do padrão</p>
+      </button>
+      <button class="prac-card" data-prac="constraints">
+        <span class="prac-num">5</span>
+        <span class="emoji">🚧</span>
+        <h4>Liste restrições</h4>
+        <p>"Não invente. Só cite fontes verificadas."</p>
+      </button>
+      <button class="prac-card" data-prac="break">
+        <span class="prac-num">6</span>
+        <span class="emoji">✂️</span>
+        <h4>Quebre em passos</h4>
+        <p>Tarefas grandes → chaining</p>
+      </button>
+      <button class="prac-card" data-prac="iterate">
+        <span class="prac-num">7</span>
+        <span class="emoji">🔁</span>
+        <h4>Itere</h4>
+        <p>Versionar prompts é tão importante quanto versionar código</p>
+      </button>
+    </div>
+
+    <div class="prac-detail" id="prac-detail">
+      <em>Clica num mandamento pra ver exemplo lado a lado.</em>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 4: RAG -->
+<!-- ============================ -->
+<section class="part-banner alt2">
+  <div class="container">
+    <span class="chapter-number">Parte 4 · Retrieval-Augmented Generation</span>
+    <h2>
+      O modelo <span class="accent">consulta</span> antes de<br>
+      <span class="yel">responder.</span>
+    </h2>
+    <p>
+      A técnica mais importante pra IA generativa em produção. Resolve alucinação, traz dados atualizados, custa muito menos que fine-tuning.
+    </p>
+  </div>
+</section>
+
+<!-- 14. RAG CONCEITO -->
+<section class="chapter" id="rag">
+  <div class="container">
+    <span class="chapter-number">14 · O que é RAG</span>
+    <h2>Sem RAG <span style="color:var(--orange)">vs</span> com RAG.</h2>
+    <p class="lead">
+      Mesmo modelo. Mesma pergunta. Compare a resposta. RAG <strong>recupera</strong> trechos relevantes da sua base e <strong>injeta</strong> no prompt antes do FM responder. Não treina o modelo — só dá contexto.
+    </p>
+
+    <div class="rag-compare">
+      <div class="rag-side no-rag">
+        <div class="rag-tag">❌ Sem RAG</div>
+        <div class="rag-prompt">
+          <strong>👤 Usuário:</strong> "Qual a política de reembolso da Clínica Felina XPTO?"
+        </div>
+        <div class="rag-flow">
+          <div class="rag-step">
+            <span class="emoji">🤖</span>
+            <strong>FM responde direto</strong>
+            <small>(usa só os pesos do treino)</small>
+          </div>
+        </div>
+        <div class="rag-answer">
+          <strong>Resposta:</strong>
+          <p>"Geralmente clínicas veterinárias oferecem reembolso em até 7 dias com nota fiscal..." <span class="rag-bad">[GENÉRICO E POSSIVELMENTE FALSO]</span></p>
+        </div>
+      </div>
+
+      <div class="rag-side with-rag">
+        <div class="rag-tag">✅ Com RAG</div>
+        <div class="rag-prompt">
+          <strong>👤 Usuário:</strong> "Qual a política de reembolso da Clínica Felina XPTO?"
+        </div>
+        <div class="rag-flow">
+          <div class="rag-step">
+            <span class="emoji">🔍</span>
+            <strong>Busca no vector DB</strong>
+            <small>recupera os 3 chunks mais relevantes</small>
+          </div>
+          <span class="rag-arrow">→</span>
+          <div class="rag-step">
+            <span class="emoji">📋</span>
+            <strong>Monta prompt</strong>
+            <small>chunks + pergunta + instrução</small>
+          </div>
+          <span class="rag-arrow">→</span>
+          <div class="rag-step">
+            <span class="emoji">🤖</span>
+            <strong>FM responde</strong>
+            <small>baseado nos chunks</small>
+          </div>
+        </div>
+        <div class="rag-answer">
+          <strong>Resposta:</strong>
+          <p>"Conforme nossa política <span class="rag-cite">(politica-reembolso-2025.pdf, página 3)</span>, oferecemos reembolso integral em até <strong>30 dias</strong> mediante apresentação da nota fiscal. Casos específicos..." <span class="rag-good">[FACTUAL E COM FONTE]</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15. PIPELINE RAG -->
+<section class="chapter alt-bg" id="pipeline">
+  <div class="container">
+    <span class="chapter-number">15 · Pipeline de RAG</span>
+    <h2>Os <span style="color:var(--orange)">7 passos</span> de ponta a ponta.</h2>
+    <p class="lead">
+      Clica em cada estágio pra ver o que acontece e qual serviço da AWS resolve.
+    </p>
+
+    <div class="pipeline-wrap">
+      <div class="pipeline-flow" id="pipeline-flow">
+        <button class="pipe-stage" data-stage="ingest">
+          <span class="pipe-stage-num">1</span>
+          <span class="emoji">📥</span>
+          <strong>Ingestão</strong>
+          <small>Docs entram no S3</small>
+        </button>
+        <span class="pipe-arrow">→</span>
+        <button class="pipe-stage" data-stage="chunk">
+          <span class="pipe-stage-num">2</span>
+          <span class="emoji">✂️</span>
+          <strong>Chunking</strong>
+          <small>Divide em pedaços</small>
+        </button>
+        <span class="pipe-arrow">→</span>
+        <button class="pipe-stage" data-stage="embed">
+          <span class="pipe-stage-num">3</span>
+          <span class="emoji">🔢</span>
+          <strong>Embedding</strong>
+          <small>Cada chunk vira vetor</small>
+        </button>
+        <span class="pipe-arrow">→</span>
+        <button class="pipe-stage" data-stage="store">
+          <span class="pipe-stage-num">4</span>
+          <span class="emoji">🗄️</span>
+          <strong>Storage</strong>
+          <small>Vector DB</small>
+        </button>
+      </div>
+
+      <div class="pipeline-flow" id="pipeline-flow-2">
+        <button class="pipe-stage" data-stage="query">
+          <span class="pipe-stage-num">5</span>
+          <span class="emoji">❓</span>
+          <strong>Query</strong>
+          <small>Usuário pergunta</small>
+        </button>
+        <span class="pipe-arrow">→</span>
+        <button class="pipe-stage" data-stage="retrieve">
+          <span class="pipe-stage-num">6</span>
+          <span class="emoji">🔍</span>
+          <strong>Retrieval</strong>
+          <small>Busca top-K chunks</small>
+        </button>
+        <span class="pipe-arrow">→</span>
+        <button class="pipe-stage" data-stage="generate">
+          <span class="pipe-stage-num">7</span>
+          <span class="emoji">🤖</span>
+          <strong>Generation</strong>
+          <small>FM responde</small>
+        </button>
+      </div>
+
+      <div class="pipeline-detail" id="pipeline-detail">
+        <em>Clica em um estágio pra ver o que acontece dentro.</em>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16. CHUNKING -->
+<section class="chapter" id="chunking">
+  <div class="container">
+    <span class="chapter-number">16 · Chunking</span>
+    <h2>O <span style="color:var(--orange)">tamanho do chunk</span> muda tudo.</h2>
+    <p class="lead">
+      Chunks pequenos = mais precisão mas falta de contexto. Chunks grandes = mais contexto mas ruído. <strong>Overlap</strong> entre chunks evita perder informação no corte. Mexe nos sliders e veja como o documento é dividido.
+    </p>
+
+    <div class="chunking-lab">
+      <div class="chunk-controls">
+        <div class="cc-field">
+          <label>Tamanho do chunk <span class="cc-val" id="chunk-size-v">300</span> tokens</label>
+          <input type="range" id="chunk-size" min="50" max="1000" step="50" value="300">
+          <div class="cc-hint"><span>50 (preciso)</span><span>1000 (contextual)</span></div>
+        </div>
+        <div class="cc-field">
+          <label>Overlap <span class="cc-val" id="chunk-overlap-v">50</span> tokens</label>
+          <input type="range" id="chunk-overlap" min="0" max="200" step="10" value="50">
+          <div class="cc-hint"><span>0 (corte limpo)</span><span>200 (muita redundância)</span></div>
+        </div>
+
+        <div class="cc-stats">
+          <div class="cc-stat">
+            <span>Chunks gerados</span>
+            <strong id="cc-count">0</strong>
+          </div>
+          <div class="cc-stat">
+            <span>Tokens duplicados</span>
+            <strong id="cc-dup">0</strong>
+          </div>
+          <div class="cc-stat">
+            <span>Custo de embedding</span>
+            <strong id="cc-cost">$0.00</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="chunk-viz" id="chunk-viz">
+        <!-- preenchido pelo JS -->
+      </div>
+
+      <div class="chunk-tips">
+        <strong>💡 Heurísticas práticas pro AIF-C01:</strong>
+        <ul>
+          <li><strong>FAQ / chatbot:</strong> chunks de 200–400 tokens, overlap 10–20%</li>
+          <li><strong>Documentos legais/técnicos:</strong> chunks 500–1000 tokens, overlap 20%</li>
+          <li><strong>Código:</strong> chunks por função/classe (chunking semântico)</li>
+          <li><strong>Bedrock Knowledge Bases</strong>: configura tudo isso pra você (default 300 tokens, overlap 20%)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- COLA -->
+<!-- ============================ -->
+<section class="chapter cola-section" id="cola">
+  <div class="container">
+    <span class="chapter-number">17 · Cola final pra prova</span>
+    <h2>Tudo o que <span style="color:var(--orange)">decorar</span>.</h2>
+
+    <div class="cola-grid">
+      <div class="cola-card">
+        <h4>🪆 Hierarquia</h4>
+        <p><strong>IA ⊃ ML ⊃ Deep Learning</strong>. GenAI é uma aplicação que usa Deep Learning (Transformers).</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎓 Tipos de aprendizado</h4>
+        <p><strong>Supervisionado</strong> (com rótulos), <strong>não-supervisionado</strong> (sem rótulos), <strong>reforço</strong> (recompensa/punição).</p>
+      </div>
+      <div class="cola-card">
+        <h4>📊 Tarefas ML</h4>
+        <p><strong>Classificação</strong> (categórica), <strong>regressão</strong> (numérica), <strong>clustering</strong> (agrupamento sem rótulo).</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎯 Over × Under</h4>
+        <p><strong>Underfitting</strong>: erra no treino e no teste. <strong>Overfitting</strong>: acerta no treino e erra no teste.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🤖 LLM × SLM</h4>
+        <p><strong>LLM</strong>: capaz, caro, alto. <strong>SLM</strong>: rápido, barato, especializado. Edge → SLM. Raciocínio → LLM.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔤 Tokens</h4>
+        <p>Unidade de processamento e cobrança. <strong>1 token ≈ 4 chars ou 0.75 palavra</strong>. Pricing é por token.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📦 Context window</h4>
+        <p>Limite TOTAL de tokens (input + output). Se passa, é cortado. Modelos modernos chegam a 200k+ tokens.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🌡️ Temperature</h4>
+        <p><strong>0–0.3</strong>: determinístico, factual. <strong>0.7+</strong>: criativo, variado. Top-k limita o universo de tokens.</p>
+      </div>
+      <div class="cola-card">
+        <h4>👻 Alucinação</h4>
+        <p>Inventa plausível. Mitiga (não elimina) com <strong>RAG, prompt restritivo, A2I, validação de output</strong>.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎲 Shots</h4>
+        <p><strong>Zero</strong>: 0 exemplos. <strong>One</strong>: 1. <strong>Few</strong>: 2–5. Mais exemplos = mais tokens = mais $.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🧠 Chain-of-Thought</h4>
+        <p>"Pense passo a passo". Melhora muito em raciocínio multi-step. Custo: aumenta tokens da resposta.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔗 Chaining × ReAct</h4>
+        <p><strong>Chaining</strong>: você define a sequência. <strong>ReAct</strong>: modelo decide ações com ferramentas. Base de Bedrock Agents.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📚 RAG</h4>
+        <p>Recupera trechos da sua base e injeta no prompt. <strong>Não treina o modelo</strong>. AWS: Bedrock Knowledge Bases.</p>
+      </div>
+      <div class="cola-card">
+        <h4>✂️ Chunking</h4>
+        <p>Quebra docs em pedaços (300–1000 tokens) com overlap (10–20%). Tamanho impacta precisão × contexto.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📐 Pipeline RAG</h4>
+        <p><strong>Ingestão → Chunk → Embed → Store</strong> (offline). <strong>Query → Retrieve → Generate</strong> (online).</p>
+      </div>
+      <div class="cola-card">
+        <h4>📏 Boas práticas</h4>
+        <p>Específico, papel, formato, few-shot, restrições, quebrar em passos, iterar e versionar.</p>
+      </div>
+    </div>
+
+    <div class="exam-tips">
+      <h3>🎯 Pegadinhas que caem na prova</h3>
+      <ul>
+        <li><strong>"Dados que mudam toda semana"</strong> → <strong>RAG</strong>. <strong>"Adaptar tom de voz"</strong> → <strong>Fine-tuning</strong>. <strong>"Ensinar jargão de domínio"</strong> → <strong>Continued pre-training</strong>.</li>
+        <li><strong>"Resposta consistente e factual"</strong> → temperature <strong>baixa</strong>. <strong>"Brainstorm criativo"</strong> → temperature <strong>alta</strong>.</li>
+        <li><strong>"Modelo decorou o treino"</strong> → <strong>overfitting</strong>. Solução: regularização, mais dados, modelo simples.</li>
+        <li><strong>"Modelo precisa decidir o que fazer dinamicamente, com ferramentas"</strong> → <strong>ReAct</strong> (e Bedrock Agents).</li>
+        <li><strong>"Sumarizar capítulo de livro"</strong> → cuide da <strong>janela de contexto</strong> antes. Pode precisar chunking + RAG.</li>
+        <li><strong>Alucinação se MITIGA, não ELIMINA.</strong> Resposta com "elimina 100%" quase sempre está errada.</li>
+        <li><strong>Few-shot ≠ fine-tuning.</strong> Few-shot é só prompt. Não muda o modelo.</li>
+        <li><strong>"Single-shot"</strong> e <strong>"one-shot"</strong> são a mesma coisa: 1 exemplo. Few-shot começa em 2.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="aula-footer">
+  <div class="container">
+    <p>Feito com 🧡 pra <strong>Escola da Nuvem</strong> · <a href="../index.html">Balaio de Gatos</a> · <a href="../mapa/">📍 Mapa de Estudos</a> · <a href="../mapa/v2.html">🎯 Treinar</a></p>
+    <p class="src">Revisão geral dos Task Statements oficiais do AIF-C01 · Tópicos D1, D2 e D3 · Compatível com o exam guide 2026.</p>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

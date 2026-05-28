@@ -1,4 +1,4 @@
-﻿/* ===== bloco 1 ===== */
+/* ===== bloco 1 ===== */
 
 // ====== BIAS vs VARIANCE INTERACTIVE ======
   const bvData = {

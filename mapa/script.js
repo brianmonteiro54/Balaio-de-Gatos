@@ -1,4 +1,4 @@
-﻿/* ===== bloco 1 ===== */
+/* ===== bloco 1 ===== */
 
 // ═══════════════════════════════════════
 // 1. Toggle dos domínios (acordeão)
@@ -107,7 +107,13 @@ setTimeout(() => {
   const wrong    = Object.values(results).filter(r => r.answered && !r.correct).length;
   const marked   = Object.values(results).filter(r => r.marked).length;
 
-  const total   = 59;
+  // Total de questões: usa o tamanho do qOrder OU dos qResults, pra refletir
+  // mudanças no banco quando a aula adiciona questões novas.
+  const total   = Math.max(
+    state.qOrder?.length || 0,
+    Object.keys(results).length,
+    answered + 1   // pelo menos o que já foi visto
+  ) || 67;
   const acc     = answered > 0 ? Math.round((correct/answered)*100) : 0;
   const headline = document.getElementById('ps-headline');
   const detail   = document.getElementById('ps-detail');
@@ -264,7 +270,7 @@ setTimeout(() => {
       ];
     } else if(goal === 'practice'){
       title = '🎯 Modo prática';
-      body = 'Pula direto pro <strong>Treino do Gato</strong>. 59 questões com feedback na hora, filtro por domínio, modo "só erradas". Volta aqui quando tiver dúvida em conceito.';
+      body = 'Pula direto pro <strong>Treino do Gato</strong>. 67 questões com feedback na hora, filtro por domínio, modo "só erradas". Volta aqui quando tiver dúvida em conceito.';
       actions = [
         { href: 'v2.html', label: '🎯 Abrir Treino do Gato' },
         { href: 'v2.html?d=3', label: '🎯 Direto pro D3 (28%)' },

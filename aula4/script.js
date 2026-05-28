@@ -1,4 +1,4 @@
-﻿/* ===== bloco 1 ===== */
+/* ===== bloco 1 ===== */
 
 // ====== CONFUSION MATRIX INTERACTION ======
   const cellData = {
