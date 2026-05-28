@@ -1,4 +1,4 @@
-﻿/* ===== bloco 1 ===== */
+/* ===== bloco 1 ===== */
 
 /* ====== OPENSEARCH SIMULATED RESULTS ====== */
 const osDocuments = [

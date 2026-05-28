@@ -1,4 +1,4 @@
-﻿/* ===== bloco 1 ===== */
+/* ===== bloco 1 ===== */
 
 :root{
     --cream: #FBF3E2;
@@ -1082,23 +1082,27 @@
 /* PATHS — 3 caminhos */
 .paths-grid{
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   margin-bottom: 36px;
+  align-items: stretch;
 }
 .path-card{
   background: var(--paper);
   border: 2.5px solid var(--ink);
   border-radius: 20px;
-  padding: 24px;
+  padding: 28px 24px 22px;
   box-shadow: 5px 5px 0 var(--ink);
   text-decoration: none;
   color: var(--ink);
   display: flex;
   flex-direction: column;
+  gap: 12px;
   position: relative;
-  overflow: hidden;
-  transition: all 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-width: 0;       /* permite que filhos com texto longo não estourem */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .path-card:hover{
   transform: translate(-2px, -2px);
@@ -1110,6 +1114,8 @@
   top: 0; left: 0;
   width: 100%; height: 5px;
   background: var(--accent-c, var(--orange));
+  border-top-left-radius: 17px;
+  border-top-right-radius: 17px;
 }
 .path-card.path-1{ --accent-c: var(--sage); }
 .path-card.path-2{ --accent-c: var(--orange); }
@@ -1125,22 +1131,22 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink);
-  margin-bottom: 12px;
   align-self: flex-start;
+  margin: 0;
 }
 .path-card h3{
   font-family:'Caprasimo', serif;
-  font-size: 26px;
-  line-height: 1.05;
-  margin-bottom: 10px;
+  font-size: 24px;
+  line-height: 1.1;
   color: var(--ink);
+  margin: 0;
 }
 .path-card p{
   font-size: 14px;
   color: var(--ink-soft);
   line-height: 1.5;
-  margin-bottom: 14px;
-  flex: 1;
+  margin: 0;
+  flex: 1 1 auto;     /* cresce, mas não estoura */
 }
 .path-card p a{
   color: var(--orange-deep);
@@ -1151,7 +1157,7 @@
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin: 0;
 }
 .path-steps span{
   background: var(--cream-2);
@@ -1161,6 +1167,7 @@
   font-size: 11px;
   font-family:'JetBrains Mono', monospace;
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 .path-arrow{
   font-family:'Sora', sans-serif;
@@ -1169,9 +1176,14 @@
   color: var(--accent-c);
   border-top: 1.5px dashed var(--ink-soft);
   padding-top: 12px;
+  margin: 4px 0 0;
 }
 @media (max-width: 900px){
   .paths-grid{ grid-template-columns: 1fr; }
+}
+@media (max-width: 480px){
+  .path-card{ padding: 24px 20px 20px; }
+  .path-card h3{ font-size: 22px; }
 }
 
 

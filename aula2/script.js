@@ -1,4 +1,4 @@
-﻿/* ===== bloco 1 ===== */
+/* ===== bloco 1 ===== */
 
 // =================== WORD VECTOR DEMO ===================
   // Each word has an 8-dim vector. Similar words have similar vectors.
