@@ -54,14 +54,19 @@ Você arrasta sliders, clica em matrizes de confusão, vê a curva ROC se mexer 
 ```
 balaio-de-gatos/
 ├── index.html         # Landing com cards de todas as aulas
+├── style.css          # Estilos da landing
 ├── favicon.png        # Identidade visual
 ├── cat-thumbnail.png  # Capa Open Graph
 ├── README.md
 └── aulaN/
-    └── index.html     # Cada aula: 1 arquivo, HTML+CSS+JS inline
+    ├── index.html     # Marcação semântica da aula
+    ├── style.css      # Visual da aula (paleta, layout, animações)
+    └── script.js      # Interatividade (sliders, gráficos, widgets)
 ```
 
-Sim, cada aula é um único arquivo. Intencional, facilita distribuição, versionamento e hospedagem em qualquer lugar.
+Cada aula é uma página independente em **arquitetura modular**: o HTML cuida só da estrutura, o CSS dos estilos e o JS da interatividade. Continua sem dependências externas, abre direto no navegador, funciona offline e hospeda em qualquer lugar.
+
+Algumas aulas têm uma versão alternativa (`v2.html` + `v2.css` + `v2.js`) ao lado do `index.html`.
 
 ---
 
