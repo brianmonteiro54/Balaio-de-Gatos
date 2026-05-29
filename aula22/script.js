@@ -249,15 +249,15 @@
       </div>
       <div class="mcb-body">
         <div class="mcb-section">
-          <h5>Uso pretendido</h5>
+          <h4>Uso pretendido</h4>
           <p>${escapeHtml(els['mcb-intended'].value)}</p>
         </div>
         <div class="mcb-section">
-          <h5>Uso NÃO pretendido</h5>
+          <h4>Uso NÃO pretendido</h4>
           <p>${escapeHtml(els['mcb-not'].value)}</p>
         </div>
         <div class="mcb-section">
-          <h5>Métricas</h5>
+          <h4>Métricas</h4>
           <div class="mcb-metrics">
             <div class="mcb-metric"><span>Acurácia</span><strong>${escapeHtml(els['mcb-acc'].value)}</strong></div>
             <div class="mcb-metric"><span>Precisão</span><strong>${escapeHtml(els['mcb-prec'].value)}</strong></div>
@@ -265,11 +265,11 @@
           </div>
         </div>
         <div class="mcb-section risk-${risk}">
-          <h5>Riscos (rating: ${risk.toUpperCase()})</h5>
+          <h4>Riscos (rating: ${risk.toUpperCase()})</h4>
           <p>${escapeHtml(els['mcb-risks'].value)}</p>
         </div>
         <div class="mcb-section">
-          <h5>Mitigações</h5>
+          <h4>Mitigações</h4>
           <p>${escapeHtml(els['mcb-mit'].value)}</p>
         </div>
       </div>

@@ -1261,7 +1261,7 @@ function ppRenderDetail() {
     <div class="pp-detail-desc">${s.desc}</div>
     <pre class="pp-detail-code">${s.code}</pre>
     <div class="pp-pitfalls">
-      <h5>⚠️ Armadilhas comuns</h5>
+      <h4>⚠️ Armadilhas comuns</h4>
       <ul>${s.pitfalls.map(p => `<li>${p}</li>`).join('')}</ul>
     </div>
   `;

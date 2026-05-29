@@ -229,7 +229,7 @@
     });
 
     info.innerHTML = `
-      <h5>"${target.w}" (${target.group})</h5>
+      <h4>"${target.w}" (${target.group})</h4>
       <p><strong>3 vizinhos mais parecidos</strong> (similaridade cosseno):</p>
       <ul>
         ${top3.map(r => `<li><strong>${r.w.w}</strong> · cos = <code>${r.sim.toFixed(3)}</code></li>`).join('')}

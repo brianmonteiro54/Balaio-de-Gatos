@@ -1542,7 +1542,7 @@ function tlabUpdate() {
   const winner = pick === 'rt' ? '⚡ Real-time' : '📦 Batch';
   document.getElementById('tlab-result').innerHTML = `
     <span class="winner-badge">VEREDITO</span>
-    <h5>${winner}</h5>
+    <h4>${winner}</h4>
     <p>${reasoning}</p>
   `;
 

@@ -901,7 +901,7 @@
     color: var(--yellow);
     margin-bottom: 6px;
   }
-  .pipe-step h5{
+  .pipe-step h4{
     font-family:'Caprasimo', serif;
     font-size: 18px;
     color: var(--paper);

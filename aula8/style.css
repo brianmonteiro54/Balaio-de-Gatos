@@ -297,7 +297,7 @@ section.chapter + section.chapter{ border-top: 2px dashed rgba(43,24,16,0.18); }
   font-family: 'JetBrains Mono', monospace;
   font-size: 13.5px;
 }
-.cmp-output h5{
+.cmp-output h4{
   font-family: 'Caprasimo', serif;
   font-size: 18px;
   margin-bottom: 10px;
@@ -928,7 +928,7 @@ section.chapter + section.chapter{ border-top: 2px dashed rgba(43,24,16,0.18); }
 .tts-stage:hover, .stt-stage:hover{ transform: translateY(-2px); box-shadow: 3px 3px 0 var(--ink); }
 .tts-stage.active, .stt-stage.active{ background: var(--orange); color: var(--paper); }
 .tts-stage .ic, .stt-stage .ic{ font-size: 24px; display: block; margin-bottom: 4px; }
-.tts-stage h5, .stt-stage h5{ font-family: 'Caprasimo', serif; font-size: 14px; }
+.tts-stage h4, .stt-stage h4{ font-family: 'Caprasimo', serif; font-size: 14px; }
 .tts-arrow, .stt-arrow{
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;

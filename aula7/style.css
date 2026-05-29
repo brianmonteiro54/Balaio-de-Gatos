@@ -1049,9 +1049,9 @@ section.chapter + section.chapter{
   border-color: var(--ink);
   transform: scale(1.04);
 }
-.cl-bucket.drop-over h5,
+.cl-bucket.drop-over h4,
 .cl-bucket.drop-over .cl-bucket-hint{ color: var(--paper); }
-.cl-bucket h5{
+.cl-bucket h4{
   font-family: 'Caprasimo', serif;
   font-size: 18px;
   margin-bottom: 4px;
@@ -2147,7 +2147,7 @@ section.chapter + section.chapter{
 .nlp-stage:hover{ transform: translateY(-2px); box-shadow: 3px 3px 0 var(--ink); }
 .nlp-stage.active{ background: var(--orange); color: var(--paper); }
 .nlp-stage .ic{ font-size: 24px; display: block; margin-bottom: 4px; }
-.nlp-stage h5{ font-family: 'Caprasimo', serif; font-size: 14px; }
+.nlp-stage h4{ font-family: 'Caprasimo', serif; font-size: 14px; }
 .nlp-arrow{
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;

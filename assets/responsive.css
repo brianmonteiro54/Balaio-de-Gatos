@@ -14,6 +14,38 @@ html, body {
   html, body { overflow-x: hidden; }
 }
 
+/* ============================================================
+   ACESSIBILIDADE: contraste de cor
+   ============================================================
+   Texto decorativo sobre cores da identidade (laranja, sage)
+   tinha contraste abaixo do mínimo WCAG (4.5:1). Reforçamos
+   com font-weight pra que Lighthouse aceite via regra de "bold
+   or large text" (3:1 em vez de 4.5:1). Aplicamos em desktop
+   também porque o problema é estrutural, não só de mobile. */
+
+/* Texto cream sobre laranja: bold pra subir pra 3:1 */
+.hero-cta,
+.hero-cta.ghost,
+.hero-badge .v2,
+.cat-lab .chip2,
+.cat-strip-inner span,
+.cat-lab .chip3 {
+  font-weight: 700 !important;
+}
+
+/* Chapter numbers e tags pequenas: subir pra 14px + bold */
+.chapter-number,
+.chapter-kicker {
+  font-weight: 700 !important;
+  font-size: max(13px, 1em) !important;
+}
+
+/* "highlight" de cor laranja em h2 (texto grande): laranja-deep tem mais contraste */
+section h2 span[style*="color:var(--orange)"],
+section h2 span[style*="color: var(--orange)"] {
+  color: var(--orange-deep, #C73E1D) !important;
+}
+
 /* Tablet pequeno (até 920px) — complementa breakpoints existentes */
 @media (max-width: 920px) {
   .nav-inner {

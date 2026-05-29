@@ -505,25 +505,25 @@
     <div class="train-timeline">
       <div class="train-step">
         <div class="n">PASSO 1</div>
-        <h5>📊 Dataset rotulado</h5>
+        <h4>📊 Dataset rotulado</h4>
         <p>Entradas (foto, texto) + saídas esperadas (rótulo). Quanto maior e mais limpo, melhor.</p>
         <div class="arr">→</div>
       </div>
       <div class="train-step">
         <div class="n">PASSO 2</div>
-        <h5>🧠 Arquitetura</h5>
+        <h4>🧠 Arquitetura</h4>
         <p>Escolhe o tipo de modelo: rede neural, árvore, transformer, etc.</p>
         <div class="arr">→</div>
       </div>
       <div class="train-step">
         <div class="n">PASSO 3</div>
-        <h5>🔁 Loop de treino</h5>
+        <h4>🔁 Loop de treino</h4>
         <p>Forward (prediz) → calcula erro → backward (ajusta pesos). Repete milhares de vezes.</p>
         <div class="arr">→</div>
       </div>
       <div class="train-step">
         <div class="n">PASSO 4</div>
-        <h5>📈 Validação</h5>
+        <h4>📈 Validação</h4>
         <p>Testa em dados nunca vistos. Se for bem, deploya. Se for mal, ajusta hiperparâmetros.</p>
       </div>
     </div>
@@ -718,22 +718,22 @@
 
     <div class="tuning-types">
       <div class="tuning-mini">
-        <h5>📋 Full fine-tuning</h5>
+        <h4>📋 Full fine-tuning</h4>
         <p>Ajusta <strong>todos os parâmetros</strong> do modelo. Resultado top, mas caro em GPU e memória.</p>
         <span class="tag-mini">caro · poderoso</span>
       </div>
       <div class="tuning-mini">
-        <h5>🪶 LoRA / QLoRA</h5>
+        <h4>🪶 LoRA / QLoRA</h4>
         <p>Treina <strong>só adaptadores pequenos</strong> "grudados" no modelo. ~1% do custo, qualidade parecida.</p>
         <span class="tag-mini">leve · favorito atual</span>
       </div>
       <div class="tuning-mini">
-        <h5>📝 Instruction tuning</h5>
+        <h4>📝 Instruction tuning</h4>
         <p>Ensina o modelo a <strong>seguir instruções</strong>. Pares "Instrução → Resposta ideal".</p>
         <span class="tag-mini">base de chatbots</span>
       </div>
       <div class="tuning-mini">
-        <h5>🎚️ RLHF / DPO</h5>
+        <h4>🎚️ RLHF / DPO</h4>
         <p>Aprende com <strong>preferências humanas</strong>: "A é melhor que B". Alinha o modelo com o gosto humano.</p>
         <span class="tag-mini">alinhamento</span>
       </div>
@@ -1062,22 +1062,22 @@
 
     <div class="tuning-types">
       <div class="tuning-mini">
-        <h5>🟦 Grid Search</h5>
+        <h4>🟦 Grid Search</h4>
         <p>Testa <strong>todas as combinações</strong> de uma grade pré-definida. Exaustivo. Caro. Garantido, mas explode em custo se você tem muitos hiperparâmetros.</p>
         <span class="tag-mini">força bruta</span>
       </div>
       <div class="tuning-mini">
-        <h5>🎲 Random Search</h5>
+        <h4>🎲 Random Search</h4>
         <p>Sorteia combinações <strong>aleatoriamente</strong>. Mais barato que grid, surpreendentemente bom na prática. Costuma ser o ponto de partida.</p>
         <span class="tag-mini">surpresa boa</span>
       </div>
       <div class="tuning-mini">
-        <h5>🧠 Bayesian Optimization</h5>
+        <h4>🧠 Bayesian Optimization</h4>
         <p>Aprende com tentativas anteriores: <strong>"essa região foi boa, vou explorar mais lá"</strong>. Convergência rápida com poucas tentativas.</p>
         <span class="tag-mini">esperto · padrão</span>
       </div>
       <div class="tuning-mini">
-        <h5>🧬 Hyperband / Population</h5>
+        <h4>🧬 Hyperband / Population</h4>
         <p>Treina muitos modelos em paralelo, <strong>mata os ruins cedo</strong>, foca recursos nos promissores. Ótimo pra deep learning.</p>
         <span class="tag-mini">paralelo</span>
       </div>

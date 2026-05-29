@@ -190,7 +190,7 @@ function cmpRender() {
   if (cmpCurrentTask === 'lang') {
     const r = cmpDetectLanguage(text);
     out.innerHTML = `
-      <h5>🌎 Idioma detectado</h5>
+      <h4>🌎 Idioma detectado</h4>
       <div class="row">
         <span class="lbl">${r.name} (${r.code})</span>
         <div class="cmp-bar"><div class="fill sage" style="width:${r.conf * 100}%"></div></div>
@@ -215,7 +215,7 @@ resp = client.detect_dominant_language(
     const sorted = Object.entries(r).sort((a, b) => b[1] - a[1]);
     const winner = sorted[0][0];
     const fillClass = { POSITIVE: 'olive', NEGATIVE: 'coral', NEUTRAL: 'sage', MIXED: 'purple' };
-    let html = `<h5>💚 Sentimento dominante: <span style="color:var(--orange-deep)">${winner}</span></h5>`;
+    let html = `<h4>💚 Sentimento dominante: <span style="color:var(--orange-deep)">${winner}</span></h4>`;
     Object.entries(r).forEach(([k, v]) => {
       html += `<div class="row">
         <span class="lbl">${k}</span>
@@ -242,9 +242,9 @@ resp = client.detect_sentiment(
   else if (cmpCurrentTask === 'entities') {
     const ents = cmpExtractEntities(text);
     if (ents.length === 0) {
-      out.innerHTML = `<h5>🔍 Entidades detectadas</h5><p style="font-family: 'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">Nenhuma entidade reconhecida no texto atual.</p>`;
+      out.innerHTML = `<h4>🔍 Entidades detectadas</h4><p style="font-family: 'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">Nenhuma entidade reconhecida no texto atual.</p>`;
     } else {
-      let html = '<h5>🔍 Entidades detectadas</h5><div style="margin-top: 10px; font-family: \'Sora\', sans-serif; line-height: 2;">';
+      let html = '<h4>🔍 Entidades detectadas</h4><div style="margin-top: 10px; font-family: \'Sora\', sans-serif; line-height: 2;">';
       let lastIdx = 0;
       ents.forEach(e => {
         html += text.slice(lastIdx, e.begin);
@@ -274,9 +274,9 @@ resp = client.detect_entities(
   else if (cmpCurrentTask === 'phrases') {
     const phrases = cmpExtractKeyPhrases(text);
     if (phrases.length === 0) {
-      out.innerHTML = `<h5>🔑 Frases-chave</h5><p style="font-family: 'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">Nenhuma frase-chave detectada.</p>`;
+      out.innerHTML = `<h4>🔑 Frases-chave</h4><p style="font-family: 'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">Nenhuma frase-chave detectada.</p>`;
     } else {
-      let html = '<h5>🔑 Frases-chave</h5><div style="margin-top: 10px;">';
+      let html = '<h4>🔑 Frases-chave</h4><div style="margin-top: 10px;">';
       phrases.forEach(([phrase, conf]) => {
         html += `<span class="cmp-phrase">${phrase} <small style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--orange-deep)">${(conf * 100).toFixed(0)}%</small></span>`;
       });
@@ -294,7 +294,7 @@ resp = client.detect_key_phrases(
 
   else if (cmpCurrentTask === 'syntax') {
     const tags = cmpExtractPos(text);
-    let html = '<h5>🏷️ Sintaxe (POS tagging)</h5><div style="margin-top: 10px;">';
+    let html = '<h4>🏷️ Sintaxe (POS tagging)</h4><div style="margin-top: 10px;">';
     tags.forEach(t => {
       if (t.tag === 'PUNCT') {
         html += `<span style="margin: 0 2px;">${t.word}</span>`;
@@ -316,9 +316,9 @@ resp = client.detect_syntax(
   else if (cmpCurrentTask === 'pii') {
     const pii = cmpExtractPii(text);
     if (pii.length === 0) {
-      out.innerHTML = `<h5>🛡️ PII (informação pessoal)</h5><p style="font-family:'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">✅ Nenhuma PII detectada. Texto limpo pra publicar.</p>`;
+      out.innerHTML = `<h4>🛡️ PII (informação pessoal)</h4><p style="font-family:'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">✅ Nenhuma PII detectada. Texto limpo pra publicar.</p>`;
     } else {
-      let html = '<h5>🛡️ PII detectada</h5><div style="margin-top: 10px;">';
+      let html = '<h4>🛡️ PII detectada</h4><div style="margin-top: 10px;">';
       pii.forEach(p => {
         html += `<span class="cmp-entity PII">${p.text}<small>${p.type}</small></span>`;
       });
