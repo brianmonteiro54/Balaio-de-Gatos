@@ -54,9 +54,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add assets/og
-            git commit -m "chore(seo): regenerar imagens OG [skip ci]"
-            # Pode haver commits novos no remote (ex: bot do sitemap rodando em paralelo).
-            # Rebase + push com retry simples pra evitar race condition.
+            git commit -m "chore(seo): regenerar imagens OG (PNG + WebP) [skip ci]"
             for attempt in 1 2 3; do
               git pull --rebase origin main && git push origin main && break
               echo "Push attempt $attempt failed, retrying..."

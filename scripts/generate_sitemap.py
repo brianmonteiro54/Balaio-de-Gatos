@@ -14,7 +14,7 @@ BASE = "https://brianmonteiro54.github.io/Balaio-de-Gatos"
 
 
 def og_image(slug: str) -> str:
-    return f"{BASE}/assets/og/{slug}.png"
+    return f"{BASE}/assets/og/{slug}.webp"
 
 
 # (file_path, url_path, priority, og_slug, image_title, image_caption)

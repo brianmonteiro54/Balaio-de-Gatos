@@ -77,10 +77,12 @@ for (const p of targets) {
 
   const out = path.join(OUT_DIR, `${p.slug}.png`);
   await page.screenshot({ path: out, type: "png", omitBackground: false });
-  // Reduz scale: o screenshot @2x em viewport 1200x630 sai em 2400x1260.
-  // Isso deixa OG grande demais (limites: Twitter 5MB, LinkedIn 5MB), mas
-  // a maioria aceita. Vamos manter 1200x630 1x pra ficar leve.
-  console.log(`✓ ${p.slug}.png`);
+
+  // Gera versão WebP em paralelo (50% menor, suportada por todas as redes sociais modernas)
+  const outWebp = path.join(OUT_DIR, `${p.slug}.webp`);
+  await page.screenshot({ path: outWebp, type: "webp", quality: 85, omitBackground: false });
+
+  console.log(`✓ ${p.slug}.png + .webp`);
 }
 
 await browser.close();
