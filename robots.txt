@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://brianmonteiro54.github.io/Balaio-de-Gatos/sitemap.xml
