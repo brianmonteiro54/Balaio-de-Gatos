@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    TREINO DO GATO · AI Practitioner · Balaio de Gatos
    - Quiz com filtros (domínio, erradas, marcadas)
    - Flashcards
@@ -10,7 +10,7 @@
 
 
 // ═══════════════════════════════════════════════════════
-// QUESTION BANK — 67 questões cenário-estilo prova oficial AIF-C01
+// QUESTION BANK, 67 questões cenário-estilo prova oficial AIF-C01
 // Alinhadas com os Task Statements oficiais (docs.aws.amazon.com)
 //
 // Pesos OFICIAIS da prova: D1=20% · D2=24% · D3=28% · D4=14% · D5=14%
@@ -25,7 +25,7 @@ const QUESTIONS = [
   // Task 1.1: conceitos básicos · Task 1.2: casos de uso · Task 1.3: ciclo de vida
   // ═════════════════════════════════════════════════
 
-  // Task 1.1 — conceitos
+  // Task 1.1, conceitos
   { d:1, aula:"aula1", q:"Uma empresa quer entender a relação entre IA, ML, Deep Learning e GenAI. Qual afirmação descreve corretamente essa hierarquia?",
     opts:[
       "São tecnologias independentes, sem relação entre si",
@@ -37,10 +37,10 @@ const QUESTIONS = [
 
   { d:1, aula:"aula2", q:"Um banco recebe transações de cartão a cada milissegundo e precisa decidir IMEDIATAMENTE se cada uma é fraude. Que tipo de inferência usar?",
     opts:[
-      "Batch inference — processa em lote durante a noite",
-      "Real-time inference — endpoint sempre online com baixa latência",
-      "Asynchronous inference — fila com resposta posterior",
-      "Serverless inference — só liga sob demanda, latência variável"
+      "Batch inference, processa em lote durante a noite",
+      "Real-time inference, endpoint sempre online com baixa latência",
+      "Asynchronous inference, fila com resposta posterior",
+      "Serverless inference, só liga sob demanda, latência variável"
     ], c:1,
     why:"Decisão imediata por transação = <strong>real-time inference</strong>. Endpoint sempre ligado. Batch é pra grandes volumes sem urgência. Async é pra payloads grandes que podem esperar. Serverless tem cold start (ruim pra latência crítica)." },
 
@@ -80,11 +80,11 @@ const QUESTIONS = [
     ], c:2,
     why:"Recompensa/punição via interação com ambiente = <strong>reinforcement learning</strong>. Base do AlphaGo, RLHF dos LLMs e robótica." },
 
-  // Task 1.2 — casos de uso (quando usar e quando NÃO usar IA)
+  // Task 1.2, casos de uso (quando usar e quando NÃO usar IA)
   { d:1, aula:"aula1", q:"Uma empresa precisa calcular comissões de vendas. A regra é fixa: 5% do valor da venda. Faz sentido usar ML aqui?",
     opts:[
       "Sim, ML é melhor que regras fixas em todo caso",
-      "Não — quando a regra é determinística e exata, programação tradicional é melhor",
+      "Não, quando a regra é determinística e exata, programação tradicional é melhor",
       "Sim, mas precisa de Deep Learning",
       "Sim, usando GenAI"
     ], c:1,
@@ -99,7 +99,7 @@ const QUESTIONS = [
     ], c:1,
     why:"<strong>Amazon Rekognition</strong> = Computer Vision gerenciada (objetos, faces, texto em imagem, moderação). Polly é texto→fala. Comprehend é NLP. Translate é tradução." },
 
-  // Task 1.3 — ciclo de vida e métricas
+  // Task 1.3, ciclo de vida e métricas
   { d:1, aula:"aula12", q:"Você divide o dataset em treino, validação e teste. Pra que serve o conjunto de validação?",
     opts:[
       "Treinar o modelo final",
@@ -111,10 +111,10 @@ const QUESTIONS = [
 
   { d:1, aula:"aula12", q:"Modelo acerta 99% no treino e 60% em dados novos. Diagnóstico?",
     opts:[
-      "Underfitting — modelo simples demais",
-      "Overfitting — decorou o treino, não generaliza",
-      "Drift — o mundo mudou",
-      "Bias — dados estão enviesados"
+      "Underfitting, modelo simples demais",
+      "Overfitting, decorou o treino, não generaliza",
+      "Drift, o mundo mudou",
+      "Bias, dados estão enviesados"
     ], c:1,
     why:"Alta acurácia no treino + baixa em dados novos = <strong>overfitting</strong> clássico. Mitigação: regularização (L1/L2), dropout, mais dados, modelo mais simples, early stopping." },
 
@@ -142,7 +142,7 @@ const QUESTIONS = [
   // Task 2.1: conceitos · Task 2.2: capacidades/limitações · Task 2.3: AWS pra GenAI
   // ═════════════════════════════════════════════════
 
-  // Task 2.1 — conceitos básicos de GenAI
+  // Task 2.1, conceitos básicos de GenAI
   { d:2, aula:"aula1", q:"O que é um Foundation Model (FM)?",
     opts:[
       "Modelo pequeno especializado em uma tarefa",
@@ -154,10 +154,10 @@ const QUESTIONS = [
 
   { d:2, aula:"aula2", q:"Você converte 'gato laranja' em [0.21, -0.45, 0.78, ...]. Como esse vetor é chamado e pra que serve?",
     opts:[
-      "Token — unidade de cobrança",
-      "Embedding — vetor denso que representa significado pra busca semântica",
-      "Hash — identificador único",
-      "Checksum — verificação de integridade"
+      "Token, unidade de cobrança",
+      "Embedding, vetor denso que representa significado pra busca semântica",
+      "Hash, identificador único",
+      "Checksum, verificação de integridade"
     ], c:1,
     why:"<strong>Embedding</strong> = vetor denso de significado. Base da busca semântica e do RAG. Tokens são a entrada DO modelo de embedding (texto bruto vira tokens, tokens viram embedding)." },
 
@@ -206,7 +206,7 @@ const QUESTIONS = [
     ], c:1,
     why:"<strong>Pricing por token</strong> conta entrada + saída. Prompts e respostas longas explodem o custo proporcionalmente. Cai no exam guide (Task 2.1 e 2.3). Pra reduzir: prompts mais enxutos, modelo menor, ou Provisioned Throughput em volume alto." },
 
-  // Task 2.1 (novo) — Agentic AI / MCP
+  // Task 2.1 (novo), Agentic AI / MCP
   { d:2, aula:"aula6", q:"Sobre 'agentic AI', qual descrição está correta?",
     opts:[
       "É o mesmo que prompt engineering",
@@ -225,7 +225,7 @@ const QUESTIONS = [
     ], c:1,
     why:"<strong>MCP</strong> = padrão aberto pra agentes consumirem ferramentas e contextos externos. Aparece no Task 2.1 do exam guide quando fala em 'multi-agent system patterns'." },
 
-  // Task 2.2 — capacidades e limitações
+  // Task 2.2, capacidades e limitações
   { d:2, aula:"aula6", q:"Qual é uma DESVANTAGEM clássica de GenAI pra cenários de negócio?",
     opts:[
       "Não escala",
@@ -253,11 +253,11 @@ const QUESTIONS = [
     ], c:1,
     why:"GenAI brilha em <strong>conteúdo aberto, criativo, conversacional e de suporte humano</strong>. Mal pra cálculo exato e decisões críticas sem human-in-the-loop." },
 
-  // Task 2.3 — AWS pra GenAI
+  // Task 2.3, AWS pra GenAI
   { d:2, aula:"aula14", q:"Sua empresa quer construir uma aplicação GenAI rapidamente, sem gerenciar GPUs nem hospedar modelos. Que serviço da AWS escolher?",
     opts:[
       "Amazon SageMaker",
-      "Amazon Bedrock — Foundation Models como serviço via API",
+      "Amazon Bedrock, Foundation Models como serviço via API",
       "Amazon EC2 com GPUs",
       "AWS Lambda"
     ], c:1,
@@ -275,14 +275,14 @@ const QUESTIONS = [
 
   // ═════════════════════════════════════════════════
   // ─── DOMÍNIO 3: Aplicações de Foundation Models (20 questões) ───
-  // 28% — MAIOR domínio. Task 3.1: design · 3.2: prompt eng · 3.3: training · 3.4: avaliação
+  // 28%, MAIOR domínio. Task 3.1: design · 3.2: prompt eng · 3.3: training · 3.4: avaliação
   // ═════════════════════════════════════════════════
 
-  // Task 3.1 — design considerations e RAG
+  // Task 3.1, design considerations e RAG
   { d:3, aula:"aula10", q:"Uma empresa quer um chatbot que responda usando os PDFs internos atualizados toda semana. Qual abordagem é a MAIS adequada?",
     opts:[
       "Fine-tuning semanal do FM com os PDFs",
-      "Implementar RAG — recuperar trechos relevantes e injetar no prompt do FM",
+      "Implementar RAG, recuperar trechos relevantes e injetar no prompt do FM",
       "Continued pre-training mensal",
       "Treinar um modelo do zero"
     ], c:1,
@@ -300,7 +300,7 @@ const QUESTIONS = [
   { d:3, aula:"aula10", q:"O time precisa AGIR no mundo: o chatbot deve consultar o estoque, criar pedido e enviar confirmação por e-mail. Qual recurso do Bedrock?",
     opts:[
       "Bedrock Knowledge Bases",
-      "Bedrock Agents — orquestra chamadas a APIs externas via Action Groups",
+      "Bedrock Agents, orquestra chamadas a APIs externas via Action Groups",
       "Bedrock Guardrails",
       "Bedrock Custom Models"
     ], c:1,
@@ -309,7 +309,7 @@ const QUESTIONS = [
   { d:3, aula:"aula10", q:"Você precisa de respostas FACTUAIS, repetíveis e consistentes (Q&A jurídico). Como ajustar os parâmetros de inferência?",
     opts:[
       "Temperature alta (0.9) e top-p alto",
-      "Temperature baixa (0–0.3), top-p baixo",
+      "Temperature baixa (0,0.3), top-p baixo",
       "Max tokens em 0",
       "Aumentar top-k pra 200"
     ], c:1,
@@ -322,7 +322,7 @@ const QUESTIONS = [
       "Fine-tuning com dados rotulados",
       "Prompt engineering / in-context learning"
     ], c:3,
-    why:"Ordem do mais barato pro mais caro: <strong>Prompt engineering &lt; RAG &lt; Fine-tuning &lt; Continued pre-training &lt; Pre-training do zero</strong>. Sempre tente prompt primeiro — é gratuito (só paga os tokens)." },
+    why:"Ordem do mais barato pro mais caro: <strong>Prompt engineering &lt; RAG &lt; Fine-tuning &lt; Continued pre-training &lt; Pre-training do zero</strong>. Sempre tente prompt primeiro, é gratuito (só paga os tokens)." },
 
   { d:3, aula:"aula12", q:"O que é 'model distillation' (citado no Task 3.1 do exam guide)?",
     opts:[
@@ -333,7 +333,7 @@ const QUESTIONS = [
     ], c:0,
     why:"<strong>Distillation</strong> = transferir conhecimento de um modelo grande pra um pequeno. Resultado: modelo menor, mais rápido, mais barato, com qualidade próxima do grande pra tarefas específicas." },
 
-  // Task 3.2 — prompt engineering
+  // Task 3.2, prompt engineering
   { d:3, aula:"aula6", q:"Você inclui 3 exemplos de tradução PT→EN no prompt antes de pedir o 4º. Que técnica de prompt engineering é essa?",
     opts:[
       "Zero-shot",
@@ -341,7 +341,7 @@ const QUESTIONS = [
       "Fine-tuning",
       "RAG"
     ], c:1,
-    why:"<strong>Few-shot</strong> = 2–5 exemplos no prompt. <strong>Zero-shot</strong> = nenhum exemplo. <strong>One-shot</strong> (ou single-shot) = 1 exemplo. Nenhuma dessas modifica o modelo — é tudo prompt." },
+    why:"<strong>Few-shot</strong> = 2,5 exemplos no prompt. <strong>Zero-shot</strong> = nenhum exemplo. <strong>One-shot</strong> (ou single-shot) = 1 exemplo. Nenhuma dessas modifica o modelo, é tudo prompt." },
 
   { d:3, aula:"aula6", q:"Você adiciona 'pense passo a passo antes de responder' no prompt. Que técnica é essa?",
     opts:[
@@ -370,7 +370,7 @@ const QUESTIONS = [
     ], c:1,
     why:"<strong>Bedrock Guardrails</strong> aplica filtros nas duas pontas (input e output). Bloqueia toxicidade, PII, tópicos sensíveis, jailbreak comum." },
 
-  // Task 3.3 — training e fine-tuning
+  // Task 3.3, training e fine-tuning
   { d:3, aula:"aula12", q:"Empresa de seguros quer um FM que entenda o JARGÃO específico do setor (apólice, sinistro, ressarcimento). Tem 50GB de documentos NÃO rotulados. Qual abordagem?",
     opts:[
       "Fine-tuning supervisionado",
@@ -398,7 +398,7 @@ const QUESTIONS = [
     ], c:1,
     why:"Lista do Task 3.3: <strong>data curation, governance, size, labeling, representativeness, RLHF</strong>. Fine-tuning ruim com dados ruins é pior que não fazer." },
 
-  // Task 3.4 — avaliação
+  // Task 3.4, avaliação
   { d:3, aula:"aula13", q:"Pra avaliar quão bom seu LLM é em SUMARIZAÇÃO automaticamente, qual métrica é mais apropriada?",
     opts:[
       "Accuracy",
@@ -435,11 +435,11 @@ const QUESTIONS = [
     ], c:1,
     why:"<strong>Amazon Q Developer</strong> = copiloto de código na IDE. Antigamente chamado Amazon CodeWhisperer." },
 
-  // Questões da aula 14: Bedrock — capacidade e playground
+  // Questões da aula 14: Bedrock, capacidade e playground
   { d:3, aula:"aula14", q:"Uma empresa terá tráfego CONSTANTE 24/7 chamando o Bedrock, com SLA de latência rígido (P95 abaixo de 800ms). Qual modo de cobrança recomendar?",
     opts:[
-      "Capacidade Sob-Demanda (On-Demand) — paga por token",
-      "Capacidade Provisionada (Provisioned Throughput) — paga por hora de Model Unit reservada",
+      "Capacidade Sob-Demanda (On-Demand), paga por token",
+      "Capacidade Provisionada (Provisioned Throughput), paga por hora de Model Unit reservada",
       "Spot pricing",
       "Free tier"
     ], c:1,
@@ -469,7 +469,7 @@ const QUESTIONS = [
   // Task 4.1: desenvolver IA responsável · Task 4.2: transparência e explicabilidade
   // ═════════════════════════════════════════════════
 
-  // Task 4.1 — features de responsible AI
+  // Task 4.1, features de responsible AI
   { d:4, aula:"aula15", q:"Quais são as 6 features de uma IA responsável segundo o exam guide?",
     opts:[
       "Velocidade, custo, escala, segurança, latência, design",
@@ -486,7 +486,7 @@ const QUESTIONS = [
       "Drift; CloudTrail",
       "Underfitting; Comprehend"
     ], c:1,
-    why:"<strong>Bias</strong> clássico — modelo amplifica desigualdade dos dados. <strong>SageMaker Clarify</strong> é a ferramenta padrão pra bias detection (pré-treino e pós-treino) e fairness metrics." },
+    why:"<strong>Bias</strong> clássico, modelo amplifica desigualdade dos dados. <strong>SageMaker Clarify</strong> é a ferramenta padrão pra bias detection (pré-treino e pós-treino) e fairness metrics." },
 
   { d:4, aula:"aula15", q:"Modelo em produção começa a errar mais com o tempo porque o mundo real mudou (novos produtos, novos padrões de fraude). Que problema é esse e como detectá-lo?",
     opts:[
@@ -524,7 +524,7 @@ const QUESTIONS = [
     ], c:1,
     why:"Task 4.1 cita <strong>environmental considerations e sustainability</strong> como prática responsável. Treinar do zero polui muito; usar FM pronto + RAG é mais sustentável." },
 
-  // Task 4.2 — transparência e explicabilidade
+  // Task 4.2, transparência e explicabilidade
   { d:4, aula:"aula16", q:"Pra DOCUMENTAR transparentemente um modelo (em quais dados foi treinado, casos de uso pretendidos, limitações conhecidas), use:",
     opts:[
       "IAM Roles",
@@ -549,7 +549,7 @@ const QUESTIONS = [
   // Task 5.1: securizar sistemas de IA · Task 5.2: governança e compliance
   // ═════════════════════════════════════════════════
 
-  // Task 5.1 — securizar
+  // Task 5.1, securizar
   { d:5, q:"Qual serviço controla QUEM pode invocar um modelo no Bedrock?",
     opts:[
       "Senha do modelo",
@@ -595,7 +595,7 @@ const QUESTIONS = [
     ], c:0,
     why:"<strong>Amazon Macie</strong> = descoberta automatizada de dados sensíveis (PII) em S3 via ML. GuardDuty é detecção de ameaças. Inspector é vulnerabilidade. Macie é pra DADOS." },
 
-  // Task 5.2 — governança e compliance
+  // Task 5.2, governança e compliance
   { d:5, q:"Auditoria precisa saber QUEM chamou QUE API DO BEDROCK QUANDO. Onde olhar?",
     opts:[
       "CloudWatch Metrics",
@@ -621,13 +621,13 @@ const QUESTIONS = [
       "Dados (incluindo prompts), configuração de IAM, escolha de modelo, governança de uso e conformidade contextual",
       "Recompilar o modelo todo mês"
     ], c:2,
-    why:"AWS cuida de infra, modelo gerenciado, segurança da plataforma. <strong>Cliente cuida de dados, prompts, acesso, uso responsável e conformidade</strong>. Cai sempre — é pegadinha clássica do Task 5.1." },
+    why:"AWS cuida de infra, modelo gerenciado, segurança da plataforma. <strong>Cliente cuida de dados, prompts, acesso, uso responsável e conformidade</strong>. Cai sempre, é pegadinha clássica do Task 5.1." },
 
   // Questões novas da aula 16
   { d:5, aula:"aula16", q:"A AWS publicou a 'Generative AI Security Scoping Matrix' com quantos escopos e o que ela define?",
     opts:[
       "3 escopos definindo apenas custos",
-      "5 escopos (Consumer App, Enterprise App, Pre-trained, Fine-tuned, Self-trained) — define a divisão de responsabilidade entre cliente e provider conforme o caso de uso",
+      "5 escopos (Consumer App, Enterprise App, Pre-trained, Fine-tuned, Self-trained), define a divisão de responsabilidade entre cliente e provider conforme o caso de uso",
       "5 escopos definindo só níveis de criptografia",
       "Não existe matriz oficial"
     ], c:1,
@@ -636,7 +636,7 @@ const QUESTIONS = [
   { d:5, aula:"aula16", q:"Sua aplicação RAG no Bedrock precisa MOSTRAR ao usuário de qual documento veio cada afirmação na resposta. Como obter isso?",
     opts:[
       "Inventar fontes via prompt engineering",
-      "Bedrock Knowledge Bases retorna source citations nativamente — arquivo, página e trecho de cada chunk usado",
+      "Bedrock Knowledge Bases retorna source citations nativamente, arquivo, página e trecho de cada chunk usado",
       "Não é possível com Bedrock",
       "Só com fine-tuning"
     ], c:1,
@@ -673,7 +673,7 @@ const QUESTIONS = [
 
 
 // ═══════════════════════════════════════════════════════
-// FLASHCARD BANK — 30 conceitos
+// FLASHCARD BANK, 30 conceitos
 // ═══════════════════════════════════════════════════════
 const CARDS = [
   { t:"RAG", d:"Retrieval Augmented Generation. Recupera trechos relevantes de uma fonte (vector DB) e injeta no prompt antes do FM responder. <strong>Não treina o modelo.</strong>",
@@ -693,15 +693,15 @@ const CARDS = [
     trap:"Limitado a o que cabe no context window. Não substitui RAG pra docs grandes." },
 
   { t:"Temperature", d:"Aleatoriedade da geração. <strong>0</strong> = determinístico, repetível. <strong>1+</strong> = criativo, variado.",
-    when:"Baixa (0–0.3) pra factual e Q&A. Alta (0.8+) pra brainstorm e copy criativo.",
+    when:"Baixa (0,0.3) pra factual e Q&A. Alta (0.8+) pra brainstorm e copy criativo.",
     trap:"Alta não é 'melhor', é mais aleatória. Pra resposta consistente, baixa." },
 
   { t:"Top-p (nucleus)", d:"Amostra só dos tokens que somam probabilidade p. Top-p=0.9 = ignora a 'cauda' de tokens improváveis.",
-    when:"Controla aleatoriedade junto com temperature. Pra factual: top-p baixo (0.5–0.8).",
+    when:"Controla aleatoriedade junto com temperature. Pra factual: top-p baixo (0.5,0.8).",
     trap:"Top-p e top-k fazem coisas parecidas. Não use os dois muito agressivos ao mesmo tempo." },
 
   { t:"Top-k", d:"Amostra dos K tokens mais prováveis. Top-k=50 = considera só os 50 tokens mais prováveis na hora.",
-    when:"Controla aleatoriedade. Top-k baixo (1–10) força resposta mais previsível.",
+    when:"Controla aleatoriedade. Top-k baixo (1,10) força resposta mais previsível.",
     trap:"Top-k=1 = greedy decoding (sempre o token mais provável). Pode gerar respostas chatas." },
 
   { t:"Zero-shot", d:"Prompt sem exemplo. 'Traduza essa frase: Hello.' O modelo já sabe.",
@@ -710,7 +710,7 @@ const CARDS = [
 
   { t:"Few-shot", d:"Prompt com <strong>2 a 5 exemplos</strong> do padrão input→output. Modelo aprende o formato pelo contexto (in-context learning). 1 exemplo só é one-shot/single-shot.",
     when:"Use quando: tarefa exige formato específico, zero-shot deu resultado inconsistente.",
-    trap:"Mais exemplos = mais tokens = mais $$$. Equilíbrio entre qualidade e custo. Não confunda com fine-tuning — few-shot NÃO muda o modelo." },
+    trap:"Mais exemplos = mais tokens = mais $$$. Equilíbrio entre qualidade e custo. Não confunda com fine-tuning, few-shot NÃO muda o modelo." },
 
   { t:"Chain-of-Thought (CoT)", d:"'Pense passo a passo antes de responder'. Induz o modelo a raciocinar explicitamente.",
     when:"Use quando: problema complexo com múltiplas etapas (matemática, lógica, planejamento).",
@@ -734,7 +734,7 @@ const CARDS = [
 
   { t:"Embeddings", d:"Vetores densos que representam significado. Texto/imagem → vetor de N dimensões (ex: 1536). Base de busca semântica.",
     when:"Use quando: RAG, busca semântica, classificação por similaridade, deduplicação.",
-    trap:"Embeddings DIFERENTES vêm de modelos diferentes — não dá pra comparar entre si." },
+    trap:"Embeddings DIFERENTES vêm de modelos diferentes, não dá pra comparar entre si." },
 
   { t:"Vector Database", d:"BD pra armazenar e buscar embeddings por similaridade (cosseno, euclidiana).",
     when:"Use quando: implementar RAG. AWS-native: OpenSearch Service, Aurora PostgreSQL (pgvector), Neptune Analytics, RDS for PostgreSQL.",
@@ -814,7 +814,7 @@ function shuffle(arr){
 }
 
 const initialState = () => ({
-  // Quiz — visão global
+  // Quiz, visão global
   qResults: {},      // { qIdx: { answered: bool, lastChoice: idx, correct: bool, marked: bool, attempts: n } }
   qByDomain: { 1:{a:0,c:0}, 2:{a:0,c:0}, 3:{a:0,c:0}, 4:{a:0,c:0}, 5:{a:0,c:0} },
   qStreak: 0,
@@ -879,7 +879,7 @@ function totalWrong(){
 
 
 // ═══════════════════════════════════════════════════════
-// FILTRO — define o pool ativo de questões
+// FILTRO, define o pool ativo de questões
 // ═══════════════════════════════════════════════════════
 function applyFilter(filter){
   state.filter = filter;
@@ -1243,7 +1243,7 @@ function updateScorecard(flashFire = false){
   document.getElementById('sc-total').textContent = QUESTIONS.length;
   document.getElementById('sc-acc').textContent = totalAnswered() > 0
     ? Math.round((totalCorrect() / totalAnswered()) * 100) + '%'
-    : '—';
+    : '-';
 
   const markedEl = document.getElementById('sc-marked');
   if(markedEl) markedEl.textContent = totalMarked();
@@ -1397,7 +1397,7 @@ document.addEventListener('keydown', (e) => {
         skipQuestion(); e.preventDefault();
       }
     } else {
-      // já respondeu — Enter ou espaço pra próxima
+      // já respondeu, Enter ou espaço pra próxima
       if(e.key === 'Enter' || e.key === ' '){
         nextQuestion();
         e.preventDefault();

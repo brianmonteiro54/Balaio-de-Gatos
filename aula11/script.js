@@ -1,4 +1,4 @@
-/* ===== aula 11: Kendra, Coleta, Workload ML, Pipeline, EDA ===== */
+﻿/* ===== aula 11: Kendra, Coleta, Workload ML, Pipeline, EDA ===== */
 
 // ============================================================
 // MÓDULO 1: AMAZON KENDRA · console profissional
@@ -111,7 +111,7 @@ const knCorpus = [
     author: 'Engineering Standards',
     updated: '2025-09-15',
     popularity: 0.66,
-    content: 'Todo PR (Pull Request) precisa de pelo menos 1 aprovação de membro do time + 1 aprovação adicional se tocar em código crítico (auth, payments, infra). SLA: feedback em até 24h úteis. Use templates de PR. Cobertura de testes mínima: 80%. PRs com mais de 500 linhas são fortemente desencorajados — quebra em PRs menores.',
+    content: 'Todo PR (Pull Request) precisa de pelo menos 1 aprovação de membro do time + 1 aprovação adicional se tocar em código crítico (auth, payments, infra). SLA: feedback em até 24h úteis. Use templates de PR. Cobertura de testes mínima: 80%. PRs com mais de 500 linhas são fortemente desencorajados, quebra em PRs menores.',
     keywords: ['code review', 'pr', 'pull request', 'github', 'aprovação', 'sla', 'cobertura', 'testes']
   },
   {
@@ -148,8 +148,8 @@ const knFAQs = [
   { q: 'Posso pedir férias antes de 1 ano?', a: 'Não. As férias são liberadas após 12 meses completos de trabalho.', triggers: ['antes de 1 ano', 'antes 1 ano', 'antes de um ano', 'menos de um ano', 'menos de 1 ano'] },
   { q: 'Posso vender meus dias de férias?', a: 'Sim, até 10 dias (1/3 do período). É preciso solicitar formalmente via Workday.', triggers: ['vender férias', 'vender dias', 'venda de férias', 'abono'] },
   { q: 'Quanto é o vale-refeição?', a: 'R$ 40 por dia útil trabalhado, creditado no cartão Sodexo.', triggers: ['vale refeição', 'vale-refeição', 'vr', 'quanto é o vr'] },
-  { q: 'Onde fica o escritório de SP?', a: 'Av. Paulista, 1500 — 8º andar (próximo ao metrô Trianon-Masp).', triggers: ['escritório', 'endereço', 'paulista', 'localização', 'onde fica'] },
-  { q: 'Como pedir reembolso de academia?', a: 'Não pedimos reembolso direto — o benefício é via Gympass tier completo.', triggers: ['academia', 'gym', 'reembolso de academia', 'gympass'] }
+  { q: 'Onde fica o escritório de SP?', a: 'Av. Paulista, 1500, 8º andar (próximo ao metrô Trianon-Masp).', triggers: ['escritório', 'endereço', 'paulista', 'localização', 'onde fica'] },
+  { q: 'Como pedir reembolso de academia?', a: 'Não pedimos reembolso direto, o benefício é via Gympass tier completo.', triggers: ['academia', 'gym', 'reembolso de academia', 'gympass'] }
 ];
 
 // Stop words
@@ -333,7 +333,7 @@ function knRenderQU(query) {
     },
     {
       label: 'Tokens normalizados',
-      value: tokens.length === 0 ? '—' : tokens.map(t => `<span class="kn-qu-tag">${t}</span>`).join(' ')
+      value: tokens.length === 0 ? '-' : tokens.map(t => `<span class="kn-qu-tag">${t}</span>`).join(' ')
     },
     {
       label: 'Entidades detectadas',
@@ -419,7 +419,7 @@ async function knRender() {
   const out = document.getElementById('kn-results');
   if (!query) {
     out.innerHTML = '<div class="kn-empty">Clica em <strong>▶️ Search</strong> ou numa pergunta sugerida pra começar.</div>';
-    document.getElementById('kn-stat-latency').textContent = '—';
+    document.getElementById('kn-stat-latency').textContent = '-';
     return;
   }
 
@@ -533,7 +533,7 @@ async function knRender() {
   const docs = knKeywordSearch(query);
   let html = '';
   if (docs.length === 0) {
-    html = '<div class="kn-empty">Nenhuma palavra-chave casou. Keyword puro só acha match exato — tenta o modo Semantic ou Kendra.</div>';
+    html = '<div class="kn-empty">Nenhuma palavra-chave casou. Keyword puro só acha match exato, tenta o modo Semantic ou Kendra.</div>';
   } else {
     html += `<div class="kn-section-head">🔤 ${docs.length} matches BM25 (apenas palavras exatas)</div>`;
     docs.forEach((d, i) => { html += knRenderDoc(d, i, tokens, false); });
@@ -811,7 +811,7 @@ const wlPhases = {
         head: '✅ Sub-etapas',
         items: [
           '<strong>Identificar o problema</strong>: classificação? regressão? recomendação?',
-          '<strong>Definir KPI</strong>: métrica de negócio (não só F1-score) — receita, churn, custo por chamada',
+          '<strong>Definir KPI</strong>: métrica de negócio (não só F1-score), receita, churn, custo por chamada',
           '<strong>Estabelecer baseline</strong>: como o problema é resolvido hoje? Manual? Regras?',
           '<strong>Critério de sucesso</strong>: "se o modelo bater 5% acima do baseline, vai pra produção"',
           '<strong>Restrições</strong>: latência, custo por inferência, fairness, privacidade'
@@ -887,7 +887,7 @@ const wlPhases = {
       {
         head: '⚠️ Armadilhas',
         items: [
-          { warn: true, text: 'Data leakage — feature do futuro vazou pro treino' },
+          { warn: true, text: 'Data leakage, feature do futuro vazou pro treino' },
           { warn: true, text: 'Overfit no conjunto de validação tunando demais' },
           { warn: true, text: 'Não documentar experimentos → 3 semanas depois ninguém lembra qual modelo é qual' },
           { warn: true, text: 'Pular EDA → modelo fica enviesado por outliers ou missing pattern' }
@@ -1039,7 +1039,7 @@ const ppSteps = [
     title: '1️⃣ Ingestão de Dados',
     services: ['S3', 'Glue', 'Kinesis', 'DMS'],
     desc: 'Trazer dado bruto de múltiplas fontes pro data lake. Em produção, costuma ser job agendado ou stream contínuo.',
-    code: `<span class="c"># SageMaker Pipelines — Step de ingestão</span>
+    code: `<span class="c"># SageMaker Pipelines, Step de ingestão</span>
 <span class="k">from</span> sagemaker.workflow.steps <span class="k">import</span> ProcessingStep
 <span class="k">from</span> sagemaker.processing <span class="k">import</span> ScriptProcessor
 
@@ -1065,7 +1065,7 @@ step_ingest = ProcessingStep(
     title: '2️⃣ Preparação / Cleaning',
     services: ['Glue', 'SageMaker Processing', 'Athena'],
     desc: 'Tratar nulls, deduplicar, normalizar tipos, mascarar PII, padronizar timezones, juntar fontes. Trabalho pesado de plumbing.',
-    code: `<span class="c"># scripts/prep.py — limpa e padroniza</span>
+    code: `<span class="c"># scripts/prep.py, limpa e padroniza</span>
 <span class="k">import</span> pandas <span class="k">as</span> pd
 
 df = pd.read_parquet(<span class="s">"/opt/ml/processing/input/raw.parquet"</span>)
@@ -1089,7 +1089,7 @@ df.to_parquet(<span class="s">"/opt/ml/processing/output/clean.parquet"</span>)`
     id: 3, icon: '📊', name: 'EDA',
     title: '3️⃣ Análise Exploratória',
     services: ['SageMaker Studio', 'Data Wrangler', 'QuickSight'],
-    desc: 'Entender distribuição, correlação, outliers, missing patterns. NÃO É opcional — pular = treinar lixo. Veja o módulo 5 abaixo.',
+    desc: 'Entender distribuição, correlação, outliers, missing patterns. NÃO É opcional, pular = treinar lixo. Veja o módulo 5 abaixo.',
     code: `<span class="k">import</span> pandas <span class="k">as</span> pd
 <span class="k">import</span> seaborn <span class="k">as</span> sns
 
@@ -1145,7 +1145,7 @@ df[<span class="s">"customer_total_orders"</span>] = df.groupby(<span class="s">
     title: '5️⃣ Treinamento',
     services: ['SageMaker Training', 'XGBoost', 'PyTorch', 'AutoPilot'],
     desc: 'Algoritmo aprende com dados de treino. Pode ser instância única ou cluster distribuído. Hyperparameter tuning roda múltiplos jobs em paralelo.',
-    code: `<span class="c"># SageMaker — Training Job</span>
+    code: `<span class="c"># SageMaker, Training Job</span>
 <span class="k">from</span> sagemaker.xgboost <span class="k">import</span> XGBoost
 
 xgb = XGBoost(
@@ -1370,9 +1370,9 @@ function edaRenderOverview() {
         <td>${types[i]}</td>
         <td>${edaData.length - missing[i]}</td>
         <td>${missing[i]} (${(missing[i] / edaData.length * 100).toFixed(1)}%)</td>
-        <td>${stats ? stats.mean.toFixed(2) : '—'}</td>
-        <td>${stats ? stats.std.toFixed(2) : '—'}</td>
-        <td>${stats ? stats.min.toFixed(0) + ' / ' + stats.max.toFixed(0) : '—'}</td>
+        <td>${stats ? stats.mean.toFixed(2) : '-'}</td>
+        <td>${stats ? stats.std.toFixed(2) : '-'}</td>
+        <td>${stats ? stats.min.toFixed(0) + ' / ' + stats.max.toFixed(0) : '-'}</td>
       </tr>`;
     } else {
       const unique = new Set(vals).size;
@@ -1382,8 +1382,8 @@ function edaRenderOverview() {
         <td>${edaData.length - missing[i]}</td>
         <td>${missing[i]} (${(missing[i] / edaData.length * 100).toFixed(1)}%)</td>
         <td>${unique} únicos</td>
-        <td>—</td>
-        <td>—</td>
+        <td>-</td>
+        <td>-</td>
       </tr>`;
     }
   }).join('');
@@ -1534,7 +1534,7 @@ function edaRenderCorrelation() {
     html += `<div class="eda-corr-cell" style="background: var(--ink); color: var(--paper); font-size: 10.5px; padding: 6px 4px;">${numCols[i]}</div>`;
     row.forEach((v, j) => {
       const isDiag = i === j;
-      html += `<div class="eda-corr-cell" style="background: ${isDiag ? '#2B1810' : corrColor(v)}; padding: 8px; aspect-ratio: 1.4/1; color: ${isDiag ? 'var(--yellow)' : (Math.abs(v) > 0.5 ? 'var(--paper)' : 'var(--ink)')};">${isDiag ? '—' : v.toFixed(2)}</div>`;
+      html += `<div class="eda-corr-cell" style="background: ${isDiag ? '#2B1810' : corrColor(v)}; padding: 8px; aspect-ratio: 1.4/1; color: ${isDiag ? 'var(--yellow)' : (Math.abs(v) > 0.5 ? 'var(--paper)' : 'var(--ink)')};">${isDiag ? '-' : v.toFixed(2)}</div>`;
     });
   });
   html += '</div>';
@@ -1647,18 +1647,18 @@ function edaRenderOutlier() {
   });
 
   html += '</svg>';
-  html += '<div style="margin-top: 10px; font-size: 12px; color: var(--ink-soft);">📐 Outliers detectados via <strong>IQR × 1.5</strong>: pontos abaixo de Q1 - 1.5·IQR ou acima de Q3 + 1.5·IQR. <strong>customer_age</strong> tem valores absurdos (200+ anos) — bug do source que precisa ser tratado antes do modelo.</div>';
+  html += '<div style="margin-top: 10px; font-size: 12px; color: var(--ink-soft);">📐 Outliers detectados via <strong>IQR × 1.5</strong>: pontos abaixo de Q1 - 1.5·IQR ou acima de Q3 + 1.5·IQR. <strong>customer_age</strong> tem valores absurdos (200+ anos), bug do source que precisa ser tratado antes do modelo.</div>';
   return html;
 }
 
 const edaInsights = {
-  overview: '🔬 <strong>Primeira inspeção</strong>: 500 linhas, 9 colunas. Veja a coluna missing — se você notou que <strong>rating</strong> e <strong>satisfaction</strong> têm 8-12% NaN, parabéns: aprendeu a regra nº 1 do EDA: olhar info() antes de modelar.',
-  hist: '📊 <strong>Histograma de price</strong>: distribuição multimodal — diferentes categorias têm preços bem distintos (Higiene fica em ~25, Ração em ~80). <strong>Mean</strong> (vermelho) e <strong>median</strong> (verde) próximos = distribuição razoavelmente simétrica.',
-  scatter: '📈 <strong>Scatter price × satisfaction</strong>: correlação positiva moderada — produtos mais caros tendem a ser melhor avaliados. Cores revelam que Higiene (verde) fica concentrado em preço baixo + satisfação média.',
+  overview: '🔬 <strong>Primeira inspeção</strong>: 500 linhas, 9 colunas. Veja a coluna missing, se você notou que <strong>rating</strong> e <strong>satisfaction</strong> têm 8-12% NaN, parabéns: aprendeu a regra nº 1 do EDA: olhar info() antes de modelar.',
+  hist: '📊 <strong>Histograma de price</strong>: distribuição multimodal, diferentes categorias têm preços bem distintos (Higiene fica em ~25, Ração em ~80). <strong>Mean</strong> (vermelho) e <strong>median</strong> (verde) próximos = distribuição razoavelmente simétrica.',
+  scatter: '📈 <strong>Scatter price × satisfaction</strong>: correlação positiva moderada, produtos mais caros tendem a ser melhor avaliados. Cores revelam que Higiene (verde) fica concentrado em preço baixo + satisfação média.',
   corr: '🔥 <strong>Heatmap</strong>: <code>price × revenue</code> tem correlação alta porque revenue = price × qty (redundância matemática). Cuidado: incluir as duas no modelo causa <strong>multicolinearidade</strong>.',
-  cat: '🥧 <strong>Pie chart</strong> revela balanceamento das categorias. Se uma categoria dominasse (>70%), seria sinal de <strong>desbalanceamento</strong> — pode precisar de SMOTE ou class_weight no treino.',
-  missing: '🕳️ <strong>Missing</strong>: rating tem ~12%, satisfaction ~8%. Padrão: usuários que dão rating também avaliam. Isso é <strong>MAR</strong> (Missing At Random) — pode imputar com confiança.',
-  outlier: '🚨 <strong>Outliers</strong>: customer_age tem valores de 200+ anos — <strong>data quality bug</strong>. Provavelmente erro de digitação no source (mistura de ano e idade). Deve ser tratado: descartar ou corrigir.'
+  cat: '🥧 <strong>Pie chart</strong> revela balanceamento das categorias. Se uma categoria dominasse (>70%), seria sinal de <strong>desbalanceamento</strong>, pode precisar de SMOTE ou class_weight no treino.',
+  missing: '🕳️ <strong>Missing</strong>: rating tem ~12%, satisfaction ~8%. Padrão: usuários que dão rating também avaliam. Isso é <strong>MAR</strong> (Missing At Random), pode imputar com confiança.',
+  outlier: '🚨 <strong>Outliers</strong>: customer_age tem valores de 200+ anos, <strong>data quality bug</strong>. Provavelmente erro de digitação no source (mistura de ano e idade). Deve ser tratado: descartar ou corrigir.'
 };
 
 function edaRender() {

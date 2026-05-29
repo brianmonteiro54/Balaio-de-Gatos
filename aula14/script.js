@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    AULA 14 · BEDROCK, PLAYGROUND E DÍVIDA TÉCNICA
    - Painel de dívida técnica (clica nos gatos, vê impacto)
    - Termômetro de dívida
@@ -470,7 +470,7 @@
         <p>Você está numa zona cinza. Tem volume e exigências, mas talvez não o suficiente pra justificar compromisso de Provisioned hoje.</p>
         <ul class="dec-list">
           <li>Lance em On-Demand pra coletar dados reais</li>
-          <li>Monitore TPM, custo e throttling por 30–60 dias</li>
+          <li>Monitore TPM, custo e throttling por 30,60 dias</li>
           <li>Calcule break-even Provisioned vs On-Demand com dados reais</li>
           <li>Migre quando o cálculo justificar (geralmente acima de 10k req/dia constantes)</li>
         </ul>
