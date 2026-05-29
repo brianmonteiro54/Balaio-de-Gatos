@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 11: dados e ciclo de vida do ML</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos<span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"> · Aula 11</span></div>
+    <div class="nav-links">
+      <a href="#kendra">Kendra</a>
+      <a href="#coleta">Coleta de dados</a>
+      <a href="#workload">Workload de ML</a>
+      <a href="#pipeline">Pipeline ML</a>
+      <a href="#eda">EDA</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula 11 · Ciclo de Vida ML</div>
+        <h1>
+          Antes do<br>
+          <span class="scratch">modelo</span>,<br>
+          tem o <span class="accent">dado</span>.
+        </h1>
+        <p>
+          Amazon Kendra busca inteligente, coleta de dados sem virar caos, ciclo de vida de uma carga ML do zero ao monitoramento, pipeline em 7 etapas e Análise Exploratória (EDA) que separa quem brinca de ML de quem entrega ML em produção.
+        </p>
+        <a href="#kendra" class="hero-cta">Começa pelo Kendra 🐾</a>
+      </div>
+
+      <div class="brain-cat">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="200" cy="200" r="180" fill="#F5E9CF" stroke="#2B1810" stroke-width="2.5"/>
+          <circle cx="200" cy="200" r="140" fill="#FBD9C5" stroke="#2B1810" stroke-width="2"/>
+
+          <!-- Cat com lupa de cientista -->
+          <g class="float">
+            <ellipse cx="200" cy="225" rx="62" ry="56" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="155,180 168,150 178,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="222,180 232,150 245,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <!-- óculos de nerd -->
+            <circle cx="183" cy="222" r="14" fill="none" stroke="#2B1810" stroke-width="2.5"/>
+            <circle cx="217" cy="222" r="14" fill="none" stroke="#2B1810" stroke-width="2.5"/>
+            <line x1="197" y1="222" x2="203" y2="222" stroke="#2B1810" stroke-width="2"/>
+            <circle cx="183" cy="222" r="3" fill="#2B1810"/>
+            <circle cx="217" cy="222" r="3" fill="#2B1810"/>
+            <ellipse cx="200" cy="240" rx="3" ry="2" fill="#2B1810"/>
+            <path d="M 188 248 Q 195 252 200 248 Q 205 252 213 248" stroke="#2B1810" stroke-width="2" fill="none"/>
+            <line x1="160" y1="232" x2="135" y2="228" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="160" y1="240" x2="135" y2="244" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="240" y1="232" x2="265" y2="228" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="240" y1="240" x2="265" y2="244" stroke="#2B1810" stroke-width="1.5"/>
+          </g>
+
+          <!-- Bolhas flutuantes -->
+          <g class="pulse-node">
+            <rect x="40" y="60" width="84" height="32" rx="14" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+            <text x="82" y="80" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🔍 Kendra</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-0.6s">
+            <rect x="280" y="50" width="92" height="32" rx="14" fill="#8A6FB1" stroke="#2B1810" stroke-width="2"/>
+            <text x="326" y="70" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">📊 EDA</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-1.2s">
+            <rect x="294" y="120" width="84" height="32" rx="14" fill="#C73E1D" stroke="#2B1810" stroke-width="2"/>
+            <text x="336" y="140" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🎯 Goals</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-1.8s">
+            <rect x="290" y="320" width="84" height="32" rx="14" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+            <text x="332" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#2B1810" font-weight="700">📈 Monitor</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-2.4s">
+            <rect x="36" y="320" width="92" height="32" rx="14" fill="#6B8E23" stroke="#2B1810" stroke-width="2"/>
+            <text x="82" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">📦 Coleta</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-3s">
+            <rect x="36" y="180" width="80" height="32" rx="14" fill="#FF6B35" stroke="#2B1810" stroke-width="2"/>
+            <text x="76" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🏭 Pipeline</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🔍 KENDRA</span><span>📦 COLETA DE DADOS</span><span>🎯 DEFINIR METAS</span><span>🏗️ DESENVOLVER</span><span>🚀 IMPLANTAR</span><span>📈 MONITORAR</span><span>🏭 PIPELINE ML</span><span>📊 EDA</span><span>📐 STATS</span><span>🔍 KENDRA</span><span>📦 COLETA DE DADOS</span><span>🎯 DEFINIR METAS</span><span>🏗️ DESENVOLVER</span><span>🚀 IMPLANTAR</span><span>📈 MONITORAR</span><span>🏭 PIPELINE ML</span><span>📊 EDA</span><span>📐 STATS</span>
+  </div>
+</div>
+
+<!-- ============ MÓDULO 1: AMAZON KENDRA ============ -->
+<section class="chapter" id="kendra">
+  <div class="container">
+    <span class="chapter-number">01 · Amazon Kendra</span>
+    <h2>Busca empresarial que <span style="color:var(--orange)">entende a pergunta</span>, não só keywords.</h2>
+    <p class="lead">
+      Kendra é o motor de busca da AWS pra documentos internos. Aqui você opera o console: faz query, vê o <strong>Query Understanding</strong> ao vivo, compara <strong>3 modos de busca</strong> lado a lado, ajusta <strong>boosts</strong>, aplica filtros faceted, e usa <strong>FAQ matching</strong>. A resposta extraída é gerada por LLM real (Pollinations) lendo os documentos do índice.
+    </p>
+
+    <!-- Console toolbar -->
+    <div class="kn-toolbar">
+      <div class="kn-tool-stat">
+        <span class="kn-stat-ic">📚</span>
+        <div>
+          <strong id="kn-stat-docs">15</strong>
+          <span>docs indexados</span>
+        </div>
+      </div>
+      <div class="kn-tool-stat">
+        <span class="kn-stat-ic">🔌</span>
+        <div>
+          <strong>3</strong>
+          <span>conectores ativos</span>
+        </div>
+      </div>
+      <div class="kn-tool-stat">
+        <span class="kn-stat-ic">🔄</span>
+        <div>
+          <strong>há 12min</strong>
+          <span>último sync</span>
+        </div>
+      </div>
+      <div class="kn-tool-stat">
+        <span class="kn-stat-ic">⚡</span>
+        <div>
+          <strong id="kn-stat-latency">—</strong>
+          <span>latência último query</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Query bar -->
+    <div class="kn-query-card">
+      <div class="kn-search-wrap">
+        <span class="kn-search-icon">🔍</span>
+        <input type="text" id="kn-input" placeholder="Pergunte em linguagem natural — ex: 'quanto tempo demora pra dar férias?'" value="quem é o líder do time de gatos e quem reporta pra ele?">
+        <button class="kn-go" id="kn-go">▶️ Search</button>
+      </div>
+
+      <div class="kn-suggestions">
+        <span class="kn-sug-label">💡 Tenta:</span>
+        <button class="kn-sug" data-q="quanto tempo demora pra dar férias e quantos dias eu tenho?">férias</button>
+        <button class="kn-sug" data-q="qual a política de home office? quantos dias presenciais por semana?">home office</button>
+        <button class="kn-sug" data-q="como solicitar reembolso de viagem corporativa?">reembolso</button>
+        <button class="kn-sug" data-q="que dia é a feijoada e posso levar acompanhante?">feijoada</button>
+        <button class="kn-sug" data-q="quem é o líder do time de gatos e quem reporta pra ele?">organograma</button>
+        <button class="kn-sug" data-q="qual o limite de gasto com alimentação em viagem?">limite viagem</button>
+        <button class="kn-sug" data-q="onde está a documentação do api de checkout?">api checkout</button>
+        <button class="kn-sug" data-q="política de uso de IA generativa">políticas IA</button>
+      </div>
+
+      <!-- Filters faceted -->
+      <div class="kn-filters">
+        <div class="kn-filter-group">
+          <span class="kn-filter-label">📁 Source:</span>
+          <button class="kn-filter active" data-filter-type="source" data-filter="all">Todos</button>
+          <button class="kn-filter" data-filter-type="source" data-filter="Confluence">Confluence</button>
+          <button class="kn-filter" data-filter-type="source" data-filter="SharePoint">SharePoint</button>
+          <button class="kn-filter" data-filter-type="source" data-filter="Workday">Workday</button>
+          <button class="kn-filter" data-filter-type="source" data-filter="Notion">Notion</button>
+          <button class="kn-filter" data-filter-type="source" data-filter="Slack">Slack</button>
+          <button class="kn-filter" data-filter-type="source" data-filter="GitHub">GitHub</button>
+        </div>
+        <div class="kn-filter-group">
+          <span class="kn-filter-label">🏢 Departamento:</span>
+          <button class="kn-filter active" data-filter-type="dept" data-filter="all">Todos</button>
+          <button class="kn-filter" data-filter-type="dept" data-filter="RH">RH</button>
+          <button class="kn-filter" data-filter-type="dept" data-filter="Finance">Finance</button>
+          <button class="kn-filter" data-filter-type="dept" data-filter="Engineering">Engineering</button>
+          <button class="kn-filter" data-filter-type="dept" data-filter="Diretoria">Diretoria</button>
+          <button class="kn-filter" data-filter-type="dept" data-filter="People">People</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode tabs: 3-way comparison -->
+    <div class="kn-modes">
+      <button class="kn-mode active" data-mode="kendra">🧠 Kendra (NLU + Answer)</button>
+      <button class="kn-mode" data-mode="semantic">🎯 Semantic (vector kNN)</button>
+      <button class="kn-mode" data-mode="keyword">🔤 Keyword (BM25)</button>
+      <button class="kn-mode" data-mode="compare">⚖️ Comparar lado a lado</button>
+    </div>
+
+    <!-- Query Understanding panel -->
+    <div class="kn-qu-panel" id="kn-qu-panel">
+      <div class="kn-qu-head">🧠 Query Understanding · como o Kendra leu sua pergunta</div>
+      <div class="kn-qu-grid" id="kn-qu-grid"></div>
+    </div>
+
+    <!-- Results area -->
+    <div class="kn-results-wrap">
+      <div class="kn-results" id="kn-results">
+        <div class="kn-empty">Clica em <strong>▶️ Search</strong> ou numa pergunta sugerida pra começar.</div>
+      </div>
+    </div>
+
+    <!-- Side panels grid -->
+    <div class="kn-tools-grid">
+      <!-- Boost slider -->
+      <div class="kn-tool-card">
+        <h3>⚖️ Relevance Tuning · Boosts</h3>
+        <p class="kn-tool-desc">Ajuste manual de pesos. Útil quando documento mais novo é mais relevante (ex: política de RH 2026 acima de 2024).</p>
+        <div class="kn-boost-row">
+          <label>📅 Recência (data do doc)</label>
+          <input type="range" class="kn-boost" id="kn-boost-recency" min="0" max="100" value="35">
+          <span class="kn-boost-v" id="kn-boost-recency-v">35</span>
+        </div>
+        <div class="kn-boost-row">
+          <label>🎯 Match no título</label>
+          <input type="range" class="kn-boost" id="kn-boost-title" min="0" max="100" value="60">
+          <span class="kn-boost-v" id="kn-boost-title-v">60</span>
+        </div>
+        <div class="kn-boost-row">
+          <label>📊 Cliques históricos (popularidade)</label>
+          <input type="range" class="kn-boost" id="kn-boost-clicks" min="0" max="100" value="40">
+          <span class="kn-boost-v" id="kn-boost-clicks-v">40</span>
+        </div>
+        <div class="kn-boost-row">
+          <label>👤 Authority (autor)</label>
+          <input type="range" class="kn-boost" id="kn-boost-authority" min="0" max="100" value="20">
+          <span class="kn-boost-v" id="kn-boost-authority-v">20</span>
+        </div>
+      </div>
+
+      <!-- FAQ panel -->
+      <div class="kn-tool-card">
+        <h3>📋 FAQ Matching</h3>
+        <p class="kn-tool-desc">Q&A pré-cadastrados (CSV upload). Kendra cruza pergunta similar e retorna a resposta direto, sem ler doc.</p>
+        <div class="kn-faqs" id="kn-faqs">
+          <div class="kn-faq"><strong>Posso pedir férias antes de 1 ano?</strong><span>Não. Após 12 meses completos.</span></div>
+          <div class="kn-faq"><strong>Posso vender meus dias de férias?</strong><span>Sim, até 10 dias (1/3 do período).</span></div>
+          <div class="kn-faq"><strong>Quanto é o vale-refeição?</strong><span>R$ 40 por dia útil trabalhado.</span></div>
+          <div class="kn-faq"><strong>Onde fica o escritório de SP?</strong><span>Av. Paulista, 1500 - 8º andar.</span></div>
+          <div class="kn-faq"><strong>Como pedir reembolso de academia?</strong><span>Use o Gympass — está incluso no pacote.</span></div>
+        </div>
+      </div>
+
+      <!-- Connectors -->
+      <div class="kn-tool-card">
+        <h3>🔌 Conectores ativos</h3>
+        <p class="kn-tool-desc">Em produção, Kendra sincroniza automaticamente. 40+ conectores nativos.</p>
+        <div class="kn-connectors">
+          <span class="kn-conn active">📚 Confluence ✓</span>
+          <span class="kn-conn active">📁 SharePoint ✓</span>
+          <span class="kn-conn active">🪣 S3 ✓</span>
+          <span class="kn-conn">🐶 ServiceNow</span>
+          <span class="kn-conn">🎯 Salesforce</span>
+          <span class="kn-conn">📧 Gmail / Drive</span>
+          <span class="kn-conn">💬 Slack</span>
+          <span class="kn-conn">📦 Box / Dropbox</span>
+          <span class="kn-conn">🗄️ RDS / DynamoDB</span>
+          <span class="kn-conn">🌐 Web Crawler</span>
+        </div>
+      </div>
+
+      <!-- Cost panel -->
+      <div class="kn-tool-card dark">
+        <h3>💰 Pricing · pega leve</h3>
+        <div class="kn-cost-row"><span>Developer Edition</span><strong>$1.125/mês</strong></div>
+        <div class="kn-cost-row"><span>Enterprise base</span><strong>$1.008/mês × unidade</strong></div>
+        <div class="kn-cost-row"><span>Adicional Storage Capacity</span><strong>$200/mês</strong></div>
+        <div class="kn-cost-row"><span>Connectors V2 (extra)</span><strong>$0.35/h × conector</strong></div>
+        <p class="kn-cost-tip">⚠️ <strong>Caro</strong>. Justifica quando ROI é claro: HR docs (RH economiza horas), suporte L1 (deflection), compliance (audit trail).</p>
+      </div>
+
+      <!-- Code snippet -->
+      <div class="kn-tool-card">
+        <h3>📡 boto3 · Query API</h3>
+        <p class="kn-tool-desc">Como sua aplicação consulta o Kendra em produção:</p>
+        <pre class="kn-code"><span class="c"># Query no índice Kendra</span>
+<span class="k">import</span> boto3
+client = boto3.client(<span class="s">"kendra"</span>)
+
+resp = client.query(
+    IndexId=<span class="s">"abc-12345"</span>,
+    QueryText=<span class="s">"quanto tempo demora pra dar férias?"</span>,
+    AttributeFilter={
+        <span class="s">"AndAllFilters"</span>: [
+            {<span class="s">"EqualsTo"</span>: {<span class="s">"Key"</span>: <span class="s">"_source_uri"</span>,
+              <span class="s">"Value"</span>: {<span class="s">"StringValue"</span>: <span class="s">"confluence"</span>}}}
+        ]
+    },
+    PageSize=<span class="n">10</span>
+)
+
+<span class="c"># 3 tipos de resultado:</span>
+<span class="k">for</span> r <span class="k">in</span> resp[<span class="s">"ResultItems"</span>]:
+    <span class="k">if</span> r[<span class="s">"Type"</span>] == <span class="s">"ANSWER"</span>:
+        ...  <span class="c"># resposta extraída</span>
+    <span class="k">elif</span> r[<span class="s">"Type"</span>] == <span class="s">"QUESTION_ANSWER"</span>:
+        ...  <span class="c"># FAQ match</span>
+    <span class="k">elif</span> r[<span class="s">"Type"</span>] == <span class="s">"DOCUMENT"</span>:
+        ...  <span class="c"># documento padrão</span></pre>
+      </div>
+    </div>
+
+    <!-- Comparison Kendra vs OpenSearch -->
+    <div class="kn-comparison">
+      <div class="kn-comp-head">📊 Quando preferir Kendra vs OpenSearch?</div>
+      <div class="kn-comp-grid">
+        <div class="kn-comp-col">
+          <h4>🧠 Kendra</h4>
+          <ul>
+            <li>Pergunta em linguagem natural</li>
+            <li>Documentos não estruturados (PDF, Word)</li>
+            <li>Você quer resposta direta, não link</li>
+            <li>FAQ + Q&A automatizado out-of-the-box</li>
+            <li>Sem time de ML</li>
+          </ul>
+        </div>
+        <div class="kn-comp-col">
+          <h4>🔍 OpenSearch</h4>
+          <ul>
+            <li>Logs, métricas, time-series</li>
+            <li>Busca facetada (filtro por categoria)</li>
+            <li>Você precisa de full control</li>
+            <li>Vector search pra RAG próprio</li>
+            <li>Custo importa muito</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 2: COLETA DE DADOS ============ -->
+<section class="chapter" id="coleta">
+  <div class="container">
+    <span class="chapter-number">02 · Coleta de Dados</span>
+    <h2>De onde vem o dado pro seu modelo? <span style="color:var(--orange)">Spoiler: lugares caóticos.</span></h2>
+    <p class="lead">
+      Antes de qualquer feature engineering, alguém precisa <strong>extrair, transformar e carregar (ETL)</strong> dado de fontes desorganizadas. <strong>Mexa nos sliders</strong> abaixo pra montar seu pipeline e veja qual ferramenta da AWS resolve cada caso.
+    </p>
+
+    <div class="dc-block">
+      <div class="dc-card">
+        <div class="dc-card-head">📋 Configure seu cenário</div>
+
+        <div class="dc-config">
+          <div class="dc-row">
+            <label>📍 Onde está a fonte?</label>
+            <select id="dc-source">
+              <option value="db">🗄️ Banco relacional (MySQL, Postgres)</option>
+              <option value="nosql">📦 NoSQL (MongoDB, Cassandra)</option>
+              <option value="api">🌐 API REST de terceiros</option>
+              <option value="files">📂 Arquivos (CSV, JSON, Parquet)</option>
+              <option value="iot" selected>📡 Sensores IoT em tempo real</option>
+              <option value="logs">📜 Logs de aplicação</option>
+              <option value="web">🕷️ Web scraping</option>
+              <option value="legacy">🦖 Sistema legado on-premise</option>
+            </select>
+          </div>
+
+          <div class="dc-row">
+            <label>⚡ Qual a frequência?</label>
+            <div class="dc-freq-pills" id="dc-freq">
+              <button class="dc-freq-btn" data-freq="batch-daily">📅 Batch diário</button>
+              <button class="dc-freq-btn" data-freq="batch-hourly">⏰ Batch a cada hora</button>
+              <button class="dc-freq-btn active" data-freq="realtime">🔴 Streaming real-time</button>
+              <button class="dc-freq-btn" data-freq="ondemand">⚡ Sob demanda</button>
+            </div>
+          </div>
+
+          <div class="dc-row">
+            <label>📦 Volume típico</label>
+            <input type="range" id="dc-volume" min="0" max="6" step="1" value="3">
+            <div class="dc-vol-axis">
+              <span>1 MB</span><span>1 GB</span><span>1 TB</span><span>1 PB</span>
+            </div>
+            <div class="dc-vol-label" id="dc-vol-label">~ 100 GB/dia</div>
+          </div>
+
+          <div class="dc-row">
+            <label>🎯 Destino dos dados</label>
+            <select id="dc-target">
+              <option value="s3" selected>🪣 Data Lake (S3 + Glue Catalog)</option>
+              <option value="warehouse">🏛️ Data Warehouse (Redshift)</option>
+              <option value="lake-house">🏞️ Lakehouse (S3 + Athena/Iceberg)</option>
+              <option value="feature-store">🎯 Feature Store (SageMaker)</option>
+              <option value="opensearch">🔍 OpenSearch (busca/log)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="dc-result" id="dc-result"></div>
+      </div>
+
+      <div class="dc-side">
+        <div class="dc-arch-card">
+          <div class="dc-arch-head">🏗️ Arquitetura recomendada</div>
+          <svg class="dc-arch-svg" id="dc-arch-svg" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg">
+            <!-- Drawn dynamically -->
+          </svg>
+        </div>
+
+        <div class="dc-quality">
+          <div class="dc-quality-head">🧹 Quality checks essenciais</div>
+          <div class="dc-quality-list">
+            <div class="dc-q-item">
+              <span class="ic">🔁</span>
+              <div><strong>Deduplicação</strong><p>Mesma transação chega 2x via batch + stream</p></div>
+            </div>
+            <div class="dc-q-item">
+              <span class="ic">🕳️</span>
+              <div><strong>Missing values</strong><p>Campos NULL — inputar média, mediana, ou descartar</p></div>
+            </div>
+            <div class="dc-q-item">
+              <span class="ic">📏</span>
+              <div><strong>Schema drift</strong><p>Source mudou coluna sem avisar — alerta automático</p></div>
+            </div>
+            <div class="dc-q-item">
+              <span class="ic">🚨</span>
+              <div><strong>Outliers</strong><p>Idade de 200 anos? Erro de digitação ou bug do source</p></div>
+            </div>
+            <div class="dc-q-item">
+              <span class="ic">🔐</span>
+              <div><strong>PII redaction</strong><p>Mascarar CPF, email, telefone antes de virar feature</p></div>
+            </div>
+            <div class="dc-q-item">
+              <span class="ic">📅</span>
+              <div><strong>Timestamp consistency</strong><p>UTC ou local? Source 1 e Source 2 precisam combinar</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 3: WORKLOAD ML ============ -->
+<section class="chapter" id="workload">
+  <div class="container">
+    <span class="chapter-number">03 · Sequência de criação de uma carga ML</span>
+    <h2>O ciclo de vida em <span style="color:var(--orange)">4 fases</span> que ninguém pula sem pagar caro depois.</h2>
+    <p class="lead">
+      Pular qualquer dessas 4 fases é jogar dinheiro fora. Times que só "treinam modelo" raramente colocam ML em produção. <strong>Clica em cada fase</strong> pra ver as sub-etapas, stakeholders, ferramentas AWS e armadilhas comuns.
+    </p>
+
+    <div class="wl-pipeline">
+      <button class="wl-phase active" data-phase="define">
+        <div class="wl-phase-num">1</div>
+        <div class="wl-phase-icon">🎯</div>
+        <div class="wl-phase-name">Definir metas</div>
+        <div class="wl-phase-tag">de negócio</div>
+      </button>
+      <div class="wl-arrow">→</div>
+      <button class="wl-phase" data-phase="develop">
+        <div class="wl-phase-num">2</div>
+        <div class="wl-phase-icon">🏗️</div>
+        <div class="wl-phase-name">Desenvolver</div>
+        <div class="wl-phase-tag">o modelo</div>
+      </button>
+      <div class="wl-arrow">→</div>
+      <button class="wl-phase" data-phase="deploy">
+        <div class="wl-phase-num">3</div>
+        <div class="wl-phase-icon">🚀</div>
+        <div class="wl-phase-name">Implantar</div>
+        <div class="wl-phase-tag">em produção</div>
+      </button>
+      <div class="wl-arrow">→</div>
+      <button class="wl-phase" data-phase="monitor">
+        <div class="wl-phase-num">4</div>
+        <div class="wl-phase-icon">📈</div>
+        <div class="wl-phase-name">Monitorar</div>
+        <div class="wl-phase-tag">e iterar</div>
+      </button>
+    </div>
+
+    <div class="wl-detail" id="wl-detail">
+      <!-- preenchido por JS -->
+    </div>
+
+    <div class="wl-cycle">
+      <div class="wl-cycle-head">🔄 É um ciclo, não uma linha reta</div>
+      <p class="wl-cycle-desc">
+        Monitoramento detecta queda de performance → volta pra desenvolvimento (re-treinar com dados novos). Dados novos podem mudar a meta → volta pra fase 1. ML em produção é <strong>ciclo contínuo</strong>, não projeto que termina.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 4: PIPELINE ML 7 ETAPAS ============ -->
+<section class="chapter" id="pipeline">
+  <div class="container">
+    <span class="chapter-number">04 · Etapas do Pipeline de ML</span>
+    <h2>As <span style="color:var(--orange)">7 etapas</span> que rodam toda vez que você re-treina.</h2>
+    <p class="lead">
+      Um pipeline de ML é <strong>código que automatiza o ciclo de vida</strong>: ingestão → preparação → treino → avaliação → deploy. Quando o pipeline está bom, você re-treina a cada semana clicando 1 botão. <strong>Clica em cada etapa</strong> pra ver os detalhes e o serviço AWS correspondente.
+    </p>
+
+    <div class="pp-pipeline" id="pp-pipeline">
+      <!-- 7 cards renderizados dinamicamente -->
+    </div>
+
+    <div class="pp-detail" id="pp-detail">
+      <!-- preenchido por JS -->
+    </div>
+
+    <div class="pp-tools">
+      <div class="pp-tools-head">🛠️ Orquestrando o pipeline</div>
+      <div class="pp-tools-grid">
+        <div class="pp-tool">
+          <div class="ic">🎼</div>
+          <h4>SageMaker Pipelines</h4>
+          <p>Pipeline-as-code, integra com Studio, conditional steps, cache de execução.</p>
+        </div>
+        <div class="pp-tool">
+          <div class="ic">🔄</div>
+          <h4>Step Functions</h4>
+          <p>Orquestra etapas em diferentes serviços AWS. Bom pra quando o pipeline mistura ML + ETL + APIs.</p>
+        </div>
+        <div class="pp-tool">
+          <div class="ic">🌬️</div>
+          <h4>Apache Airflow (MWAA)</h4>
+          <p>Padrão da indústria. DAGs em Python. Curva de aprendizado mais alta, mas flexível.</p>
+        </div>
+        <div class="pp-tool">
+          <div class="ic">⚡</div>
+          <h4>EventBridge</h4>
+          <p>Triggers por evento: novo arquivo no S3, schedule cron, mensagem em SQS, custom.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 5: EDA ============ -->
+<section class="chapter" id="eda">
+  <div class="container">
+    <span class="chapter-number">05 · Análise Exploratória (EDA)</span>
+    <h2>Antes de modelar, <span style="color:var(--orange)">olhe o dado de cara</span>.</h2>
+    <p class="lead">
+      EDA é a fase onde você descobre que 30% dos clientes têm idade negativa, que vendas tem outlier de R$ 9 milhões, que duas variáveis são 99% correlacionadas. Pular EDA = treinar lixo. <strong>Brinque com o dataset abaixo</strong> (vendas reais simuladas do petshop Bigode) e veja como cada visualização revela uma história diferente.
+    </p>
+
+    <div class="eda-block">
+      <div class="eda-card">
+        <div class="eda-card-head">
+          <div>
+            <div class="eda-card-title">📊 Dataset: vendas Bigode Petshop</div>
+            <div class="eda-card-sub" id="eda-summary">— linhas, — colunas</div>
+          </div>
+          <button class="eda-mini-btn" id="eda-regen">🎲 Regenerar dataset</button>
+        </div>
+
+        <div class="eda-tabs">
+          <button class="eda-tab active" data-eda="overview">📋 Overview</button>
+          <button class="eda-tab" data-eda="hist">📊 Histograma</button>
+          <button class="eda-tab" data-eda="scatter">📈 Scatter</button>
+          <button class="eda-tab" data-eda="corr">🔥 Correlação</button>
+          <button class="eda-tab" data-eda="cat">🥧 Categóricas</button>
+          <button class="eda-tab" data-eda="missing">🕳️ Missing</button>
+          <button class="eda-tab" data-eda="outlier">🚨 Outliers</button>
+        </div>
+
+        <div class="eda-canvas-wrap">
+          <div id="eda-content"></div>
+        </div>
+
+        <div class="eda-insights" id="eda-insights"></div>
+      </div>
+
+      <div class="eda-side">
+        <div class="eda-side-card">
+          <h3>🔬 O que EDA responde?</h3>
+          <ul>
+            <li><strong>Distribuição</strong> — minhas vendas seguem normal ou cauda longa?</li>
+            <li><strong>Outliers</strong> — tem ponto absurdo afetando a média?</li>
+            <li><strong>Correlação</strong> — quais variáveis se mexem juntas? Pode haver redundância.</li>
+            <li><strong>Missing</strong> — onde tá faltando dado e por quê?</li>
+            <li><strong>Cardinalidade</strong> — campos categóricos com 100k valores únicos? Vai gerar feature explosion.</li>
+            <li><strong>Skewness</strong> — campo enviesado pra um lado? Considere log-transform.</li>
+          </ul>
+        </div>
+
+        <div class="eda-side-card dark">
+          <div class="eda-stats-head">📐 Estatísticas-chave</div>
+          <div class="eda-stats-grid" id="eda-stats-grid">
+            <!-- preenchido por JS -->
+          </div>
+        </div>
+
+        <div class="eda-side-card">
+          <h3>🛠️ Ferramentas comuns</h3>
+          <div class="eda-tools">
+            <div class="eda-tool"><strong>pandas</strong> · Python — DataFrame, .describe(), .info()</div>
+            <div class="eda-tool"><strong>matplotlib / seaborn</strong> · Plots estatísticos clássicos</div>
+            <div class="eda-tool"><strong>plotly / altair</strong> · Visualizações interativas</div>
+            <div class="eda-tool"><strong>SageMaker Data Wrangler</strong> · EDA visual sem código na AWS</div>
+            <div class="eda-tool"><strong>QuickSight</strong> · BI dashboards pra não-técnicos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2 style="margin-bottom: 8px;">A cola da aula 11.</h2>
+    <p style="font-size: 17px; color: var(--ink-soft); max-width: 700px; margin-bottom: 16px;">
+      Antes do gato treinar o modelo, ele organiza os dados, define meta, e olha o histograma.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">🔍 Kendra</div>
+        <div class="micro">enterprise search</div>
+        <div class="q">"Pergunta livre, resposta direta."</div>
+        <div class="what">NLU embutida + answer extraction + 40+ conectores. Caro mas paga quando ROI da busca é alto.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📦 Coleta</div>
+        <div class="micro">data ingestion</div>
+        <div class="q">"De onde vem o dado?"</div>
+        <div class="what">Batch (Glue, DMS) ou streaming (Kinesis, Firehose). Sempre passa por quality checks.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎯 Definir metas</div>
+        <div class="micro">fase 1</div>
+        <div class="q">"Que problema de negócio resolve?"</div>
+        <div class="what">KPI mensurável + restrições (latência, custo, fairness) + critério de sucesso.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏗️ Desenvolver</div>
+        <div class="micro">fase 2</div>
+        <div class="q">"Treinar e validar."</div>
+        <div class="what">EDA → feature eng → split treino/val/teste → treino → avaliação → ajuste.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🚀 Implantar</div>
+        <div class="micro">fase 3</div>
+        <div class="q">"Pôr em produção."</div>
+        <div class="what">Endpoint (SageMaker), batch transform, edge (IoT). A/B test, blue/green, shadow.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📈 Monitorar</div>
+        <div class="micro">fase 4</div>
+        <div class="q">"O modelo ainda funciona?"</div>
+        <div class="what">Data drift, concept drift, performance drop, alertas, retreino automático.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏭 Pipeline ML</div>
+        <div class="micro">7 etapas</div>
+        <div class="q">"Re-treinar é 1 click."</div>
+        <div class="what">Ingestão → Prep → EDA → Feature → Treino → Avaliação → Deploy. SageMaker Pipelines / Step Functions.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📊 EDA</div>
+        <div class="micro">exploratory analysis</div>
+        <div class="q">"Olhar o dado antes de modelar."</div>
+        <div class="what">describe(), histograma, scatter, correlação, missing, outliers. Pula → treina lixo.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📐 Stats básicas</div>
+        <div class="micro">numpy day 1</div>
+        <div class="q">"Mean, mediana, std, IQR."</div>
+        <div class="what">Mean é sensível a outlier. Mediana resiste. IQR pra detectar outliers (Q3 + 1.5×IQR).</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🌡️ Data Drift</div>
+        <div class="micro">monitoring</div>
+        <div class="q">"Os dados de hoje ainda parecem com os de treino?"</div>
+        <div class="what">PSI, KS test, Wasserstein. Drift detectado → alarme → retreino.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🪣 Data Lake</div>
+        <div class="micro">S3 + Glue</div>
+        <div class="q">"Tudo num lugar barato."</div>
+        <div class="what">S3 storage + Glue catalog + Athena query. Padrão pra raw data antes de virar feature.</div>
+      </div>
+      <div class="cheat-card" style="background: var(--orange); color: var(--paper);">
+        <div class="name" style="color: var(--paper);">🐾 Resumo do resumo</div>
+        <div class="q" style="color: rgba(255,255,255,0.85);">"O que eu levo?"</div>
+        <div class="what" style="color: var(--paper);"><strong>ML não é só treinar. É um ciclo de 4 fases que vira código (pipeline) e nunca termina (monitoramento). Antes de tudo: EDA, EDA, EDA.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
+    Aula 11 com Kendra real, EDA brincável e ciclo ML completo.
+  </div>
+  <div style="margin-top: 8px; opacity: 0.7;">
+    <em>"Os alunos que aprendam mexendo, não decorando."</em>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

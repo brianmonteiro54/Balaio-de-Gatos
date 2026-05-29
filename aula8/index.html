@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 8: o gato fala e escuta</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos<span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"> · Aula 8</span></div>
+    <div class="nav-links">
+      <a href="#comprehend">Comprehend</a>
+      <a href="#medical">Medical</a>
+      <a href="#healthscribe">HealthScribe</a>
+      <a href="#tts">TTS</a>
+      <a href="#polly">Polly · Lab</a>
+      <a href="#stt">STT</a>
+      <a href="#transcribe">Transcribe · Lab</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula 8 · Voz & Linguagem</div>
+        <h1>
+          O gato<br>
+          <span class="scratch">fala</span>,<br>
+          <span class="accent">escuta</span> e<br>
+          entende.
+        </h1>
+        <p>
+          Amazon Comprehend, Comprehend Medical, AWS HealthScribe, Polly e Transcribe. Os labs do Polly e do Transcribe rodam <strong>de verdade aqui no seu navegador</strong> — clica pra ouvir o gato falar em 10 idiomas e fala no microfone pra ele transcrever ao vivo.
+        </p>
+        <a href="#comprehend" class="hero-cta">Começa aqui 🐾</a>
+      </div>
+
+      <div class="brain-cat">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="200" cy="200" r="180" fill="#F5E9CF" stroke="#2B1810" stroke-width="2.5"/>
+          <circle cx="200" cy="200" r="140" fill="#FBD9C5" stroke="#2B1810" stroke-width="2"/>
+
+          <!-- Cat with headset -->
+          <g class="float">
+            <ellipse cx="200" cy="225" rx="62" ry="56" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="155,180 168,150 178,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="222,180 232,150 245,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <!-- headset arc -->
+            <path d="M 145 175 Q 200 130 255 175" fill="none" stroke="#2B1810" stroke-width="3" stroke-linecap="round"/>
+            <!-- ear cushions -->
+            <ellipse cx="142" cy="195" rx="10" ry="14" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+            <ellipse cx="258" cy="195" rx="10" ry="14" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+            <!-- mic boom -->
+            <path d="M 142 205 Q 130 230 155 250" fill="none" stroke="#2B1810" stroke-width="2.5" stroke-linecap="round"/>
+            <ellipse cx="160" cy="252" rx="6" ry="4" fill="#2B1810"/>
+            <!-- face -->
+            <circle cx="183" cy="225" r="4.5" fill="#2B1810"/>
+            <circle cx="217" cy="225" r="4.5" fill="#2B1810"/>
+            <ellipse cx="200" cy="240" rx="3.5" ry="2.5" fill="#2B1810"/>
+            <path d="M 188 248 Q 195 254 200 248 Q 205 254 213 248" stroke="#2B1810" stroke-width="2" fill="none"/>
+            <!-- whiskers -->
+            <line x1="160" y1="235" x2="135" y2="232" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="240" y1="235" x2="265" y2="232" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="160" y1="240" x2="135" y2="245" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="240" y1="240" x2="265" y2="245" stroke="#2B1810" stroke-width="1.5"/>
+          </g>
+
+          <!-- sound waves coming out -->
+          <g class="wave-pulse">
+            <path d="M 285 240 Q 305 240 305 220" fill="none" stroke="#5C8D89" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M 295 250 Q 325 250 325 220" fill="none" stroke="#5C8D89" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M 305 260 Q 345 260 345 220" fill="none" stroke="#5C8D89" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- Floating labels -->
+          <g class="pulse-node">
+            <rect x="40" y="80" width="80" height="32" rx="14" fill="#8A6FB1" stroke="#2B1810" stroke-width="2"/>
+            <text x="80" y="100" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">📖 Comprehend</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-1s">
+            <rect x="280" y="68" width="92" height="32" rx="14" fill="#C73E1D" stroke="#2B1810" stroke-width="2"/>
+            <text x="326" y="88" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🩺 Medical</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-2s">
+            <rect x="290" y="320" width="80" height="32" rx="14" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+            <text x="330" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#2B1810" font-weight="700">🗣️ Polly</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-2.5s">
+            <rect x="36" y="320" width="92" height="32" rx="14" fill="#6B8E23" stroke="#2B1810" stroke-width="2"/>
+            <text x="82" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🎙️ Transcribe</text>
+          </g>
+
+          <!-- Dotted connector lines -->
+          <line x1="120" y1="100" x2="180" y2="200" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="290" y1="86" x2="220" y2="200" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="295" y1="330" x2="225" y2="240" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="120" y1="330" x2="180" y2="245" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>📖 COMPREHEND</span><span>🩺 COMPREHEND MEDICAL</span><span>🏥 HEALTHSCRIBE</span><span>🗣️ TEXT-TO-SPEECH</span><span>🐦 POLLY</span><span>🎙️ SPEECH-TO-TEXT</span><span>📝 TRANSCRIBE</span><span>🐈 BALAIO 8</span><span>📖 COMPREHEND</span><span>🩺 COMPREHEND MEDICAL</span><span>🏥 HEALTHSCRIBE</span><span>🗣️ TEXT-TO-SPEECH</span><span>🐦 POLLY</span><span>🎙️ SPEECH-TO-TEXT</span><span>📝 TRANSCRIBE</span>
+  </div>
+</div>
+
+<!-- ============ MÓDULO 1: AMAZON COMPREHEND ============ -->
+<section class="chapter" id="comprehend">
+  <div class="container">
+    <span class="chapter-number">01 · Amazon Comprehend</span>
+    <h2>NLP <span style="color:var(--orange)">fora da caixa</span>: idioma, entidades, sentimento, frases-chave.</h2>
+    <p class="lead">
+      Comprehend é o serviço gerenciado de NLP da AWS. Você manda texto, ele devolve estrutura. Sem treinar modelo. <strong>Cole um texto ou clica num exemplo</strong> e veja as 5 análises principais ao vivo.
+    </p>
+
+    <div class="cmp-block">
+      <div class="cmp-card">
+        <div class="cmp-card-head">
+          <div class="cmp-card-title">📥 Texto de entrada</div>
+          <div class="cmp-examples" id="cmp-examples">
+            <button class="cmp-ex-btn active" data-ex="0">📦 Review de produto</button>
+            <button class="cmp-ex-btn" data-ex="1">📰 Notícia</button>
+            <button class="cmp-ex-btn" data-ex="2">📞 Reclamação</button>
+            <button class="cmp-ex-btn" data-ex="3">🇬🇧 Inglês</button>
+            <button class="cmp-ex-btn" data-ex="4">🇪🇸 Espanhol</button>
+          </div>
+        </div>
+        <textarea id="cmp-input" class="cmp-input" rows="4">Comprei 3 caixas de ração premium na PetShop Bigode em São Paulo no dia 15 de março. O atendimento foi excelente, a Maria foi super atenciosa e meu gato adorou o produto.</textarea>
+
+        <div class="cmp-tasks">
+          <button class="cmp-task active" data-task="lang">
+            <span class="cmp-ic">🌎</span><span>Language</span>
+          </button>
+          <button class="cmp-task" data-task="sent">
+            <span class="cmp-ic">💚</span><span>Sentiment</span>
+          </button>
+          <button class="cmp-task" data-task="entities">
+            <span class="cmp-ic">🔍</span><span>Entities</span>
+          </button>
+          <button class="cmp-task" data-task="phrases">
+            <span class="cmp-ic">🔑</span><span>Key Phrases</span>
+          </button>
+          <button class="cmp-task" data-task="syntax">
+            <span class="cmp-ic">🏷️</span><span>Syntax (POS)</span>
+          </button>
+          <button class="cmp-task" data-task="pii">
+            <span class="cmp-ic">🛡️</span><span>PII</span>
+          </button>
+        </div>
+
+        <div class="cmp-output" id="cmp-output">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <div class="cmp-side">
+        <div class="cmp-side-card">
+          <div class="cmp-side-head">📡 Chamada da API</div>
+          <pre class="cmp-code" id="cmp-code"></pre>
+        </div>
+        <div class="cmp-explain">
+          <h3>🐱 Por que isso importa?</h3>
+          <p>
+            O ChatGPT até faz isso, mas custa caro pra escala. Comprehend é <strong>focado e barato</strong>: pra detectar idioma de 10 milhões de tweets por dia, você não vai chamar GPT-4. Chama Comprehend e paga centavos.
+          </p>
+          <p class="small">
+            Versões: <strong>Comprehend</strong> (texto geral), <strong>Comprehend Medical</strong> (clínico), <strong>Custom Comprehend</strong> (você treina pro seu domínio).
+          </p>
+          <div class="cmp-tip">
+            💡 <strong>Combinação clássica:</strong> Transcribe (áudio → texto) + Comprehend (sentimento, entidades). É assim que call centers analisam ligações em tempo real.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 2: COMPREHEND MEDICAL ============ -->
+<section class="chapter" id="medical">
+  <div class="container">
+    <span class="chapter-number">02 · Amazon Comprehend Medical</span>
+    <h2>O <span style="color:var(--orange)">veterinário-NLP</span>: entende prontuário, receita e exame.</h2>
+    <p class="lead">
+      Texto clínico é uma fera diferente. "Paciente com PA 140x90, em uso de losartana 50mg 1x/dia, queixa de cefaleia há 3 dias" — isso é português, mas com vocabulário próprio. Comprehend Medical extrai <strong>entidades clínicas</strong>: medicamento, dosagem, frequência, condição, anatomia, tratamento e <strong>PHI</strong> (dados protegidos do paciente). <strong>Clica num caso clínico</strong> e veja as entidades destacadas.
+    </p>
+
+    <div class="med-block">
+      <div class="med-card">
+        <div class="med-cases" id="med-cases">
+          <button class="med-case-btn active" data-case="0">🐈 Receita veterinária</button>
+          <button class="med-case-btn" data-case="1">🩺 Anamnese</button>
+          <button class="med-case-btn" data-case="2">💊 Prescrição complexa</button>
+          <button class="med-case-btn" data-case="3">📋 Resumo de alta</button>
+        </div>
+
+        <div class="med-text" id="med-text"></div>
+
+        <div class="med-legend">
+          <div class="med-leg-item" data-type="MEDICATION"><span class="sw med"></span>MEDICATION</div>
+          <div class="med-leg-item" data-type="MEDICAL_CONDITION"><span class="sw cond"></span>CONDITION</div>
+          <div class="med-leg-item" data-type="ANATOMY"><span class="sw anat"></span>ANATOMY</div>
+          <div class="med-leg-item" data-type="TEST_TREATMENT_PROCEDURE"><span class="sw test"></span>TEST/TREATMENT</div>
+          <div class="med-leg-item" data-type="DOSAGE"><span class="sw dose"></span>DOSAGE</div>
+          <div class="med-leg-item" data-type="FREQUENCY"><span class="sw freq"></span>FREQUENCY</div>
+          <div class="med-leg-item" data-type="PHI"><span class="sw phi"></span>PHI</div>
+        </div>
+
+        <div class="med-detail" id="med-detail">
+          <span class="hint">💡 Passa o mouse (ou clica) numa palavra destacada pra ver detalhes da entidade.</span>
+        </div>
+
+        <div class="med-actions">
+          <button class="med-btn" id="med-icd">🏷️ Mapear ICD-10</button>
+          <button class="med-btn ghost" id="med-rxnorm">💊 Mapear RxNorm</button>
+          <button class="med-btn ghost" id="med-redact">🛡️ Redact PHI</button>
+        </div>
+
+        <div class="med-mapping" id="med-mapping" style="display:none;"></div>
+      </div>
+
+      <div class="med-side">
+        <h3>⚠️ Por que existe um Comprehend separado pra saúde?</h3>
+        <p>
+          Vocabulário clínico é específico. "Acetaminofeno", "BPM", "TC sem contraste", "hipertensão arterial sistêmica" — Comprehend padrão não ia acertar a categoria. O Medical foi treinado em milhões de textos clínicos.
+        </p>
+        <p>
+          Além disso, ele <strong>já é HIPAA-eligible</strong> (PHI não é usado pra retreinar) e mapeia entidades pra padrões da indústria: <strong>ICD-10-CM</strong> (códigos de doença), <strong>RxNorm</strong> (medicamentos) e <strong>SNOMED CT</strong> (terminologia clínica).
+        </p>
+        <p class="small">
+          Casos: prontuário eletrônico que destaca alergias automaticamente, alerta de interação medicamentosa, classificação de exames pra triagem, anonimização de dataset clínico antes de virar paper.
+        </p>
+        <div class="med-quote">
+          "Para texto clínico, fugir do Comprehend Medical é reinventar a roda — e essa roda envolve compliance HIPAA, vocabulário ICD-10 e treinamento em milhões de prontuários reais."
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 3: AWS HEALTHSCRIBE ============ -->
+<section class="chapter" id="healthscribe">
+  <div class="container">
+    <span class="chapter-number">03 · AWS HealthScribe</span>
+    <h2>O médico fala, o gato escreve a <span style="color:var(--orange)">SOAP note</span> sozinho.</h2>
+    <p class="lead">
+      HealthScribe junta Transcribe Medical + Comprehend Medical + LLM num produto só: você manda o áudio de uma consulta médica, ele entrega <strong>transcrição com diarização</strong> (quem falou) e uma <strong>nota clínica estruturada</strong> (SOAP). Médico volta a olhar pro paciente, em vez de digitar prontuário. <strong>Aperta play</strong> pra simular.
+    </p>
+
+    <div class="hs-block">
+      <div class="hs-card">
+        <div class="hs-controls">
+          <button class="hs-play-btn" id="hs-play">▶️ Reproduzir consulta</button>
+          <button class="hs-play-btn ghost" id="hs-pause">⏸️ Pausar</button>
+          <button class="hs-play-btn ghost" id="hs-reset">↺ Recomeçar</button>
+          <span class="hs-time" id="hs-time">00:00 / 00:42</span>
+        </div>
+
+        <div class="hs-progress">
+          <div class="hs-progress-fill" id="hs-progress"></div>
+        </div>
+
+        <div class="hs-stage">
+          <div class="hs-stage-tab active" data-stage="audio">🎙️ Áudio</div>
+          <div class="hs-stage-tab" data-stage="transcript">📝 Transcrição</div>
+          <div class="hs-stage-tab" data-stage="soap">🏥 SOAP Note</div>
+        </div>
+
+        <div class="hs-content" id="hs-content">
+          <!-- audio panel -->
+          <div class="hs-panel active" data-panel="audio">
+            <div class="hs-waveform" id="hs-waveform"></div>
+            <div class="hs-now-speaking" id="hs-now-speaking">
+              <span class="hs-speaker-pill" id="hs-current-speaker">—</span>
+              <span class="hs-current-line" id="hs-current-line">aguardando…</span>
+            </div>
+            <p class="hs-helper">A consulta é processada em streaming. Conforme o áudio toca, a transcrição vai se materializando à direita (tab "Transcrição") e a SOAP note se constrói automaticamente.</p>
+          </div>
+
+          <!-- transcript panel -->
+          <div class="hs-panel" data-panel="transcript">
+            <div class="hs-transcript" id="hs-transcript"></div>
+          </div>
+
+          <!-- soap panel -->
+          <div class="hs-panel" data-panel="soap">
+            <div class="hs-soap" id="hs-soap">
+              <div class="hs-soap-section" data-soap="S">
+                <div class="hs-soap-head">
+                  <span class="letter">S</span>
+                  <span>Subjetivo</span>
+                </div>
+                <ul class="hs-soap-list" id="soap-S"></ul>
+              </div>
+              <div class="hs-soap-section" data-soap="O">
+                <div class="hs-soap-head">
+                  <span class="letter">O</span>
+                  <span>Objetivo</span>
+                </div>
+                <ul class="hs-soap-list" id="soap-O"></ul>
+              </div>
+              <div class="hs-soap-section" data-soap="A">
+                <div class="hs-soap-head">
+                  <span class="letter">A</span>
+                  <span>Avaliação</span>
+                </div>
+                <ul class="hs-soap-list" id="soap-A"></ul>
+              </div>
+              <div class="hs-soap-section" data-soap="P">
+                <div class="hs-soap-head">
+                  <span class="letter">P</span>
+                  <span>Plano</span>
+                </div>
+                <ul class="hs-soap-list" id="soap-P"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hs-side">
+        <h3>🪄 O que isso resolve?</h3>
+        <p>
+          Médicos passam <strong>2 horas por dia</strong> digitando prontuário. HealthScribe corta esse trabalho: o médico só precisa <strong>revisar e aprovar</strong> a nota gerada.
+        </p>
+        <p class="small">
+          A saída é estruturada com <strong>citações</strong> apontando pro trecho exato da transcrição que originou cada bullet. Auditoria, compliance, confiança. Não é "LLM cuspindo texto bonito" — é "rastreável até a fala original".
+        </p>
+        <div class="hs-arch">
+          <div class="hs-arch-head">⚙️ Por baixo do capô</div>
+          <div class="hs-arch-step"><span class="ic">🎙️</span> Transcribe Medical (ASR + diarização)</div>
+          <div class="hs-arch-step"><span class="ic">🩺</span> Comprehend Medical (entidades clínicas)</div>
+          <div class="hs-arch-step"><span class="ic">🧠</span> LLM (sumarização SOAP-aware)</div>
+          <div class="hs-arch-step"><span class="ic">🛡️</span> HIPAA-eligible end-to-end</div>
+        </div>
+        <div class="hs-quote">
+          "É o caso clássico onde 3 serviços sozinhos viram um produto integrado. AWS poderia te vender peça por peça, mas resolveu empacotar o caso de uso completo."
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 4: TTS CONCEITUAL ============ -->
+<section class="chapter" id="tts">
+  <div class="container">
+    <span class="chapter-number">04 · Text-to-Speech (TTS)</span>
+    <h2>Como o computador transforma <span style="color:var(--orange)">letra em voz</span>?</h2>
+    <p class="lead">
+      Antes de mexer no Polly, vale entender o pipeline. Texto vira fonemas (sons), fonemas viram prosódia (entonação), prosódia vira waveform (áudio). Cada etapa virou problema de Deep Learning. <strong>Clica em cada etapa</strong> pra ver o que rola dentro.
+    </p>
+
+    <div class="tts-pipeline">
+      <div class="tts-stage active" data-tts="text">
+        <div class="ic">📝</div>
+        <h5>Texto cru</h5>
+      </div>
+      <div class="tts-arrow">→</div>
+      <div class="tts-stage" data-tts="normalize">
+        <div class="ic">🧹</div>
+        <h5>Normalização</h5>
+      </div>
+      <div class="tts-arrow">→</div>
+      <div class="tts-stage" data-tts="phoneme">
+        <div class="ic">🔡</div>
+        <h5>Fonemas</h5>
+      </div>
+      <div class="tts-arrow">→</div>
+      <div class="tts-stage" data-tts="prosody">
+        <div class="ic">🎵</div>
+        <h5>Prosódia</h5>
+      </div>
+      <div class="tts-arrow">→</div>
+      <div class="tts-stage" data-tts="wave">
+        <div class="ic">📊</div>
+        <h5>Waveform</h5>
+      </div>
+      <div class="tts-arrow">→</div>
+      <div class="tts-stage" data-tts="audio">
+        <div class="ic">🔊</div>
+        <h5>Áudio</h5>
+      </div>
+    </div>
+
+    <div class="tts-detail">
+      <div class="tts-detail-head" id="tts-detail-head">📝 Texto cru</div>
+      <p class="tts-detail-desc" id="tts-detail-desc"></p>
+      <div class="tts-detail-result" id="tts-detail-result"></div>
+    </div>
+
+    <div class="tts-types">
+      <div class="tts-type">
+        <div class="ic">🤖</div>
+        <h4>Concatenativo</h4>
+        <p>Antigo. Grava milhares de fonemas, "cola" eles. Soa robótico, mas é leve.</p>
+      </div>
+      <div class="tts-type">
+        <div class="ic">📐</div>
+        <h4>Paramétrico (HMM)</h4>
+        <p>Geração via parâmetros estatísticos. Soa "computador dos anos 2000".</p>
+      </div>
+      <div class="tts-type">
+        <div class="ic">🧠</div>
+        <h4>Neural (Tacotron, FastSpeech)</h4>
+        <p>Texto → mel-spectrogram via transformer/CNN. Já parece humano.</p>
+      </div>
+      <div class="tts-type" style="background: var(--ink); color: var(--paper); border-color: var(--orange);">
+        <div class="ic">✨</div>
+        <h4 style="color: var(--yellow)">Generativo (NTTS, VALL-E)</h4>
+        <p style="color: var(--cream-2)">Modelos enormes que clonam voz a partir de 3 segundos de áudio. Polly Generative.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 5: AMAZON POLLY · LAB ============ -->
+<section class="chapter" id="polly">
+  <div class="container">
+    <span class="chapter-number">05 · Amazon Polly · 🧪 Lab</span>
+    <h2>O serviço de voz da AWS: <span style="color:var(--orange)">100+ vozes em 40 idiomas</span>.</h2>
+    <p class="lead">
+      Aqui o lab é <strong>de verdade</strong>. Seu navegador tem uma engine TTS embutida (Web Speech API) que estamos usando como mock do Polly — mesma interface, mesmas configurações. <strong>Clica em "Falar"</strong> e ouve. As vozes vão variar conforme o seu sistema operacional.
+    </p>
+
+    <div class="polly-block">
+      <div class="polly-card">
+        <div class="polly-card-head">
+          <div class="polly-card-title">🐦 Console do Polly</div>
+          <div class="polly-card-sub">Edita o texto, escolhe a voz e fala. Tem suporte a SSML pra ajustar entonação fina.</div>
+        </div>
+
+        <div class="polly-tabs">
+          <button class="polly-tab active" data-polly-tab="text">📝 Texto simples</button>
+          <button class="polly-tab" data-polly-tab="ssml">🎼 SSML</button>
+        </div>
+
+        <textarea id="polly-text" class="polly-textarea" rows="4">Oi, sou o gato do Balaio! Tô falando ao vivo, no seu navegador, sem chamar nenhuma API externa. A mesma interface seria usada pra chamar o Amazon Polly em produção.</textarea>
+
+        <div class="polly-ssml-examples" id="polly-ssml-examples" style="display:none;">
+          <button class="polly-ssml-btn" data-ssml="break">⏸️ Pausa entre palavras</button>
+          <button class="polly-ssml-btn" data-ssml="prosody-slow">🐌 Falar devagar</button>
+          <button class="polly-ssml-btn" data-ssml="prosody-fast">⚡ Falar rápido</button>
+          <button class="polly-ssml-btn" data-ssml="emphasis">💪 Ênfase</button>
+          <button class="polly-ssml-btn" data-ssml="phoneme">🔡 Fonema customizado</button>
+          <button class="polly-ssml-btn" data-ssml="say-as">📅 Dizer-como (data)</button>
+          <button class="polly-ssml-btn" data-ssml="full">🎬 SSML completo</button>
+        </div>
+
+        <div class="polly-controls">
+          <div class="polly-ctrl">
+            <label><span>🌎 Voz</span></label>
+            <select id="polly-voice"></select>
+          </div>
+          <div class="polly-ctrl">
+            <label><span>⚡ Velocidade</span><span class="val" id="polly-rate-v">1,0×</span></label>
+            <input type="range" id="polly-rate" min="0.5" max="2" step="0.1" value="1">
+          </div>
+          <div class="polly-ctrl">
+            <label><span>🎚️ Pitch (tom)</span><span class="val" id="polly-pitch-v">1,0</span></label>
+            <input type="range" id="polly-pitch" min="0.5" max="2" step="0.1" value="1">
+          </div>
+          <div class="polly-ctrl">
+            <label><span>🔊 Volume</span><span class="val" id="polly-vol-v">100%</span></label>
+            <input type="range" id="polly-vol" min="0" max="1" step="0.05" value="1">
+          </div>
+        </div>
+
+        <div class="polly-actions">
+          <button class="polly-btn primary" id="polly-speak">▶️ Falar</button>
+          <button class="polly-btn" id="polly-stop">⏹️ Parar</button>
+          <button class="polly-btn ghost" id="polly-pause">⏸️ Pausar</button>
+          <button class="polly-btn ghost" id="polly-resume">⏯️ Retomar</button>
+          <button class="polly-btn ghost" id="polly-download" title="Numa AWS real, isso baixa o MP3 retornado pelo SynthesizeSpeech.">💾 (mock) baixar MP3</button>
+        </div>
+
+        <div class="polly-status" id="polly-status">
+          <span class="dot" id="polly-status-dot"></span>
+          <span id="polly-status-msg">Pronto. Clica em "Falar" pra ouvir.</span>
+        </div>
+
+        <div class="polly-viz">
+          <canvas id="polly-canvas" width="600" height="80"></canvas>
+        </div>
+      </div>
+
+      <div class="polly-side">
+        <div class="polly-side-card">
+          <div class="polly-side-head">📡 Equivalente Polly real</div>
+          <pre class="polly-code" id="polly-code"></pre>
+        </div>
+
+        <div class="polly-engines">
+          <div class="polly-engine-head">⚙️ Engines do Polly real</div>
+          <div class="polly-engine">
+            <strong>Standard</strong>
+            <span class="micro">concatenativo · barato</span>
+            <p>O básico funcional. Soa "voz de telefone bancário". Bom pra IVR.</p>
+          </div>
+          <div class="polly-engine">
+            <strong>Neural (NTTS)</strong>
+            <span class="micro">deep learning · padrão hoje</span>
+            <p>Soa quase humano. Suporta Newscaster, Conversational, e a maioria dos casos.</p>
+          </div>
+          <div class="polly-engine highlight">
+            <strong>Long-form</strong>
+            <span class="micro">audiobooks, podcasts</span>
+            <p>Otimizado pra textos longos com prosódia natural ao longo de minutos.</p>
+          </div>
+          <div class="polly-engine highlight">
+            <strong>Generative</strong>
+            <span class="micro">topo da linha · 2024+</span>
+            <p>Voz expressiva com emoção e nuance. Próximo do estado da arte (ElevenLabs-tier).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="polly-presets">
+      <div class="polly-presets-head">🎬 Presets prontos · clica e ouve:</div>
+      <div class="polly-preset-grid" id="polly-preset-grid">
+        <button class="polly-preset" data-preset="announce">📢 Locutor de jornal</button>
+        <button class="polly-preset" data-preset="story">📖 Contador de história</button>
+        <button class="polly-preset" data-preset="bedtime">🌙 Voz de "dormir"</button>
+        <button class="polly-preset" data-preset="hype">🚀 Anúncio de promoção</button>
+        <button class="polly-preset" data-preset="poetry">🌹 Poesia</button>
+        <button class="polly-preset" data-preset="multi">🌍 Frase multi-idioma</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 6: STT CONCEITUAL ============ -->
+<section class="chapter" id="stt">
+  <div class="container">
+    <span class="chapter-number">06 · Speech-to-Text (STT)</span>
+    <h2>O caminho inverso: <span style="color:var(--orange)">áudio vira texto</span>.</h2>
+    <p class="lead">
+      STT (também chamado de ASR — Automatic Speech Recognition) é o pilar de Siri, Alexa, Google Assistant, legendas automáticas no YouTube e transcrição de reunião. <strong>Veja o pipeline</strong> e clica em cada peça.
+    </p>
+
+    <div class="stt-pipeline">
+      <div class="stt-stage active" data-stt="audio">
+        <div class="ic">🎙️</div>
+        <h5>Áudio bruto</h5>
+      </div>
+      <div class="stt-arrow">→</div>
+      <div class="stt-stage" data-stt="spectrogram">
+        <div class="ic">🌈</div>
+        <h5>Espectrograma</h5>
+      </div>
+      <div class="stt-arrow">→</div>
+      <div class="stt-stage" data-stt="acoustic">
+        <div class="ic">🔡</div>
+        <h5>Modelo Acústico</h5>
+      </div>
+      <div class="stt-arrow">→</div>
+      <div class="stt-stage" data-stt="language">
+        <div class="ic">🧠</div>
+        <h5>Modelo de Linguagem</h5>
+      </div>
+      <div class="stt-arrow">→</div>
+      <div class="stt-stage" data-stt="text">
+        <div class="ic">📝</div>
+        <h5>Texto</h5>
+      </div>
+    </div>
+
+    <div class="stt-detail">
+      <div class="stt-detail-head" id="stt-detail-head">🎙️ Áudio bruto</div>
+      <p class="stt-detail-desc" id="stt-detail-desc"></p>
+      <div class="stt-detail-result" id="stt-detail-result"></div>
+    </div>
+
+    <div class="stt-challenges">
+      <div class="stt-ch">
+        <div class="ic">🌪️</div>
+        <h4>Ruído de fundo</h4>
+        <p>Café barulhento, vento, eco de sala. Modelos modernos isolam vozes, mas tem limite.</p>
+      </div>
+      <div class="stt-ch">
+        <div class="ic">🗣️</div>
+        <h4>Sotaque</h4>
+        <p>Sotaque carioca vs. gaúcho vs. estrangeiro. Modelo precisa ser exposto a variação no treino.</p>
+      </div>
+      <div class="stt-ch">
+        <div class="ic">📚</div>
+        <h4>Vocabulário técnico</h4>
+        <p>"Pleitear", "azitromicina", "bug fix" — fora do dicionário comum precisa de boost (Custom Vocabulary).</p>
+      </div>
+      <div class="stt-ch" style="background: var(--ink); color: var(--paper); border-color: var(--orange);">
+        <div class="ic">👯</div>
+        <h4 style="color: var(--yellow)">Múltiplos falantes</h4>
+        <p style="color: var(--cream-2)">"Quem falou o quê?" Diarização separa cada speaker em canal próprio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 7: AMAZON TRANSCRIBE · LAB ============ -->
+<section class="chapter" id="transcribe">
+  <div class="container">
+    <span class="chapter-number">07 · Amazon Transcribe · 🧪 Lab</span>
+    <h2>Outro lab <span style="color:var(--orange)">de verdade</span>: clica, fala, transcreve.</h2>
+    <p class="lead">
+      Seu navegador tem uma Web Speech Recognition embutida (Chrome / Edge funcionam melhor). Estamos usando ela como mock do Transcribe — mesma ideia, mesmos parâmetros. <strong>Clica em "Iniciar gravação"</strong>, fala uma frase, e veja a transcrição aparecer ao vivo.
+    </p>
+
+    <div class="trans-block">
+      <div class="trans-card">
+        <div class="trans-card-head">
+          <div class="trans-card-title">🎙️ Console do Transcribe</div>
+          <div class="trans-card-sub">Streaming · transcrição em tempo real conforme você fala. Funciona melhor em Chrome / Edge / Safari.</div>
+        </div>
+
+        <div class="trans-controls">
+          <div class="trans-ctrl">
+            <label><span>🌎 Idioma</span></label>
+            <select id="trans-lang">
+              <option value="pt-BR" selected>Português (Brasil)</option>
+              <option value="en-US">English (US)</option>
+              <option value="es-ES">Español (España)</option>
+              <option value="es-MX">Español (México)</option>
+              <option value="fr-FR">Français</option>
+              <option value="de-DE">Deutsch</option>
+              <option value="it-IT">Italiano</option>
+              <option value="ja-JP">日本語</option>
+              <option value="zh-CN">中文 (普通话)</option>
+            </select>
+          </div>
+          <div class="trans-ctrl">
+            <label class="trans-toggle">
+              <input type="checkbox" id="trans-continuous" checked>
+              <span class="slider"></span>
+              <span class="lbl">🔁 Streaming contínuo</span>
+            </label>
+          </div>
+          <div class="trans-ctrl">
+            <label class="trans-toggle">
+              <input type="checkbox" id="trans-interim" checked>
+              <span class="slider"></span>
+              <span class="lbl">⚡ Resultados parciais</span>
+            </label>
+          </div>
+          <div class="trans-ctrl">
+            <label class="trans-toggle">
+              <input type="checkbox" id="trans-vocab">
+              <span class="slider"></span>
+              <span class="lbl">📚 Custom Vocabulary (mock)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="trans-recorder">
+          <button class="trans-rec-btn" id="trans-rec-btn">
+            <span class="trans-rec-dot"></span>
+            <span id="trans-rec-lbl">🎙️ Iniciar gravação</span>
+          </button>
+          <div class="trans-meter" id="trans-meter">
+            <div class="trans-meter-bars" id="trans-meter-bars">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="trans-status" id="trans-status">⏸️ Aguardando…</div>
+        </div>
+
+        <div class="trans-output">
+          <div class="trans-output-head">📝 Transcrição ao vivo</div>
+          <div class="trans-transcript" id="trans-transcript">
+            <div class="trans-placeholder">A transcrição vai aparecer aqui conforme você fala. Linhas em <em>itálico cinza</em> são resultados parciais; em preto sólido são finais.</div>
+          </div>
+          <div class="trans-stats">
+            <div class="trans-stat">
+              <span class="lbl">Palavras</span>
+              <span class="v" id="trans-stat-words">0</span>
+            </div>
+            <div class="trans-stat">
+              <span class="lbl">Caracteres</span>
+              <span class="v" id="trans-stat-chars">0</span>
+            </div>
+            <div class="trans-stat">
+              <span class="lbl">Confiança ≈</span>
+              <span class="v" id="trans-stat-conf">—</span>
+            </div>
+            <div class="trans-stat">
+              <span class="lbl">Tempo</span>
+              <span class="v" id="trans-stat-time">00:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="trans-actions">
+          <button class="trans-btn" id="trans-clear">↺ Limpar</button>
+          <button class="trans-btn ghost" id="trans-copy">📋 Copiar texto</button>
+          <button class="trans-btn ghost" id="trans-analyze">📖 Analisar com Comprehend</button>
+          <button class="trans-btn ghost" id="trans-tts">🔊 Falar de volta (Polly)</button>
+        </div>
+
+        <div class="trans-analysis" id="trans-analysis" style="display:none;"></div>
+      </div>
+
+      <div class="trans-side">
+        <div class="trans-side-card">
+          <div class="trans-side-head">📡 Equivalente Transcribe real</div>
+          <pre class="trans-code" id="trans-code"></pre>
+        </div>
+
+        <div class="trans-features">
+          <div class="trans-feature">
+            <span class="ic">📚</span>
+            <div>
+              <strong>Custom Vocabulary</strong>
+              <p>Sobe lista de termos do seu domínio (medicamento, sigla interna). Boost de reconhecimento.</p>
+            </div>
+          </div>
+          <div class="trans-feature">
+            <span class="ic">👥</span>
+            <div>
+              <strong>Speaker Diarization</strong>
+              <p>Detecta automaticamente quantas pessoas estão falando e separa em canais.</p>
+            </div>
+          </div>
+          <div class="trans-feature">
+            <span class="ic">⏱️</span>
+            <div>
+              <strong>Timestamps por palavra</strong>
+              <p>Cada palavra vem com início e fim em ms. Base pra legendas SRT/VTT.</p>
+            </div>
+          </div>
+          <div class="trans-feature">
+            <span class="ic">🚫</span>
+            <div>
+              <strong>Vocabulary Filter</strong>
+              <p>Censura ou marca palavras (palavrão, info confidencial). Substitui por *** ou tag.</p>
+            </div>
+          </div>
+          <div class="trans-feature">
+            <span class="ic">📞</span>
+            <div>
+              <strong>Call Analytics</strong>
+              <p>Variante pra call center: detecta sentimento, interrupções, palavras-chave.</p>
+            </div>
+          </div>
+          <div class="trans-feature">
+            <span class="ic">🩺</span>
+            <div>
+              <strong>Transcribe Medical</strong>
+              <p>Variante clínica: vocabulário médico, HIPAA-eligible, base do HealthScribe.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trans-tip">
+      <strong>💡 Dica de produção:</strong> Transcribe tem dois modos — <code>StartTranscriptionJob</code> (assíncrono, lê de S3, ideal pra arquivos longos) e <code>StartStreamTranscription</code> (WebSocket, ideal pra live de call center, legendas ao vivo). O navegador aqui simula o segundo.
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2 style="margin-bottom: 8px;">A cola da aula 8.</h2>
+    <p style="font-size: 17px; color: var(--ink-soft); max-width: 700px; margin-bottom: 16px;">
+      As 4 mãos do gato falante: ouvir, entender, escrever e responder.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">📖 Comprehend</div>
+        <div class="micro">NLP gerenciado</div>
+        <div class="q">"Texto vira estrutura."</div>
+        <div class="what">Idioma, sentimento, entidades, frases-chave, sintaxe, PII. Sem treinar nada.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🩺 Comprehend Medical</div>
+        <div class="micro">NLP clínico</div>
+        <div class="q">"Comprehend de jaleco."</div>
+        <div class="what">Entidades médicas + ICD-10, RxNorm, SNOMED. HIPAA-eligible.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏥 HealthScribe</div>
+        <div class="micro">consulta → SOAP</div>
+        <div class="q">"Médico fala, IA escreve."</div>
+        <div class="what">Transcribe Medical + Comprehend Medical + LLM. Saída SOAP com citações.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🗣️ TTS</div>
+        <div class="micro">text-to-speech</div>
+        <div class="q">"Letra vira som."</div>
+        <div class="what">Pipeline: texto → fonemas → prosódia → waveform. Engines: standard, neural, generative.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🐦 Polly</div>
+        <div class="micro">TTS gerenciado AWS</div>
+        <div class="q">"100+ vozes em 40 idiomas."</div>
+        <div class="what">SSML, lexicons, speech marks. SynthesizeSpeech retorna MP3, OGG ou PCM.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎙️ STT</div>
+        <div class="micro">speech-to-text · ASR</div>
+        <div class="q">"Som vira letra."</div>
+        <div class="what">Pipeline: áudio → espectrograma → modelo acústico → modelo de linguagem → texto.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📝 Transcribe</div>
+        <div class="micro">STT gerenciado AWS</div>
+        <div class="q">"Áudio vira texto."</div>
+        <div class="what">Streaming + batch. Custom vocab, diarização, timestamps, vocabulary filter, call analytics.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔗 Combo clássico</div>
+        <div class="micro">stack vocal</div>
+        <div class="q">"Áudio → análise → fala."</div>
+        <div class="what">Transcribe → Comprehend → Bedrock/Lex → Polly. Call center, agente, IVR moderno.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🛡️ HIPAA-eligible</div>
+        <div class="micro">saúde</div>
+        <div class="q">"Posso processar PHI?"</div>
+        <div class="what">Comprehend Medical, Transcribe Medical, HealthScribe. PHI não vira dado de treino da AWS.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎼 SSML</div>
+        <div class="micro">Speech Synthesis Markup</div>
+        <div class="q">"XML que controla a voz."</div>
+        <div class="what"><code>&lt;break&gt;</code>, <code>&lt;prosody&gt;</code>, <code>&lt;emphasis&gt;</code>, <code>&lt;say-as&gt;</code>, <code>&lt;phoneme&gt;</code>. Vai além do texto puro.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📚 Custom Vocabulary</div>
+        <div class="micro">Transcribe</div>
+        <div class="q">"Termo técnico do seu domínio."</div>
+        <div class="what">Lista de palavras + IPA + soundsLike. Boost de reconhecimento sem retreinar modelo.</div>
+      </div>
+      <div class="cheat-card" style="background: var(--orange); color: var(--paper);">
+        <div class="name" style="color: var(--paper);">🐾 Resumo do resumo</div>
+        <div class="q" style="color: rgba(255,255,255,0.85);">"O que eu levo dessa aula?"</div>
+        <div class="what" style="color: var(--paper);"><strong>Comprehend entende texto, Polly fala, Transcribe escuta. Versões Medical (HIPAA) pra saúde. HealthScribe junta tudo. SSML pra controlar voz, Custom Vocab pra reconhecer jargão.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
+    Aula 8 com Polly e Transcribe rodando ao vivo no seu navegador.
+  </div>
+  <div style="margin-top: 8px; opacity: 0.7;">
+    Aperta no microfone, fala uma frase, ouve o gato responder. <em>"Os alunos que aprendam mexendo, não decorando."</em>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

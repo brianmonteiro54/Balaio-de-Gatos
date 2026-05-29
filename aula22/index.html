@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 22: Logging, Model Cards, Fine-tuning, Hiperparâmetros e Prompt × RAG × FT</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<meta name="description" content="Aula 22 do Balaio de Gatos: logging de inferência, Model Cards, ajuste fino (full FT, PEFT/LoRA, instruction tuning, RLHF), hiperparâmetros e a decisão entre Prompt Engineering, RAG e Fine-tuning.">
+<meta name="keywords" content="inference logging, CloudWatch, CloudTrail, Model Cards, Model Registry, fine-tuning, full fine-tuning, PEFT, LoRA, instruction tuning, RLHF, hyperparameters, learning rate, batch size, epochs, prompt engineering, RAG, decision tree, AWS AI Practitioner">
+<meta name="author" content="Escola da Nuvem">
+<meta name="theme-color" content="#FF6B35">
+
+<meta property="og:title" content="Aula 22 · Logging, Model Cards, Fine-tuning, Hiperparâmetros e Prompt × RAG × FT">
+<meta property="og:description" content="Logs em streaming, Model Card gerada na hora, sliders de hiperparâmetro mexendo curva de loss e a árvore de decisão Prompt × RAG × Fine-tuning.">
+<meta property="og:image" content="../cat-thumbnail.png">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span class="pt">aula 22</span></div>
+    <div class="nav-links">
+      <a href="#logging">Logging</a>
+      <a href="#log-types">Tipos de log</a>
+      <a href="#model-cards">Model Cards</a>
+      <a href="#card-builder">Builder</a>
+      <a href="#fine-tuning">Fine-tuning</a>
+      <a href="#ft-types">Tipos FT</a>
+      <a href="#ft-pipeline">Pipeline FT</a>
+      <a href="#hyperparams">Hiperparâmetros</a>
+      <a href="#hp-tuning">Tuning</a>
+      <a href="#decision">Prompt × RAG × FT</a>
+      <a href="#decision-tree">Árvore</a>
+      <a href="#cola">Cola</a>
+      <a href="../index.html">← Aulas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · AI Practitioner <span class="v2">aula 22 · operação + customização</span></div>
+        <h1>
+          <span class="scratch">Logar</span>, documentar,<br>
+          <span class="accent">tunar</span> e decidir<br>
+          o caminho do <span class="yel">gato.</span>
+        </h1>
+        <p>
+          Os 5 últimos tópicos antes da prova: <strong>logging de inferência</strong> (auditoria em produção), <strong>Model Cards</strong> (documentação que o regulador pede), <strong>fine-tuning</strong> (full, PEFT, LoRA, RLHF), <strong>hiperparâmetros</strong> (learning rate, batch, epochs, regularização) e a decisão clássica de toda prova: <strong>Prompt Engineering × RAG × Fine-tuning</strong>.
+        </p>
+        <a href="#logging" class="hero-cta">Começa a revisão 🐾</a>
+        <a href="#cola" class="hero-cta ghost">Cola final</a>
+      </div>
+      <div class="cat-lab">
+        <span class="float-cat c1">📜</span>
+        <span class="float-cat c2">📋</span>
+        <span class="float-cat c3">🐈</span>
+        <span class="float-cat c4">🎛️</span>
+        <span class="float-cat c5">🌳</span>
+        <span class="chip">CloudTrail · CloudWatch</span>
+        <span class="chip2">Model Cards · Registry</span>
+        <span class="chip3">PEFT · LoRA · RLHF</span>
+        <span class="chip4">Prompt × RAG × FT</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>📜 LOGGING DE INFERÊNCIA</span><span>📋 MODEL CARDS</span><span>🛠️ FINE-TUNING</span><span>🔬 PEFT · LoRA</span><span>🎓 INSTRUCTION TUNING</span><span>🎯 RLHF</span><span>🎛️ HIPERPARÂMETROS</span><span>📈 LEARNING RATE</span><span>📦 BATCH SIZE</span><span>🔁 EPOCHS</span><span>🛡️ REGULARIZAÇÃO</span><span>🎯 AMT (BAYESIAN)</span><span>💬 PROMPT ENGINEERING</span><span>📚 RAG</span><span>🌳 DECISÃO</span>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!-- PARTE 1: OPERAÇÃO E AUDITORIA -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 1 · Operação e auditoria</span>
+    <h2>
+      O modelo <span class="accent">em produção</span><br>
+      precisa de <span class="yel">rastro.</span>
+    </h2>
+    <p>
+      Sem logs e sem documentação, o modelo é caixa preta dupla: ninguém sabe o que ele fez nem como ele foi feito. Auditor, regulador e o próprio time pedem essas duas coisas.
+    </p>
+  </div>
+</section>
+
+<!-- 1. LOGGING DE INFERÊNCIA -->
+<section class="chapter" id="logging">
+  <div class="container">
+    <span class="chapter-number">01 · Logging de inferência</span>
+    <h2>Cada chamada deixa <span style="color:var(--orange)">rastro</span>.</h2>
+    <p class="lead">
+      Logar inferência é <strong>obrigatório</strong> em produção: pra debugar, auditar, treinar de novo e responder regulador. Veja um stream simulado de produção e clica nos eventos pra ver o que tem dentro.
+    </p>
+
+    <div class="log-lab">
+      <div class="log-stream">
+        <div class="log-stream-head">
+          <strong>📡 Live · prod-inference-endpoint · sa-east-1</strong>
+          <button id="log-pause" class="log-btn">⏸ pausar</button>
+        </div>
+        <div class="log-list" id="log-list"></div>
+      </div>
+
+      <div class="log-detail" id="log-detail">
+        <em>Clica num evento pra ver os campos.</em>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. TIPOS DE LOG -->
+<section class="chapter alt-bg" id="log-types">
+  <div class="container">
+    <span class="chapter-number">02 · Onde cada coisa é logada</span>
+    <h2>Quatro <span style="color:var(--orange)">canais</span>, cada um com sua função.</h2>
+    <p class="lead">
+      Logging de IA na AWS não é um lugar só. É uma combinação de <strong>CloudTrail</strong> (quem chamou), <strong>CloudWatch Logs</strong> (o que aconteceu), <strong>S3 Data Capture</strong> (input + output completos) e <strong>Model Monitor</strong> (qualidade/drift).
+    </p>
+
+    <div class="logtype-grid">
+      <button class="logtype-card active" data-l="cloudtrail">
+        <span class="emoji">📋</span>
+        <strong>CloudTrail</strong>
+        <small>API audit · quem chamou o quê</small>
+      </button>
+      <button class="logtype-card" data-l="cloudwatch">
+        <span class="emoji">📊</span>
+        <strong>CloudWatch Logs</strong>
+        <small>App logs · erros, latência, métricas</small>
+      </button>
+      <button class="logtype-card" data-l="datacapture">
+        <span class="emoji">📦</span>
+        <strong>Data Capture (S3)</strong>
+        <small>Input + output completos pra auditoria</small>
+      </button>
+      <button class="logtype-card" data-l="monitor">
+        <span class="emoji">👀</span>
+        <strong>Model Monitor</strong>
+        <small>Qualidade · drift · viés</small>
+      </button>
+      <button class="logtype-card" data-l="bedrock">
+        <span class="emoji">🟪</span>
+        <strong>Bedrock invocation logging</strong>
+        <small>Prompts e respostas no Bedrock</small>
+      </button>
+      <button class="logtype-card" data-l="guardrails">
+        <span class="emoji">🛡️</span>
+        <strong>Guardrails trace</strong>
+        <small>O que filtrou, o que passou</small>
+      </button>
+    </div>
+
+    <div class="logtype-detail" id="logtype-detail">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- 3. MODEL CARDS CONCEITO -->
+<section class="chapter" id="model-cards">
+  <div class="container">
+    <span class="chapter-number">03 · Model Cards · documentação de modelos</span>
+    <h2>A <span style="color:var(--orange)">RG</span> do modelo.</h2>
+    <p class="lead">
+      Model Card é documentação <strong>estruturada</strong> que descreve o modelo: pra que serve, em que dado foi treinado, em quem funciona bem, em quem falha, riscos, métricas, donos. Inspirado no paper "Model Cards for Model Reporting" (Mitchell et al., 2019). AWS implementa via <strong>SageMaker Model Cards</strong>.
+    </p>
+
+    <div class="mc-grid">
+      <div class="mc-card why">
+        <h3>🤔 Por que existe?</h3>
+        <ul>
+          <li><strong>Auditoria</strong> · regulador (BACEN, ANS, ANPD, EU AI Act) pede documentação do modelo</li>
+          <li><strong>Reprodutibilidade</strong> · 6 meses depois, você esquece como treinou</li>
+          <li><strong>Comunicação</strong> · time de produto/legal/risk precisa entender sem ler código</li>
+          <li><strong>Onboarding</strong> · novo dev no time entra mais rápido</li>
+          <li><strong>Compliance</strong> · ISO/IEC 42001 (AI management) requer</li>
+        </ul>
+      </div>
+
+      <div class="mc-card sections">
+        <h3>📑 As 9 seções padrão</h3>
+        <ol>
+          <li><strong>Detalhes do modelo</strong> · nome, versão, dono, data, framework</li>
+          <li><strong>Uso pretendido</strong> · pra que SIM e pra que NÃO usar</li>
+          <li><strong>Fatores</strong> · grupos demográficos, condições ambientais, instrumentação</li>
+          <li><strong>Métricas</strong> · acurácia, F1, AUC, MAE, etc. — e por subgrupo</li>
+          <li><strong>Dataset de avaliação</strong> · de onde veio, como foi balanceado</li>
+          <li><strong>Dataset de treino</strong> · idem (pode ser parcial por privacidade)</li>
+          <li><strong>Análises quantitativas</strong> · gráficos, matriz de confusão, viés</li>
+          <li><strong>Considerações éticas</strong> · risco, dano potencial, mitigação</li>
+          <li><strong>Recomendações</strong> · uso seguro, monitoramento, limites</li>
+        </ol>
+      </div>
+
+      <div class="mc-card aws">
+        <h3>☁️ Como a AWS implementa</h3>
+        <ul>
+          <li><strong>SageMaker Model Cards</strong> · cria, versiona, aprova, exporta PDF</li>
+          <li><strong>Integração</strong> · com Model Registry, Pipelines, Studio</li>
+          <li><strong>Aprovação</strong> · rascunho → review → publicado</li>
+          <li><strong>API</strong> · CreateModelCard, UpdateModelCard, ExportModelCard</li>
+          <li><strong>AI Service Cards</strong> · cards públicos da AWS pra Rekognition, Comprehend, etc.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. MODEL CARD BUILDER -->
+<section class="chapter alt-bg" id="card-builder">
+  <div class="container">
+    <span class="chapter-number">04 · Construa uma Model Card</span>
+    <h2>Preencha à esquerda. Veja o <span style="color:var(--orange)">resultado</span> à direita.</h2>
+    <p class="lead">
+      Modelo de detector de gato perdido. Mexa nos campos e veja a card sendo gerada em tempo real (formato similar ao SageMaker Model Cards).
+    </p>
+
+    <div class="mcb-lab">
+      <div class="mcb-form">
+        <div class="mcb-field">
+          <label>Nome do modelo</label>
+          <input type="text" id="mcb-name" value="cat-finder-v3">
+        </div>
+        <div class="mcb-row">
+          <div class="mcb-field">
+            <label>Versão</label>
+            <input type="text" id="mcb-version" value="3.2.1">
+          </div>
+          <div class="mcb-field">
+            <label>Status</label>
+            <select id="mcb-status">
+              <option value="draft">Draft</option>
+              <option value="pending">Pending review</option>
+              <option value="approved" selected>Approved</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+        </div>
+        <div class="mcb-field">
+          <label>Risk rating</label>
+          <select id="mcb-risk">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="mcb-field">
+          <label>Uso pretendido</label>
+          <textarea id="mcb-intended" rows="2">Identificar gatos perdidos comparando foto enviada por usuário com fotos da base do abrigo. Apoia adoção e devolução.</textarea>
+        </div>
+        <div class="mcb-field">
+          <label>Uso NÃO pretendido</label>
+          <textarea id="mcb-not" rows="2">Identificação forense, vigilância, decisão final sem revisão humana, classificação de raça pra fins de pedigree.</textarea>
+        </div>
+        <div class="mcb-row">
+          <div class="mcb-field">
+            <label>Acurácia</label>
+            <input type="text" id="mcb-acc" value="92.4%">
+          </div>
+          <div class="mcb-field">
+            <label>Precisão</label>
+            <input type="text" id="mcb-prec" value="89.1%">
+          </div>
+          <div class="mcb-field">
+            <label>Recall</label>
+            <input type="text" id="mcb-rec" value="87.3%">
+          </div>
+        </div>
+        <div class="mcb-field">
+          <label>Riscos identificados</label>
+          <textarea id="mcb-risks" rows="2">Performance ~10pp menor em fotos noturnas. Sub-representação de raças sem pelo (sphynx). Possível sobreajuste a fotos do abrigo.</textarea>
+        </div>
+        <div class="mcb-field">
+          <label>Mitigações</label>
+          <textarea id="mcb-mit" rows="2">Aviso ao usuário em fotos com baixa luminosidade. Threshold mais alto pra aprovar match. HITL via A2I em score &lt; 0.75.</textarea>
+        </div>
+      </div>
+
+      <div class="mcb-preview" id="mcb-preview">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 2: CUSTOMIZAÇÃO -->
+<!-- ============================ -->
+<section class="part-banner alt">
+  <div class="container">
+    <span class="chapter-number">Parte 2 · Customização do modelo</span>
+    <h2>
+      <span class="accent">Fine-tuning</span> e os botões<br>
+      do <span class="yel">treino.</span>
+    </h2>
+    <p>
+      Quando RAG e prompt não bastam, você ajusta o modelo. Mas tem 4 jeitos diferentes de fazer isso, com custos muito diferentes.
+    </p>
+  </div>
+</section>
+
+<!-- 5. FINE-TUNING CONCEITO -->
+<section class="chapter" id="fine-tuning">
+  <div class="container">
+    <span class="chapter-number">05 · Ajuste fino (Fine-tuning)</span>
+    <h2>Pegar um modelo pronto e <span style="color:var(--orange)">moldar</span> aos seus dados.</h2>
+    <p class="lead">
+      Você não treina do zero (custaria milhões). Pega um <strong>foundation model pré-treinado</strong> (Llama, Titan, Falcon...) e continua o treino com <em>seus</em> dados, ajustando os pesos. Resultado: modelo customizado pro seu domínio sem reinventar a roda.
+    </p>
+
+    <div class="ft-intro">
+      <div class="ft-when">
+        <h3>✅ Quando vale a pena</h3>
+        <ul>
+          <li>Tom de voz, estilo, persona da marca</li>
+          <li>Formato de saída fixo (SQL custom, JSON com schema próprio)</li>
+          <li>Jargão de domínio (médico, jurídico, financeiro)</li>
+          <li>Idioma de baixo recurso ou variante regional</li>
+          <li>Few-shot já não cabe no contexto</li>
+        </ul>
+      </div>
+      <div class="ft-when bad">
+        <h3>❌ Quando NÃO vale</h3>
+        <ul>
+          <li>Conhecimento factual que muda (use RAG)</li>
+          <li>Você não tem ≥100 exemplos de qualidade</li>
+          <li>Resolveu com prompt engineering simples</li>
+          <li>Privacidade exige que o dado nunca toque os pesos</li>
+          <li>Você ainda não validou o problema com um piloto</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. TIPOS DE FT -->
+<section class="chapter alt-bg" id="ft-types">
+  <div class="container">
+    <span class="chapter-number">06 · Os 4 tipos de fine-tuning</span>
+    <h2>Mesmo nome, <span style="color:var(--orange)">técnicas</span> bem diferentes.</h2>
+    <p class="lead">
+      Cada técnica tem custo e poder próprios. Clica pra ver custo, dado, casos típicos e onde a AWS suporta.
+    </p>
+
+    <div class="ftt-grid" id="ftt-grid">
+      <button class="ftt-card active" data-t="full">
+        <div class="ftt-num">01</div>
+        <span class="emoji">🔥</span>
+        <h4>Full Fine-tuning</h4>
+        <small>Atualiza TODOS os pesos</small>
+      </button>
+      <button class="ftt-card" data-t="peft">
+        <div class="ftt-num">02</div>
+        <span class="emoji">🪶</span>
+        <h4>PEFT / LoRA</h4>
+        <small>Atualiza só uma fração</small>
+      </button>
+      <button class="ftt-card" data-t="instruct">
+        <div class="ftt-num">03</div>
+        <span class="emoji">🎓</span>
+        <h4>Instruction Tuning</h4>
+        <small>Ensina seguir instruções</small>
+      </button>
+      <button class="ftt-card" data-t="rlhf">
+        <div class="ftt-num">04</div>
+        <span class="emoji">🎯</span>
+        <h4>RLHF</h4>
+        <small>Aprende com feedback humano</small>
+      </button>
+    </div>
+
+    <div class="ftt-detail" id="ftt-detail">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- 7. PIPELINE FT -->
+<section class="chapter" id="ft-pipeline">
+  <div class="container">
+    <span class="chapter-number">07 · Pipeline de fine-tuning</span>
+    <h2>As <span style="color:var(--orange)">7 etapas</span> de um FT que não dá ruim.</h2>
+    <p class="lead">
+      Clica em cada etapa pra ver o que rola e o que pode quebrar.
+    </p>
+
+    <div class="ftpipe-wrap">
+      <div class="ftpipe-flow">
+        <button class="ftpipe-stage active" data-s="dataset">
+          <span class="ftpipe-num">1</span>
+          <span class="emoji">📊</span>
+          <strong>Dataset</strong>
+          <small>JSONL · 100-10k pares</small>
+        </button>
+        <span class="ftpipe-arrow">→</span>
+        <button class="ftpipe-stage" data-s="split">
+          <span class="ftpipe-num">2</span>
+          <span class="emoji">✂️</span>
+          <strong>Split</strong>
+          <small>treino/val/teste</small>
+        </button>
+        <span class="ftpipe-arrow">→</span>
+        <button class="ftpipe-stage" data-s="hp">
+          <span class="ftpipe-num">3</span>
+          <span class="emoji">🎛️</span>
+          <strong>Hiperparâmetros</strong>
+          <small>LR, batch, epochs</small>
+        </button>
+        <span class="ftpipe-arrow">→</span>
+        <button class="ftpipe-stage" data-s="train">
+          <span class="ftpipe-num">4</span>
+          <span class="emoji">🏋️</span>
+          <strong>Treino</strong>
+          <small>GPU · checkpoint</small>
+        </button>
+      </div>
+      <div class="ftpipe-flow">
+        <button class="ftpipe-stage" data-s="eval">
+          <span class="ftpipe-num">5</span>
+          <span class="emoji">🧪</span>
+          <strong>Avaliação</strong>
+          <small>holdout + benchmark</small>
+        </button>
+        <span class="ftpipe-arrow">→</span>
+        <button class="ftpipe-stage" data-s="deploy">
+          <span class="ftpipe-num">6</span>
+          <span class="emoji">🚀</span>
+          <strong>Deploy</strong>
+          <small>Provisioned Throughput</small>
+        </button>
+        <span class="ftpipe-arrow">→</span>
+        <button class="ftpipe-stage" data-s="monitor">
+          <span class="ftpipe-num">7</span>
+          <span class="emoji">👀</span>
+          <strong>Monitor</strong>
+          <small>regression test contínuo</small>
+        </button>
+      </div>
+
+      <div class="ftpipe-detail" id="ftpipe-detail">
+        <em>Clica numa etapa.</em>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. HIPERPARÂMETROS -->
+<section class="chapter alt-bg" id="hyperparams">
+  <div class="container">
+    <span class="chapter-number">08 · Hiperparâmetros</span>
+    <h2>Os <span style="color:var(--orange)">botões</span> do treino.</h2>
+    <p class="lead">
+      Hiperparâmetros são as configurações que <strong>você</strong> define antes do treino — diferente de parâmetros (pesos), que o treino aprende. Mexa nos sliders e veja a curva de loss reagir + o veredicto.
+    </p>
+
+    <div class="hp-lab">
+      <div class="hp-controls">
+        <div class="hp-field">
+          <label>Learning Rate <span class="cm-val" id="hp-lr-v">1e-4</span></label>
+          <input type="range" id="hp-lr" min="0" max="100" value="40">
+          <small>1e-6 (lento, seguro) ··· 1e-2 (rápido, instável)</small>
+        </div>
+        <div class="hp-field">
+          <label>Batch Size <span class="cm-val" id="hp-bs-v">32</span></label>
+          <input type="range" id="hp-bs" min="0" max="100" value="50">
+          <small>2 (ruidoso, generaliza) ··· 512 (estável, GPU pesada)</small>
+        </div>
+        <div class="hp-field">
+          <label>Epochs <span class="cm-val" id="hp-ep-v">5</span></label>
+          <input type="range" id="hp-ep" min="1" max="50" value="5">
+          <small>poucas (underfit) ··· muitas (overfit)</small>
+        </div>
+        <div class="hp-field">
+          <label>Dropout <span class="cm-val" id="hp-dr-v">0.20</span></label>
+          <input type="range" id="hp-dr" min="0" max="80" value="20">
+          <small>0 (decora) ··· 0.5+ (regulariza demais)</small>
+        </div>
+
+        <div class="hp-verdict" id="hp-verdict">
+          <span class="hv-tag">⚖️ Bem ajustado</span>
+          <p>Configuração no sweet spot. Treino estável, generalização boa.</p>
+        </div>
+      </div>
+
+      <div class="hp-canvas">
+        <svg viewBox="0 0 480 320" id="hp-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="hpg" width="40" height="32" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 32" fill="none" stroke="rgba(43,24,16,0.07)"/>
+            </pattern>
+          </defs>
+          <rect width="480" height="320" fill="url(#hpg)"/>
+          <line x1="40" y1="280" x2="460" y2="280" stroke="#2B1810" stroke-width="2"/>
+          <line x1="40" y1="20" x2="40" y2="280" stroke="#2B1810" stroke-width="2"/>
+          <text x="20" y="30" font-family="JetBrains Mono" font-size="11" fill="#4A3528">loss</text>
+          <text x="430" y="295" font-family="JetBrains Mono" font-size="11" fill="#4A3528">epoch</text>
+
+          <path id="hp-train" d="" stroke="#5C8D89" stroke-width="3" fill="none"/>
+          <path id="hp-val" d="" stroke="#C73E1D" stroke-width="3" fill="none"/>
+          <text x="60" y="50" font-family="Sora" font-weight="700" font-size="11" fill="#5C8D89">treino</text>
+          <text x="60" y="68" font-family="Sora" font-weight="700" font-size="11" fill="#C73E1D">validação</text>
+        </svg>
+        <div class="hp-legend">
+          <div class="hpl-item"><span class="dot train"></span>train loss</div>
+          <div class="hpl-item"><span class="dot val"></span>val loss</div>
+          <div class="hpl-item gap"><span>gap:</span><strong id="hp-gap">0.04</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-cheat">
+      <h4>📋 Cheatsheet de hiperparâmetros</h4>
+      <table>
+        <thead><tr><th>Sintoma</th><th>Suspeita</th><th>Ação</th></tr></thead>
+        <tbody>
+          <tr><td>Loss não cai</td><td>LR muito baixo OU dataset com bug</td><td>↑ LR · checa dataset</td></tr>
+          <tr><td>Loss explode (NaN)</td><td>LR muito alto · gradient explosion</td><td>↓ LR · gradient clipping</td></tr>
+          <tr><td>Train loss baixo, val alto</td><td>Overfitting</td><td>↑ dropout · ↓ epochs · early stopping · mais dado</td></tr>
+          <tr><td>Train e val altos</td><td>Underfitting</td><td>Modelo maior · ↑ epochs · features melhores</td></tr>
+          <tr><td>Treino instável</td><td>Batch pequeno · LR alto</td><td>↑ batch · warmup do LR</td></tr>
+          <tr><td>OOM (out of memory)</td><td>Batch grande demais</td><td>↓ batch · gradient accumulation · mixed precision</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 9. TUNING (AMT) -->
+<section class="chapter" id="hp-tuning">
+  <div class="container">
+    <span class="chapter-number">09 · Hyperparameter tuning automático</span>
+    <h2>Quando você não sabe o <span style="color:var(--orange)">valor certo</span>.</h2>
+    <p class="lead">
+      Em vez de chutar manualmente, você define um <strong>range</strong> pra cada hiperparâmetro e o serviço explora combinações. Cada estratégia tem trade-off entre custo (jobs gastos) e qualidade do resultado.
+    </p>
+
+    <div class="amt-grid">
+      <button class="amt-card active" data-a="random">
+        <span class="emoji">🎲</span>
+        <h4>Random Search</h4>
+        <p>Amostra aleatória do espaço.</p>
+        <ul>
+          <li>✅ Simples, paralelizável</li>
+          <li>✅ Baseline confiável</li>
+          <li>⚠️ Não aprende com tentativas</li>
+        </ul>
+      </button>
+      <button class="amt-card" data-a="grid">
+        <span class="emoji">🪟</span>
+        <h4>Grid Search</h4>
+        <p>Combinações em grade fixa.</p>
+        <ul>
+          <li>✅ Cobertura previsível</li>
+          <li>⚠️ Explosão combinatória</li>
+          <li>⚠️ Caro em alta dimensão</li>
+        </ul>
+      </button>
+      <button class="amt-card" data-a="bayesian">
+        <span class="emoji">🧠</span>
+        <h4>Bayesian Optimization</h4>
+        <p>Usa resultado anterior pra escolher próximo.</p>
+        <ul>
+          <li>✅ Acha melhor com menos jobs</li>
+          <li>✅ Inteligente</li>
+          <li>⚠️ Sequencial (pouco paralelizável)</li>
+        </ul>
+      </button>
+      <button class="amt-card" data-a="hyperband">
+        <span class="emoji">⚡</span>
+        <h4>Hyperband</h4>
+        <p>Cancela jobs ruins cedo (early stopping).</p>
+        <ul>
+          <li>✅ Eficiente em GPU</li>
+          <li>✅ Foca recursos no promissor</li>
+          <li>⚠️ Pode cortar tarde-bloomers</li>
+        </ul>
+      </button>
+    </div>
+
+    <div class="amt-detail" id="amt-detail">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 3: A DECISÃO -->
+<!-- ============================ -->
+<section class="part-banner alt2">
+  <div class="container">
+    <span class="chapter-number">Parte 3 · A decisão clássica de prova</span>
+    <h2>
+      <span class="accent">Prompt</span> × <span class="yel">RAG</span> × <span class="accent">Fine-tuning.</span>
+    </h2>
+    <p>
+      Pergunta de prova certeira: dado o cenário, qual técnica resolve? E quase sempre a resposta envolve <em>combinar</em>.
+    </p>
+  </div>
+</section>
+
+<!-- 10. PROMPT × RAG × FT -->
+<section class="chapter" id="decision">
+  <div class="container">
+    <span class="chapter-number">10 · Comparador lado a lado</span>
+    <h2>Três técnicas, <span style="color:var(--orange)">três custos</span>, três objetivos.</h2>
+    <p class="lead">
+      Cada uma resolve um problema diferente. Confundir é o erro mais comum em prova e em projeto.
+    </p>
+
+    <div class="prft-table">
+      <div class="prft-row head">
+        <span></span>
+        <span class="col-pe">💬 Prompt Engineering</span>
+        <span class="col-rag">📚 RAG</span>
+        <span class="col-ft">🛠️ Fine-tuning</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">Resolve</span>
+        <span>Como pedir melhor</span>
+        <span>Conhecimento factual</span>
+        <span>Comportamento, estilo</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">Muda os pesos?</span>
+        <span>❌ Não</span>
+        <span>❌ Não</span>
+        <span>✅ Sim</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">Custo</span>
+        <span>💲 Quase zero</span>
+        <span>💲💲 Médio (vector DB + embeddings)</span>
+        <span>💲💲💲 Alto (GPU + dados)</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">Time to deploy</span>
+        <span>Minutos</span>
+        <span>Dias</span>
+        <span>Semanas</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">Atualizar dado</span>
+        <span>Reescreve prompt</span>
+        <span>Re-indexa (segundos)</span>
+        <span>Re-treina (horas)</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">Privacidade do dado</span>
+        <span>Vai pro provedor</span>
+        <span>Fica no seu vector DB</span>
+        <span>Embute nos pesos do modelo custom</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">Risco principal</span>
+        <span>Resposta inconsistente</span>
+        <span>Retrieval ruim</span>
+        <span>Overfitting · perde generalização</span>
+      </div>
+      <div class="prft-row">
+        <span class="prft-label">AWS</span>
+        <span><code>Bedrock InvokeModel</code> · Prompt Management</span>
+        <span><code>Bedrock Knowledge Bases</code></span>
+        <span><code>Bedrock Custom Models</code> · SageMaker JumpStart FT</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. ÁRVORE DE DECISÃO -->
+<section class="chapter alt-bg" id="decision-tree">
+  <div class="container">
+    <span class="chapter-number">11 · Árvore de decisão</span>
+    <h2>Lê o <span style="color:var(--orange)">cenário</span>, escolhe a técnica.</h2>
+    <p class="lead">
+      Cada cenário cai numa das 3 técnicas (ou combinação). Clica num cenário pra ver a resposta animada percorrer a árvore.
+    </p>
+
+    <div class="dt-lab">
+      <div class="dt-scenarios">
+        <h4>📋 Cenários</h4>
+        <button class="dt-scen active" data-d="catalogo">
+          <strong>Catálogo muda toda semana</strong>
+          <small>preço, estoque, novos itens</small>
+        </button>
+        <button class="dt-scen" data-d="tom">
+          <strong>Tom de voz da marca</strong>
+          <small>respondrer sempre como "tia Cleide"</small>
+        </button>
+        <button class="dt-scen" data-d="formato">
+          <strong>Formato de saída fixo</strong>
+          <small>JSON com schema próprio</small>
+        </button>
+        <button class="dt-scen" data-d="manual">
+          <strong>Manual interno 500 páginas</strong>
+          <small>política, FAQ, procedimentos</small>
+        </button>
+        <button class="dt-scen" data-d="jargao">
+          <strong>Jargão veterinário</strong>
+          <small>vocabulário técnico</small>
+        </button>
+        <button class="dt-scen" data-d="quick">
+          <strong>Resposta inconsistente</strong>
+          <small>usuário reclama do formato</small>
+        </button>
+        <button class="dt-scen" data-d="resumo">
+          <strong>Resumir reunião gravada</strong>
+          <small>caso pontual, 1 vez por semana</small>
+        </button>
+        <button class="dt-scen" data-d="combo">
+          <strong>Atendente médico do app</strong>
+          <small>tom + base de conhecimento + formato</small>
+        </button>
+      </div>
+
+      <div class="dt-tree">
+        <svg viewBox="0 0 500 460" id="dt-svg" xmlns="http://www.w3.org/2000/svg">
+          <!-- Root -->
+          <g class="dt-node" id="dt-root">
+            <rect x="180" y="10" width="140" height="50" rx="14" fill="#2B1810" stroke="#2B1810" stroke-width="2"/>
+            <text x="250" y="32" text-anchor="middle" font-family="Caprasimo" font-size="14" fill="#FBF3E2">Qual problema?</text>
+            <text x="250" y="50" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#F4D35E">START</text>
+          </g>
+
+          <!-- Branch 1: muda forma -->
+          <line x1="220" y1="60" x2="80" y2="105" stroke="#2B1810" stroke-width="2"/>
+          <text x="135" y="92" font-family="JetBrains Mono" font-size="10" fill="#4A3528">forma do output</text>
+          <g class="dt-node" id="dt-form">
+            <rect x="20" y="110" width="120" height="44" rx="10" fill="#FFF9EC" stroke="#2B1810" stroke-width="2"/>
+            <text x="80" y="138" text-anchor="middle" font-family="Caprasimo" font-size="12">Forma / tom?</text>
+          </g>
+
+          <!-- Branch 2: precisa fato -->
+          <line x1="250" y1="60" x2="250" y2="105" stroke="#2B1810" stroke-width="2"/>
+          <text x="270" y="92" font-family="JetBrains Mono" font-size="10" fill="#4A3528">fato externo</text>
+          <g class="dt-node" id="dt-fact">
+            <rect x="190" y="110" width="120" height="44" rx="10" fill="#FFF9EC" stroke="#2B1810" stroke-width="2"/>
+            <text x="250" y="138" text-anchor="middle" font-family="Caprasimo" font-size="12">Conhecimento?</text>
+          </g>
+
+          <!-- Branch 3: rápido -->
+          <line x1="280" y1="60" x2="420" y2="105" stroke="#2B1810" stroke-width="2"/>
+          <text x="345" y="92" font-family="JetBrains Mono" font-size="10" fill="#4A3528">caso pontual</text>
+          <g class="dt-node" id="dt-quick">
+            <rect x="360" y="110" width="120" height="44" rx="10" fill="#FFF9EC" stroke="#2B1810" stroke-width="2"/>
+            <text x="420" y="138" text-anchor="middle" font-family="Caprasimo" font-size="12">Quick win?</text>
+          </g>
+
+          <!-- Sub-branches -->
+          <line x1="80" y1="154" x2="80" y2="200" stroke="#2B1810" stroke-width="2"/>
+          <line x1="250" y1="154" x2="250" y2="200" stroke="#2B1810" stroke-width="2"/>
+          <line x1="420" y1="154" x2="420" y2="200" stroke="#2B1810" stroke-width="2"/>
+
+          <!-- Leaf: Fine-tuning -->
+          <g class="dt-leaf" id="dt-ft">
+            <rect x="20" y="200" width="120" height="60" rx="14" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <text x="80" y="225" text-anchor="middle" font-family="Caprasimo" font-size="15" fill="#FBF3E2">🛠️ Fine-tuning</text>
+            <text x="80" y="245" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#FBF3E2">muda os pesos</text>
+          </g>
+
+          <!-- Leaf: RAG -->
+          <g class="dt-leaf" id="dt-rag">
+            <rect x="190" y="200" width="120" height="60" rx="14" fill="#5C8D89" stroke="#2B1810" stroke-width="2.5"/>
+            <text x="250" y="225" text-anchor="middle" font-family="Caprasimo" font-size="15" fill="#FBF3E2">📚 RAG</text>
+            <text x="250" y="245" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#FBF3E2">recupera + injeta</text>
+          </g>
+
+          <!-- Leaf: Prompt -->
+          <g class="dt-leaf" id="dt-pe">
+            <rect x="360" y="200" width="120" height="60" rx="14" fill="#F4D35E" stroke="#2B1810" stroke-width="2.5"/>
+            <text x="420" y="225" text-anchor="middle" font-family="Caprasimo" font-size="15" fill="#2B1810">💬 Prompt</text>
+            <text x="420" y="245" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#2B1810">só reescreve</text>
+          </g>
+
+          <!-- Combo box -->
+          <g class="dt-leaf" id="dt-combo">
+            <rect x="100" y="320" width="300" height="80" rx="16" fill="#FBF3E2" stroke="#2B1810" stroke-width="2.5" stroke-dasharray="6,4"/>
+            <text x="250" y="350" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">🤝 Combinação</text>
+            <text x="250" y="372" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">FT pro tom + RAG pro fato + Prompt pro formato</text>
+            <text x="250" y="390" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FF6B35" font-weight="700">caso real complexo</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="dt-result" id="dt-result">
+        <em>Clica num cenário pra ver a recomendação.</em>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- COLA -->
+<!-- ============================ -->
+<section class="chapter cola-section" id="cola">
+  <div class="container">
+    <span class="chapter-number">12 · Cola final pra prova</span>
+    <h2>Tudo o que <span style="color:var(--orange)">decorar</span>.</h2>
+
+    <div class="cola-grid">
+      <div class="cola-card">
+        <h4>📜 Logging de inferência</h4>
+        <p>Combinação: <strong>CloudTrail</strong> (auditoria de API), <strong>CloudWatch</strong> (app logs), <strong>Data Capture</strong> (input/output em S3), <strong>Model Monitor</strong> (qualidade/drift).</p>
+      </div>
+      <div class="cola-card">
+        <h4>🟪 Bedrock invocation logging</h4>
+        <p>Liga no console: prompts e respostas vão pra CloudWatch ou S3. Útil pra auditoria, fine-tuning, debugging. <strong>Pode conter PII</strong> — restringe acesso.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🛡️ Guardrails trace</h4>
+        <p>Mostra o que cada filtro detectou em cada chamada. Combina com CloudWatch. Indispensável pra entender por que algo foi bloqueado.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📋 Model Cards</h4>
+        <p>Documentação estruturada do modelo. 9 seções padrão. AWS: <strong>SageMaker Model Cards</strong>. Versionamento + aprovação + export PDF.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📑 AI Service Cards</h4>
+        <p>Cards públicos da AWS pra serviços gerenciados (Rekognition, Comprehend, etc.). Documenta limites, casos de uso seguros e considerações éticas.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔥 Full Fine-tuning</h4>
+        <p>Atualiza <strong>todos</strong> os pesos. Caro (GPU + horas), poderoso, exige muito dado. Modelo customizado é seu.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🪶 PEFT / LoRA</h4>
+        <p>Atualiza só uma fração (~0.1-3% dos pesos via matrizes low-rank). 10-100× mais barato. Default em fine-tuning moderno.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎓 Instruction Tuning</h4>
+        <p>FT supervisionado em pares <code>(instrução, resposta ideal)</code>. Ensina o modelo a seguir instruções genericamente. Base do "Chat" dos LLMs.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎯 RLHF</h4>
+        <p>Reinforcement Learning from Human Feedback. Humano ranqueia respostas, treina modelo de recompensa, RL otimiza. Caro mas mais preciso.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📈 Learning rate</h4>
+        <p>Quão grande é cada passo do gradient descent. Baixo = lento. Alto = instável (NaN). Sweet spot tipicamente 1e-5 a 1e-3.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📦 Batch size</h4>
+        <p>Quantos exemplos por step. Pequeno = ruidoso, generaliza melhor. Grande = estável, GPU-pesado. Trade-off com learning rate.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔁 Epochs</h4>
+        <p>Quantas vezes vê o dataset inteiro. Poucas = underfit. Muitas = overfit. Use early stopping baseado em val loss.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🛡️ Regularização</h4>
+        <p>Dropout (zera neurônios), L1/L2 (penaliza pesos grandes), data augmentation. Combate overfitting.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎯 SageMaker AMT</h4>
+        <p>Automatic Model Tuning. 4 estratégias: Random, Grid, <strong>Bayesian</strong> (default), Hyperband. Define ranges, AMT acha o melhor.</p>
+      </div>
+      <div class="cola-card">
+        <h4>💬 Prompt Engineering</h4>
+        <p>Reescreve a pergunta. Não muda modelo, não muda dado. <strong>Custo zero</strong>, mais simples e rápido. Sempre tente isso primeiro.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📚 RAG</h4>
+        <p>Recupera trechos da sua base e injeta no prompt. Ideal pra <strong>conhecimento factual</strong> que muda. Não treina modelo.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🛠️ Fine-tuning</h4>
+        <p>Ajusta pesos com seus dados. Ideal pra <strong>tom, estilo, formato, jargão</strong>. Caro, mas vira ativo da empresa.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🤝 Combinação</h4>
+        <p>Caso real geralmente combina os 3: <strong>FT</strong> pro tom + <strong>RAG</strong> pro fato atualizado + <strong>Prompt</strong> pro formato fechado.</p>
+      </div>
+    </div>
+
+    <div class="exam-tips">
+      <h3>🎯 Pegadinhas que caem na prova</h3>
+      <ul>
+        <li><strong>"Auditar todas as chamadas pra um endpoint"</strong> → <strong>CloudTrail</strong> + Data Capture pro payload completo. CloudWatch é app log, não API audit.</li>
+        <li><strong>"Vamos retreinar e precisamos saber o que o modelo viu"</strong> → <strong>Data Capture</strong> em S3 (input + output). Sem isso, você reconstrói às cegas.</li>
+        <li><strong>"Modelo bloqueou e o usuário reclamou"</strong> → habilite <strong>Guardrails trace</strong>. Mostra qual filtro pegou.</li>
+        <li><strong>"Documentar pra auditor regulatório"</strong> → <strong>SageMaker Model Cards</strong>. Não confunda com Model Registry (que versiona binário).</li>
+        <li><strong>"Adaptar tom de voz"</strong> → fine-tuning. <strong>"Conhecimento atualizado"</strong> → RAG. <strong>"Pequeno ajuste de saída"</strong> → prompt.</li>
+        <li><strong>"Pouco dado pra fine-tuning"</strong> → use <strong>PEFT/LoRA</strong> (precisa menos exemplos) ou volte pra few-shot.</li>
+        <li><strong>"Loss sobe ao infinito (NaN)"</strong> → learning rate alto demais. Reduza ou use warmup.</li>
+        <li><strong>"Train loss baixo, val loss alto"</strong> = <strong>overfitting</strong>. Mais dropout, mais dado, menos epochs.</li>
+        <li><strong>"Quero menor número de jobs no tuning"</strong> → <strong>Bayesian Optimization</strong>. Hyperband é pra economizar GPU em jobs longos.</li>
+        <li><strong>RLHF ≠ instruction tuning.</strong> RLHF usa reward model + RL. Instruction tuning é supervised fine-tuning em pares (instr, resp).</li>
+        <li><strong>Custom Model no Bedrock</strong> só roda em <strong>Provisioned Throughput</strong> (capacidade reservada). Sob-demanda não rola.</li>
+        <li><strong>Bedrock Knowledge Bases ≠ Bedrock Custom Models.</strong> KB é RAG. Custom é Fine-tuning. Misturar é erro clássico.</li>
+        <li><strong>"Resposta tem que ser 100% factual e citar fonte"</strong> → RAG, não fine-tuning. FT pode "lembrar errado".</li>
+        <li><strong>Hiperparâmetros são definidos por você, parâmetros (pesos) são aprendidos pelo treino.</strong> Aparece direto na prova.</li>
+        <li><strong>Quase sempre comece com Prompt Engineering.</strong> Sobe pra RAG se faltar conhecimento. Sobe pra FT só se for um problema de comportamento que prompt não resolve.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="aula-footer">
+  <div class="container">
+    <p>Feito com 🧡 pra <strong>Escola da Nuvem</strong> · <a href="../index.html">Balaio de Gatos</a> · <a href="../aula21/">← Aula 21</a> · <a href="../mapa/">📍 Mapa de Estudos</a></p>
+    <p class="src">Revisão de operação (logging, Model Cards) e customização (fine-tuning, hiperparâmetros, decisão Prompt × RAG × FT) · Compatível com o exam guide AIF-C01 2026.</p>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>
