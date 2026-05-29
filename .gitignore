@@ -1,0 +1,11 @@
+# Editor / IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temp / scratch
+.tmp_*
+*.tmp

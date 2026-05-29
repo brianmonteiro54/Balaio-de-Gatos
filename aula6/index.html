@@ -1,14 +1,36 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Balaio de Gatos · aula 6: </title>
+<title>Balaio de Gatos · Aula 6: Engenharia de Prompt, Agents e Alucinação</title>
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="../favicon.png">
 <link rel="shortcut icon" href="../favicon.png">
 <link rel="apple-touch-icon" href="../favicon.png">
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="Aula 6 do Balaio de Gatos: prompts, prompt chaining, agents, alucinação, GANs e NLP com simuladores interativos. Onde IA agrega valor e onde não.">
+<meta name="keywords" content="engenharia de prompt, prompt chaining, agents, alucinação, GAN, NLP, ReAct, IA generativa, AWS Bedrock, escola da nuvem">
+<meta name="author" content="Escola da Nuvem">
+<meta name="theme-color" content="#FF6B35">
+
+<!-- Open Graph (Compartilhamento em redes sociais) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://brianmonteiro54.github.io/Balaio-de-Gatos/aula6/">
+<meta property="og:title" content="Balaio de Gatos · Aula 6: Engenharia de Prompt, Agents e Alucinação">
+<meta property="og:description" content="Aula 6 do Balaio de Gatos: prompts, prompt chaining, agents, alucinação, GANs e NLP com simuladores interativos. Onde IA agrega valor e onde não.">
+<meta property="og:image" content="https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Balaio de Gatos · Aula 6: Engenharia de Prompt, Agents e Alucinação">
+<meta name="twitter:description" content="Aula 6 do Balaio de Gatos: prompts, prompt chaining, agents, alucinação, GANs e NLP com simuladores interativos. Onde IA agrega valor e onde não.">
+<meta name="twitter:image" content="https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png">
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +41,7 @@
 
 <nav>
   <div class="nav-inner">
-    <div class="nav-brand">🐈 Balaio de Gatos <span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"></span></div>
+    <div class="nav-brand">🐈 Balaio de Gatos</div>
     <div class="nav-links">
       <a href="#valor">Onde IA agrega</a>
       <a href="#nao-usar">Quando não usar</a>
