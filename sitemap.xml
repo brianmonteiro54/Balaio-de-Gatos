@@ -1,123 +1,268 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula1/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula2/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula3/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula4/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula5/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula6/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula7/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula8/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula9/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula10/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula11/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula12/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula13/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula14/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula15/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula16/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula17/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula19/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula20/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula21/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/aula22/</loc>
+    <lastmod>2026-05-29T00:45:58-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/mapa/</loc>
+    <lastmod>2026-05-28T22:51:29-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/game/</loc>
+    <lastmod>2026-05-28T01:21:34-03:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:title>Balaio de Gatos</image:title>
+      <image:caption>Balaio de Gatos: aulas visuais de IA pra Escola da Nuvem</image:caption>
+    </image:image>
   </url>
 </urlset>
