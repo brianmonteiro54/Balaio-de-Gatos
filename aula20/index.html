@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 20: Embeddings, Métricas, Inferência e AWS</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<meta name="description" content="Aula 20 do Balaio de Gatos: revisão interativa do D4 + D5 do AIF-C01. RAG vs Fine-tuning, embeddings, similaridade vetorial, vector DBs, métricas de classificação e regressão, métricas de negócio, tipos de inferência (batch, real-time, serverless, async), API gerenciada vs auto-hospedada, e visão geral do SageMaker e Bedrock.">
+<meta name="keywords" content="RAG, fine-tuning, embeddings, vector similarity, cosine similarity, vector database, OpenSearch, pgvector, accuracy, precision, recall, F1, confusion matrix, threshold, MAE, MSE, RMSE, R², ROI, batch inference, real-time inference, serverless, async, SageMaker, Bedrock, AWS AI Practitioner">
+<meta name="author" content="Escola da Nuvem">
+<meta name="theme-color" content="#FF6B35">
+
+<meta property="og:title" content="Aula 20 · Embeddings, métricas e inferência">
+<meta property="og:description" content="Mexe nos sliders, vê a matriz de confusão respondendo, compara endpoints e revisa SageMaker × Bedrock num lugar só.">
+<meta property="og:image" content="../cat-thumbnail.png">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span class="pt">aula 20</span></div>
+    <div class="nav-links">
+      <a href="#rag-ft">RAG × FT</a>
+      <a href="#embeddings">Embeddings</a>
+      <a href="#similaridade">Similaridade</a>
+      <a href="#vector-db">Vector DB</a>
+      <a href="#quando-emb">Quando usar</a>
+      <a href="#matriz">Matriz × Métricas</a>
+      <a href="#threshold">Threshold</a>
+      <a href="#reg-metrics">Reg. Métricas</a>
+      <a href="#negocio">Negócio</a>
+      <a href="#batch-rt">Batch × RT</a>
+      <a href="#serverless">Serverless × Endpoint</a>
+      <a href="#async">Async</a>
+      <a href="#api-host">API × Self</a>
+      <a href="#sagemaker">SageMaker</a>
+      <a href="#bedrock">Bedrock</a>
+      <a href="#cola">Cola</a>
+      <a href="../index.html">← Aulas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · AI Practitioner <span class="v2">aula 20 · D4 + D5</span></div>
+        <h1>
+          <span class="scratch">Embeddings</span>, métricas<br>
+          e o <span class="accent">deploy</span> do<br>
+          gato em produção.
+        </h1>
+        <p>
+          Os 16 conceitos do <strong>Domínio 4 (Aplicações de FM)</strong> e <strong>Domínio 5 (Operações)</strong> que mais aparecem na prova: <strong>RAG × Fine-tuning</strong>, embeddings e similaridade vetorial, vector DBs, <strong>métricas</strong> de classificação e regressão, <strong>métricas de negócio</strong>, tipos de inferência (batch, real-time, serverless, async), API gerenciada vs auto-hospedada e a visão geral de <strong>SageMaker</strong> e <strong>Bedrock</strong>. Cada um com widget pra mexer.
+        </p>
+        <a href="#rag-ft" class="hero-cta">Começa a revisão 🐾</a>
+        <a href="#cola" class="hero-cta ghost">Cola final</a>
+      </div>
+      <div class="cat-lab">
+        <span class="float-cat c1">📊</span>
+        <span class="float-cat c2">🎯</span>
+        <span class="float-cat c3">🐈</span>
+        <span class="float-cat c4">📈</span>
+        <span class="float-cat c5">⚙️</span>
+        <span class="chip">RAG × Fine-tuning</span>
+        <span class="chip2">Acc · Prec · Rec · F1</span>
+        <span class="chip3">MAE · RMSE · R²</span>
+        <span class="chip4">SageMaker · Bedrock</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🔁 RAG × FINE-TUNING</span><span>🔢 EMBEDDINGS</span><span>📐 SIMILARIDADE VETORIAL</span><span>🗄️ VECTOR DB</span><span>🤔 QUANDO USAR</span><span>🟧 MATRIZ DE CONFUSÃO</span><span>🎯 ACURÁCIA · PRECISÃO · RECALL · F1</span><span>📏 THRESHOLD</span><span>📈 MAE · MSE · RMSE · R²</span><span>💰 ROI · CUSTO · IMPACTO</span><span>📦 BATCH × REAL-TIME</span><span>☁️ SERVERLESS × ENDPOINT</span><span>⏳ ASYNC</span><span>🛒 API × AUTO-HOSPEDADA</span><span>🟧 SAGEMAKER</span><span>🟪 BEDROCK</span>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!-- PARTE 1: EMBEDDINGS & RAG -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 1 · Embeddings, similaridade e RAG vs Fine-tuning</span>
+    <h2>
+      Como o gato <span class="accent">vira número</span><br>
+      e <span class="yel">acha quem é parecido.</span>
+    </h2>
+    <p>
+      Antes de falar em métrica e deploy, é preciso entender <strong>como o conhecimento entra no modelo</strong>. Por embedding (representação vetorial) ou por treino (fine-tuning). Cada um com seu custo e momento certo.
+    </p>
+  </div>
+</section>
+
+<!-- 1. RAG × FINE-TUNING -->
+<section class="chapter" id="rag-ft">
+  <div class="container">
+    <span class="chapter-number">01 · RAG × Fine-tuning</span>
+    <h2>Adicionar <span style="color:var(--orange)">conhecimento</span> ou mudar <span style="color:var(--orange)">comportamento</span>?</h2>
+    <p class="lead">
+      Erro clássico de prova: confundir os dois. <strong>RAG</strong> recupera contexto na hora, não treina o modelo. <strong>Fine-tuning</strong> ajusta os pesos com seus dados, vira parte do modelo. Clica num cenário e descubra qual técnica resolve.
+    </p>
+
+    <div class="rft-grid">
+      <div class="rft-scenarios" id="rft-scenarios">
+        <button class="rft-scen active" data-s="atualizado">
+          <span class="emoji">📅</span>
+          <strong>Catálogo muda toda semana</strong>
+          <span>preço, estoque, novos produtos</span>
+        </button>
+        <button class="rft-scen" data-s="tom">
+          <span class="emoji">🎭</span>
+          <strong>Tom de voz da marca</strong>
+          <span>responder sempre como "tia Cleide"</span>
+        </button>
+        <button class="rft-scen" data-s="jargao">
+          <span class="emoji">🩺</span>
+          <strong>Jargão médico-veterinário</strong>
+          <span>vocabulário técnico de domínio</span>
+        </button>
+        <button class="rft-scen" data-s="docs">
+          <span class="emoji">📚</span>
+          <strong>Manual interno de 500 páginas</strong>
+          <span>política de reembolso, FAQ, procedimentos</span>
+        </button>
+        <button class="rft-scen" data-s="formato">
+          <span class="emoji">🧾</span>
+          <strong>Formato de saída específico</strong>
+          <span>SQL custom, JSON com schema fechado</span>
+        </button>
+        <button class="rft-scen" data-s="privado">
+          <span class="emoji">🔒</span>
+          <strong>Conhecimento privado e sensível</strong>
+          <span>contratos confidenciais, dados financeiros</span>
+        </button>
+      </div>
+
+      <div class="rft-result" id="rft-result">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+
+    <div class="rft-table">
+      <div class="rft-row head">
+        <span></span>
+        <span class="col-rag">📚 RAG</span>
+        <span class="col-ft">🛠️ Fine-tuning</span>
+      </div>
+      <div class="rft-row">
+        <span class="rft-label">Muda os pesos?</span>
+        <span class="col-rag">❌ Não</span>
+        <span class="col-ft">✅ Sim</span>
+      </div>
+      <div class="rft-row">
+        <span class="rft-label">Atualizar dado é</span>
+        <span class="col-rag">✅ Re-indexar (segundos)</span>
+        <span class="col-ft">⏳ Re-treinar (horas/dias)</span>
+      </div>
+      <div class="rft-row">
+        <span class="rft-label">Custo</span>
+        <span class="col-rag">💲 Baixo (busca vetorial)</span>
+        <span class="col-ft">💲💲💲 Alto (GPU + dados)</span>
+      </div>
+      <div class="rft-row">
+        <span class="rft-label">Boa pra</span>
+        <span class="col-rag">Conhecimento factual, atualizado, com citação</span>
+        <span class="col-ft">Estilo, tom, formato, jargão, comportamento</span>
+      </div>
+      <div class="rft-row">
+        <span class="rft-label">Risco principal</span>
+        <span class="col-rag">Retrieval ruim → resposta ruim</span>
+        <span class="col-ft">Overfitting → perde generalização</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. EMBEDDINGS -->
+<section class="chapter alt-bg" id="embeddings">
+  <div class="container">
+    <span class="chapter-number">02 · O que são embeddings</span>
+    <h2>Palavra <span style="color:var(--orange)">vira coordenada</span> num espaço.</h2>
+    <p class="lead">
+      Embedding é um vetor (lista de números) que representa o significado de um pedaço de texto, imagem ou áudio. Coisas <strong>parecidas</strong> ficam <strong>perto</strong> no espaço. Clica nas palavras pra ver quem fica perto de quem.
+    </p>
+
+    <div class="emb-lab">
+      <div class="emb-controls">
+        <h4>🐈 Vocabulário do balaio</h4>
+        <p class="emb-hint">Clica numa palavra. As 3 mais parecidas piscam no mapa.</p>
+        <div class="emb-words" id="emb-words"></div>
+        <div class="emb-info" id="emb-info">
+          <em>Selecione uma palavra acima.</em>
+        </div>
+      </div>
+
+      <div class="emb-canvas">
+        <svg viewBox="0 0 480 360" id="emb-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="eg" width="40" height="30" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 30" fill="none" stroke="rgba(43,24,16,0.07)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="480" height="360" fill="url(#eg)"/>
+          <line x1="20" y1="180" x2="460" y2="180" stroke="rgba(43,24,16,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="240" y1="20" x2="240" y2="340" stroke="rgba(43,24,16,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="450" y="175" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#4A3528">dim 1</text>
+          <text x="245" y="30" font-family="JetBrains Mono" font-size="10" fill="#4A3528">dim 2</text>
+          <g id="emb-points"></g>
+          <g id="emb-labels"></g>
+          <g id="emb-lines"></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. SIMILARIDADE -->
+<section class="chapter" id="similaridade">
+  <div class="container">
+    <span class="chapter-number">03 · Similaridade vetorial</span>
+    <h2>Como <span style="color:var(--orange)">medir</span> "perto" entre vetores?</h2>
+    <p class="lead">
+      A métrica padrão de vector DBs é <strong>cosseno</strong>: mede o <em>ângulo</em> entre os vetores, ignorando comprimento. Vai de <code>-1</code> (opostos) a <code>1</code> (idênticos). Mexa nos vetores e veja a similaridade ao vivo.
+    </p>
+
+    <div class="sim-lab">
+      <div class="sim-canvas">
+        <svg viewBox="0 0 360 360" id="sim-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="sg" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(43,24,16,0.07)" stroke-width="1"/>
+            </pattern>
+            <marker id="arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#FF6B35"/>
+            </marker>
+            <marker id="arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#5C8D89"/>
+            </marker>
+          </defs>
+          <rect width="360" height="360" fill="url(#sg)"/>
+          <line x1="20" y1="180" x2="340" y2="180" stroke="#2B1810" stroke-width="2"/>
+          <line x1="180" y1="20" x2="180" y2="340" stroke="#2B1810" stroke-width="2"/>
+          <path id="sim-arc" d="" fill="rgba(255,107,53,0.18)" stroke="#FF6B35" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line id="sim-vec-a" x1="180" y1="180" x2="280" y2="80" stroke="#FF6B35" stroke-width="3" marker-end="url(#arrow-a)"/>
+          <line id="sim-vec-b" x1="180" y1="180" x2="260" y2="120" stroke="#5C8D89" stroke-width="3" marker-end="url(#arrow-b)"/>
+          <circle id="sim-handle-a" cx="280" cy="80" r="10" fill="#FF6B35" stroke="#2B1810" stroke-width="2" style="cursor:grab"/>
+          <circle id="sim-handle-b" cx="260" cy="120" r="10" fill="#5C8D89" stroke="#2B1810" stroke-width="2" style="cursor:grab"/>
+          <text id="sim-label-a" x="290" y="75" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#FF6B35">A "gato"</text>
+          <text id="sim-label-b" x="270" y="135" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#5C8D89">B "felino"</text>
+        </svg>
+        <p class="sim-hint">Arrasta as bolinhas pra mover os vetores.</p>
+      </div>
+
+      <div class="sim-info">
+        <div class="sim-tag" id="sim-tag">≈ idênticos</div>
+        <div class="sim-metrics">
+          <div class="sim-m">
+            <span class="sm-label">Cosine similarity</span>
+            <span class="sm-val" id="sim-cos">0.97</span>
+          </div>
+          <div class="sim-m">
+            <span class="sm-label">Ângulo (graus)</span>
+            <span class="sm-val" id="sim-angle">14°</span>
+          </div>
+          <div class="sim-m">
+            <span class="sm-label">Distância euclidiana</span>
+            <span class="sm-val" id="sim-eucl">42</span>
+          </div>
+          <div class="sim-m">
+            <span class="sm-label">Dot product</span>
+            <span class="sm-val" id="sim-dot">21000</span>
+          </div>
+        </div>
+
+        <div class="sim-explain" id="sim-explain">
+          <p>"Gato" e "felino" são quase sinônimos. Vetores quase paralelos → cosseno alto.</p>
+        </div>
+
+        <div class="sim-presets">
+          <button data-preset="syn">😺 Sinônimos</button>
+          <button data-preset="rel">🐈 Relacionados</button>
+          <button data-preset="orth">⚖️ Sem relação</button>
+          <button data-preset="opp">🔄 Opostos</button>
+        </div>
+
+        <div class="sim-formulas">
+          <strong>📐 Métricas comuns:</strong>
+          <ul>
+            <li><strong>Cosseno</strong> · padrão em texto · ignora magnitude</li>
+            <li><strong>Euclidiana</strong> · distância "real" · sensível à escala</li>
+            <li><strong>Dot product</strong> · simples e rápido · usa magnitude</li>
+            <li><strong>Manhattan</strong> · soma dos eixos · resistente a outliers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. VECTOR DB -->
+<section class="chapter alt-bg" id="vector-db">
+  <div class="container">
+    <span class="chapter-number">04 · Bancos de dados vetoriais</span>
+    <h2>O <span style="color:var(--orange)">Ctrl+F semântico</span> dos seus dados.</h2>
+    <p class="lead">
+      Vector DB armazena embeddings e responde "quais são os mais parecidos?" em milissegundos, mesmo com bilhões de vetores. Cada serviço da AWS tem um perfil. Clica pra comparar.
+    </p>
+
+    <div class="vdb-grid" id="vdb-grid">
+      <button class="vdb-card active" data-v="opensearch">
+        <span class="vdb-emoji">🔍</span>
+        <strong>Amazon OpenSearch</strong>
+        <small>Vector engine · k-NN · híbrido</small>
+      </button>
+      <button class="vdb-card" data-v="aurora">
+        <span class="vdb-emoji">🐘</span>
+        <strong>Aurora pgvector</strong>
+        <small>Postgres com extensão de vetor</small>
+      </button>
+      <button class="vdb-card" data-v="neptune">
+        <span class="vdb-emoji">🕸️</span>
+        <strong>Neptune Analytics</strong>
+        <small>Grafo + vetor</small>
+      </button>
+      <button class="vdb-card" data-v="rds">
+        <span class="vdb-emoji">🗃️</span>
+        <strong>RDS for PostgreSQL</strong>
+        <small>pgvector em Postgres puro</small>
+      </button>
+      <button class="vdb-card" data-v="docdb">
+        <span class="vdb-emoji">📄</span>
+        <strong>DocumentDB</strong>
+        <small>Mongo-compatible com vector</small>
+      </button>
+      <button class="vdb-card" data-v="mq">
+        <span class="vdb-emoji">⚡</span>
+        <strong>MemoryDB / Redis</strong>
+        <small>Vector em memória, latência baixíssima</small>
+      </button>
+      <button class="vdb-card" data-v="kb">
+        <span class="vdb-emoji">📦</span>
+        <strong>Bedrock Knowledge Bases</strong>
+        <small>Gerenciado · escolhe e configura</small>
+      </button>
+    </div>
+
+    <div class="vdb-detail" id="vdb-detail">
+      <em>Clica num serviço pra ver detalhe.</em>
+    </div>
+  </div>
+</section>
+
+<!-- 5. QUANDO USAR EMBEDDINGS -->
+<section class="chapter" id="quando-emb">
+  <div class="container">
+    <span class="chapter-number">05 · Quando usar embeddings</span>
+    <h2>Nem toda <span style="color:var(--orange)">busca</span> precisa de vetor.</h2>
+    <p class="lead">
+      Embedding brilha quando a relação é semântica (significado, não palavra). Pra busca exata, SQL e índices clássicos ainda ganham. Lê o cenário e adivinha.
+    </p>
+
+    <div class="when-quiz" id="when-quiz">
+      <div class="wq-card">
+        <div class="wq-head">
+          <span class="wq-counter" id="wq-counter">1 / 6</span>
+          <span class="wq-streak" id="wq-streak">🔥 0</span>
+        </div>
+        <div class="wq-scenario" id="wq-scenario"></div>
+        <div class="wq-opts" id="wq-opts">
+          <button data-v="emb">🔢 Embeddings (vector search)</button>
+          <button data-v="sql">🗃️ Busca clássica (SQL/keyword)</button>
+          <button data-v="hybrid">🔀 Híbrido (BM25 + vetor)</button>
+        </div>
+        <div class="wq-feedback" id="wq-feedback" hidden></div>
+        <button class="wq-next" id="wq-next" hidden>Próximo →</button>
+      </div>
+
+      <div class="when-cheat">
+        <h4>📋 Quando vai de embedding</h4>
+        <ul>
+          <li>✅ "Encontre conteúdo <strong>parecido</strong>" (semântico)</li>
+          <li>✅ Recomendação por similaridade</li>
+          <li>✅ Detecção de duplicatas/anomalias</li>
+          <li>✅ Multi-idioma (vetor cruza idiomas)</li>
+          <li>✅ Multimodal (imagem ↔ texto)</li>
+        </ul>
+        <h4 style="margin-top:14px">🚫 Não precisa de embedding</h4>
+        <ul>
+          <li>❌ Busca exata por <strong>ID</strong>, CPF, código</li>
+          <li>❌ Filtros por intervalo numérico/data</li>
+          <li>❌ JOIN entre tabelas relacionais</li>
+          <li>❌ Resultado precisa ser determinístico</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 2: MÉTRICAS -->
+<!-- ============================ -->
+<section class="part-banner alt">
+  <div class="container">
+    <span class="chapter-number">Parte 2 · Métricas</span>
+    <h2>
+      Treinou. <span class="accent">Mas é bom?</span><br>
+      <span class="yel">Mede direito, não chuta.</span>
+    </h2>
+    <p>
+      Acurácia parece simples, mas mente. Em dataset desbalanceado, 99% de acerto pode ser fracasso. Aqui vai a régua de cada métrica e quando usar.
+    </p>
+  </div>
+</section>
+
+<!-- 6+7. MATRIZ DE CONFUSÃO + MÉTRICAS -->
+<section class="chapter" id="matriz">
+  <div class="container">
+    <span class="chapter-number">06 + 07 · Matriz de confusão · Acurácia · Precisão · Recall · F1</span>
+    <h2>A base <span style="color:var(--orange)">e</span> as quatro métricas que ela <span style="color:var(--orange)">explica</span>.</h2>
+    <p class="lead">
+      Quatro caixas: <strong>VP</strong> e <strong>VN</strong> são acertos, <strong>FP</strong> (alarme falso) e <strong>FN</strong> (deixou passar) são os dois jeitos diferentes de errar, e quase sempre custam coisas diferentes. Mexa nos sliders e veja a matriz reagir junto com as <strong>4 métricas de classificação</strong>. Cada métrica responde a uma pergunta de negócio diferente.
+    </p>
+
+    <div class="cmm-lab">
+      <div class="cmm-controls">
+        <h4>🎛️ Ajuste a matriz</h4>
+        <div class="cm-field">
+          <label>Verdadeiros Positivos (VP) <span class="cm-val" id="cm-tp-v">85</span></label>
+          <input type="range" id="cm-tp" min="0" max="100" value="85">
+          <small>"detectou gato e era gato mesmo"</small>
+        </div>
+        <div class="cm-field">
+          <label>Falsos Positivos (FP) <span class="cm-val" id="cm-fp-v">5</span></label>
+          <input type="range" id="cm-fp" min="0" max="100" value="5">
+          <small>"detectou gato mas era cachorro"</small>
+        </div>
+        <div class="cm-field">
+          <label>Falsos Negativos (FN) <span class="cm-val" id="cm-fn-v">15</span></label>
+          <input type="range" id="cm-fn" min="0" max="100" value="15">
+          <small>"era gato mas o modelo deixou passar"</small>
+        </div>
+        <div class="cm-field">
+          <label>Verdadeiros Negativos (VN) <span class="cm-val" id="cm-tn-v">95</span></label>
+          <input type="range" id="cm-tn" min="0" max="100" value="95">
+          <small>"era cachorro e o modelo disse que era cachorro"</small>
+        </div>
+      </div>
+
+      <div class="cmm-matrix-wrap">
+        <h4>🟧 Matriz de confusão</h4>
+        <div class="cm-matrix">
+          <div class="cm-headers">
+            <div class="cm-corner"></div>
+            <div class="cm-htop">Predito: 🐈</div>
+            <div class="cm-htop">Predito: 🐕</div>
+          </div>
+          <div class="cm-row">
+            <div class="cm-side">Real: 🐈</div>
+            <div class="cm-cell tp" id="cm-cell-tp">
+              <span class="cm-label">VP</span>
+              <span class="cm-num" id="cm-num-tp">85</span>
+              <span class="cm-mini">acertou ✅</span>
+            </div>
+            <div class="cm-cell fn" id="cm-cell-fn">
+              <span class="cm-label">FN</span>
+              <span class="cm-num" id="cm-num-fn">15</span>
+              <span class="cm-mini">deixou passar ❌</span>
+            </div>
+          </div>
+          <div class="cm-row">
+            <div class="cm-side">Real: 🐕</div>
+            <div class="cm-cell fp" id="cm-cell-fp">
+              <span class="cm-label">FP</span>
+              <span class="cm-num" id="cm-num-fp">5</span>
+              <span class="cm-mini">alarme falso ❌</span>
+            </div>
+            <div class="cm-cell tn" id="cm-cell-tn">
+              <span class="cm-label">VN</span>
+              <span class="cm-num" id="cm-num-tn">95</span>
+              <span class="cm-mini">acertou ✅</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmm-metrics">
+        <h4>📐 As 4 métricas, ao vivo</h4>
+        <div class="metrics-grid">
+          <div class="metric-card acc">
+            <div class="m-tag">📊 Acurácia</div>
+            <div class="m-formula">(VP + VN) / Total</div>
+            <div class="m-value" id="m-acc">90%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-acc-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "De todas as previsões, quantas acertei?"</p>
+            <p class="m-warn">⚠️ Mente em dataset desbalanceado.</p>
+          </div>
+
+          <div class="metric-card prec">
+            <div class="m-tag">🎯 Precisão</div>
+            <div class="m-formula">VP / (VP + FP)</div>
+            <div class="m-value" id="m-prec">94.4%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-prec-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "Dos que <em>previ</em> como positivos, quantos eram?"</p>
+            <p class="m-warn">⚠️ Use quando <strong>FP é caro</strong>: spam, denúncia de fraude.</p>
+          </div>
+
+          <div class="metric-card rec">
+            <div class="m-tag">🪤 Recall</div>
+            <div class="m-formula">VP / (VP + FN)</div>
+            <div class="m-value" id="m-rec">85%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-rec-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "Dos casos <em>reais</em> positivos, quantos peguei?"</p>
+            <p class="m-warn">⚠️ Use quando <strong>FN é caro</strong>: detecção de tumor, gato perdido.</p>
+          </div>
+
+          <div class="metric-card f1">
+            <div class="m-tag">⚖️ F1 Score</div>
+            <div class="m-formula">2 · (P · R) / (P + R)</div>
+            <div class="m-value" id="m-f1">89.5%</div>
+            <div class="m-bar"><div class="m-bar-fill" id="m-f1-bar"></div></div>
+            <p class="m-q"><strong>Pergunta:</strong> "Tô equilibrado entre Precisão e Recall?"</p>
+            <p class="m-warn">✅ Boa <strong>métrica única</strong> em dataset desbalanceado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-tradeoff">
+      <h4>🎢 O trade-off Precisão × Recall</h4>
+      <p>Quase sempre <strong>aumentar uma diminui a outra</strong>. Deixar o modelo "mais agressivo" (chutar positivo com pouca certeza) sobe Recall mas derruba Precisão. F1 é o equilíbrio. ROC-AUC é a métrica resumo da capacidade do modelo em <em>qualquer</em> threshold.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. THRESHOLD/INTERVALO -->
+<section class="chapter" id="threshold">
+  <div class="container">
+    <span class="chapter-number">08 · Threshold (intervalo de decisão)</span>
+    <h2>O <span style="color:var(--orange)">corte</span> que vira "sim" ou "não".</h2>
+    <p class="lead">
+      O modelo cospe um <strong>score de 0 a 1</strong> (probabilidade). Quem decide se vira positivo é o <strong>threshold</strong>. Mover o corte muda Precisão, Recall e a matriz inteira. Mexa o slider e veja a régua dos gatos.
+    </p>
+
+    <div class="th-lab">
+      <div class="th-controls">
+        <label>Threshold <span class="cm-val" id="th-v">0.50</span></label>
+        <input type="range" id="th-slider" min="0" max="100" value="50">
+        <div class="cm-hint"><span>← captura tudo (recall ↑)</span><span>só certeza (precisão ↑) →</span></div>
+
+        <div class="th-stats">
+          <div class="ths">
+            <span>Precisão</span>
+            <strong id="th-prec">88.0%</strong>
+          </div>
+          <div class="ths">
+            <span>Recall</span>
+            <strong id="th-rec">79.2%</strong>
+          </div>
+          <div class="ths">
+            <span>F1</span>
+            <strong id="th-f1">83.4%</strong>
+          </div>
+          <div class="ths">
+            <span>Detectados</span>
+            <strong id="th-pos">42 / 50</strong>
+          </div>
+        </div>
+
+        <div class="th-tips">
+          <strong>💡 Como escolher</strong>
+          <ul>
+            <li><strong>Threshold baixo</strong> (0.2-0.4) → cataloga mais, mais alarme falso. Use quando FN é caro (saúde, segurança).</li>
+            <li><strong>Threshold alto</strong> (0.7-0.9) → só pega certezas, deixa muita coisa passar. Use quando FP é caro (spam, denúncia).</li>
+            <li>0.5 só é certo se o dataset é balanceado e os erros custam o mesmo.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="th-board" id="th-board">
+        <!-- preenchido pelo JS: 50 fotos com score, separadas pelo threshold -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. MÉTRICAS DE REGRESSÃO -->
+<section class="chapter alt-bg" id="reg-metrics">
+  <div class="container">
+    <span class="chapter-number">09 · MAE · MSE · RMSE · R²</span>
+    <h2>Quando o modelo <span style="color:var(--orange)">prevê número</span>.</h2>
+    <p class="lead">
+      Em regressão, o erro é a <strong>distância entre o previsto e o real</strong>. Cada métrica trata essa distância diferente. Mexa nas previsões dos 10 gatos e veja as métricas se ajustando.
+    </p>
+
+    <div class="reg-lab">
+      <div class="reg-canvas">
+        <svg viewBox="0 0 480 320" id="reg-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="rg" width="40" height="32" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 32" fill="none" stroke="rgba(43,24,16,0.07)"/>
+            </pattern>
+          </defs>
+          <rect width="480" height="320" fill="url(#rg)"/>
+          <line x1="40" y1="280" x2="460" y2="280" stroke="#2B1810" stroke-width="2"/>
+          <line x1="40" y1="20" x2="40" y2="280" stroke="#2B1810" stroke-width="2"/>
+          <text x="440" y="295" font-family="JetBrains Mono" font-size="11" fill="#4A3528">idade</text>
+          <text x="10" y="30" font-family="JetBrains Mono" font-size="11" fill="#4A3528">peso (kg)</text>
+          <line id="reg-line" x1="50" y1="240" x2="450" y2="80" stroke="#FF6B35" stroke-width="2.5" stroke-dasharray="4,3"/>
+          <text x="370" y="105" font-family="Sora" font-weight="700" font-size="11" fill="#FF6B35">previsão</text>
+          <g id="reg-real"></g>
+          <g id="reg-errors"></g>
+        </svg>
+        <p class="sim-hint">Arrasta as bolinhas reais (verdes) pra mudar o erro de cada amostra.</p>
+      </div>
+
+      <div class="reg-metrics-grid">
+        <div class="rm-card">
+          <span class="rm-tag">📏 MAE</span>
+          <span class="rm-name">Mean Absolute Error</span>
+          <span class="rm-val" id="rm-mae">0.42</span>
+          <p>Média do <strong>módulo</strong> dos erros. Mesma unidade do alvo (kg). Robusto a outliers.</p>
+          <code>(1/n) · Σ |yi − ŷi|</code>
+        </div>
+
+        <div class="rm-card">
+          <span class="rm-tag">📐 MSE</span>
+          <span class="rm-name">Mean Squared Error</span>
+          <span class="rm-val" id="rm-mse">0.31</span>
+          <p>Média do <strong>quadrado</strong> dos erros. Penaliza erro grande mais que pequeno. Unidade ao quadrado (kg²).</p>
+          <code>(1/n) · Σ (yi − ŷi)²</code>
+        </div>
+
+        <div class="rm-card">
+          <span class="rm-tag">📊 RMSE</span>
+          <span class="rm-name">Root Mean Squared Error</span>
+          <span class="rm-val" id="rm-rmse">0.55</span>
+          <p>Raiz do MSE. Volta pra unidade original (kg). É a métrica mais lida em produção.</p>
+          <code>√MSE</code>
+        </div>
+
+        <div class="rm-card">
+          <span class="rm-tag">🎯 R²</span>
+          <span class="rm-name">Coeficiente de determinação</span>
+          <span class="rm-val" id="rm-r2">0.82</span>
+          <p>Quanto da variância dos dados o modelo explica. <strong>1.0</strong> = perfeito. <strong>0</strong> = chuta a média. <strong>&lt; 0</strong> = pior que a média.</p>
+          <code>1 − (Σ erros² / Σ var)</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. MÉTRICAS DE NEGÓCIO -->
+<section class="chapter" id="negocio">
+  <div class="container">
+    <span class="chapter-number">10 · Métricas de negócio</span>
+    <h2>O número <span style="color:var(--orange)">que decide</span> se o projeto continua.</h2>
+    <p class="lead">
+      F1 alto não paga conta. Quem aprova budget olha <strong>ROI, custo evitado, receita gerada e impacto operacional</strong>. Use a calculadora pra ver o detector de gato perdido virar dinheiro.
+    </p>
+
+    <div class="biz-lab">
+      <div class="biz-controls">
+        <h4>🎛️ Variáveis do caso</h4>
+
+        <div class="biz-field">
+          <label>Volume mensal de busca <span class="cm-val" id="biz-vol-v">10.000</span></label>
+          <input type="range" id="biz-vol" min="100" max="100000" step="100" value="10000">
+        </div>
+
+        <div class="biz-field">
+          <label>Recall do modelo <span class="cm-val" id="biz-rec-v">85%</span></label>
+          <input type="range" id="biz-rec" min="50" max="99" value="85">
+        </div>
+
+        <div class="biz-field">
+          <label>Receita por gato encontrado <span class="cm-val" id="biz-rev-v">R$ 35</span></label>
+          <input type="range" id="biz-rev" min="5" max="100" value="35">
+        </div>
+
+        <div class="biz-field">
+          <label>Custo do modelo (mês) <span class="cm-val" id="biz-cost-v">R$ 4.500</span></label>
+          <input type="range" id="biz-cost" min="500" max="20000" step="100" value="4500">
+        </div>
+
+        <div class="biz-field">
+          <label>Custo por revisão humana de FP <span class="cm-val" id="biz-fp-v">R$ 8</span></label>
+          <input type="range" id="biz-fp" min="0" max="50" value="8">
+        </div>
+      </div>
+
+      <div class="biz-result" id="biz-result">
+        <!-- preenchido pelo JS -->
+      </div>
+
+      <div class="biz-tips">
+        <h4>💡 Métricas de negócio que caem na prova</h4>
+        <ul>
+          <li><strong>ROI</strong> = (ganho − custo) / custo · em %. Acima de 0 vale a pena, regra de bolso é mirar &gt;30%.</li>
+          <li><strong>Custo evitado</strong> = quanto deixou de gastar (ex.: gato perdido não rende reembolso de plano).</li>
+          <li><strong>Receita gerada</strong> = vendas/leads que vieram do modelo. Use teste A/B pra atribuir.</li>
+          <li><strong>Impacto operacional</strong> = horas humanas economizadas, redução de tempo de resposta, NPS.</li>
+          <li><strong>Custo por inferência</strong> = total de gasto / chamadas do mês. Compare com receita por chamada.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 3: INFERÊNCIA -->
+<!-- ============================ -->
+<section class="part-banner alt2">
+  <div class="container">
+    <span class="chapter-number">Parte 3 · Tipos de inferência</span>
+    <h2>
+      Treinou o gato. <span class="accent">Hora</span><br>
+      de ele <span class="yel">trabalhar.</span>
+    </h2>
+    <p>
+      Inferência é o "modelo em produção respondendo". Tem 4 sabores no SageMaker, e a escolha errada custa caro ou deixa o usuário esperando.
+    </p>
+  </div>
+</section>
+
+<!-- 11. BATCH × REAL-TIME -->
+<section class="chapter" id="batch-rt">
+  <div class="container">
+    <span class="chapter-number">11 · Inferência em lote × tempo real</span>
+    <h2>Processa <span style="color:var(--orange)">tudo de uma vez</span> ou <span style="color:var(--orange)">um por um</span>?</h2>
+    <p class="lead">
+      A pergunta-chave é simples: <strong>o usuário tá esperando?</strong> Se sim, real-time. Se não, batch, e você economiza muito.
+    </p>
+
+    <div class="brt-grid">
+      <div class="brt-card batch">
+        <div class="brt-tag">📦 Batch (em lote)</div>
+        <h3>Processa milhares juntos, fora do horário</h3>
+        <ul class="brt-feat">
+          <li>✅ Sem endpoint sempre ligado · você paga só o job</li>
+          <li>✅ Otimizado pra <strong>throughput</strong> (volume)</li>
+          <li>✅ Roda offline · usuário não espera</li>
+          <li>⚠️ Latência: minutos a horas</li>
+          <li>⚠️ Resultado vem num arquivo (S3) depois</li>
+        </ul>
+        <div class="brt-when">
+          <strong>Use quando:</strong> rodar todo fim de semana scoring de churn, classificar 10M de fotos antigas, recalcular embeddings da base inteira.
+        </div>
+        <div class="brt-aws"><strong>AWS:</strong> SageMaker <code>Batch Transform</code></div>
+      </div>
+
+      <div class="brt-card rt">
+        <div class="brt-tag">⚡ Real-time</div>
+        <h3>Responde uma chamada por vez, em ms</h3>
+        <ul class="brt-feat">
+          <li>✅ Latência baixa (50-500ms)</li>
+          <li>✅ HTTPS endpoint sempre disponível</li>
+          <li>✅ Auto-scaling configurável</li>
+          <li>⚠️ Paga pela instância <strong>24/7</strong> mesmo parada</li>
+          <li>⚠️ Custo alto se volume é baixo</li>
+        </ul>
+        <div class="brt-when">
+          <strong>Use quando:</strong> chatbot, busca em loja, recomendação durante navegação, fraude em pagamento, qualquer caso com usuário esperando.
+        </div>
+        <div class="brt-aws"><strong>AWS:</strong> SageMaker <code>Real-time Endpoint</code></div>
+      </div>
+    </div>
+
+    <div class="brt-decisor">
+      <h4>🤔 Cenário rápido</h4>
+      <p id="brt-q">"Quero recalcular o score de saúde de todos os 2M de gatos do sistema toda madrugada de domingo."</p>
+      <div class="brt-opts">
+        <button data-v="batch">📦 Batch</button>
+        <button data-v="rt">⚡ Real-time</button>
+      </div>
+      <div class="brt-feedback" id="brt-feedback" hidden></div>
+      <button class="brt-next" id="brt-next" hidden>Próximo cenário →</button>
+    </div>
+  </div>
+</section>
+
+<!-- 12. SERVERLESS × ENDPOINT -->
+<section class="chapter alt-bg" id="serverless">
+  <div class="container">
+    <span class="chapter-number">12 · Serverless × Endpoint dedicado</span>
+    <h2>Pagar por chamada ou pela <span style="color:var(--orange)">máquina ligada</span>?</h2>
+    <p class="lead">
+      Mesma pergunta de Lambda × EC2, mas pra inferência. <strong>Serverless</strong> escala a zero. <strong>Endpoint</strong> tem instância sempre quente. Escolha errada = ou conta cara, ou usuário esperando o cold start.
+    </p>
+
+    <div class="se-lab">
+      <div class="se-controls">
+        <label>Tráfego médio (chamadas/dia) <span class="cm-val" id="se-traf-v">5.000</span></label>
+        <input type="range" id="se-traf" min="0" max="100000" step="500" value="5000">
+        <div class="cm-hint"><span>baixo / esporádico</span><span>alto / 24/7</span></div>
+
+        <label style="margin-top:18px">Padrão de tráfego</label>
+        <div class="se-pat">
+          <button data-p="bursty" class="active">⚡ Burst (picos)</button>
+          <button data-p="steady">📊 Constante</button>
+          <button data-p="rare">💤 Raro / dev</button>
+        </div>
+      </div>
+
+      <div class="se-result" id="se-result">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+
+    <div class="se-table">
+      <div class="se-row head">
+        <span></span>
+        <span>☁️ Serverless</span>
+        <span>🖥️ Endpoint dedicado</span>
+      </div>
+      <div class="se-row">
+        <span>Cobrança</span>
+        <span>Por uso (request + duração)</span>
+        <span>Por hora de instância (24/7)</span>
+      </div>
+      <div class="se-row">
+        <span>Cold start</span>
+        <span>⚠️ Sim (segundos)</span>
+        <span>✅ Não (instância sempre quente)</span>
+      </div>
+      <div class="se-row">
+        <span>Tráfego ideal</span>
+        <span>Esporádico, irregular, dev/test</span>
+        <span>Constante, alto volume, baixa latência</span>
+      </div>
+      <div class="se-row">
+        <span>Custo de "ficar parado"</span>
+        <span>R$ 0</span>
+        <span>R$ instância × 24h × 30d</span>
+      </div>
+      <div class="se-row">
+        <span>AWS</span>
+        <span>SageMaker <code>Serverless Inference</code></span>
+        <span>SageMaker <code>Real-time Endpoint</code></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13. ASYNC -->
+<section class="chapter" id="async">
+  <div class="container">
+    <span class="chapter-number">13 · Inferência assíncrona</span>
+    <h2>Quando a chamada <span style="color:var(--orange)">demora demais</span> pra esperar.</h2>
+    <p class="lead">
+      <strong>Async</strong> é o meio-termo: você manda a request, recebe um <em>token de fila</em>, faz outra coisa, e quando o resultado tá pronto cai num bucket S3 (ou recebe notificação SNS). Útil pra payloads grandes (vídeo, PDF longo) ou inferências que levam minutos.
+    </p>
+
+    <div class="async-flow">
+      <div class="af-step">
+        <span class="af-num">1</span>
+        <span class="af-emoji">📤</span>
+        <strong>Cliente envia</strong>
+        <small>POST com input (S3 path)</small>
+      </div>
+      <span class="af-arrow">→</span>
+      <div class="af-step">
+        <span class="af-num">2</span>
+        <span class="af-emoji">🎫</span>
+        <strong>Recebe token</strong>
+        <small>jobId + S3 output path</small>
+      </div>
+      <span class="af-arrow">→</span>
+      <div class="af-step">
+        <span class="af-num">3</span>
+        <span class="af-emoji">⚙️</span>
+        <strong>SM processa</strong>
+        <small>na fila interna, sem timeout HTTP</small>
+      </div>
+      <span class="af-arrow">→</span>
+      <div class="af-step">
+        <span class="af-num">4</span>
+        <span class="af-emoji">📥</span>
+        <strong>Resultado em S3</strong>
+        <small>+ notif SNS opcional</small>
+      </div>
+    </div>
+
+    <div class="async-when">
+      <div class="aw-card">
+        <h4>✅ Use Async quando</h4>
+        <ul>
+          <li>Payload &gt; 6MB (limite do real-time)</li>
+          <li>Inferência demora &gt; 60s (timeout do real-time)</li>
+          <li>Vídeo, PDF longo, audio extenso</li>
+          <li>Usuário aceita esperar minutos por e-mail/notif</li>
+          <li>Quer escalar a zero (sem requisição = sem custo)</li>
+        </ul>
+      </div>
+      <div class="aw-card warn">
+        <h4>⚠️ Não use Async quando</h4>
+        <ul>
+          <li>Usuário tá vendo a tela esperando resposta</li>
+          <li>Latência precisa ser previsível em ms</li>
+          <li>Aplicações conversacionais (chat)</li>
+          <li>Resposta tem que voltar na mesma chamada HTTP</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="inf-summary">
+      <h4>🗺️ Os 4 modos de inferência no SageMaker</h4>
+      <div class="inf-grid">
+        <div class="inf-mode">
+          <span class="im-emoji">⚡</span>
+          <strong>Real-time</strong>
+          <small>HTTPS · ms · 24/7</small>
+        </div>
+        <div class="inf-mode">
+          <span class="im-emoji">☁️</span>
+          <strong>Serverless</strong>
+          <small>HTTPS · ms · escala a zero</small>
+        </div>
+        <div class="inf-mode">
+          <span class="im-emoji">⏳</span>
+          <strong>Async</strong>
+          <small>fila · minutos · payload grande</small>
+        </div>
+        <div class="inf-mode">
+          <span class="im-emoji">📦</span>
+          <strong>Batch Transform</strong>
+          <small>job · horas · volume gigante</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14. API GERENCIADA × AUTO-HOSPEDADA -->
+<section class="chapter alt-bg" id="api-host">
+  <div class="container">
+    <span class="chapter-number">14 · API gerenciada × Auto-hospedada</span>
+    <h2>Usar <span style="color:var(--orange)">FM como serviço</span> ou subir o seu?</h2>
+    <p class="lead">
+      Você precisa de IA generativa. Pode pagar pela <strong>API</strong> da AWS/OpenAI/Anthropic (gerenciada, paga por token) ou subir um <strong>Llama 70B</strong> num cluster próprio (auto-hospedado, paga pela GPU). Use o slider do volume e veja onde cada um faz sentido.
+    </p>
+
+    <div class="ah-lab">
+      <div class="ah-controls">
+        <label>Tokens processados / mês <span class="cm-val" id="ah-tok-v">10M</span></label>
+        <input type="range" id="ah-tok" min="100000" max="10000000000" step="100000" value="10000000">
+        <div class="cm-hint"><span>100k</span><span>10B</span></div>
+
+        <label style="margin-top:18px">Latência aceitável</label>
+        <div class="ah-lat">
+          <button data-l="strict" class="active">⚡ &lt; 200ms</button>
+          <button data-l="med">🚶 &lt; 2s</button>
+          <button data-l="relax">💤 OK esperar</button>
+        </div>
+
+        <label style="margin-top:18px">Time disponível</label>
+        <div class="ah-team">
+          <button data-t="solo" class="active">👤 1 pessoa de IA</button>
+          <button data-t="small">👥 3-5 pessoas</button>
+          <button data-t="big">🏢 Time MLOps dedicado</button>
+        </div>
+      </div>
+
+      <div class="ah-result" id="ah-result">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+
+    <div class="ah-table">
+      <div class="ah-row head">
+        <span></span>
+        <span class="col-api">🛒 API gerenciada</span>
+        <span class="col-self">🏗️ Auto-hospedada</span>
+      </div>
+      <div class="ah-row">
+        <span>Setup</span>
+        <span class="col-api">✅ minutos · API key</span>
+        <span class="col-self">⚙️ semanas · cluster GPU</span>
+      </div>
+      <div class="ah-row">
+        <span>Cobrança</span>
+        <span class="col-api">Por token</span>
+        <span class="col-self">Por hora de GPU</span>
+      </div>
+      <div class="ah-row">
+        <span>Customização</span>
+        <span class="col-api">Limitada (fine-tuning gerenciado)</span>
+        <span class="col-self">✅ Total · escolhe modelo, hardware, libs</span>
+      </div>
+      <div class="ah-row">
+        <span>Privacidade</span>
+        <span class="col-api">Provedor processa (mas não treina com seus dados)</span>
+        <span class="col-self">✅ Tudo na sua VPC</span>
+      </div>
+      <div class="ah-row">
+        <span>Operação</span>
+        <span class="col-api">✅ Provedor cuida</span>
+        <span class="col-self">⚙️ Você cuida (escalar, atualizar, monitorar)</span>
+      </div>
+      <div class="ah-row">
+        <span>Exemplo AWS</span>
+        <span class="col-api"><strong>Bedrock</strong> · Comprehend · Polly · Rekognition</span>
+        <span class="col-self">SageMaker JumpStart + EC2 GPU · EKS + vLLM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 4: AWS -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 4 · Os dois grandes da AWS pra IA</span>
+    <h2>
+      <span class="accent">SageMaker</span> e <span class="yel">Bedrock.</span>
+    </h2>
+    <p>
+      Caem em quase toda questão. Sabendo o que cada um faz e <strong>onde se sobrepõem</strong>, metade da prova já tá resolvida.
+    </p>
+  </div>
+</section>
+
+<!-- 15. SAGEMAKER -->
+<section class="chapter" id="sagemaker">
+  <div class="container">
+    <span class="chapter-number">15 · Amazon SageMaker · visão geral</span>
+    <h2>A <span style="color:var(--orange)">plataforma completa</span> de ML.</h2>
+    <p class="lead">
+      SageMaker é o <em>guarda-chuva</em> de ML da AWS. Cobre o ciclo inteiro: preparar dados, treinar, tunar, deployar e monitorar. Clica em cada componente pra ver o que faz.
+    </p>
+
+    <div class="sm-layout">
+      <div class="sm-pipeline" id="sm-pipeline">
+        <button class="sm-comp" data-c="studio">
+          <span class="emoji">🏠</span>
+          <strong>Studio</strong>
+          <small>IDE web pra ML</small>
+        </button>
+        <button class="sm-comp" data-c="data-wrangler">
+          <span class="emoji">🧹</span>
+          <strong>Data Wrangler</strong>
+          <small>Limpeza visual de dados</small>
+        </button>
+        <button class="sm-comp" data-c="ground-truth">
+          <span class="emoji">🏷️</span>
+          <strong>Ground Truth</strong>
+          <small>Rotulagem (humana ou auto)</small>
+        </button>
+        <button class="sm-comp" data-c="feature-store">
+          <span class="emoji">🗄️</span>
+          <strong>Feature Store</strong>
+          <small>Catálogo de features reutilizáveis</small>
+        </button>
+        <button class="sm-comp" data-c="training">
+          <span class="emoji">🏋️</span>
+          <strong>Training Jobs</strong>
+          <small>Treina em GPU/CPU gerenciada</small>
+        </button>
+        <button class="sm-comp" data-c="amt">
+          <span class="emoji">🎯</span>
+          <strong>AMT (Tuning)</strong>
+          <small>Hiperparâmetros automáticos</small>
+        </button>
+        <button class="sm-comp" data-c="autopilot">
+          <span class="emoji">🤖</span>
+          <strong>Autopilot</strong>
+          <small>AutoML · escolhe modelo sozinho</small>
+        </button>
+        <button class="sm-comp" data-c="jumpstart">
+          <span class="emoji">🚀</span>
+          <strong>JumpStart</strong>
+          <small>Modelos prontos (FMs, clássicos)</small>
+        </button>
+        <button class="sm-comp" data-c="endpoints">
+          <span class="emoji">🛰️</span>
+          <strong>Endpoints</strong>
+          <small>Real-time · Serverless · Async · Batch</small>
+        </button>
+        <button class="sm-comp" data-c="monitor">
+          <span class="emoji">👀</span>
+          <strong>Model Monitor</strong>
+          <small>Detecta drift de dados/qualidade</small>
+        </button>
+        <button class="sm-comp" data-c="clarify">
+          <span class="emoji">🔎</span>
+          <strong>Clarify</strong>
+          <small>Viés + explicabilidade (SHAP)</small>
+        </button>
+        <button class="sm-comp" data-c="pipelines">
+          <span class="emoji">🔁</span>
+          <strong>Pipelines</strong>
+          <small>MLOps · CI/CD de modelos</small>
+        </button>
+      </div>
+
+      <div class="sm-detail" id="sm-detail">
+        <em>Clica num componente do SageMaker pra ver o que faz.</em>
+      </div>
+    </div>
+
+    <div class="sm-cycle">
+      <h4>🔁 O ciclo de vida no SageMaker</h4>
+      <div class="smc-flow">
+        <span>1. Preparar (Wrangler · Ground Truth · Feature Store)</span>
+        <span class="smc-arr">→</span>
+        <span>2. Treinar (Training · AMT · Autopilot · JumpStart)</span>
+        <span class="smc-arr">→</span>
+        <span>3. Avaliar (Clarify · Experiments)</span>
+        <span class="smc-arr">→</span>
+        <span>4. Deployar (Endpoints)</span>
+        <span class="smc-arr">→</span>
+        <span>5. Monitorar (Model Monitor)</span>
+        <span class="smc-arr">→</span>
+        <span>6. Automatizar (Pipelines)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16. BEDROCK -->
+<section class="chapter alt-bg" id="bedrock">
+  <div class="container">
+    <span class="chapter-number">16 · Amazon Bedrock · visão geral</span>
+    <h2>FMs como <span style="color:var(--orange)">serviço</span>, sem servidor pra cuidar.</h2>
+    <p class="lead">
+      Bedrock é a <strong>API gerenciada de Foundation Models</strong>. Você escolhe o modelo (Claude, Titan, Llama, Mistral, Cohere, Stability), chama API, paga por token. Sem GPU, sem cluster, sem deploy. Clica em cada feature pra entender.
+    </p>
+
+    <div class="br-layout">
+      <div class="br-features" id="br-features">
+        <button class="br-feat active" data-f="invoke">
+          <span class="emoji">🎯</span>
+          <strong>InvokeModel</strong>
+          <small>API REST pra qualquer FM</small>
+        </button>
+        <button class="br-feat" data-f="playground">
+          <span class="emoji">🎮</span>
+          <strong>Playground</strong>
+          <small>Console pra testar prompts</small>
+        </button>
+        <button class="br-feat" data-f="kb">
+          <span class="emoji">📚</span>
+          <strong>Knowledge Bases</strong>
+          <small>RAG gerenciado · ingest, embed, query</small>
+        </button>
+        <button class="br-feat" data-f="agents">
+          <span class="emoji">🤖</span>
+          <strong>Agents</strong>
+          <small>FM + ferramentas (ReAct gerenciado)</small>
+        </button>
+        <button class="br-feat" data-f="guardrails">
+          <span class="emoji">🛡️</span>
+          <strong>Guardrails</strong>
+          <small>Filtra entrada/saída · PII, tópicos, hate</small>
+        </button>
+        <button class="br-feat" data-f="finetune">
+          <span class="emoji">🧪</span>
+          <strong>Custom Models</strong>
+          <small>Fine-tune e continued pre-training</small>
+        </button>
+        <button class="br-feat" data-f="evaluations">
+          <span class="emoji">📊</span>
+          <strong>Model Evaluation</strong>
+          <small>Testa qualidade entre modelos</small>
+        </button>
+        <button class="br-feat" data-f="provisioned">
+          <span class="emoji">⚙️</span>
+          <strong>Provisioned Throughput</strong>
+          <small>Capacidade reservada · custo previsível</small>
+        </button>
+      </div>
+
+      <div class="br-detail" id="br-detail">
+        <!-- preenchido pelo JS -->
+      </div>
+    </div>
+
+    <div class="sm-vs-br">
+      <h4>⚔️ SageMaker × Bedrock · onde cada um brilha</h4>
+      <div class="svb-grid">
+        <div class="svb-card sm">
+          <strong>🟧 Use SageMaker quando</strong>
+          <ul>
+            <li>Quer treinar modelo do zero</li>
+            <li>Tem dados tabulares · ML clássico</li>
+            <li>Precisa de pipeline MLOps full</li>
+            <li>Quer controle total da infra</li>
+            <li>Vai operar modelo customizado em escala</li>
+          </ul>
+        </div>
+        <div class="svb-card br">
+          <strong>🟪 Use Bedrock quando</strong>
+          <ul>
+            <li>Quer GenAI sem operar GPU</li>
+            <li>Precisa de RAG rápido (Knowledge Bases)</li>
+            <li>Quer agente com ferramentas</li>
+            <li>Precisa de guardrails de segurança prontos</li>
+            <li>Tem time pequeno e quer time-to-market</li>
+          </ul>
+        </div>
+      </div>
+      <p class="svb-note">📌 Os dois <strong>convivem</strong>. Ex.: detector de gato (clássico) no SageMaker + chatbot do app (GenAI) no Bedrock + Knowledge Base apontando pro S3 da empresa.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- COLA -->
+<!-- ============================ -->
+<section class="chapter cola-section" id="cola">
+  <div class="container">
+    <span class="chapter-number">17 · Cola final pra prova</span>
+    <h2>Tudo o que <span style="color:var(--orange)">decorar</span>.</h2>
+
+    <div class="cola-grid">
+      <div class="cola-card">
+        <h4>🔁 RAG × Fine-tuning</h4>
+        <p><strong>RAG</strong>: dado novo/factual, atualizado, com citação. <strong>FT</strong>: tom, estilo, formato, jargão, comportamento. RAG não treina, FT muda os pesos.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔢 Embedding</h4>
+        <p>Vetor de N dimensões representando significado. Coisas parecidas → vetores próximos. Mesmo modelo de embedding em ingest e query.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📐 Cosseno</h4>
+        <p>Métrica padrão de similaridade. Vai de <code>-1</code> a <code>1</code>. Ignora magnitude. <code>1</code> = idênticos.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🗄️ Vector DB</h4>
+        <p>OpenSearch (k-NN), Aurora pgvector, RDS Postgres, Neptune Analytics, DocumentDB, MemoryDB. Bedrock KB gerencia.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🤔 Embedding ou SQL?</h4>
+        <p>Semântico → embedding. Exato/intervalo/JOIN → SQL. Se quer os dois, <strong>híbrido</strong> (BM25 + vetor).</p>
+      </div>
+      <div class="cola-card">
+        <h4>🟧 Matriz de confusão</h4>
+        <p>VP, FP (alarme falso), FN (deixou passar), VN. FP × FN custam coisas diferentes. Pense no negócio antes da fórmula.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎯 Precisão × Recall</h4>
+        <p><strong>Precisão</strong>: dos previstos como pos, quantos eram? Use se FP é caro. <strong>Recall</strong>: dos reais pos, quantos peguei? Use se FN é caro.</p>
+      </div>
+      <div class="cola-card">
+        <h4>⚖️ F1 Score</h4>
+        <p>Média harmônica de P e R. Boa métrica única em dataset desbalanceado.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📊 Acurácia</h4>
+        <p>(VP+VN)/Total. Mente em dataset desbalanceado. Não use sozinha.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📏 Threshold</h4>
+        <p>Corte do score. Baixo → mais recall. Alto → mais precisão. Escolha por custo de erro, não por padrão (0.5 ≠ certo sempre).</p>
+      </div>
+      <div class="cola-card">
+        <h4>📈 MAE × MSE × RMSE</h4>
+        <p><strong>MAE</strong>: módulo do erro, robusto. <strong>MSE</strong>: erro ao quadrado, pune outlier. <strong>RMSE</strong>: √MSE, mesma unidade do alvo.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎯 R²</h4>
+        <p>Quanto da variância o modelo explica. <strong>1</strong>=perfeito, <strong>0</strong>=média, <strong>&lt;0</strong>=pior que média.</p>
+      </div>
+      <div class="cola-card">
+        <h4>💰 Métricas de negócio</h4>
+        <p>ROI, custo evitado, receita gerada, impacto operacional, custo por inferência. Quem aprova budget olha pra essas.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📦 Batch × Real-time</h4>
+        <p>Batch: volume, sem usuário esperando, S3 → S3, paga só o job. Real-time: HTTPS ms, paga 24/7.</p>
+      </div>
+      <div class="cola-card">
+        <h4>☁️ Serverless × Endpoint</h4>
+        <p>Serverless: escala a zero, cold start. Endpoint: sempre quente, paga a instância. Volume baixo → serverless.</p>
+      </div>
+      <div class="cola-card">
+        <h4>⏳ Async</h4>
+        <p>Payload &gt;6MB ou inferência &gt;60s. Volta resultado em S3 (+ SNS). Escala a zero, sem timeout HTTP.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🛒 API × Auto-hospedado</h4>
+        <p>API (Bedrock, Comprehend): pago por uso, time pequeno. Auto: VPC própria, time MLOps, escala muito grande.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🟧 SageMaker</h4>
+        <p>Plataforma completa de ML: prep → treino → deploy → monitor. Studio, Wrangler, Ground Truth, Feature Store, AMT, Autopilot, JumpStart, Endpoints, Model Monitor, Clarify, Pipelines.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🟪 Bedrock</h4>
+        <p>FMs como serviço. InvokeModel, Playground, Knowledge Bases (RAG), Agents (ReAct), Guardrails, Custom Models (FT), Model Evaluation, Provisioned Throughput.</p>
+      </div>
+      <div class="cola-card">
+        <h4>⚔️ SM × Bedrock</h4>
+        <p>SageMaker = treino e operação. Bedrock = GenAI gerenciada. Convivem no mesmo projeto.</p>
+      </div>
+    </div>
+
+    <div class="exam-tips">
+      <h3>🎯 Pegadinhas que caem na prova</h3>
+      <ul>
+        <li><strong>"Acurácia 99% é incrível"</strong> → desconfia. Pergunta se o dataset é balanceado. Se 99% é "não-fraude", chutar "não-fraude" dá 99%.</li>
+        <li><strong>"Reduzir falsos negativos"</strong> → otimize <strong>Recall</strong>, NÃO Precisão. <strong>"Reduzir falsos positivos"</strong> → Precisão.</li>
+        <li><strong>"RMSE é em qual unidade?"</strong> → na mesma do alvo (kg, $, min). MSE é ao quadrado, MAE é módulo.</li>
+        <li><strong>"R² negativo"</strong> não é erro: o modelo é pior que prever a média.</li>
+        <li><strong>"Conhecimento muda com frequência"</strong> → RAG. <strong>"Adaptar tom de voz"</strong> → fine-tuning. <strong>"Jargão de domínio"</strong> → continued pre-training.</li>
+        <li><strong>Cosseno é a métrica padrão</strong> em texto. Euclidiana é mais comum em imagens. Manhattan resiste a outliers.</li>
+        <li><strong>"Payload de 8MB"</strong> ou <strong>"inferência demora 2 minutos"</strong> → <strong>Async</strong>, não real-time.</li>
+        <li><strong>"Tráfego raro/dev/test"</strong> → <strong>Serverless</strong>. <strong>"Latência crítica e tráfego constante"</strong> → Real-time endpoint.</li>
+        <li><strong>"Toda madrugada processar X milhões"</strong> → <strong>Batch Transform</strong>.</li>
+        <li><strong>SageMaker treina e operaciona modelos</strong>. <strong>Bedrock só roda FMs gerenciados</strong> (não treina do zero).</li>
+        <li><strong>Bedrock Knowledge Bases ≠ Fine-tuning.</strong> Knowledge Bases é RAG gerenciado. Custom Models é FT.</li>
+        <li><strong>Provisioned Throughput</strong> (Bedrock) ≈ <strong>Real-time Endpoint</strong> (SageMaker): capacidade reservada, custo fixo, latência baixa.</li>
+        <li><strong>Métrica de negócio &gt; métrica técnica</strong>. F1=0.95 não justifica projeto se ROI é negativo.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="aula-footer">
+  <div class="container">
+    <p>Feito com 🧡 pra <strong>Escola da Nuvem</strong> · <a href="../index.html">Balaio de Gatos</a> · <a href="../aula19/">← Aula 19</a> · <a href="../mapa/">📍 Mapa de Estudos</a></p>
+    <p class="src">Revisão geral dos Task Statements oficiais do AIF-C01 · Tópicos D4 (Aplicações de FM) e D5 (Operações de IA) · Compatível com o exam guide 2026.</p>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

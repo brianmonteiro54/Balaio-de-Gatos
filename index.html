@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Balaio de Gatos · Aulas visuais de IA pra Escola da Nuvem</title>
-<meta name="description" content="Aulas visuais e interativas de IA Practitioner. Você aprende mexendo, não decorando. Cobre IA/ML/DL, embeddings, métricas, prompt engineering, RAG, treino e ética.">
+<meta name="description" content="22 aulas visuais e interativas de IA Practitioner (AIF-C01). Você aprende mexendo, não decorando. Cobre IA/ML/DL, embeddings, métricas, prompt engineering, RAG, Bedrock, MLOps, IA responsável e segurança.">
 
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="shortcut icon" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 
 <meta property="og:title" content="Balaio de Gatos · Aulas visuais de IA">
-<meta property="og:description" content="Aulas visuais e interativas de IA Practitioner pra Escola da Nuvem. Você aprende mexendo, não decorando">
+<meta property="og:description" content="22 aulas visuais e interativas de IA Practitioner pra Escola da Nuvem. Você aprende mexendo, não decorando">
 <meta property="og:image" content="cat-thumbnail.png">
 <meta property="og:type" content="website">
 
@@ -19,608 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-  :root{
-    --cream: #FBF3E2;
-    --cream-2: #F5E9CF;
-    --paper: #FFF9EC;
-    --ink: #2B1810;
-    --ink-soft: #4A3528;
-    --orange: #FF6B35;
-    --orange-deep: #E54E1B;
-    --caramel: #D4A574;
-    --sage: #5C8D89;
-    --sage-deep: #3F6864;
-    --coral: #C73E1D;
-    --olive: #6B8E23;
-    --yellow: #F4D35E;
-    --purple: #8A6FB1;
-    --purple-deep: #5B3F87;
-    --shadow: rgba(43, 24, 16, 0.12);
-    --shadow-strong: rgba(43, 24, 16, 0.25);
-  }
-  *{box-sizing:border-box; margin:0; padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Sora', sans-serif;
-    background: var(--cream);
-    color: var(--ink);
-    line-height:1.6;
-    overflow-x:hidden;
-    background-image:
-      radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
-      radial-gradient(circle at 90% 80%, rgba(92, 141, 137, 0.05) 0%, transparent 50%);
-  }
-  body::before{
-    content:'';
-    position:fixed; inset:0;
-    pointer-events:none;
-    z-index:1;
-    opacity:0.4;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
-  }
-  h1, h2, h3, .display{
-    font-family:'Caprasimo', serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-  }
-  .container{
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 32px;
-    position:relative;
-    z-index:2;
-  }
-
-  /* NAV */
-  nav{
-    position:sticky; top:0;
-    z-index:100;
-    background: var(--cream);
-    border-bottom: 2px solid var(--ink);
-    box-shadow: 0 4px 0 var(--ink);
-  }
-  .nav-inner{
-    max-width:1180px; margin:0 auto;
-    padding: 14px 32px;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:24px;
-  }
-  .nav-brand{
-    font-family:'Caprasimo', serif;
-    font-size:22px;
-    display:flex; align-items:center; gap:8px;
-  }
-  .nav-links{
-    display:flex; gap:6px; flex-wrap:wrap;
-  }
-  .nav-links a{
-    color:var(--ink);
-    text-decoration:none;
-    padding: 6px 12px;
-    font-size:13px;
-    font-weight:500;
-    border-radius: 20px;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .nav-links a:hover{
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  /* HERO */
-  .hero{
-    padding: 80px 0 60px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-grid{
-    display:grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 60px;
-    align-items:center;
-  }
-  .hero-badge{
-    display:inline-flex; align-items:center; gap:8px;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 8px 16px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 28px;
-  }
-  .hero h1{
-    font-size: clamp(46px, 7vw, 86px);
-    line-height: 0.95;
-    margin-bottom: 28px;
-    color: var(--ink);
-  }
-  .hero h1 .accent{
-    color: var(--orange);
-    display:inline-block;
-  }
-  .hero h1 .scratch{
-    position:relative;
-    display:inline-block;
-  }
-  .hero h1 .scratch::after{
-    content:'';
-    position:absolute;
-    bottom:8%; left:-3%;
-    width:106%; height:18%;
-    background: var(--yellow);
-    z-index:-1;
-    transform: skew(-8deg, -1deg);
-  }
-  .hero p.lead{
-    font-size: 18px;
-    color: var(--ink-soft);
-    margin-bottom: 32px;
-    max-width: 580px;
-  }
-  .hero-ctas{
-    display:flex; gap:14px; flex-wrap:wrap;
-  }
-  .hero-cta{
-    display:inline-flex; align-items:center; gap:10px;
-    background: var(--orange);
-    color: var(--paper);
-    padding: 16px 28px;
-    border-radius: 60px;
-    text-decoration:none;
-    font-weight:600;
-    font-size: 16px;
-    border: 2px solid var(--ink);
-    box-shadow: 4px 4px 0 var(--ink);
-    transition: all 0.15s;
-  }
-  .hero-cta:hover{
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--ink);
-  }
-  .hero-cta.ghost{
-    background: var(--paper);
-    color: var(--ink);
-  }
-
-  /* Cat illustration */
-  .hero-art{
-    position:relative;
-    display:flex; justify-content:center;
-  }
-  .hero-art svg{
-    width:100%; max-width:420px;
-    height:auto;
-    filter: drop-shadow(8px 8px 0 var(--ink));
-  }
-  @keyframes float-slow{
-    0%, 100%{ transform: translateY(0) rotate(-2deg); }
-    50%{ transform: translateY(-12px) rotate(2deg); }
-  }
-  @keyframes blink{
-    0%, 90%, 100%{ transform: scaleY(1); }
-    93%{ transform: scaleY(0.1); }
-  }
-  .cat-pile{
-    animation: float-slow 6s ease-in-out infinite;
-    transform-origin: center;
-  }
-  .blink-eye{
-    animation: blink 4.5s ease-in-out infinite;
-    transform-origin: center;
-  }
-
-  /* SECTION */
-  section.block{
-    padding: 60px 0;
-  }
-  .section-kicker{
-    display:inline-block;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 16px;
-  }
-  .section-title{
-    font-size: clamp(36px, 5vw, 56px);
-    line-height: 1;
-    margin-bottom: 16px;
-  }
-  .section-title .accent{ color: var(--orange); }
-  .section-sub{
-    font-size: 18px;
-    color: var(--ink-soft);
-    max-width: 680px;
-    margin-bottom: 48px;
-  }
-
-  /* WHY strip */
-  .why-strip{
-    display:grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin: 40px 0 0;
-  }
-  .why-card{
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 18px;
-    padding: 22px;
-    box-shadow: 4px 4px 0 var(--ink);
-  }
-  .why-card .icon{
-    font-size: 28px;
-    margin-bottom: 10px;
-    display:block;
-  }
-  .why-card h3{
-    font-family:'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-  .why-card p{
-    font-size: 14px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-  }
-
-  /* AULAS GRID */
-  .aulas-grid{
-    display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
-  }
-  .aula-card{
-    background: var(--paper);
-    border: 2.5px solid var(--ink);
-    border-radius: 22px;
-    padding: 32px;
-    box-shadow: 6px 6px 0 var(--ink);
-    transition: all 0.2s;
-    position:relative;
-    overflow:hidden;
-    display:flex; flex-direction:column;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .aula-card:hover{
-    transform: translate(-3px, -3px);
-    box-shadow: 9px 9px 0 var(--ink);
-  }
-  .aula-card::before{
-    content:'';
-    position:absolute;
-    top:0; left:0;
-    width: 100%; height: 6px;
-    background: var(--card-color, var(--orange));
-  }
-  .aula-head{
-    display:flex; align-items:flex-start; justify-content:space-between;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-  .aula-num{
-    font-family:'Caprasimo', serif;
-    font-size: 64px;
-    line-height: 1;
-    color: var(--card-color, var(--orange));
-    letter-spacing: -0.04em;
-  }
-  .aula-num::before{
-    content: 'Aula';
-    display:block;
-    font-family: 'Sora', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--ink-soft);
-    margin-bottom: 2px;
-  }
-  .aula-kicker{
-    background: var(--ink);
-    color: var(--paper);
-    padding: 6px 12px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    white-space:nowrap;
-    align-self: center;
-  }
-  .aula-title{
-    font-size: 28px;
-    line-height: 1.05;
-    margin-bottom: 14px;
-  }
-  .aula-desc{
-    font-size: 15px;
-    color: var(--ink-soft);
-    margin-bottom: 18px;
-    flex: 1;
-  }
-  .aula-tags{
-    display:flex; gap: 6px; flex-wrap: wrap;
-    margin-bottom: 22px;
-  }
-  .aula-tag{
-    background: var(--cream-2);
-    color: var(--ink);
-    border: 1.5px solid var(--ink);
-    padding: 4px 10px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 500;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .aula-link{
-    display:inline-flex; align-items:center; gap: 8px;
-    color: var(--ink);
-    font-weight: 600;
-    font-size: 14px;
-    align-self: flex-start;
-    border-bottom: 2px solid var(--card-color, var(--orange));
-    padding-bottom: 2px;
-    transition: gap 0.15s;
-  }
-  .aula-card:hover .aula-link{ gap: 14px; }
-  .aula-link svg{ width: 18px; height: 18px; }
-
-  /* ═══════════════════════════════════════
-     GAME CARD — special full-width treatment
-     ═══════════════════════════════════════ */
-  .aula-game {
-    grid-column: 1 / -1;
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
-    box-shadow: 8px 8px 0 #39D353;
-    flex-direction: column;
-    gap: 0;
-    overflow: hidden;
-  }
-  .aula-game::before {
-    background: #39D353;
-    height: 5px;
-  }
-  .aula-game:hover {
-    transform: translate(-3px, -3px);
-    box-shadow: 11px 11px 0 #39D353;
-  }
-
-  /* CRT scanline effect */
-  .game-scanline {
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 3px,
-      rgba(57, 211, 83, 0.02) 3px,
-      rgba(57, 211, 83, 0.02) 4px
-    );
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .aula-game .aula-head {
-    position: relative;
-    z-index: 1;
-    margin-bottom: 20px;
-    align-items: center;
-  }
-
-  /* Override the ::before pseudo for the number */
-  .aula-game .game-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 48px;
-    line-height: 1;
-    color: #C73E1D;
-    letter-spacing: -0.02em;
-    animation: alarm-pulse 2s ease-in-out infinite;
-  }
-  .aula-game .game-num::before {
-    content: none; /* remove "Aula" label */
-  }
-
-  @keyframes alarm-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-  }
-
-  .game-inner {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 36px;
-    align-items: start;
-  }
-
-  .aula-game .aula-title {
-    color: var(--paper);
-    font-size: 30px;
-    margin-bottom: 12px;
-  }
-  .aula-game .aula-desc {
-    color: rgba(251,243,226,0.78);
-    font-size: 15px;
-  }
-  .aula-game .aula-tag {
-    background: transparent;
-    color: #39D353;
-    border-color: rgba(57,211,83,0.4);
-    font-size: 11px;
-  }
-  .aula-game .aula-link {
-    color: var(--paper);
-    margin-top: 8px;
-  }
-
-  /* Game meta pills */
-  .game-pills {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 22px;
-  }
-  .game-pill {
-    background: rgba(57,211,83,0.12);
-    color: #39D353;
-    border: 1.5px solid rgba(57,211,83,0.35);
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.02em;
-  }
-
-  /* Mini terminal widget */
-  .game-terminal {
-    background: #0d1117;
-    border: 2px solid rgba(57,211,83,0.35);
-    border-radius: 14px;
-    min-width: 300px;
-    max-width: 340px;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(57,211,83,0.12);
-    flex-shrink: 0;
-  }
-  .terminal-bar {
-    background: #161b22;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border-bottom: 1px solid rgba(57,211,83,0.2);
-  }
-  .terminal-bar span {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-  }
-  .terminal-bar span:nth-child(1) { background: #C73E1D; }
-  .terminal-bar span:nth-child(2) { background: #F4D35E; }
-  .terminal-bar span:nth-child(3) { background: #39D353; }
-  .terminal-bar small {
-    margin-left: auto;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: rgba(57,211,83,0.6);
-    letter-spacing: 0.06em;
-  }
-  .terminal-body {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .t-line {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    line-height: 1.5;
-  }
-  .t-ts { color: rgba(57,211,83,0.45); flex-shrink: 0; }
-  .t-err { color: #C73E1D; font-weight: 700; flex-shrink: 0; }
-  .t-wrn { color: #F4D35E; font-weight: 700; flex-shrink: 0; }
-  .t-ok  { color: #39D353; font-weight: 700; flex-shrink: 0; }
-  .t-line span:last-child { color: rgba(251,243,226,0.75); }
-  .t-line b { color: var(--paper); font-weight: 700; }
-
-  @keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-  .t-blink span:last-child::after {
-    content: '█';
-    color: #39D353;
-    animation: cursor-blink 1s step-end infinite;
-    margin-left: 2px;
-  }
-
-  /* CTA FINAL */
-  .final-cta{
-    background: var(--ink);
-    color: var(--paper);
-    border-radius: 24px;
-    padding: 56px 48px;
-    text-align: center;
-    border: 2.5px solid var(--ink);
-    box-shadow: 8px 8px 0 var(--orange);
-    margin: 40px 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .final-cta h2{
-    font-size: clamp(32px, 4vw, 48px);
-    line-height: 1.05;
-    margin-bottom: 16px;
-  }
-  .final-cta h2 .accent{ color: var(--orange); }
-  .final-cta p{
-    color: rgba(251, 243, 226, 0.85);
-    margin-bottom: 28px;
-    font-size: 17px;
-    max-width: 600px;
-    margin-left:auto; margin-right:auto;
-  }
-  .final-cta .hero-cta{ background: var(--orange); }
-
-  /* FOOTER */
-  footer{
-    border-top: 2px solid var(--ink);
-    padding: 32px 0;
-    text-align: center;
-    background: var(--cream);
-  }
-  footer p{
-    font-size: 14px;
-    color: var(--ink-soft);
-  }
-  footer a{
-    color: var(--orange-deep);
-    font-weight: 600;
-    text-decoration: none;
-  }
-  footer a:hover{ text-decoration: underline; }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px){
-    .hero{ padding: 48px 0 32px; }
-    .hero-grid{ grid-template-columns: 1fr; gap: 32px; }
-    .hero-art{ order: -1; }
-    .hero-art svg{ max-width: 280px; }
-    .why-strip{ grid-template-columns: repeat(2, 1fr); }
-    .aulas-grid{ grid-template-columns: 1fr; gap: 22px; }
-    .aula-card{ padding: 26px; }
-    .aula-num{ font-size: 52px; }
-    .final-cta{ padding: 40px 24px; }
-    .nav-links{ display:none; }
-
-    .game-inner { grid-template-columns: 1fr; }
-    .game-terminal { min-width: 100%; max-width: 100%; }
-    .aula-game .aula-title { font-size: 26px; }
-  }
-  @media (max-width: 500px){
-    .container{ padding: 0 20px; }
-    .why-strip{ grid-template-columns: 1fr; }
-    .aula-title{ font-size: 24px; }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -631,6 +30,8 @@
     <div class="nav-links">
       <a href="#sobre">Sobre</a>
       <a href="#aulas">Aulas</a>
+      <a href="mapa/">📍 Mapa AIF-C01</a>
+      <a href="game/">🎮 Jogo</a>
       <a href="https://escoladanuvem.org" target="_blank" rel="noopener">Escola da Nuvem</a>
       <a href="https://github.com/brianmonteiro54/Balaio-de-Gatos" target="_blank" rel="noopener">GitHub</a>
     </div>
@@ -642,7 +43,7 @@
   <div class="container">
     <div class="hero-grid">
       <div>
-        <div class="hero-badge">Escola da Nuvem</div>
+        <div class="hero-badge">Escola da Nuvem · AIF-C01</div>
         <h1>
           Aprenda <span class="scratch">IA</span><br>
           mexendo,<br>
@@ -651,6 +52,14 @@
         <p class="lead">
           Um balaio de aulas visuais e interativas pra quem tá começando em Inteligência Artificial. Tudo em HTML/CSS/JS puro, sem dependências, com gatos como fio condutor. Você arrasta sliders, clica em matrizes, vê a curva ROC se mexer ao vivo.
         </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>22</strong><span>aulas interativas</span></div>
+          <div class="hero-stat"><strong>1</strong><span>jogo de incidente</span></div>
+          <div class="hero-stat"><strong>1</strong><span>mapa da prova</span></div>
+          <div class="hero-stat"><strong>0</strong><span>dependências</span></div>
+        </div>
+
         <div class="hero-ctas">
           <a href="#aulas" class="hero-cta">Ver as aulas 🐾</a>
           <a href="#sobre" class="hero-cta ghost">Como funciona</a>
@@ -757,7 +166,7 @@
     <div class="section-kicker">📚 As aulas</div>
     <h2 class="section-title">Escolha um <span class="accent">balaio</span> e bora.</h2>
     <p class="section-sub">
-      Cada card é uma aula completa, independente. Pode começar pela 1 ou pular pra aula que te interessa mais. Todas seguem o mesmo formato visual e interativo.
+      Cada card é uma aula completa, independente. Pode começar pela 1 ou pular pra aula que te interessa mais. Os números pulam de 17 pra 19 porque não tem aula 18, é só herança da numeração antiga. As aulas 19, 20, 21 e 22 são <strong>revisões</strong> pros 5 domínios da prova AIF-C01.
     </p>
 
     <div class="aulas-grid">
@@ -889,6 +298,72 @@
         </span>
       </a>
 
+      <!-- AULA 7 -->
+      <a class="aula-card" href="aula7/" style="--card-color: #5C8D89;">
+        <div class="aula-head">
+          <div class="aula-num">07</div>
+          <div class="aula-kicker">Visão &amp; Linguagem</div>
+        </div>
+        <h3 class="aula-title">O gato vê e o gato lê: GAN, Rekognition, NLP e sentimento.</h3>
+        <p class="aula-desc">
+          Sub-campos de IA, Visão Computacional na prática (classificação, detecção, segmentação, OCR), GAN com galeria que melhora a cada round, Amazon Rekognition + Custom Labels, distribuição segura de credenciais AWS, NLP pipeline e análise de sentimento ao vivo (digite uma frase, veja a classificação).
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">CV</span>
+          <span class="aula-tag">GAN</span>
+          <span class="aula-tag">Rekognition</span>
+          <span class="aula-tag">NLP</span>
+          <span class="aula-tag">Sentimento</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 8 -->
+      <a class="aula-card" href="aula8/" style="--card-color: #8A6FB1;">
+        <div class="aula-head">
+          <div class="aula-num">08</div>
+          <div class="aula-kicker">Voz &amp; Linguagem</div>
+        </div>
+        <h3 class="aula-title">O gato fala, escuta e entende: Comprehend, Polly e Transcribe.</h3>
+        <p class="aula-desc">
+          Amazon Comprehend e Comprehend Medical com texto sendo analisado ao vivo, AWS HealthScribe simulado (consulta vira SOAP note), pipelines de TTS e STT explicados clicando, e dois labs de verdade. Polly fala 100+ vozes no seu navegador e Transcribe transcreve o seu microfone em tempo real.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">Comprehend</span>
+          <span class="aula-tag">Medical</span>
+          <span class="aula-tag">HealthScribe</span>
+          <span class="aula-tag">Polly</span>
+          <span class="aula-tag">Transcribe</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 9 -->
+      <a class="aula-card" href="aula9/" style="--card-color: #6B8E23;">
+        <div class="aula-head">
+          <div class="aula-num">09</div>
+          <div class="aula-kicker">Catálogo AWS de IA</div>
+        </div>
+        <h3 class="aula-title">Os 7 serviços que os gatos mais usam: Textract, Translate, Personalize e cia.</h3>
+        <p class="aula-desc">
+          Textract com bounding boxes animadas em 5 docs diferentes, arquitetura completa S3→Lambda→Textract→Dynamo, Translate ao vivo em 7 idiomas, Personalize com 3 recipes, Fraud Detector com score 0-1000, e mini-demos pra Q Developer, Q QuickSight, Lex, Titan, Nova e OpenSearch.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">Textract</span>
+          <span class="aula-tag">Translate</span>
+          <span class="aula-tag">Personalize</span>
+          <span class="aula-tag">Fraud</span>
+          <span class="aula-tag">Q · Lex · Titan · Nova</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
       <!-- AULA 10 -->
       <a class="aula-card" href="aula10/" style="--card-color: #D4A574;">
         <div class="aula-head">
@@ -905,6 +380,28 @@
           <span class="aula-tag">Temperatura</span>
           <span class="aula-tag">RAG</span>
           <span class="aula-tag">AWS</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 11 -->
+      <a class="aula-card" href="aula11/" style="--card-color: #3F6864;">
+        <div class="aula-head">
+          <div class="aula-num">11</div>
+          <div class="aula-kicker">Dados &amp; Ciclo ML</div>
+        </div>
+        <h3 class="aula-title">Antes do modelo, tem o dado: Kendra, EDA e ciclo de vida ML.</h3>
+        <p class="aula-desc">
+          Amazon Kendra com NLU vs busca keyword (compare lado a lado), coleta de dados com gerador de arquitetura AWS, ciclo de vida ML em 4 fases (definir → desenvolver → implantar → monitorar), pipeline de ML em 7 etapas com código real, e EDA brincável em dataset sintético com histograma, scatter, correlação, missing, outliers.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">Kendra</span>
+          <span class="aula-tag">Coleta</span>
+          <span class="aula-tag">Pipeline</span>
+          <span class="aula-tag">EDA</span>
+          <span class="aula-tag">MLOps</span>
         </div>
         <span class="aula-link">Abrir aula
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -931,11 +428,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </span>
       </a>
+
       <!-- AULA 13 -->
       <a class="aula-card" href="aula13/" style="--card-color: #FF9900;">
         <div class="aula-head">
           <div class="aula-num">13</div>
-          <div class="aula-kicker">Deploy & MLOps</div>
+          <div class="aula-kicker">Deploy &amp; MLOps</div>
         </div>
         <h3 class="aula-title">Do modelo treinado ao modelo em produção.</h3>
         <p class="aula-desc">
@@ -948,6 +446,28 @@
           <span class="aula-tag">Endpoints</span>
           <span class="aula-tag">MLOps</span>
           <span class="aula-tag">SageMaker</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 14 -->
+      <a class="aula-card" href="aula14/" style="--card-color: #8B4F7F;">
+        <div class="aula-head">
+          <div class="aula-num">14</div>
+          <div class="aula-kicker">Bedrock &amp; Custos</div>
+        </div>
+        <h3 class="aula-title">Bedrock, Playground e dívida técnica.</h3>
+        <p class="aula-desc">
+          Foundation Models como serviço: como o Bedrock funciona, o que tem no Playground, e a decisão crítica que cai na prova: capacidade <strong>Sob-Demanda</strong> vs <strong>Provisionada</strong> (Model Units). Tem simulador de fatura, decisor visual de 5 perguntas, painel de dívida técnica em GenAI e comparador lado a lado.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">Bedrock</span>
+          <span class="aula-tag">Playground</span>
+          <span class="aula-tag">Sob-Demanda</span>
+          <span class="aula-tag">Provisionada</span>
+          <span class="aula-tag">Dívida Técnica</span>
         </div>
         <span class="aula-link">Abrir aula
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -969,6 +489,158 @@
           <span class="aula-tag">Viés</span>
           <span class="aula-tag">Explicabilidade</span>
           <span class="aula-tag">SageMaker</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 16 -->
+      <a class="aula-card" href="aula16/" style="--card-color: #8A6FB1;">
+        <div class="aula-head">
+          <div class="aula-num">16</div>
+          <div class="aula-kicker">Confiança &amp; Segurança</div>
+        </div>
+        <h3 class="aula-title">A2I, explicabilidade, moderação e dados seguros.</h3>
+        <p class="aula-desc">
+          A caixa de ferramentas pra fazer IA confiável: <strong>Amazon A2I</strong> (human-in-the-loop), <strong>SHAP/LIME/Clarify</strong> com viz interativa, <strong>AWS AI Service Cards</strong>, trade-off interpretabilidade × performance num gráfico vivo, APIs de moderação (Guardrails, Comprehend, Rekognition, Transcribe), <strong>Generative AI Security Scoping Matrix</strong> (5 escopos), citação de fontes, linhagem de dados e checklist de engenharia segura.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">A2I</span>
+          <span class="aula-tag">SHAP/LIME</span>
+          <span class="aula-tag">Service Cards</span>
+          <span class="aula-tag">Moderação</span>
+          <span class="aula-tag">Scoping Matrix</span>
+          <span class="aula-tag">Linhagem</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 17 -->
+      <a class="aula-card" href="aula17/" style="--card-color: #C73E1D;">
+        <div class="aula-head">
+          <div class="aula-num">17</div>
+          <div class="aula-kicker">Segurança &amp; Privacidade</div>
+        </div>
+        <h3 class="aula-title">Atacar pra defender: o lado adversarial da IA.</h3>
+        <p class="aula-desc">
+          A aula mais hands-on de segurança: diferença entre <strong>Safety e Security</strong>, lab interativo de <strong>prompt injection / jailbreak / adversarial / vazamento</strong> com toggle pro Bedrock Guardrails, detector de PII em tempo real, mapa de <strong>residência de dados</strong> (LGPD/GDPR/HIPAA), calculadora de retenção, defesa em profundidade em forma de cebola, 8 pilares de governança e <strong>live stream</strong> simulado de eventos CloudTrail.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">Safety × Security</span>
+          <span class="aula-tag">Prompt Injection</span>
+          <span class="aula-tag">Jailbreak</span>
+          <span class="aula-tag">Guardrails</span>
+          <span class="aula-tag">PII</span>
+          <span class="aula-tag">Residência</span>
+          <span class="aula-tag">Governança</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 19 -->
+      <a class="aula-card" href="aula19/" style="--card-color: #5C8D89;">
+        <div class="aula-head">
+          <div class="aula-num">19</div>
+          <div class="aula-kicker">Revisão · D1 + D2 + D3</div>
+        </div>
+        <h3 class="aula-title">Tudo o que cai na prova num só lugar, mexendo.</h3>
+        <p class="aula-desc">
+          A aula mais densa: 17 conceitos do exam guide em formato interativo. Boneca russa <strong>IA/ML/DL/GenAI</strong>, quiz de tipos de aprendizado, tabs de classificação/regressão/clustering, slider de over/underfitting, picker LLM × SLM, tokenizador ao vivo, comparador de janela de contexto entre 7 modelos, sliders de parâmetros (temp/top-k/max), mitigações de alucinação, tabs zero/one/few-shot, CoT lado a lado, chaining × ReAct, 7 boas práticas, comparador RAG, pipeline de 7 etapas e chunking lab.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">IA × ML × DL × GenAI</span>
+          <span class="aula-tag">Tipos de aprendizado</span>
+          <span class="aula-tag">Tokens &amp; Context</span>
+          <span class="aula-tag">Parâmetros</span>
+          <span class="aula-tag">Shots &amp; CoT</span>
+          <span class="aula-tag">RAG</span>
+          <span class="aula-tag">Chunking</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 20 -->
+      <a class="aula-card" href="aula20/" style="--card-color: #6B8E23;">
+        <div class="aula-head">
+          <div class="aula-num">20</div>
+          <div class="aula-kicker">Revisão · D4 + D5</div>
+        </div>
+        <h3 class="aula-title">Embeddings, métricas e o deploy do gato em produção.</h3>
+        <p class="aula-desc">
+          A revisão dos domínios 4 e 5 do exam guide em formato interativo. <strong>RAG × Fine-tuning</strong> com 6 cenários, mapa 2D de embeddings, similaridade vetorial arrastável, comparador de 7 vector DBs, quiz "embedding ou SQL?", matriz de confusão ao vivo com Acc/Prec/Rec/F1, threshold lab com 50 fotos, regressão lab arrastável (MAE/MSE/RMSE/R²), calculadora de ROI, decisor batch×real-time×serverless×async, recommender de API×self-hosted, e visão geral clicável de <strong>SageMaker</strong> (12 componentes) e <strong>Bedrock</strong> (8 features).
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">RAG × Fine-tuning</span>
+          <span class="aula-tag">Embeddings</span>
+          <span class="aula-tag">Similaridade</span>
+          <span class="aula-tag">Vector DB</span>
+          <span class="aula-tag">Acc · Prec · Rec · F1</span>
+          <span class="aula-tag">MAE · RMSE · R²</span>
+          <span class="aula-tag">ROI</span>
+          <span class="aula-tag">Inferência</span>
+          <span class="aula-tag">SageMaker</span>
+          <span class="aula-tag">Bedrock</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 21 -->
+      <a class="aula-card" href="aula21/" style="--card-color: #8B4F7F;">
+        <div class="aula-head">
+          <div class="aula-num">21</div>
+          <div class="aula-kicker">Revisão · Serviços + Pipeline + Responsável</div>
+        </div>
+        <h3 class="aula-title">Os serviços da AWS, o pipeline e o gato vivendo seguro.</h3>
+        <p class="aula-desc">
+          Os <strong>7 serviços de IA gerenciada</strong> (Rekognition, Comprehend, Lex, Transcribe, Translate, Personalize, Fraud Detector) com demo de cada, quiz de cenário × serviço, pipeline ML clicável de 8 etapas, técnicas de EDA com antes/depois, feature engineering em 5 categorias, Feature Store, <strong>detector de PII ao vivo</strong> com mascaramento, lab de prompt injection com toggle do Guardrails, jailbreak, Safety × Security, Bedrock Guardrails interativo, residência de dados (LGPD/GDPR/HIPAA), viés com slider, SHAP visual, HITL com threshold, trade-off perf × interp clicável e drift lab.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">7 serviços AWS</span>
+          <span class="aula-tag">Pipeline ML</span>
+          <span class="aula-tag">EDA + FE</span>
+          <span class="aula-tag">Feature Store</span>
+          <span class="aula-tag">PII</span>
+          <span class="aula-tag">Prompt Injection</span>
+          <span class="aula-tag">Jailbreak</span>
+          <span class="aula-tag">Guardrails</span>
+          <span class="aula-tag">LGPD/GDPR/HIPAA</span>
+          <span class="aula-tag">Viés · SHAP</span>
+          <span class="aula-tag">HITL · Drift · Retreino</span>
+        </div>
+        <span class="aula-link">Abrir aula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- AULA 22 -->
+      <a class="aula-card" href="aula22/" style="--card-color: #FF9900;">
+        <div class="aula-head">
+          <div class="aula-num">22</div>
+          <div class="aula-kicker">Revisão · Operação + Customização</div>
+        </div>
+        <h3 class="aula-title">Logar, documentar, tunar e decidir o caminho do gato.</h3>
+        <p class="aula-desc">
+          A revisão dos 5 últimos tópicos antes da prova: <strong>logging de inferência</strong> com stream ao vivo simulado e 6 canais (CloudTrail, CloudWatch, Data Capture, Model Monitor, Bedrock Logging, Guardrails Trace), <strong>Model Cards</strong> com builder que gera card em tempo real conforme você preenche, <strong>fine-tuning</strong> em 4 sabores (Full, PEFT/LoRA, Instruction, RLHF) com pipeline de 7 etapas, <strong>hiperparâmetros</strong> com sliders mexendo curva de loss + cheatsheet de sintomas, <strong>tuning automático</strong> (Random, Grid, Bayesian, Hyperband) e a <strong>árvore de decisão</strong> Prompt × RAG × Fine-tuning com 8 cenários e a folha certa acendendo.
+        </p>
+        <div class="aula-tags">
+          <span class="aula-tag">Inference Logging</span>
+          <span class="aula-tag">CloudTrail · CloudWatch</span>
+          <span class="aula-tag">Data Capture</span>
+          <span class="aula-tag">Model Cards</span>
+          <span class="aula-tag">Full FT · PEFT · LoRA</span>
+          <span class="aula-tag">Instruction Tuning · RLHF</span>
+          <span class="aula-tag">Hiperparâmetros</span>
+          <span class="aula-tag">AMT · Bayesian</span>
+          <span class="aula-tag">Prompt × RAG × FT</span>
         </div>
         <span class="aula-link">Abrir aula
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -1054,6 +726,46 @@
         </div>
       </a>
 
+      <!-- ══════════════════════════════════════════════════════
+           MAPA DE ESTUDOS AIF-C01 · special card
+           ══════════════════════════════════════════════════════ -->
+      <a class="aula-card aula-mapa" href="mapa/">
+        <div class="aula-head">
+          <div class="mapa-num">📍</div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span class="aula-kicker" style="background:#5B3F87; color:#FFF9EC;">MAPA</span>
+            <span class="aula-kicker" style="background:#F4D35E; color:#2B1810;">AIF-C01</span>
+          </div>
+        </div>
+
+        <div class="mapa-inner">
+          <div>
+            <h3 class="aula-title">Mapa de Estudos · o que <em>cai mesmo</em> na prova.</h3>
+            <p class="aula-desc">
+              Não estuda no escuro. O mapa pega o exam guide oficial e transforma em <strong>painel interativo</strong>: pesos por domínio, top tópicos por peso, palavras-chave que acionam cada serviço, decisões críticas que sempre caem (Sob-Demanda × Provisionada, RAG × Fine-tuning, Real-time × Batch) e roteiro sugerido de estudo por dia. Tem também a aba <strong>🎯 Treino</strong> com simulado.
+            </p>
+            <div class="aula-tags">
+              <span class="aula-tag">D1 Fundamentos</span>
+              <span class="aula-tag">D2 GenAI</span>
+              <span class="aula-tag">D3 Foundation Models</span>
+              <span class="aula-tag">D4 Apps GenAI</span>
+              <span class="aula-tag">D5 Responsável</span>
+              <span class="aula-tag">Simulado</span>
+            </div>
+            <span class="aula-link">Abrir o mapa
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+
+          <div class="mapa-stats">
+            <div class="mapa-stat"><strong>5</strong><span>domínios</span></div>
+            <div class="mapa-stat"><strong>85</strong><span>questões</span></div>
+            <div class="mapa-stat"><strong>90min</strong><span>de prova</span></div>
+            <div class="mapa-stat"><strong>$100</strong><span>de inscrição</span></div>
+          </div>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>
@@ -1064,7 +776,10 @@
     <div class="final-cta">
       <h2>Bora <span class="accent">mexer nos gráficos?</span></h2>
       <p>Não tem ordem certa. Cada aula é independente. Mas se for a primeira vez, começa pela Aula 1 - ela monta o vocabulário que o resto usa.</p>
-      <a href="aula1/" class="hero-cta">Começar pela Aula 1 🐾</a>
+      <div class="hero-ctas" style="justify-content:center;">
+        <a href="aula1/" class="hero-cta">Começar pela Aula 1 🐾</a>
+        <a href="mapa/" class="hero-cta ghost">Ver mapa da prova 📍</a>
+      </div>
     </div>
   </div>
 </section>

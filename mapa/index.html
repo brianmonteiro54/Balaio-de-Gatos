@@ -18,939 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-  :root{
-    --cream: #FBF3E2;
-    --cream-2: #F5E9CF;
-    --paper: #FFF9EC;
-    --ink: #2B1810;
-    --ink-soft: #4A3528;
-    --orange: #FF6B35;
-    --orange-deep: #E54E1B;
-    --caramel: #D4A574;
-    --sage: #5C8D89;
-    --sage-deep: #3F6864;
-    --coral: #C73E1D;
-    --olive: #6B8E23;
-    --yellow: #F4D35E;
-    --purple: #8A6FB1;
-    --purple-deep: #5B3F87;
-    --shadow: rgba(43, 24, 16, 0.12);
-    --shadow-strong: rgba(43, 24, 16, 0.25);
-
-    /* Cores dos 5 domínios */
-    --d1: var(--sage);
-    --d2: var(--purple);
-    --d3: var(--orange);
-    --d4: var(--coral);
-    --d5: var(--caramel);
-  }
-  *{box-sizing:border-box; margin:0; padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Sora', sans-serif;
-    background: var(--cream);
-    color: var(--ink);
-    line-height:1.6;
-    overflow-x:hidden;
-    background-image:
-      radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
-      radial-gradient(circle at 90% 80%, rgba(92, 141, 137, 0.05) 0%, transparent 50%);
-  }
-  body::before{
-    content:'';
-    position:fixed; inset:0;
-    pointer-events:none;
-    z-index:1;
-    opacity:0.4;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
-  }
-  h1, h2, h3, .display{
-    font-family:'Caprasimo', serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-  }
-  .container{
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 32px;
-    position:relative;
-    z-index:2;
-  }
-
-  /* NAV */
-  nav{
-    position:sticky; top:0;
-    z-index:100;
-    background: var(--cream);
-    border-bottom: 2px solid var(--ink);
-    box-shadow: 0 4px 0 var(--ink);
-  }
-  .nav-inner{
-    max-width:1180px; margin:0 auto;
-    padding: 14px 32px;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:24px;
-  }
-  .nav-brand{
-    font-family:'Caprasimo', serif;
-    font-size:22px;
-    display:flex; align-items:center; gap:8px;
-    color: var(--ink);
-    text-decoration:none;
-  }
-  .nav-links{
-    display:flex; gap:6px; flex-wrap:wrap;
-  }
-  .nav-links a{
-    color:var(--ink);
-    text-decoration:none;
-    padding: 6px 12px;
-    font-size:13px;
-    font-weight:500;
-    border-radius: 20px;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .nav-links a:hover{
-    background: var(--ink);
-    color: var(--paper);
-  }
-  .nav-links a.active{
-    background: var(--orange);
-    color: var(--paper);
-  }
-
-  /* HERO */
-  .hero{
-    padding: 60px 0 30px;
-    position: relative;
-  }
-  .hero-badge{
-    display:inline-flex; align-items:center; gap:8px;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 8px 16px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 24px;
-  }
-  .hero h1{
-    font-size: clamp(42px, 6.5vw, 76px);
-    line-height: 0.96;
-    margin-bottom: 20px;
-    max-width: 920px;
-  }
-  .hero h1 .accent{ color: var(--orange); }
-  .hero h1 .scratch{
-    position:relative; display:inline-block;
-  }
-  .hero h1 .scratch::after{
-    content:'';
-    position:absolute;
-    bottom:8%; left:-3%;
-    width:106%; height:18%;
-    background: var(--yellow);
-    z-index:-1;
-    transform: skew(-8deg, -1deg);
-  }
-  .hero p.lead{
-    font-size: 19px;
-    color: var(--ink-soft);
-    max-width: 680px;
-    margin-bottom: 40px;
-  }
-
-  /* STATS BAR */
-  .stats-bar{
-    display:grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 14px;
-    margin-bottom: 30px;
-  }
-  .stat{
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 16px;
-    padding: 18px 16px;
-    box-shadow: 4px 4px 0 var(--ink);
-  }
-  .stat .label{
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-soft);
-    margin-bottom: 6px;
-  }
-  .stat .value{
-    font-family:'Caprasimo', serif;
-    font-size: 32px;
-    line-height: 1;
-    color: var(--ink);
-  }
-  .stat .value .small{ font-size: 16px; font-family:'Sora', sans-serif; font-weight: 600; }
-  .stat .sub{
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin-top: 4px;
-    font-family:'JetBrains Mono', monospace;
-  }
-
-  /* SECTION */
-  section.block{
-    padding: 50px 0;
-  }
-  .section-kicker{
-    display:inline-block;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 14px;
-  }
-  .section-title{
-    font-size: clamp(34px, 4.5vw, 52px);
-    line-height: 1;
-    margin-bottom: 14px;
-  }
-  .section-title .accent{ color: var(--orange); }
-  .section-sub{
-    font-size: 17px;
-    color: var(--ink-soft);
-    max-width: 680px;
-    margin-bottom: 40px;
-  }
-
-  /* ═══════════════════════════════════════
-     DOMÍNIOS — bar chart
-     ═══════════════════════════════════════ */
-  .domains{
-    display:flex; flex-direction: column;
-    gap: 16px;
-    margin-bottom: 30px;
-  }
-  .domain-row{
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 18px;
-    box-shadow: 5px 5px 0 var(--ink);
-    overflow: hidden;
-    transition: all 0.2s;
-  }
-  .domain-row:hover{
-    transform: translate(-2px, -2px);
-    box-shadow: 7px 7px 0 var(--ink);
-  }
-  .domain-head{
-    padding: 20px 24px;
-    display:flex; align-items:center; justify-content:space-between;
-    gap: 20px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .domain-info{
-    flex: 1;
-    display:flex; align-items:center; gap: 16px;
-  }
-  .domain-num{
-    font-family:'Caprasimo', serif;
-    font-size: 38px;
-    line-height: 1;
-    width: 50px;
-    text-align: center;
-    color: var(--dcolor);
-  }
-  .domain-name{
-    flex:1;
-    min-width: 0;
-  }
-  .domain-name h3{
-    font-family:'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 1.2;
-    margin-bottom: 4px;
-  }
-  .domain-name .sub{
-    font-size: 13px;
-    color: var(--ink-soft);
-    font-family:'JetBrains Mono', monospace;
-  }
-  .domain-weight{
-    text-align: right;
-    flex-shrink: 0;
-  }
-  .domain-pct{
-    font-family:'Caprasimo', serif;
-    font-size: 44px;
-    line-height: 1;
-    color: var(--dcolor);
-  }
-  .domain-q{
-    font-size: 11px;
-    color: var(--ink-soft);
-    font-family:'JetBrains Mono', monospace;
-    margin-top: 2px;
-  }
-  .domain-bar{
-    height: 8px;
-    background: var(--cream-2);
-    position: relative;
-    overflow: hidden;
-  }
-  .domain-bar::after{
-    content:'';
-    position:absolute;
-    inset: 0;
-    width: var(--w, 0%);
-    background: var(--dcolor);
-    transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    transition-delay: var(--delay, 0s);
-  }
-  .domain-bar.animated::after{
-    width: var(--w, 0%);
-  }
-  .domain-detail{
-    padding: 0 24px 24px;
-    display: none;
-    border-top: 1.5px dashed var(--ink-soft);
-    margin-top: 0;
-    padding-top: 20px;
-  }
-  .domain-row.open .domain-detail{ display: block; }
-  .domain-row.open .domain-head .chev{ transform: rotate(180deg); }
-  .chev{
-    width: 24px; height: 24px;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .domain-detail h4{
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink-soft);
-    margin-bottom: 10px;
-  }
-  .domain-detail ul{
-    list-style: none;
-    display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px 18px;
-    margin-bottom: 18px;
-  }
-  .domain-detail li{
-    font-size: 14px;
-    padding-left: 18px;
-    position: relative;
-    color: var(--ink);
-  }
-  .domain-detail li::before{
-    content:'▸';
-    position:absolute;
-    left: 0;
-    color: var(--dcolor);
-    font-weight: bold;
-  }
-  .domain-detail .trap{
-    background: rgba(199, 62, 29, 0.08);
-    border-left: 3px solid var(--coral);
-    padding: 10px 14px;
-    border-radius: 6px;
-    font-size: 13.5px;
-    color: var(--ink);
-  }
-  .domain-detail .trap strong{ color: var(--coral); }
-
-  /* domain colors */
-  .d-1{ --dcolor: var(--sage); }
-  .d-2{ --dcolor: var(--purple); }
-  .d-3{ --dcolor: var(--orange); }
-  .d-4{ --dcolor: var(--coral); }
-  .d-5{ --dcolor: var(--caramel); }
-
-  /* ═══════════════════════════════════════
-     TOP TOPICS — Ranked list
-     ═══════════════════════════════════════ */
-  .topics-list{
-    display:flex; flex-direction: column;
-    gap: 10px;
-  }
-  .topic{
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 14px;
-    padding: 16px 22px;
-    box-shadow: 3px 3px 0 var(--ink);
-    display:grid;
-    grid-template-columns: 50px 1fr 220px;
-    align-items: center;
-    gap: 18px;
-    transition: all 0.15s;
-  }
-  .topic:hover{
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0 var(--ink);
-  }
-  .topic-rank{
-    font-family:'Caprasimo', serif;
-    font-size: 32px;
-    line-height: 1;
-    color: var(--ink-soft);
-  }
-  .topic.high .topic-rank{ color: var(--orange); }
-  .topic.veryhigh .topic-rank{ color: var(--coral); }
-  .topic-info h4{
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 4px;
-    line-height: 1.2;
-  }
-  .topic-info .tags{
-    display:flex; gap:6px; flex-wrap:wrap;
-  }
-  .topic-info .tag{
-    background: var(--cream-2);
-    border: 1.5px solid var(--ink);
-    color: var(--ink);
-    font-family:'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-weight: 500;
-  }
-  .topic-info .tag.d1{ background: rgba(92, 141, 137, 0.18); border-color: var(--sage-deep); }
-  .topic-info .tag.d2{ background: rgba(138, 111, 177, 0.18); border-color: var(--purple-deep); }
-  .topic-info .tag.d3{ background: rgba(255, 107, 53, 0.2); border-color: var(--orange-deep); }
-  .topic-info .tag.d4{ background: rgba(199, 62, 29, 0.18); border-color: var(--coral); }
-  .topic-info .tag.d5{ background: rgba(212, 165, 116, 0.25); border-color: #8B6E45; }
-  .topic-bar{
-    display:flex; align-items: center; gap: 10px;
-  }
-  .topic-bar .bar{
-    flex: 1;
-    height: 14px;
-    background: var(--cream-2);
-    border: 1.5px solid var(--ink);
-    border-radius: 100px;
-    overflow: hidden;
-    position: relative;
-  }
-  .topic-bar .bar::after{
-    content:'';
-    position:absolute;
-    inset: 0;
-    width: var(--p, 0%);
-    background: repeating-linear-gradient(
-      45deg,
-      var(--orange),
-      var(--orange) 8px,
-      var(--orange-deep) 8px,
-      var(--orange-deep) 16px
-    );
-    transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-    transition-delay: var(--delay, 0s);
-  }
-  .topic-bar.animated .bar::after{ width: var(--p, 0%); }
-  .topic-bar .pct{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-    min-width: 50px;
-    text-align: right;
-  }
-
-  /* ═══════════════════════════════════════
-     KEYWORD MAP
-     ═══════════════════════════════════════ */
-  .kw-controls{
-    display:flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 24px;
-  }
-  .kw-filter{
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    color: var(--ink);
-    padding: 8px 16px;
-    border-radius: 100px;
-    font-family:'Sora', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s;
-    box-shadow: 2px 2px 0 var(--ink);
-  }
-  .kw-filter:hover{ transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
-  .kw-filter.active{
-    background: var(--ink);
-    color: var(--paper);
-  }
-  .kw-filter .dot{
-    display:inline-block;
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    margin-right: 6px;
-    vertical-align: middle;
-    border: 1px solid var(--ink);
-  }
-  .kw-map{
-    background: var(--paper);
-    border: 2.5px solid var(--ink);
-    border-radius: 22px;
-    box-shadow: 6px 6px 0 var(--ink);
-    padding: 36px 30px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 10px;
-    align-items: center;
-    justify-content: center;
-    min-height: 380px;
-    position: relative;
-  }
-  .kw{
-    display:inline-flex; align-items: center;
-    padding: 4px 14px;
-    border-radius: 100px;
-    border: 1.5px solid var(--ink);
-    background: var(--cream-2);
-    font-family:'Sora', sans-serif;
-    font-weight: 600;
-    color: var(--ink);
-    cursor: default;
-    transition: all 0.2s;
-    user-select: none;
-  }
-  .kw:hover{
-    transform: translateY(-2px) rotate(-1deg);
-    box-shadow: 3px 3px 0 var(--ink);
-  }
-  .kw.s-1{ font-size: 12px; padding: 3px 10px; }
-  .kw.s-2{ font-size: 14px; padding: 4px 12px; }
-  .kw.s-3{ font-size: 17px; padding: 5px 14px; font-weight: 700; }
-  .kw.s-4{ font-size: 22px; padding: 6px 18px; font-weight: 700; letter-spacing: -0.01em; }
-  .kw.s-5{ font-size: 28px; padding: 8px 22px; font-weight: 700; letter-spacing: -0.02em; font-family:'Caprasimo', serif; }
-
-  .kw.k-d1{ background: rgba(92, 141, 137, 0.22); border-color: var(--sage-deep); color: var(--sage-deep); }
-  .kw.k-d2{ background: rgba(138, 111, 177, 0.22); border-color: var(--purple-deep); color: var(--purple-deep); }
-  .kw.k-d3{ background: rgba(255, 107, 53, 0.22); border-color: var(--orange-deep); color: var(--orange-deep); }
-  .kw.k-d4{ background: rgba(199, 62, 29, 0.18); border-color: var(--coral); color: var(--coral); }
-  .kw.k-d5{ background: rgba(212, 165, 116, 0.3); border-color: #8B6E45; color: #6B4F2D; }
-  .kw.dim{ opacity: 0.2; }
-  .kw-legend{
-    display:flex; gap: 18px; flex-wrap: wrap;
-    margin-top: 18px;
-    justify-content: center;
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
-  .kw-legend .li{ display:flex; align-items:center; gap: 6px; }
-  .kw-legend .li::before{
-    content:'';
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    border: 1.5px solid var(--ink);
-  }
-  .kw-legend .li.l1::before{ background: rgba(92, 141, 137, 0.6); }
-  .kw-legend .li.l2::before{ background: rgba(138, 111, 177, 0.6); }
-  .kw-legend .li.l3::before{ background: rgba(255, 107, 53, 0.6); }
-  .kw-legend .li.l4::before{ background: rgba(199, 62, 29, 0.5); }
-  .kw-legend .li.l5::before{ background: rgba(212, 165, 116, 0.7); }
-
-  /* ═══════════════════════════════════════
-     DECISÕES — comparison cards
-     ═══════════════════════════════════════ */
-  .decisions{
-    display:flex; flex-direction: column;
-    gap: 28px;
-  }
-  .decision{
-    background: var(--paper);
-    border: 2.5px solid var(--ink);
-    border-radius: 22px;
-    box-shadow: 6px 6px 0 var(--ink);
-    padding: 28px 30px;
-    position: relative;
-    overflow: hidden;
-  }
-  .decision::before{
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 6px;
-    background: var(--orange);
-  }
-  .decision-head{
-    display:flex; align-items: center; gap: 14px;
-    margin-bottom: 22px;
-  }
-  .decision-head .num{
-    font-family:'Caprasimo', serif;
-    font-size: 38px;
-    line-height: 1;
-    color: var(--orange);
-  }
-  .decision-head h3{
-    font-size: 24px;
-    line-height: 1.1;
-  }
-  .decision-grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  .opt{
-    border: 2px solid var(--ink);
-    border-radius: 14px;
-    padding: 16px 18px;
-    background: var(--cream-2);
-    position: relative;
-  }
-  .opt h4{
-    font-family:'Caprasimo', serif;
-    font-size: 22px;
-    line-height: 1;
-    margin-bottom: 6px;
-    color: var(--ink);
-  }
-  .opt .when{
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
-    color: var(--ink-soft);
-    margin-bottom: 10px;
-    font-family:'JetBrains Mono', monospace;
-  }
-  .opt p{
-    font-size: 14px;
-    color: var(--ink);
-    margin-bottom: 12px;
-    line-height: 1.45;
-  }
-  .opt .cost{
-    display:flex; align-items: center; gap: 6px;
-    font-size: 12px;
-    color: var(--ink-soft);
-    font-family:'JetBrains Mono', monospace;
-  }
-  .opt .cost .dots{
-    display:inline-flex; gap: 2px;
-  }
-  .opt .cost .dots .d{
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--ink); opacity: 0.18;
-  }
-  .opt .cost .dots .d.on{ opacity: 1; background: var(--orange); }
-  .opt.win{
-    background: var(--paper);
-    border-color: var(--orange);
-    box-shadow: 3px 3px 0 var(--orange-deep);
-  }
-  .decision .pegadinha{
-    margin-top: 18px;
-    background: rgba(255, 107, 53, 0.08);
-    border: 1.5px dashed var(--orange-deep);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 13.5px;
-  }
-  .decision .pegadinha strong{ color: var(--orange-deep); }
-
-  /* ═══════════════════════════════════════
-     SERVIÇOS AWS — cheatsheet grid
-     ═══════════════════════════════════════ */
-  .svc-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
-  }
-  .svc{
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 14px;
-    padding: 16px 18px;
-    box-shadow: 3px 3px 0 var(--ink);
-    transition: all 0.15s;
-    position: relative;
-  }
-  .svc:hover{
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0 var(--ink);
-  }
-  .svc .icon{
-    width: 30px; height: 30px;
-    border-radius: 8px;
-    background: var(--orange);
-    display:inline-flex; align-items:center; justify-content:center;
-    color: var(--paper);
-    font-family:'JetBrains Mono', monospace;
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 10px;
-    border: 1.5px solid var(--ink);
-  }
-  .svc h4{
-    font-family:'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 4px;
-    line-height: 1.2;
-  }
-  .svc .when{
-    font-size: 11px;
-    color: var(--ink-soft);
-    font-family:'JetBrains Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
-  }
-  .svc p{
-    font-size: 13px;
-    color: var(--ink);
-    line-height: 1.45;
-  }
-  .svc.featured{
-    background: var(--cream-2);
-    border-color: var(--ink);
-  }
-  .svc.featured .icon{ background: var(--coral); }
-
-  /* ═══════════════════════════════════════
-     PEGADINHAS — common traps
-     ═══════════════════════════════════════ */
-  .traps{
-    display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  .trap-card{
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 16px;
-    box-shadow: 4px 4px 0 var(--ink);
-    padding: 22px 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  .trap-card::before{
-    content:'';
-    position:absolute;
-    top: 0; left: 0;
-    width: 100%; height: 5px;
-    background: var(--coral);
-  }
-  .trap-card .tag{
-    display:inline-block;
-    background: var(--coral);
-    color: var(--paper);
-    padding: 3px 10px;
-    border-radius: 100px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-  }
-  .trap-card h4{
-    font-family:'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 8px;
-    line-height: 1.3;
-  }
-  .trap-card p{
-    font-size: 14px;
-    color: var(--ink-soft);
-    margin-bottom: 10px;
-  }
-  .trap-card .fix{
-    background: var(--cream-2);
-    border-left: 3px solid var(--olive);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-  }
-  .trap-card .fix strong{ color: var(--olive); }
-
-  /* ═══════════════════════════════════════
-     ROTEIRO — study plan
-     ═══════════════════════════════════════ */
-  .roadmap{
-    display:flex; flex-direction: column;
-    gap: 14px;
-    position: relative;
-  }
-  .roadmap::before{
-    content:'';
-    position: absolute;
-    left: 30px; top: 30px; bottom: 30px;
-    width: 3px;
-    background: var(--ink);
-    z-index: 0;
-  }
-  .week{
-    display:flex; align-items: flex-start; gap: 20px;
-    position: relative;
-    z-index: 1;
-  }
-  .week-num{
-    flex-shrink: 0;
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    background: var(--paper);
-    border: 2.5px solid var(--ink);
-    box-shadow: 3px 3px 0 var(--ink);
-    display: flex; align-items: center; justify-content: center;
-    font-family:'Caprasimo', serif;
-    font-size: 24px;
-    color: var(--ink);
-  }
-  .week-card{
-    flex: 1;
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 14px;
-    padding: 18px 22px;
-    box-shadow: 4px 4px 0 var(--ink);
-  }
-  .week-card h4{
-    font-family:'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
-  .week-card .meta{
-    font-size: 12px;
-    color: var(--ink-soft);
-    font-family:'JetBrains Mono', monospace;
-    margin-bottom: 10px;
-  }
-  .week-card ul{
-    list-style: none;
-    display:flex; flex-direction: column;
-    gap: 4px;
-  }
-  .week-card li{
-    font-size: 13.5px;
-    padding-left: 18px;
-    position: relative;
-    color: var(--ink);
-  }
-  .week-card li::before{
-    content:'☐';
-    position:absolute; left: 0;
-    color: var(--orange);
-    font-weight: bold;
-  }
-
-  /* ═══════════════════════════════════════
-     CTA / FOOTER
-     ═══════════════════════════════════════ */
-  .cta-block{
-    background: var(--ink);
-    color: var(--paper);
-    border-radius: 24px;
-    padding: 48px 40px;
-    text-align: center;
-    border: 2.5px solid var(--ink);
-    box-shadow: 8px 8px 0 var(--orange);
-    margin-top: 30px;
-    position: relative;
-    overflow: hidden;
-  }
-  .cta-block::before{
-    content:'';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 20% 30%, rgba(255,107,53,0.12) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(244,211,94,0.08) 0%, transparent 50%);
-    pointer-events: none;
-  }
-  .cta-block h3{
-    font-size: clamp(28px, 4vw, 42px);
-    margin-bottom: 14px;
-    line-height: 1.05;
-    position: relative;
-  }
-  .cta-block p{
-    font-size: 16px;
-    opacity: 0.85;
-    max-width: 540px;
-    margin: 0 auto 24px;
-    position: relative;
-  }
-  .cta-block .ctas{
-    display:flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    position: relative;
-  }
-  .cta-block a{
-    display:inline-flex; align-items: center; gap: 8px;
-    background: var(--orange);
-    color: var(--paper);
-    padding: 14px 24px;
-    border-radius: 60px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 15px;
-    border: 2px solid var(--paper);
-    transition: all 0.15s;
-  }
-  .cta-block a.ghost{
-    background: transparent;
-    border-color: rgba(251,243,226,0.4);
-  }
-  .cta-block a:hover{
-    transform: translateY(-2px);
-    background: var(--orange-deep);
-    border-color: var(--paper);
-  }
-
-  footer{
-    padding: 40px 0 60px;
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 14px;
-  }
-  footer a{
-    color: var(--ink);
-    text-decoration: underline;
-    text-decoration-color: var(--orange);
-    text-underline-offset: 3px;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 920px){
-    .stats-bar{ grid-template-columns: repeat(2, 1fr); }
-    .topic{ grid-template-columns: 36px 1fr; }
-    .topic-bar{ grid-column: 1 / -1; }
-    .decision-grid{ grid-template-columns: 1fr; }
-    .domain-detail ul{ grid-template-columns: 1fr; }
-    .traps{ grid-template-columns: 1fr; }
-    .container{ padding: 0 18px; }
-    .domain-num{ font-size: 30px; width: 36px; }
-    .domain-pct{ font-size: 34px; }
-    .domain-head{ padding: 16px 18px; }
-    .nav-links{ gap: 2px; }
-    .nav-links a{ font-size: 11.5px; padding: 5px 9px; }
-  }
-  @media (max-width: 540px){
-    .stats-bar{ grid-template-columns: 1fr 1fr; gap: 8px; }
-    .stat{ padding: 14px 12px; }
-    .stat .value{ font-size: 26px; }
-    .kw-map{ padding: 24px 16px; }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -960,7 +28,8 @@
     <div class="nav-links">
       <a href="../index.html">Início</a>
       <a href="../index.html#aulas">Aulas</a>
-      <a href="#" class="active">Mapa de Estudos</a>
+      <a href="#" class="active">📍 Mapa</a>
+      <a href="v2.html">🎯 Treino</a>
     </div>
   </div>
 </nav>
@@ -1005,6 +74,92 @@
     </div>
   </div>
 </header>
+
+<!-- ═══════════════════════════════════════
+     PROGRESSO DO TREINO (lê localStorage)
+     ═══════════════════════════════════════ -->
+<section class="progress-strip" id="progress-strip" hidden>
+  <div class="container">
+    <div class="ps-card">
+      <div class="ps-icon">🎯</div>
+      <div class="ps-text">
+        <div class="ps-kicker">Seu progresso no Treino</div>
+        <div class="ps-headline" id="ps-headline">Você já respondeu <strong>0</strong> de 67 questões</div>
+        <div class="ps-detail" id="ps-detail">Bora continuar de onde parou.</div>
+      </div>
+      <div class="ps-domains" id="ps-domains" aria-label="Acerto por domínio"></div>
+      <div class="ps-actions">
+        <a href="v2.html" class="ps-cta">Continuar treino →</a>
+        <a href="#" class="ps-cta ghost" id="ps-weakest" hidden>Treinar ponto fraco</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     POR ONDE COMEÇAR?
+     ═══════════════════════════════════════ -->
+<section class="block" id="comecar">
+  <div class="container">
+    <span class="section-kicker">🚦 por onde começar</span>
+    <h2 class="section-title">Em que momento <span class="accent">você está</span>?</h2>
+    <p class="section-sub">
+      Você não precisa ler isso aqui de cima a baixo. Escolhe o caminho que combina com sua situação,
+      ou faz o diagnóstico rápido logo abaixo. Cada caminho leva direto pra ferramenta certa.
+    </p>
+
+    <div class="paths-grid">
+      <a href="#dominios" class="path-card path-1">
+        <span class="path-tag">Tô começando agora</span>
+        <h3>Nunca vi IA na vida</h3>
+        <p>Comece pelos <strong>5 domínios</strong> entendendo o peso de cada um. Depois faz a Aula 1 e 2 do Balaio. Ainda <em>não</em> abra o quiz, leia primeiro.</p>
+        <div class="path-steps">
+          <span>① Os 5 domínios</span>
+          <span>② Aula 1 e 2</span>
+          <span>③ Volta aqui</span>
+        </div>
+        <span class="path-arrow">↓ os 5 domínios</span>
+      </a>
+
+      <a href="v2.html?d=3" class="path-card path-2">
+        <span class="path-tag">Já vi alguma coisa</span>
+        <h3>Tô no meio do caminho</h3>
+        <p>Manda direto pro <strong>Domínio 3</strong> (28% da prova, o maior). Pratica RAG, Bedrock, prompts e fine-tuning. Depois ataca Domínio 2, depois 4 e 5.</p>
+        <div class="path-steps">
+          <span>① Quiz D3</span>
+          <span>② Quiz D2</span>
+          <span>③ D4 + D5</span>
+        </div>
+        <span class="path-arrow">→ treino do D3</span>
+      </a>
+
+      <a href="v2.html?mode=wrong" class="path-card path-3">
+        <span class="path-tag">Faltam dias pra prova</span>
+        <h3>É véspera, e agora?</h3>
+        <p>Modo "<strong>só erradas</strong>" no quiz pra revisar erros. Depois <strong>⭐ marcadas</strong>. Dá uma olhada nas <strong>3 decisões clássicas</strong> e nas <strong>10 pegadinhas</strong> aí embaixo. Dorme.</p>
+        <div class="path-steps">
+          <span>① Só erradas</span>
+          <span>② Marcadas</span>
+          <span>③ Pegadinhas</span>
+        </div>
+        <span class="path-arrow">→ revisar erros</span>
+      </a>
+    </div>
+
+    <!-- Diagnóstico de 3 perguntas -->
+    <div class="diag" id="diag">
+      <div class="diag-head">
+        <span class="diag-kicker">🔬 diagnóstico relâmpago</span>
+        <h3>Não sabe por onde? Responda <span style="color:var(--orange)">3 perguntas</span>.</h3>
+        <p>Te recomendo onde focar baseado nas respostas. Leva 30 segundos.</p>
+      </div>
+      <div class="diag-body" id="diag-body">
+        <!-- preenchido pelo JS -->
+      </div>
+      <div class="diag-result" id="diag-result" hidden></div>
+    </div>
+  </div>
+</section>
 
 <!-- ═══════════════════════════════════════
      OS 5 DOMÍNIOS
@@ -1052,7 +207,16 @@
             <li>Matriz de confusão</li>
           </ul>
           <div class="trap">
-            <strong>Pegadinha clássica:</strong> diferenciar quando usar <em>classificação</em> (saída categórica: "é gato ou cachorro?") de <em>regressão</em> (saída numérica: "preço da casa") — toda prova tem.
+            <strong>Pegadinha clássica:</strong> diferenciar quando usar <em>classificação</em> (saída categórica: "é gato ou cachorro?") de <em>regressão</em> (saída numérica: "preço da casa"). Toda prova tem.
+          </div>
+          <div class="domain-actions">
+            <a href="v2.html?d=1" class="domain-cta">🎯 Treinar Domínio 1 (12 questões no treino)</a>
+            <a href="../aula1/" class="domain-cta ghost">📚 Aula 1</a>
+            <a href="../aula2/" class="domain-cta ghost">📚 Aula 2</a>
+            <a href="../aula3/" class="domain-cta ghost">📚 Aula 3</a>
+            <a href="../aula4/" class="domain-cta ghost">📚 Aula 4</a>
+            <a href="../aula5/" class="domain-cta ghost">📚 Aula 5</a>
+            <a href="../aula19/" class="domain-cta ghost">📚 Aula 19 (revisão)</a>
           </div>
         </div>
       </div>
@@ -1090,6 +254,12 @@
           </ul>
           <div class="trap">
             <strong>Pegadinha clássica:</strong> a prova adora cobrar <em>vantagens vs limitações</em> de GenAI em cenários de negócio. Alucinação, custo, latência e privacidade são sempre as respostas para "limitações".
+          </div>
+          <div class="domain-actions">
+            <a href="v2.html?d=2" class="domain-cta">🎯 Treinar Domínio 2 (14 questões no treino)</a>
+            <a href="../aula1/" class="domain-cta ghost">📚 Aula 1</a>
+            <a href="../aula6/" class="domain-cta ghost">📚 Aula 6</a>
+            <a href="../aula19/" class="domain-cta ghost">📚 Aula 19 (revisão)</a>
           </div>
         </div>
       </div>
@@ -1130,6 +300,15 @@
           <div class="trap">
             <strong>Pegadinha clássica:</strong> o exame ADORA o triângulo <em>RAG vs Fine-tuning vs Prompt Engineering</em>. Quando usar cada um? Veja a seção "As 3 grandes decisões" abaixo. Cai em quase todas as provas.
           </div>
+          <div class="domain-actions">
+            <a href="v2.html?d=3" class="domain-cta">🎯 Treinar Domínio 3 (20 questões no treino, o MAIOR)</a>
+            <a href="../aula6/" class="domain-cta ghost">📚 Aula 6</a>
+            <a href="../aula10/" class="domain-cta ghost">📚 Aula 10</a>
+            <a href="../aula12/" class="domain-cta ghost">📚 Aula 12</a>
+            <a href="../aula13/" class="domain-cta ghost">📚 Aula 13</a>
+            <a href="../aula14/" class="domain-cta ghost">📚 Aula 14</a>
+            <a href="../aula19/" class="domain-cta ghost">📚 Aula 19 (revisão)</a>
+          </div>
         </div>
       </div>
 
@@ -1166,6 +345,11 @@
           </ul>
           <div class="trap">
             <strong>Pegadinha clássica:</strong> "Como detectar viés?" → <strong>SageMaker Clarify</strong>. "Como filtrar conteúdo tóxico?" → <strong>Bedrock Guardrails</strong>. Esse mapeamento direto cai sempre.
+          </div>
+          <div class="domain-actions">
+            <a href="v2.html?d=4" class="domain-cta">🎯 Treinar Domínio 4 (8 questões no treino)</a>
+            <a href="../aula15/" class="domain-cta ghost">📚 Aula 15</a>
+            <a href="../aula16/" class="domain-cta ghost">📚 Aula 16</a>
           </div>
         </div>
       </div>
@@ -1204,15 +388,20 @@
           <div class="trap">
             <strong>Pegadinha clássica:</strong> pra qualquer cenário de segurança, pense em <strong>IAM + KMS + CloudTrail + VPC endpoints</strong>. Essa combinação resolve a maioria.
           </div>
+          <div class="domain-actions">
+            <a href="v2.html?d=5" class="domain-cta">🎯 Treinar Domínio 5 (13 questões no treino)</a>
+            <a href="../aula15/" class="domain-cta ghost">📚 Aula 15 (Governança)</a>
+            <a href="../aula16/" class="domain-cta ghost">📚 Aula 16 (Segurança)</a>
+            <a href="../aula17/" class="domain-cta ghost">📚 Aula 17 (Privacidade)</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-
 <!-- ═══════════════════════════════════════
-     TOP TÓPICOS — Ranked list
+     TOP TÓPICOS · Ranked list
      ═══════════════════════════════════════ -->
 <section class="block" style="background: var(--cream-2); border-top: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink); margin: 20px 0;" id="top-topicos">
   <div class="container">
@@ -1229,7 +418,7 @@
       <div class="topic veryhigh" data-p="98">
         <div class="topic-rank">01</div>
         <div class="topic-info">
-          <h4>RAG vs Fine-tuning vs Prompt Engineering — qual escolher</h4>
+          <h4>RAG vs Fine-tuning vs Prompt Engineering · qual escolher</h4>
           <div class="tags">
             <span class="tag d3">Domínio 3</span>
             <span class="tag">decisão</span>
@@ -1242,7 +431,7 @@
       <div class="topic veryhigh" data-p="95">
         <div class="topic-rank">02</div>
         <div class="topic-info">
-          <h4>Amazon Bedrock — Knowledge Bases, Agents, Guardrails</h4>
+          <h4>Amazon Bedrock · Knowledge Bases, Agents, Guardrails</h4>
           <div class="tags">
             <span class="tag d3">Domínio 3</span>
             <span class="tag">serviço</span>
@@ -1279,7 +468,7 @@
       <div class="topic high" data-p="85">
         <div class="topic-rank">05</div>
         <div class="topic-info">
-          <h4>SageMaker — JumpStart, Clarify, Model Monitor, Canvas</h4>
+          <h4>SageMaker · JumpStart, Clarify, Model Monitor, Canvas</h4>
           <div class="tags">
             <span class="tag d1">Domínio 1</span>
             <span class="tag d4">Domínio 4</span>
@@ -1330,7 +519,7 @@
       <div class="topic high" data-p="75">
         <div class="topic-rank">09</div>
         <div class="topic-info">
-          <h4>Viés e fairness — SageMaker Clarify, A2I (human-in-the-loop)</h4>
+          <h4>Viés e fairness · SageMaker Clarify, A2I (human-in-the-loop)</h4>
           <div class="tags">
             <span class="tag d4">Domínio 4</span>
             <span class="tag">ética</span>
@@ -1342,7 +531,7 @@
       <div class="topic high" data-p="72">
         <div class="topic-rank">10</div>
         <div class="topic-info">
-          <h4>Amazon Q: Business vs Developer — quando usar cada um</h4>
+          <h4>Amazon Q: Business vs Developer · quando usar cada um</h4>
           <div class="tags">
             <span class="tag d3">Domínio 3</span>
             <span class="tag">serviço</span>
@@ -1415,7 +604,6 @@
     </div>
   </div>
 </section>
-
 
 <!-- ═══════════════════════════════════════
      MAPA DE PALAVRAS-CHAVE
@@ -1558,7 +746,6 @@
   </div>
 </section>
 
-
 <!-- ═══════════════════════════════════════
      AS 3 GRANDES DECISÕES
      ═══════════════════════════════════════ -->
@@ -1569,7 +756,7 @@
     <p class="section-sub">
       A AWS adora cenários do tipo "qual abordagem você escolheria?". 
       Quase toda prova tem pelo menos uma dessas três perguntas. 
-      Decora o critério de escolha — não decora a definição.
+      Decora o critério de escolha, não decora a definição.
     </p>
 
     <div class="decisions">
@@ -1660,7 +847,7 @@
           <div class="opt">
             <h4>Amazon Q</h4>
             <div class="when">Use quando: assistente pronto</div>
-            <p>Assistente <strong>já pronto</strong>: Q Business (conhecimento corporativo) e Q Developer (código). Você não constrói — você liga e usa.</p>
+            <p>Assistente <strong>já pronto</strong>: Q Business (conhecimento corporativo) e Q Developer (código). Você não constrói, você liga e usa.</p>
             <div class="cost">
               skill: <span class="dots"><span class="d on"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span></span> nenhum
             </div>
@@ -1716,9 +903,8 @@
   </div>
 </section>
 
-
 <!-- ═══════════════════════════════════════
-     SERVIÇOS AWS — CHEATSHEET
+     SERVIÇOS AWS · CHEATSHEET
      ═══════════════════════════════════════ -->
 <section class="block" id="servicos">
   <div class="container">
@@ -1866,7 +1052,6 @@
   </div>
 </section>
 
-
 <!-- ═══════════════════════════════════════
      PEGADINHAS COMUNS
      ═══════════════════════════════════════ -->
@@ -1875,7 +1060,7 @@
     <span class="section-kicker">🚨 cuidado</span>
     <h2 class="section-title">Pegadinhas que <span class="accent">derrubam todo mundo</span>.</h2>
     <p class="section-sub">
-      A prova tem perguntas onde 2 ou 3 respostas parecem certas — só uma é a <em>melhor</em>.
+      A prova tem perguntas onde 2 ou 3 respostas parecem certas, só uma é a <em>melhor</em>.
       Essas são as confusões mais comuns. Memorize a diferença.
     </p>
 
@@ -1953,7 +1138,6 @@
   </div>
 </section>
 
-
 <!-- ═══════════════════════════════════════
      ROTEIRO DE ESTUDO
      ═══════════════════════════════════════ -->
@@ -1970,7 +1154,7 @@
       <div class="week">
         <div class="week-num">1</div>
         <div class="week-card">
-          <h4>Fundação — Domínios 1 e 2</h4>
+          <h4>Fundação · Domínios 1 e 2</h4>
           <div class="meta">~10h · IA/ML básico + GenAI fundamentos</div>
           <ul>
             <li>Faz a Aula 1 (IA vs ML vs DL) e Aula 2 (dados, embeddings)</li>
@@ -1985,7 +1169,7 @@
       <div class="week">
         <div class="week-num">2</div>
         <div class="week-card">
-          <h4>O domínio mais pesado — Domínio 3</h4>
+          <h4>O domínio mais pesado · Domínio 3</h4>
           <div class="meta">~12h · Bedrock, RAG, prompts, fine-tuning, Amazon Q</div>
           <ul>
             <li>Faz a Aula 6 (prompts, agents) e Aula 10 (RAG, vector DB)</li>
@@ -2022,13 +1206,13 @@
         chegou a hora. A prova é escalada de 100 a 1000, corte em 700 (~70% bruto).
       </p>
       <div class="ctas">
-        <a href="../index.html#aulas">📚 Voltar pras aulas</a>
+        <a href="v2.html">🎯 Treinar agora</a>
+        <a href="../index.html#aulas" class="ghost">📚 Voltar pras aulas</a>
         <a href="https://aws.amazon.com/certification/certified-ai-practitioner/" class="ghost" target="_blank" rel="noopener">🎓 Agendar prova oficial</a>
       </div>
     </div>
   </div>
 </section>
-
 
 <footer>
   <div class="container">
@@ -2039,80 +1223,13 @@
   </div>
 </footer>
 
+<!-- FAB pra ir direto pro treino -->
+<a href="v2.html" class="fab-train" id="fab-train" title="Ir pro treino">
+  <span class="fab-emoji">🎯</span>
+  <span class="fab-text">Treinar</span>
+</a>
 
-<script>
-// ═══════════════════════════════════════
-// 1. Toggle dos domínios (acordeão)
-// ═══════════════════════════════════════
-document.querySelectorAll('.domain-head').forEach(head => {
-  head.addEventListener('click', () => {
-    const row = head.closest('.domain-row');
-    const wasOpen = row.classList.contains('open');
-    document.querySelectorAll('.domain-row').forEach(r => r.classList.remove('open'));
-    if (!wasOpen) row.classList.add('open');
-  });
-});
-
-// ═══════════════════════════════════════
-// 2. Animação das barras quando entra na viewport
-// ═══════════════════════════════════════
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      if (el.classList.contains('domain-bar')) {
-        el.classList.add('animated');
-      } else if (el.classList.contains('topic-bar')) {
-        el.classList.add('animated');
-      }
-      observer.unobserve(el);
-    }
-  });
-}, { threshold: 0.3 });
-
-document.querySelectorAll('.domain-bar').forEach((bar, i) => {
-  bar.style.setProperty('--delay', (i * 0.08) + 's');
-  observer.observe(bar);
-});
-document.querySelectorAll('.topic').forEach((topic, i) => {
-  const bar = topic.querySelector('.topic-bar');
-  const p = topic.dataset.p;
-  bar.style.setProperty('--p', p + '%');
-  bar.style.setProperty('--delay', (i * 0.04) + 's');
-  observer.observe(bar);
-});
-
-// ═══════════════════════════════════════
-// 3. Filtro do mapa de palavras-chave
-// ═══════════════════════════════════════
-const filterBtns = document.querySelectorAll('.kw-filter');
-const kws = document.querySelectorAll('.kw');
-
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const filter = btn.dataset.f;
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    kws.forEach(kw => {
-      if (filter === 'all') {
-        kw.classList.remove('dim');
-      } else {
-        kw.classList.toggle('dim', !kw.classList.contains('k-' + filter));
-      }
-    });
-  });
-});
-
-// ═══════════════════════════════════════
-// 4. Abrir o domínio 3 (o maior) por padrão depois de 1s
-// ═══════════════════════════════════════
-setTimeout(() => {
-  const d3 = document.querySelector('[data-domain="3"]');
-  if (d3 && !document.querySelector('.domain-row.open')) {
-    d3.classList.add('open');
-  }
-}, 1400);
-</script>
+<script defer src="script.js"></script>
 
 </body>
 </html>

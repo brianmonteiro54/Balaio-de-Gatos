@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 16: A2I, Explicabilidade, Moderação e Segurança em IA</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<meta name="description" content="Aula 16 do Balaio de Gatos: Amazon A2I, ferramentas de explicabilidade, AWS AI Service Cards, trade-off interpretabilidade × performance, APIs de moderação, Generative AI Security Scoping Matrix, linhagem de dados e engenharia de dados segura. Aula visual e interativa pra AWS AI Practitioner.">
+<meta name="keywords" content="Amazon A2I, Augmented AI, SHAP, LIME, SageMaker Clarify, AWS AI Service Cards, interpretabilidade, performance, Bedrock Guardrails, Comprehend, Rekognition moderation, GenAI Security Scoping Matrix, data lineage, source citation, AWS AI Practitioner">
+<meta name="author" content="Escola da Nuvem">
+<meta name="theme-color" content="#FF6B35">
+
+<meta property="og:title" content="Aula 16 · Confiança, Explicabilidade e Segurança em IA">
+<meta property="og:description" content="Bota humano no loop, explica decisões do modelo, modera conteúdo e protege seus dados. Tudo com gato.">
+<meta property="og:image" content="../cat-thumbnail.png">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span class="pt">aula 16</span></div>
+    <div class="nav-links">
+      <a href="#a2i">A2I</a>
+      <a href="#xai">Explicabilidade</a>
+      <a href="#cards">Service Cards</a>
+      <a href="#tradeoff">Trade-off</a>
+      <a href="#moderacao">Moderação</a>
+      <a href="#scoping">Scoping Matrix</a>
+      <a href="#linhagem">Linhagem</a>
+      <a href="#dados">Dados Seguros</a>
+      <a href="#cola">Cola</a>
+      <a href="../index.html">← Aulas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · AI Practitioner <span class="v2">aula 16</span></div>
+        <h1>
+          O modelo <span class="scratch">acertou</span><br>
+          mas você consegue<br>
+          <span class="accent">explicar como?</span>
+        </h1>
+        <p>
+          Aula 15 falou de princípios. Aula 16 entrega as <strong>ferramentas</strong>: como botar humano no loop com <strong>A2I</strong>, explicar decisões com <strong>SHAP/LIME</strong>, ler <strong>AWS AI Service Cards</strong>, escolher o ponto certo entre interpretabilidade e performance, moderar conteúdo, navegar a <strong>Security Scoping Matrix</strong> da AWS e cuidar dos dados pra não virar manchete.
+        </p>
+        <a href="#a2i" class="hero-cta">Bora começar 🐾</a>
+        <a href="#cola" class="hero-cta ghost">Cola final</a>
+      </div>
+      <div class="cat-lab">
+        <span class="float-cat c1">🧑‍⚖️</span>
+        <span class="float-cat c2">😼</span>
+        <span class="float-cat c3">🔍</span>
+        <span class="float-cat c4">🛡️</span>
+        <span class="float-cat c5">📜</span>
+        <span class="chip">Human-in-Loop</span>
+        <span class="chip2">SHAP · LIME</span>
+        <span class="chip3">Guardrails</span>
+        <span class="chip4">Scoping Matrix ⚡</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🧑‍⚖️ A2I</span><span>🔍 EXPLICABILIDADE</span><span>📇 SERVICE CARDS</span><span>⚖️ TRADE-OFF</span><span>🛡️ MODERAÇÃO</span><span>📊 SCOPING MATRIX</span><span>📜 LINHAGEM</span><span>🔐 DADOS SEGUROS</span><span>🧑‍⚖️ A2I</span><span>🔍 EXPLICABILIDADE</span><span>📇 SERVICE CARDS</span><span>⚖️ TRADE-OFF</span><span>🛡️ MODERAÇÃO</span><span>📊 SCOPING MATRIX</span>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!-- 1. A2I -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 1 · O humano não saiu da equação</span>
+    <h2>
+      Quando a IA <span class="accent">não tem certeza</span>,<br>
+      ela chama <span class="yel">o humano.</span>
+    </h2>
+    <p>
+      Modelo bom é modelo que sabe quando <em>não</em> sabe. Pra isso existe Amazon A2I (Augmented AI): orquestra revisão humana em decisões de ML que têm baixa confiança ou alto impacto.
+    </p>
+  </div>
+</section>
+
+<section class="chapter" id="a2i">
+  <div class="container">
+    <span class="chapter-number">01 · Amazon A2I · Augmented AI</span>
+    <h2>O <span style="color:var(--orange)">human-in-the-loop</span> como serviço.</h2>
+    <p class="lead">
+      Clica em cada nó do fluxograma pra ver o que acontece em cada etapa, e como o A2I decide quando passar o gato pra revisão humana.
+    </p>
+
+    <div class="a2i-flow" id="a2i-flow">
+      <button class="a2i-node" data-node="input">
+        <span class="emoji">📸</span>
+        <span class="t">Input</span>
+        <span class="sub">Foto do gato</span>
+      </button>
+      <span class="a2i-arrow">→</span>
+      <button class="a2i-node" data-node="model">
+        <span class="emoji">🤖</span>
+        <span class="t">Modelo</span>
+        <span class="sub">Rekognition / SageMaker / Bedrock</span>
+      </button>
+      <span class="a2i-arrow">→</span>
+      <button class="a2i-node decision" data-node="confidence">
+        <span class="emoji">📊</span>
+        <span class="t">Confiança alta?</span>
+        <span class="sub">A2I avalia threshold</span>
+      </button>
+      <div class="a2i-branch">
+        <div class="branch-yes">
+          <span class="branch-label">SIM</span>
+          <button class="a2i-node" data-node="auto">
+            <span class="emoji">✅</span>
+            <span class="t">Aprova automático</span>
+            <span class="sub">Resposta direto pro app</span>
+          </button>
+        </div>
+        <div class="branch-no">
+          <span class="branch-label">NÃO</span>
+          <button class="a2i-node human" data-node="human">
+            <span class="emoji">🧑‍⚖️</span>
+            <span class="t">Revisão humana</span>
+            <span class="sub">Workforce A2I</span>
+          </button>
+          <span class="a2i-arrow vert">↓</span>
+          <button class="a2i-node" data-node="feedback">
+            <span class="emoji">🔄</span>
+            <span class="t">Feedback loop</span>
+            <span class="sub">Volta pro treino</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="a2i-detail" id="a2i-detail">
+      <span class="dd-tag">A2I · clica num nó</span>
+      <h3>Fluxo Augmented AI ponta a ponta</h3>
+      <p>O A2I não toma a decisão, ele <strong>orquestra</strong>. Define os thresholds de confiança, distribui as tarefas pro pool humano (próprio, vendor da AWS Marketplace ou Mechanical Turk) e devolve a decisão pra aplicação. O ciclo de feedback alimenta o retreino do modelo.</p>
+    </div>
+
+    <div class="a2i-cases">
+      <div class="case-card">
+        <span class="emoji">🩺</span>
+        <h4>Saúde</h4>
+        <p>Modelo classifica raio-X. Score &lt; 0.85 → revisão humana. Médico aprova ou corrige antes da decisão final.</p>
+      </div>
+      <div class="case-card">
+        <span class="emoji">💳</span>
+        <h4>Financeiro</h4>
+        <p>Modelo aprova crédito. Casos limítrofes ou de alto valor passam por analista humano.</p>
+      </div>
+      <div class="case-card">
+        <span class="emoji">📄</span>
+        <h4>Documentos</h4>
+        <p>Textract extrai dados. Campo com confiança baixa vai pro humano validar antes de seguir o workflow.</p>
+      </div>
+      <div class="case-card">
+        <span class="emoji">🎭</span>
+        <h4>Moderação</h4>
+        <p>Rekognition flagra possível conteúdo impróprio. Caso ambíguo → moderador humano decide.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 2. EXPLICABILIDADE -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="xai">
+  <div class="container">
+    <span class="chapter-number">02 · Ferramentas de Explicabilidade</span>
+    <h2>Por que o modelo decidiu <span style="color:var(--orange)">isso</span>?</h2>
+    <p class="lead">
+      O modelo previu que esse gato tem 87% de chance de ser adotado. Por quê? <strong>SHAP</strong> e <strong>LIME</strong> abrem a caixa preta e mostram quais features pesaram pra cima ou pra baixo. Mexe nas características do gato e vê a explicação mudar ao vivo.
+    </p>
+
+    <div class="shap-wrap">
+      <div class="shap-controls">
+        <h4>🐈 Características do gato</h4>
+
+        <div class="shap-feature">
+          <label>Idade <span class="shap-val" id="shap-age-v">3 anos</span></label>
+          <input type="range" id="shap-age" min="0" max="20" step="1" value="3">
+          <div class="shap-hint"><span>filhote</span><span>idoso</span></div>
+        </div>
+
+        <div class="shap-feature">
+          <label>Sociabilidade <span class="shap-val" id="shap-social-v">8/10</span></label>
+          <input type="range" id="shap-social" min="0" max="10" step="1" value="8">
+          <div class="shap-hint"><span>tímido</span><span>extrovertido</span></div>
+        </div>
+
+        <div class="shap-feature">
+          <label>Saúde <span class="shap-val" id="shap-health-v">9/10</span></label>
+          <input type="range" id="shap-health" min="0" max="10" step="1" value="9">
+          <div class="shap-hint"><span>com problemas</span><span>excelente</span></div>
+        </div>
+
+        <div class="shap-feature">
+          <label>Cor <span class="shap-val" id="shap-color-v">malhado</span></label>
+          <select id="shap-color">
+            <option value="white">branco</option>
+            <option value="orange" selected>laranja malhado</option>
+            <option value="black">preto</option>
+            <option value="siamese">siamês</option>
+          </select>
+        </div>
+
+        <div class="shap-feature">
+          <label>Vacinado? <span class="shap-val" id="shap-vac-v">Sim</span></label>
+          <div class="shap-toggle">
+            <button class="active" data-vac="1">Sim</button>
+            <button data-vac="0">Não</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="shap-output">
+        <div class="shap-prediction">
+          <span class="shap-tag">Predição do modelo</span>
+          <div class="shap-prob" id="shap-prob">87%</div>
+          <div class="shap-prob-label" id="shap-prob-label">probabilidade de adoção</div>
+        </div>
+
+        <div class="shap-explain">
+          <h4>📊 Contribuição de cada feature (SHAP)</h4>
+          <div class="shap-bars" id="shap-bars">
+            <!-- preenchido pelo JS -->
+          </div>
+          <div class="shap-baseline">
+            <span>Base:</span> <strong>50%</strong> · cada barra mostra como aquela feature empurrou a predição pra cima (verde) ou pra baixo (vermelho).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shap-tools">
+      <div class="tool-card">
+        <span class="emoji">🔬</span>
+        <h4>SHAP</h4>
+        <p>SHapley Additive exPlanations. Atribui pesos a cada feature baseado em teoria dos jogos. Mostra <strong>contribuição global e local</strong>.</p>
+      </div>
+      <div class="tool-card">
+        <span class="emoji">🍋</span>
+        <h4>LIME</h4>
+        <p>Local Interpretable Model-agnostic Explanations. Aproxima o modelo complexo por um modelo simples <strong>perto da predição</strong> que você quer explicar.</p>
+      </div>
+      <div class="tool-card aws">
+        <span class="emoji">☁️</span>
+        <h4>SageMaker Clarify</h4>
+        <p>Implementa SHAP nativamente. Roda <strong>pré-treino</strong> (bias nos dados), <strong>pós-treino</strong> (bias do modelo) e <strong>inferência</strong> (explica predições individuais).</p>
+      </div>
+      <div class="tool-card aws">
+        <span class="emoji">📋</span>
+        <h4>SageMaker Model Cards</h4>
+        <p>Documentação estruturada do modelo: dados de treino, casos de uso, limitações, métricas de bias. <strong>Transparência</strong> formalizada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 3. AWS AI SERVICE CARDS -->
+<!-- ============================ -->
+<section class="chapter" id="cards">
+  <div class="container">
+    <span class="chapter-number">03 · AWS AI Service Cards</span>
+    <h2>A <span style="color:var(--orange)">bula</span> dos serviços de IA da AWS.</h2>
+    <p class="lead">
+      A AWS publica <strong>Service Cards</strong> pra cada serviço de IA: pra que serve, como funciona, em que contextos foi testado, e quais são as <em>limitações conhecidas</em>. Folheia os cards abaixo. Isso cai na prova como exemplo de transparência.
+    </p>
+
+    <div class="cards-deck" id="cards-deck">
+      <button class="card-tab active" data-card="rekognition">Rekognition</button>
+      <button class="card-tab" data-card="textract">Textract</button>
+      <button class="card-tab" data-card="transcribe">Transcribe</button>
+      <button class="card-tab" data-card="comprehend">Comprehend</button>
+      <button class="card-tab" data-card="titan">Titan Text</button>
+    </div>
+
+    <div class="service-card" id="service-card">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 4. TRADE-OFF -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="tradeoff">
+  <div class="container">
+    <span class="chapter-number">04 · Trade-off Interpretabilidade × Performance</span>
+    <h2>O <span style="color:var(--orange)">eterno cabo de guerra</span>.</h2>
+    <p class="lead">
+      Modelos simples são fáceis de explicar mas costumam errar mais. Modelos complexos acertam mais mas são caixas pretas. Onde você quer estar nessa curva? Mexe no slider e veja o gato te dizer qual modelo escolher.
+    </p>
+
+    <div class="tradeoff-wrap">
+      <div class="tradeoff-slider">
+        <input type="range" id="trade" min="0" max="100" step="1" value="50">
+        <div class="trade-axis">
+          <span>← mais interpretável</span>
+          <span>mais performático →</span>
+        </div>
+      </div>
+
+      <svg class="trade-curve" id="trade-curve" viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background grid -->
+        <defs>
+          <pattern id="grid" width="40" height="28" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 28" fill="none" stroke="rgba(43,24,16,0.08)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="600" height="280" fill="url(#grid)"/>
+
+        <!-- axes -->
+        <line x1="40" y1="240" x2="580" y2="240" stroke="#2B1810" stroke-width="2"/>
+        <line x1="40" y1="20" x2="40" y2="240" stroke="#2B1810" stroke-width="2"/>
+        <text x="20" y="30" font-family="JetBrains Mono" font-size="11" fill="#4A3528">alta</text>
+        <text x="20" y="245" font-family="JetBrains Mono" font-size="11" fill="#4A3528">baixa</text>
+        <text x="0" y="135" font-family="JetBrains Mono" font-size="11" fill="#4A3528" transform="rotate(-90 12 135)">performance</text>
+        <text x="42" y="265" font-family="JetBrains Mono" font-size="11" fill="#4A3528">simples (interpretável)</text>
+        <text x="430" y="265" font-family="JetBrains Mono" font-size="11" fill="#4A3528">complexo (caixa preta)</text>
+
+        <!-- curve -->
+        <path d="M 60 220 Q 200 200 300 130 Q 400 70 560 50" stroke="#FF6B35" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+        <!-- model dots (left to right: linear, tree, random forest, deep, LLM) -->
+        <g class="model-dot" data-min="0" data-max="20">
+          <circle cx="80" cy="215" r="9" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+          <text x="80" y="200" font-family="Sora" font-size="11" fill="#2B1810" text-anchor="middle" font-weight="700">Linear</text>
+        </g>
+        <g class="model-dot" data-min="20" data-max="40">
+          <circle cx="180" cy="195" r="9" fill="#6B8E23" stroke="#2B1810" stroke-width="2"/>
+          <text x="180" y="180" font-family="Sora" font-size="11" fill="#2B1810" text-anchor="middle" font-weight="700">Árvore</text>
+        </g>
+        <g class="model-dot" data-min="40" data-max="60">
+          <circle cx="290" cy="135" r="9" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+          <text x="290" y="120" font-family="Sora" font-size="11" fill="#2B1810" text-anchor="middle" font-weight="700">Random Forest</text>
+        </g>
+        <g class="model-dot" data-min="60" data-max="85">
+          <circle cx="430" cy="80" r="9" fill="#8B4F7F" stroke="#2B1810" stroke-width="2"/>
+          <text x="430" y="65" font-family="Sora" font-size="11" fill="#2B1810" text-anchor="middle" font-weight="700">Deep Net</text>
+        </g>
+        <g class="model-dot" data-min="85" data-max="100">
+          <circle cx="540" cy="55" r="9" fill="#C73E1D" stroke="#2B1810" stroke-width="2"/>
+          <text x="540" y="40" font-family="Sora" font-size="11" fill="#2B1810" text-anchor="middle" font-weight="700">LLM</text>
+        </g>
+
+        <!-- selected dot (movable) -->
+        <circle id="trade-dot" cx="80" cy="215" r="12" fill="none" stroke="#FF6B35" stroke-width="3"/>
+      </svg>
+
+      <div class="trade-result" id="trade-result">
+        <span class="dec-tag">Modelo recomendado</span>
+        <h3 id="trade-model">Regressão Linear</h3>
+        <p id="trade-desc">Performance modesta, mas você consegue explicar cada coeficiente. Ideal pra crédito, saúde, justiça e qualquer área regulada.</p>
+        <div class="trade-meta">
+          <span><strong>Interpretabilidade:</strong> <span id="trade-int">★★★★★</span></span>
+          <span><strong>Performance:</strong> <span id="trade-perf">★★☆☆☆</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 5. MODERAÇÃO -->
+<!-- ============================ -->
+<section class="part-banner alt">
+  <div class="container">
+    <span class="chapter-number">Parte 5 · Filtrando o que sai do modelo</span>
+    <h2>
+      Output cru é <span class="accent">bomba relógio.</span><br>
+      <span class="yel">Modere antes</span> que o usuário veja.
+    </h2>
+    <p>
+      A AWS oferece um arsenal de APIs de moderação pra texto, imagem, vídeo e voz. A pegadinha do exame é saber qual usar em cada cenário.
+    </p>
+  </div>
+</section>
+
+<section class="chapter" id="moderacao">
+  <div class="container">
+    <span class="chapter-number">05 · APIs de moderação</span>
+    <h2>O <span style="color:var(--orange)">tradutor de cenário</span> em serviço.</h2>
+    <p class="lead">
+      Escolhe o tipo de conteúdo que você precisa moderar e o gato te diz qual API usar:
+    </p>
+
+    <div class="mod-picker" id="mod-picker">
+      <button class="mod-type active" data-type="text-llm">📝 Texto gerado por LLM</button>
+      <button class="mod-type" data-type="text-user">💬 Texto de usuário (chat)</button>
+      <button class="mod-type" data-type="image">🖼️ Imagem (foto, upload)</button>
+      <button class="mod-type" data-type="video">🎬 Vídeo</button>
+      <button class="mod-type" data-type="audio">🎤 Áudio / voz</button>
+    </div>
+
+    <div class="mod-result" id="mod-result">
+      <!-- preenchido pelo JS -->
+    </div>
+
+    <div class="mod-comparison">
+      <h3>📋 Cheatsheet · qual API moderar o quê?</h3>
+      <div class="mod-table">
+        <div class="mod-row head">
+          <div>Tipo de conteúdo</div>
+          <div>API recomendada</div>
+          <div>O que detecta</div>
+        </div>
+        <div class="mod-row">
+          <div>Output de LLM no Bedrock</div>
+          <div><strong>Bedrock Guardrails</strong></div>
+          <div>Tópicos proibidos, PII, toxicidade, jailbreak: input + output</div>
+        </div>
+        <div class="mod-row">
+          <div>Texto livre (chat de usuário)</div>
+          <div><strong>Comprehend</strong> (toxicity)</div>
+          <div>Toxicidade, sentimento, PII (DetectPiiEntities)</div>
+        </div>
+        <div class="mod-row">
+          <div>Imagem ou foto</div>
+          <div><strong>Rekognition</strong> (DetectModerationLabels)</div>
+          <div>Nudez, violência, drogas, ódio visual</div>
+        </div>
+        <div class="mod-row">
+          <div>Vídeo</div>
+          <div><strong>Rekognition Video</strong></div>
+          <div>Mesmas categorias de moderação aplicadas frame a frame</div>
+        </div>
+        <div class="mod-row">
+          <div>Áudio falado</div>
+          <div><strong>Transcribe Toxicity Detection</strong></div>
+          <div>Detecta toxicidade direto na fala (sem precisar transcrever antes)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 6. SCOPING MATRIX -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="scoping">
+  <div class="container">
+    <span class="chapter-number">06 · Generative AI Security Scoping Matrix</span>
+    <h2>Quanto <span style="color:var(--orange)">controle</span> você tem? Quanta <span style="color:var(--orange)">responsabilidade</span> você assume?</h2>
+    <p class="lead">
+      A AWS publicou uma matriz com 5 escopos de uso de GenAI. Cada escopo muda o que <em>você</em> precisa proteger. Clica em cada escopo pra ver o que muda.
+    </p>
+
+    <div class="scope-grid" id="scope-grid">
+      <button class="scope-card" data-scope="1">
+        <span class="scope-num">1</span>
+        <h4>Consumer App</h4>
+        <p class="scope-ex">Funcionário usa ChatGPT no navegador</p>
+        <span class="scope-resp">↓ Sua responsabilidade: <strong>baixa</strong></span>
+      </button>
+      <button class="scope-card" data-scope="2">
+        <span class="scope-num">2</span>
+        <h4>Enterprise App</h4>
+        <p class="scope-ex">Sua empresa contrata Microsoft Copilot</p>
+        <span class="scope-resp">↓ Sua responsabilidade: <strong>baixa-média</strong></span>
+      </button>
+      <button class="scope-card" data-scope="3">
+        <span class="scope-num">3</span>
+        <h4>Pre-trained Model</h4>
+        <p class="scope-ex">Você chama Claude no Bedrock via API</p>
+        <span class="scope-resp">↓ Sua responsabilidade: <strong>média</strong></span>
+      </button>
+      <button class="scope-card" data-scope="4">
+        <span class="scope-num">4</span>
+        <h4>Fine-tuned Model</h4>
+        <p class="scope-ex">Você fine-tuna Claude no seu dataset</p>
+        <span class="scope-resp">↓ Sua responsabilidade: <strong>alta</strong></span>
+      </button>
+      <button class="scope-card" data-scope="5">
+        <span class="scope-num">5</span>
+        <h4>Self-trained Model</h4>
+        <p class="scope-ex">Você treina FM próprio do zero</p>
+        <span class="scope-resp">↓ Sua responsabilidade: <strong>máxima</strong></span>
+      </button>
+    </div>
+
+    <div class="scope-detail" id="scope-detail">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 7. LINHAGEM -->
+<!-- ============================ -->
+<section class="chapter" id="linhagem">
+  <div class="container">
+    <span class="chapter-number">07 · Citação de fontes & linhagem de dados</span>
+    <h2>De onde <span style="color:var(--orange)">veio essa resposta</span>?</h2>
+    <p class="lead">
+      Não basta o modelo responder. Em IA confiável, você precisa <strong>saber e mostrar</strong> de qual documento veio cada afirmação. Aqui mora a citação de fontes (source citation) e a linhagem de dados (data lineage).
+    </p>
+
+    <div class="lineage-demo">
+      <div class="lineage-question">
+        <span class="lbl">USER</span>
+        <p>Quais são as condições da nossa apólice de seguro pra gatos persas?</p>
+      </div>
+
+      <div class="lineage-answer">
+        <span class="lbl">ASSISTANT (com Bedrock Knowledge Bases + citação)</span>
+        <p id="lineage-answer-text">
+          Sua apólice cobre <strong>cirurgias eletivas</strong> após carência de 60 dias <span class="cite" data-cite="1">¹</span>, com franquia de R$ 200 por procedimento <span class="cite" data-cite="2">²</span>. Vacinação anual está inclusa <span class="cite" data-cite="3">³</span>. Não cobre tratamento estético <span class="cite" data-cite="2">²</span>.
+        </p>
+        <div class="lineage-cites">
+          <div class="cite-item" data-cite="1">
+            <span class="cite-num">¹</span>
+            <div>
+              <strong>apolice-felinos-2025.pdf</strong> · Cláusula 4.2, página 18
+              <span class="cite-meta">Atualizado em 12/03/2025 · S3://docs-corporate/seguros/</span>
+            </div>
+          </div>
+          <div class="cite-item" data-cite="2">
+            <span class="cite-num">²</span>
+            <div>
+              <strong>apolice-felinos-2025.pdf</strong> · Anexo I, tabela de franquias
+              <span class="cite-meta">Atualizado em 12/03/2025 · S3://docs-corporate/seguros/</span>
+            </div>
+          </div>
+          <div class="cite-item" data-cite="3">
+            <span class="cite-num">³</span>
+            <div>
+              <strong>cobertura-vacinas-2025.pdf</strong> · Seção 2
+              <span class="cite-meta">Atualizado em 03/01/2025 · S3://docs-corporate/seguros/</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lineage-pipeline">
+      <h3>📜 Pipeline de linhagem ponta a ponta</h3>
+      <div class="pipe-grid">
+        <div class="pipe-step">
+          <span class="pipe-num">1</span>
+          <h4>Origem</h4>
+          <p>Documento entra no S3 com <strong>metadata</strong>: autor, data, versão, hash.</p>
+        </div>
+        <div class="pipe-step">
+          <span class="pipe-num">2</span>
+          <h4>Indexação</h4>
+          <p>Bedrock Knowledge Bases chunka, embedda e <strong>preserva o link</strong> de cada chunk pro arquivo de origem.</p>
+        </div>
+        <div class="pipe-step">
+          <span class="pipe-num">3</span>
+          <h4>Retrieval</h4>
+          <p>Modelo recebe os chunks junto com seus metadados como contexto. Não tem como "esquecer" a fonte.</p>
+        </div>
+        <div class="pipe-step">
+          <span class="pipe-num">4</span>
+          <h4>Resposta</h4>
+          <p>Output inclui <strong>source citations</strong>: arquivo, página, trecho. Auditoria feliz.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lineage-services">
+      <div class="ls-card">
+        <span class="emoji">🗂️</span>
+        <h4>SageMaker Lineage Tracking</h4>
+        <p>Rastreia automaticamente datasets, modelos, treinamentos e deploys. Quem treinou, com qual dado, em que data.</p>
+      </div>
+      <div class="ls-card">
+        <span class="emoji">📋</span>
+        <h4>SageMaker Model Cards</h4>
+        <p>Documenta o modelo: dados de treino, casos de uso, limitações conhecidas, métricas de bias.</p>
+      </div>
+      <div class="ls-card">
+        <span class="emoji">📚</span>
+        <h4>Bedrock Knowledge Bases</h4>
+        <p>Retorna <strong>source citations</strong> nativamente em cada resposta: qual documento, qual chunk.</p>
+      </div>
+      <div class="ls-card">
+        <span class="emoji">📜</span>
+        <h4>AWS Glue Data Catalog</h4>
+        <p>Catálogo central de datasets. Descoberta, esquema, ownership e linhagem de tabelas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- 8. DADOS SEGUROS -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="dados">
+  <div class="container">
+    <span class="chapter-number">08 · Engenharia de dados segura</span>
+    <h2>Boas práticas que <span style="color:var(--orange)">salvam você</span> da próxima auditoria.</h2>
+    <p class="lead">
+      Marque os itens que você JÁ aplica no projeto. O termômetro mostra a maturidade da sua engenharia de dados pra IA. Cada item linka pro serviço da AWS que ajuda a implementar.
+    </p>
+
+    <div class="checklist" id="checklist">
+      <label class="check-item">
+        <input type="checkbox" data-w="3"> 
+        <div class="ci-text">
+          <strong>Criptografia em repouso (at rest)</strong>
+          <span>Todos os datasets em S3 com SSE-KMS. Bancos com KMS. Backups criptografados. <em>AWS KMS</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="3"> 
+        <div class="ci-text">
+          <strong>Criptografia em trânsito (in transit)</strong>
+          <span>TLS pra toda chamada de API e movimento de dado. PrivateLink pra ficar dentro da AWS. <em>VPC Endpoints, ACM</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="3"> 
+        <div class="ci-text">
+          <strong>Controle de acesso fino (least privilege)</strong>
+          <span>IAM com roles específicas pra cada papel. Sem políticas wide-open. Acesso temporário via STS. <em>IAM, AWS Lake Formation</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>PII identificada e classificada</strong>
+          <span>Você sabe ONDE estão os dados pessoais nos seus buckets. <em>Amazon Macie</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>PII redacted antes do treino</strong>
+          <span>Mascaramento ou tokenização de CPF, e-mail, telefone antes de virar feature. <em>Comprehend DetectPiiEntities</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>Auditoria de acesso aos dados</strong>
+          <span>CloudTrail registrando toda leitura/escrita em S3, Bedrock e SageMaker. Logs imutáveis. <em>CloudTrail, S3 Object Lock</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>Linhagem (data lineage) documentada</strong>
+          <span>Sabe de qual fonte cada feature veio. <em>SageMaker ML Lineage Tracking, AWS Glue Catalog</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>Validação de qualidade dos dados</strong>
+          <span>Schemas validados, valores fora de range bloqueados, dados duplicados detectados. <em>Glue DataBrew, Deequ</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>Retenção e descarte definidos</strong>
+          <span>Política de quanto tempo cada categoria de dado fica viva. Apaga ao fim do prazo. <em>S3 Lifecycle, AWS Config</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="3"> 
+        <div class="ci-text">
+          <strong>Dados de prompt/resposta sanitizados</strong>
+          <span>Logs de prompts em GenAI sem expor PII bruta. Output validado antes de sair. <em>Bedrock Guardrails, Comprehend</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>Backup e recuperação testados</strong>
+          <span>Não basta ter backup, precisa ter feito pelo menos um restore real esse ano. <em>AWS Backup</em></span>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" data-w="2"> 
+        <div class="ci-text">
+          <strong>Compliance contínuo monitorado</strong>
+          <span>Drift de configuração detectado automaticamente. Relatórios pra auditoria com 1 clique. <em>AWS Config, Audit Manager, Artifact</em></span>
+        </div>
+      </label>
+    </div>
+
+    <div class="check-meter">
+      <div class="meter-info">
+        <strong>🩺 Maturidade da sua engenharia de dados:</strong>
+        <span id="check-counter">Marque os itens que já aplica</span>
+      </div>
+      <div class="meter-bar"><div class="meter-fill" id="check-fill"></div></div>
+      <div class="meter-labels"><span>🌱 começo</span><span>🌳 crescendo</span><span>🌲 maduro</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- COLA -->
+<!-- ============================ -->
+<section class="chapter cola-section" id="cola">
+  <div class="container">
+    <span class="chapter-number">09 · Cola final pra prova</span>
+    <h2>O que <span style="color:var(--orange)">decorar</span>.</h2>
+
+    <div class="cola-grid">
+      <div class="cola-card">
+        <h4>🧑‍⚖️ Amazon A2I</h4>
+        <p>Augmented AI. Orquestra <strong>human-in-the-loop</strong> pra decisões de ML. Threshold de confiança baixo → humano revisa. Cai sempre que a questão fala "revisão humana".</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔍 SHAP / LIME / Clarify</h4>
+        <p>Ferramentas de <strong>explicabilidade (XAI)</strong>. SHAP atribui pesos baseados em teoria dos jogos. LIME aproxima local. <strong>Clarify</strong> é o serviço AWS que implementa SHAP.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📇 AWS AI Service Cards</h4>
+        <p>Documentação pública de cada serviço de IA da AWS: capacidades, limitações, contextos de teste. Exemplo de <strong>transparência</strong>.</p>
+      </div>
+      <div class="cola-card">
+        <h4>⚖️ Trade-off</h4>
+        <p>Mais simples = mais explicável e menos performático. Mais complexo = inverso. <strong>Decisão regulada/crítica</strong> → modelo mais simples ou caixa preta + Clarify.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🛡️ Moderação</h4>
+        <p><strong>Bedrock Guardrails</strong> pra LLM. <strong>Comprehend</strong> pra texto livre. <strong>Rekognition</strong> pra imagem/vídeo. <strong>Transcribe Toxicity</strong> pra áudio.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📊 Scoping Matrix</h4>
+        <p>5 escopos da AWS pra GenAI. Quanto mais perto do <strong>self-trained</strong>, mais responsabilidade do cliente. Importante pra responsabilidade compartilhada.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📜 Linhagem</h4>
+        <p><strong>Source citation</strong> via Knowledge Bases. <strong>Data lineage</strong> via SageMaker Lineage Tracking + Glue Catalog. <strong>Model Cards</strong> documentam tudo.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🔐 Dados seguros</h4>
+        <p>Trio mínimo: <strong>KMS</strong> (criptografia), <strong>IAM</strong> (acesso), <strong>CloudTrail</strong> (audit). Adiciona <strong>Macie</strong> pra PII e <strong>Config</strong> pra compliance contínuo.</p>
+      </div>
+    </div>
+
+    <div class="exam-tips">
+      <h3>🎯 Pegadinhas que caem na prova</h3>
+      <ul>
+        <li><strong>"Modelo precisa explicar a decisão pra área regulada"</strong> → modelo mais simples (linear, árvore) OU caixa preta + Clarify/SHAP. Nunca apenas "use modelo mais complexo".</li>
+        <li><strong>"Decisão sensível precisa de revisão humana"</strong> → <strong>Amazon A2I</strong>, sempre. Não confunda com Step Functions ou Lambda.</li>
+        <li><strong>"Filtrar conteúdo gerado pelo LLM no Bedrock"</strong> → <strong>Bedrock Guardrails</strong>. Não é Comprehend, não é Rekognition.</li>
+        <li><strong>"Detectar PII em buckets S3"</strong> → <strong>Macie</strong>. <strong>"Detectar PII em texto"</strong> → <strong>Comprehend DetectPiiEntities</strong>. São coisas diferentes.</li>
+        <li><strong>"Empresa quer mostrar fontes nas respostas do chatbot"</strong> → <strong>Bedrock Knowledge Bases</strong> com source citations.</li>
+        <li><strong>"Documentar bias e limitações do modelo"</strong> → <strong>SageMaker Model Cards</strong>. Não é só metadata, é documentação estruturada.</li>
+        <li><strong>Generative AI Security Scoping Matrix</strong> tem <strong>5 escopos</strong>. Decora os nomes (Consumer App, Enterprise App, Pre-trained, Fine-tuned, Self-trained).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="aula-footer">
+  <div class="container">
+    <p>Feito com 🧡 pra <strong>Escola da Nuvem</strong> · <a href="../index.html">Balaio de Gatos</a> · <a href="../mapa/">📍 Mapa de Estudos</a> · <a href="../mapa/v2.html">🎯 Treinar</a></p>
+    <p class="src">Fontes: <a href="https://aws.amazon.com/machine-learning/responsible-ai/" target="_blank" rel="noopener">AWS Responsible AI</a> · <a href="https://aws.amazon.com/ai/responsible-ai/transparency/" target="_blank" rel="noopener">AWS AI Service Cards</a> · <a href="https://aws.amazon.com/blogs/security/securing-generative-ai-an-introduction-to-the-generative-ai-security-scoping-matrix/" target="_blank" rel="noopener">GenAI Security Scoping Matrix</a></p>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

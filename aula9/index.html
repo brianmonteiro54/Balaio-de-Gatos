@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 9: o canivete suíço da AWS</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos<span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"> · Aula 9</span></div>
+    <div class="nav-links">
+      <a href="#textract">Textract</a>
+      <a href="#textract-lab">Textract Lab</a>
+      <a href="#translate">Translate</a>
+      <a href="#translate-lab">Translate Lab</a>
+      <a href="#personalize">Personalize</a>
+      <a href="#fraud">Fraud Detector</a>
+      <a href="#outros">Outros</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula 9 · Catálogo de IA AWS</div>
+        <h1>
+          Os <span class="scratch">7</span><br>
+          serviços que<br>
+          os <span class="accent">gatos</span><br>
+          mais usam.
+        </h1>
+        <p>
+          Textract pra ler papel, Translate pra falar idiomas, Personalize pra recomendar o melhor pote de ração, Fraud Detector pra pegar gato malandro no cartão, Q Developer pra escrever código, Lex pra criar chatbot, Titan e Nova pra geração de tudo, OpenSearch pra buscar tudo. <strong>Todos com demos interativos</strong>.
+        </p>
+        <a href="#textract" class="hero-cta">Começa pelo Textract 🐾</a>
+      </div>
+
+      <div class="brain-cat">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="200" cy="200" r="180" fill="#F5E9CF" stroke="#2B1810" stroke-width="2.5"/>
+          <circle cx="200" cy="200" r="140" fill="#FBD9C5" stroke="#2B1810" stroke-width="2"/>
+
+          <!-- Cat with toolbox -->
+          <g class="float">
+            <ellipse cx="200" cy="225" rx="62" ry="56" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="155,180 168,150 178,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="222,180 232,150 245,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <circle cx="183" cy="220" r="4.5" fill="#2B1810"/>
+            <circle cx="217" cy="220" r="4.5" fill="#2B1810"/>
+            <ellipse cx="200" cy="234" rx="3.5" ry="2.5" fill="#2B1810"/>
+            <path d="M 188 244 Q 195 250 200 244 Q 205 250 213 244" stroke="#2B1810" stroke-width="2" fill="none"/>
+            <line x1="160" y1="230" x2="135" y2="225" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="240" y1="230" x2="265" y2="225" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="160" y1="240" x2="135" y2="245" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="240" y1="240" x2="265" y2="245" stroke="#2B1810" stroke-width="1.5"/>
+          </g>
+
+          <!-- Floating service icons -->
+          <g class="pulse-node">
+            <rect x="48" y="60" width="84" height="32" rx="14" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+            <text x="90" y="80" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">📄 Textract</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-0.6s">
+            <rect x="280" y="50" width="92" height="32" rx="14" fill="#8A6FB1" stroke="#2B1810" stroke-width="2"/>
+            <text x="326" y="70" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🌐 Translate</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-1.2s">
+            <rect x="294" y="120" width="84" height="32" rx="14" fill="#C73E1D" stroke="#2B1810" stroke-width="2"/>
+            <text x="336" y="140" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🛡️ Fraud</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-1.8s">
+            <rect x="290" y="320" width="80" height="32" rx="14" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+            <text x="330" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#2B1810" font-weight="700">🎯 Person.</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-2.4s">
+            <rect x="36" y="320" width="92" height="32" rx="14" fill="#6B8E23" stroke="#2B1810" stroke-width="2"/>
+            <text x="82" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">🔍 OpenSrch</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-3s">
+            <rect x="36" y="180" width="80" height="32" rx="14" fill="#FF6B35" stroke="#2B1810" stroke-width="2"/>
+            <text x="76" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">💬 Lex</text>
+          </g>
+
+          <line x1="132" y1="76" x2="180" y2="200" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="290" y1="66" x2="220" y2="200" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="294" y1="136" x2="225" y2="220" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="295" y1="330" x2="225" y2="250" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="120" y1="330" x2="180" y2="245" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="116" y1="195" x2="178" y2="220" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>📄 TEXTRACT</span><span>🌐 TRANSLATE</span><span>🎯 PERSONALIZE</span><span>🛡️ FRAUD DETECTOR</span><span>💻 Q DEVELOPER</span><span>📊 Q QUICKSIGHT</span><span>💬 LEX</span><span>🌟 TITAN</span><span>✨ NOVA</span><span>🔍 OPENSEARCH</span><span>📄 TEXTRACT</span><span>🌐 TRANSLATE</span><span>🎯 PERSONALIZE</span><span>🛡️ FRAUD DETECTOR</span><span>💻 Q DEVELOPER</span><span>💬 LEX</span><span>🌟 TITAN</span><span>✨ NOVA</span><span>🔍 OPENSEARCH</span>
+  </div>
+</div>
+
+<!-- ============ MÓDULO 1: AMAZON TEXTRACT ============ -->
+<section class="chapter" id="textract">
+  <div class="container">
+    <span class="chapter-number">01 · Amazon Textract</span>
+    <h2>OCR <span style="color:var(--orange)">com superpoderes</span>: lê papel e devolve estrutura.</h2>
+    <p class="lead">
+      Textract não é só OCR. Ele entende <strong>formulário</strong> (extrai key-value), <strong>tabela</strong> (preserva linhas/colunas), <strong>nota fiscal</strong> (campos específicos) e <strong>identidade</strong> (RG, CNH, passaporte). <strong>Clica nos documentos abaixo</strong> e veja as bounding boxes aparecerem ao vivo, depois muda a API pra ver o que cada uma devolve.
+    </p>
+
+    <div class="tx-block">
+      <div class="tx-card">
+        <div class="tx-doc-picker" id="tx-doc-picker">
+          <button class="tx-doc-btn active" data-doc="receipt">🧾 Recibo</button>
+          <button class="tx-doc-btn" data-doc="form">📋 Formulário</button>
+          <button class="tx-doc-btn" data-doc="invoice">💰 Nota Fiscal</button>
+          <button class="tx-doc-btn" data-doc="id">🪪 Identidade</button>
+          <button class="tx-doc-btn" data-doc="table">📊 Tabela</button>
+        </div>
+
+        <div class="tx-stage">
+          <div class="tx-doc-frame" id="tx-doc-frame">
+            <svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg" id="tx-doc-svg">
+              <!-- doc renders here -->
+            </svg>
+          </div>
+        </div>
+
+        <div class="tx-api-picker" id="tx-api-picker">
+          <button class="tx-api-btn active" data-api="text">DetectDocumentText</button>
+          <button class="tx-api-btn" data-api="forms">AnalyzeDocument · FORMS</button>
+          <button class="tx-api-btn" data-api="tables">AnalyzeDocument · TABLES</button>
+          <button class="tx-api-btn" data-api="expense">AnalyzeExpense</button>
+          <button class="tx-api-btn" data-api="id">AnalyzeID</button>
+          <button class="tx-api-btn" data-api="layout">AnalyzeDocument · LAYOUT</button>
+        </div>
+
+        <div class="tx-actions">
+          <button class="tx-btn primary" id="tx-process">🔍 Processar documento</button>
+          <button class="tx-btn ghost" id="tx-clear">↺ Limpar</button>
+          <span class="tx-status" id="tx-status">⏸️ Pronto</span>
+        </div>
+      </div>
+
+      <div class="tx-side">
+        <div class="tx-out">
+          <div class="tx-out-head">📨 Resposta da API</div>
+          <pre id="tx-out-json"><span class="c"># Clica em "Processar documento" pra ver a saída</span></pre>
+        </div>
+        <div class="tx-explain">
+          <h3 id="tx-explain-title">🔤 DetectDocumentText</h3>
+          <p id="tx-explain-desc"></p>
+          <div class="tx-tip" id="tx-tip">
+            💡 <strong>Dica:</strong> use <code>DetectDocumentText</code> pra OCR puro. Se você precisa de <em>estrutura</em> (formulário, tabela, nota fiscal, RG), use as variantes <code>Analyze*</code>, que já entendem o tipo de documento.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 2: TEXTRACT LAB ============ -->
+<section class="chapter" id="textract-lab">
+  <div class="container">
+    <span class="chapter-number">02 · Textract Lab · 🧪 mão na massa</span>
+    <h2>Pipeline real: <span style="color:var(--orange)">S3 → Lambda → Textract → DynamoDB</span>.</h2>
+    <p class="lead">
+      Vamos montar a arquitetura de um sistema de processamento de notas fiscais que escala pra milhões. <strong>Clica nos blocos</strong> pra ver o código de cada peça e <strong>arrasta uma nota</strong> pro pipeline pra ver o fluxo executar.
+    </p>
+
+    <div class="lab-architecture">
+      <svg viewBox="0 0 1080 240" xmlns="http://www.w3.org/2000/svg" id="lab-arch-svg">
+        <!-- Boxes -->
+        <g class="lab-box" data-step="upload">
+          <rect x="10" y="80" width="140" height="80" rx="12" fill="#F5E9CF" stroke="#2B1810" stroke-width="2.5"/>
+          <text x="80" y="108" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">📤 Upload</text>
+          <text x="80" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">presigned URL</text>
+          <text x="80" y="146" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4A3528">user → S3</text>
+        </g>
+
+        <path d="M 154 120 L 196 120" stroke="#2B1810" stroke-width="2" marker-end="url(#lab-arr)"/>
+        <circle class="lab-token" id="lab-token-1" r="8" fill="#FF6B35" cx="-100" cy="120" stroke="#2B1810" stroke-width="2" style="opacity:0"/>
+
+        <g class="lab-box" data-step="s3">
+          <rect x="200" y="80" width="140" height="80" rx="12" fill="#FFE8DD" stroke="#2B1810" stroke-width="2.5"/>
+          <text x="270" y="108" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">🪣 S3</text>
+          <text x="270" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">notas-fiscais/</text>
+          <text x="270" y="146" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4A3528">+ event trigger</text>
+        </g>
+
+        <path d="M 344 120 L 386 120" stroke="#2B1810" stroke-width="2" marker-end="url(#lab-arr)"/>
+
+        <g class="lab-box" data-step="lambda">
+          <rect x="390" y="80" width="140" height="80" rx="12" fill="#DDEEEC" stroke="#2B1810" stroke-width="2.5"/>
+          <text x="460" y="108" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">⚡ Lambda</text>
+          <text x="460" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">trigger handler</text>
+          <text x="460" y="146" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4A3528">+ IAM Role</text>
+        </g>
+
+        <path d="M 534 120 L 576 120" stroke="#2B1810" stroke-width="2" marker-end="url(#lab-arr)"/>
+
+        <g class="lab-box" data-step="textract">
+          <rect x="580" y="80" width="140" height="80" rx="12" fill="#F5B7A4" stroke="#2B1810" stroke-width="2.5"/>
+          <text x="650" y="108" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">📄 Textract</text>
+          <text x="650" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">AnalyzeExpense</text>
+          <text x="650" y="146" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4A3528">async via SNS</text>
+        </g>
+
+        <path d="M 724 120 L 766 120" stroke="#2B1810" stroke-width="2" marker-end="url(#lab-arr)"/>
+
+        <g class="lab-box" data-step="db">
+          <rect x="770" y="80" width="140" height="80" rx="12" fill="#DCE9C4" stroke="#2B1810" stroke-width="2.5"/>
+          <text x="840" y="108" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">💾 DynamoDB</text>
+          <text x="840" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">notas-extraidas</text>
+          <text x="840" y="146" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4A3528">+ Athena</text>
+        </g>
+
+        <path d="M 914 120 L 956 120" stroke="#2B1810" stroke-width="2" marker-end="url(#lab-arr)"/>
+
+        <g class="lab-box" data-step="dash">
+          <rect x="960" y="80" width="110" height="80" rx="12" fill="#F4D35E" stroke="#2B1810" stroke-width="2.5"/>
+          <text x="1015" y="108" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">📊 BI</text>
+          <text x="1015" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">QuickSight</text>
+        </g>
+
+        <defs>
+          <marker id="lab-arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 z" fill="#2B1810"/>
+          </marker>
+        </defs>
+      </svg>
+
+      <div class="lab-controls">
+        <button class="lab-btn primary" id="lab-fire">▶️ Disparar fluxo</button>
+        <span class="lab-helper">Ou clica num bloco pra ver o código dele.</span>
+      </div>
+    </div>
+
+    <div class="lab-detail">
+      <div class="lab-detail-head" id="lab-detail-head">⚙️ Clica num dos blocos da arquitetura</div>
+      <p class="lab-detail-desc" id="lab-detail-desc">Cada bloco tem seu papel e seu pedaço de código. Clica em qualquer um deles acima.</p>
+      <pre id="lab-detail-code"></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 3: AMAZON TRANSLATE ============ -->
+<section class="chapter" id="translate">
+  <div class="container">
+    <span class="chapter-number">03 · Amazon Translate</span>
+    <h2>O <span style="color:var(--orange)">tradutor neural</span> da AWS · 75+ idiomas, 5500 pares.</h2>
+    <p class="lead">
+      Translate é tradução automática neural. Não é Google Translate da empresa do Bezos. É treinado em corpora gigantes, suporta <strong>terminologia customizada</strong> ("Bigode" sempre vira "Mustache", não "Whisker"), bate em batch e em real-time. <strong>Digita um texto na esquerda</strong>, escolhe os idiomas, vê a tradução acontecer.
+    </p>
+
+    <div class="tr-block">
+      <div class="tr-card">
+        <div class="tr-langs">
+          <div class="tr-lang-pick">
+            <label>De</label>
+            <select id="tr-from">
+              <option value="auto" selected>🌐 Auto-detectar</option>
+              <option value="pt">🇧🇷 Português</option>
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="it">🇮🇹 Italiano</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="ko">🇰🇷 한국어</option>
+              <option value="ru">🇷🇺 Русский</option>
+              <option value="ar">🇸🇦 العربية</option>
+              <option value="hi">🇮🇳 हिन्दी</option>
+              <option value="nl">🇳🇱 Nederlands</option>
+              <option value="sv">🇸🇪 Svenska</option>
+              <option value="tr">🇹🇷 Türkçe</option>
+              <option value="pl">🇵🇱 Polski</option>
+            </select>
+          </div>
+          <button class="tr-swap" id="tr-swap" title="Trocar idiomas">⇄</button>
+          <div class="tr-lang-pick">
+            <label>Para</label>
+            <select id="tr-to">
+              <option value="en">🇺🇸 English</option>
+              <option value="pt" selected>🇧🇷 Português</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="it">🇮🇹 Italiano</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="ko">🇰🇷 한국어</option>
+              <option value="ru">🇷🇺 Русский</option>
+              <option value="ar">🇸🇦 العربية</option>
+              <option value="hi">🇮🇳 हिन्दी</option>
+              <option value="nl">🇳🇱 Nederlands</option>
+              <option value="sv">🇸🇪 Svenska</option>
+              <option value="tr">🇹🇷 Türkçe</option>
+              <option value="pl">🇵🇱 Polski</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tr-area">
+          <div class="tr-side-area">
+            <div class="tr-side-head">
+              <span id="tr-from-name">🌐 Auto-detectar</span>
+              <span class="tr-detect" id="tr-detect"></span>
+            </div>
+            <textarea id="tr-input" rows="6" placeholder="Digita ou cola um texto aqui...">The cat sat on the mat. It was a sunny afternoon, and the little orange cat watched the birds outside the window with great interest.</textarea>
+            <div class="tr-counter">
+              <span id="tr-char-count">0 chars</span>
+              <span id="tr-word-count">0 words</span>
+            </div>
+          </div>
+          <div class="tr-side-area">
+            <div class="tr-side-head">
+              <span id="tr-to-name">🇧🇷 Português</span>
+              <span class="tr-conf" id="tr-conf">··· · neural</span>
+            </div>
+            <div id="tr-output" class="tr-output"></div>
+            <div class="tr-out-actions">
+              <button class="tr-mini" id="tr-copy">📋 Copiar</button>
+              <button class="tr-mini" id="tr-tts">🔊 Ouvir</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tr-actions">
+          <button class="tr-translate-btn" id="tr-translate-btn">▶️ Traduzir</button>
+          <span class="tr-status" id="tr-translate-status">Pronto. Edite o texto ou clique em Traduzir.</span>
+        </div>
+
+        <div class="tr-features">
+          <label class="tr-toggle">
+            <input type="checkbox" id="tr-formal">
+            <span class="slider"></span>
+            <span class="lbl">🎩 Formality: <strong>FORMAL</strong> · forçar registro formal (vous, Sie, usted)</span>
+          </label>
+          <label class="tr-toggle">
+            <input type="checkbox" id="tr-profanity">
+            <span class="slider"></span>
+            <span class="lbl">🚫 Profanity Mask · censura palavrão com ***</span>
+          </label>
+          <label class="tr-toggle">
+            <input type="checkbox" id="tr-custom" checked>
+            <span class="slider"></span>
+            <span class="lbl">📚 Custom Terminology · injeta dicionário próprio no prompt</span>
+          </label>
+        </div>
+
+        <!-- Tabela editável de Custom Terminology -->
+        <div class="tr-terminology" id="tr-terminology">
+          <div class="tr-term-head">
+            <span class="tr-term-title">📚 Custom Terminology · CSV ativo</span>
+            <button class="tr-term-btn" id="tr-term-add">+ Adicionar termo</button>
+            <button class="tr-term-btn ghost" id="tr-term-reset">↺ Padrão</button>
+          </div>
+          <div class="tr-term-info">
+            Esses termos vão direto pro prompt da API: <strong>"traduza X sempre como Y"</strong>. Útil pra marca, jargão técnico, vocabulário do seu domínio. Na AWS real, é um arquivo CSV/TMX que você faz upload.
+          </div>
+          <div class="tr-term-table" id="tr-term-table"></div>
+          <pre class="tr-term-csv" id="tr-term-csv"></pre>
+        </div>
+
+        <div class="tr-examples" id="tr-examples">
+          <button class="tr-ex-btn" data-ex="0">📦 Review en→pt</button>
+          <button class="tr-ex-btn" data-ex="1">🩺 Texto médico pt→es</button>
+          <button class="tr-ex-btn" data-ex="2">🍕 Cardápio pt→en</button>
+          <button class="tr-ex-btn" data-ex="3">📜 Contrato en→pt (formal)</button>
+          <button class="tr-ex-btn" data-ex="4">🎬 Diálogo pt→ja</button>
+          <button class="tr-ex-btn featured" data-ex="5">📚 Demo Custom Terminology</button>
+        </div>
+      </div>
+
+      <div class="tr-side">
+        <div class="tr-side-card">
+          <div class="tr-side-card-head">📡 Equivalente AWS</div>
+          <pre id="tr-code"></pre>
+        </div>
+        <div class="tr-side-card explain">
+          <h3>🌎 Como Translate é diferente?</h3>
+          <p>
+            É <strong>neural</strong> (não estatístico) e foi treinado em domínios genéricos. Funciona bem pra texto comum. Pra jargão (médico, jurídico, técnico) você sobe um <strong>Custom Terminology</strong> CSV: "Bigode → Mustache", e o tradutor obedece.
+          </p>
+          <p class="small">
+            <strong>Active Custom Translation</strong>: pra ir além do dicionário, treina um modelo customizado com <strong>parallel data</strong> (corpus seu paralelo nos 2 idiomas). Modelo aprende seu jeito de traduzir.
+          </p>
+          <div class="tr-tip">
+            💡 Combo do dia: <strong>Transcribe</strong> (áudio→texto) → <strong>Translate</strong> (idioma A→B) → <strong>Polly</strong> (texto→áudio). Voilà: tradução simultânea de áudio.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 4: TRANSLATE LAB ============ -->
+<section class="chapter" id="translate-lab">
+  <div class="container">
+    <span class="chapter-number">04 · Translate Lab · 🧪 batch + real-time</span>
+    <h2>Quando usar <span style="color:var(--orange)">batch</span>, quando usar <span style="color:var(--sage)">real-time</span>?</h2>
+    <p class="lead">
+      Translate tem 2 modos que parecem iguais, mas custam diferente e atendem cenários diferentes. <strong>Mexe nos sliders</strong> abaixo e veja qual modo o conselho dos gatos recomenda pro seu caso.
+    </p>
+
+    <div class="tlab-block">
+      <div class="tlab-card">
+        <div class="tlab-card-head">📋 Caso de uso</div>
+        <div class="tlab-row">
+          <label>📊 Volume mensal de chars</label>
+          <input type="range" id="tlab-vol" min="0" max="6" step="1" value="3">
+          <span class="val" id="tlab-vol-v">10 milhões</span>
+        </div>
+        <div class="tlab-row">
+          <label>⏱️ Latência aceitável</label>
+          <input type="range" id="tlab-lat" min="0" max="3" step="1" value="1">
+          <span class="val" id="tlab-lat-v">≤ 1 segundo</span>
+        </div>
+        <div class="tlab-row">
+          <label>🔁 Frequência</label>
+          <select id="tlab-freq">
+            <option value="continuous" selected>Contínuo (chega o tempo todo)</option>
+            <option value="daily">Diário (1× por dia)</option>
+            <option value="ondemand">Sob demanda (esporádico)</option>
+            <option value="initial">Carga única (migração inicial)</option>
+          </select>
+        </div>
+        <div class="tlab-row">
+          <label class="tlab-check">
+            <input type="checkbox" id="tlab-multi" checked>
+            <span class="lbl">🌐 Múltiplos idiomas-alvo de uma vez</span>
+          </label>
+        </div>
+
+        <div class="tlab-result" id="tlab-result"></div>
+
+        <div class="tlab-cost">
+          <div class="tlab-cost-head">💰 Custo estimado mensal (mock)</div>
+          <div class="tlab-cost-grid">
+            <div class="tlab-cost-card" id="tlab-rt-cost">
+              <span class="tlab-cost-name">⚡ Real-time</span>
+              <span class="tlab-cost-v" id="tlab-rt-v">···</span>
+              <span class="tlab-cost-rate">~$15 / 1M chars</span>
+            </div>
+            <div class="tlab-cost-card" id="tlab-bt-cost">
+              <span class="tlab-cost-name">📦 Batch</span>
+              <span class="tlab-cost-v" id="tlab-bt-v">···</span>
+              <span class="tlab-cost-rate">~$15 / 1M chars + S3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tlab-side">
+        <div class="tlab-side-row" data-tab="rt">
+          <h4>⚡ Real-time (TranslateText)</h4>
+          <ul>
+            <li>Chamada síncrona, retorno em milissegundos</li>
+            <li>Limite de 10.000 bytes por chamada</li>
+            <li>Ideal pra UI, app, chat, integração inline</li>
+            <li>Cobra por char traduzido</li>
+          </ul>
+        </div>
+        <div class="tlab-side-row" data-tab="bt">
+          <h4>📦 Batch (StartTextTranslationJob)</h4>
+          <ul>
+            <li>Assíncrono, lê arquivos do S3</li>
+            <li>Suporta documentos grandes (até 1 GB)</li>
+            <li>Suporta múltiplos idiomas-alvo na mesma rodada</li>
+            <li>Ideal pra carga inicial, sites estáticos, livros</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 5: AMAZON PERSONALIZE ============ -->
+<section class="chapter" id="personalize">
+  <div class="container">
+    <span class="chapter-number">05 · Sistema de Recomendação · Amazon Personalize</span>
+    <h2>O <span style="color:var(--orange)">"se você gostou disso, vai gostar daquilo"</span> da Netflix, agora seu.</h2>
+    <p class="lead">
+      Personalize é um motor de recomendação gerenciado: você sobe seu histórico de interações (user, item, timestamp), escolhe uma <em>recipe</em> (algoritmo) e ele entrega um endpoint. <strong>Curte alguns produtos</strong> abaixo e veja as recomendações se atualizarem ao vivo. Muda a recipe pra ver como o resultado muda.
+    </p>
+
+    <div class="rec-block">
+      <div class="rec-card">
+        <div class="rec-card-head">
+          <div class="rec-card-title">🛒 Catálogo de petshop</div>
+          <div class="rec-recipes">
+            <button class="rec-recipe-btn active" data-recipe="user">🧠 USER_PERSONALIZATION</button>
+            <button class="rec-recipe-btn" data-recipe="sims">🔄 SIMS</button>
+            <button class="rec-recipe-btn" data-recipe="rank">📊 PERSONALIZED_RANKING</button>
+          </div>
+        </div>
+
+        <div class="rec-personas">
+          <span class="rec-personas-label">👤 Carregar persona:</span>
+          <button class="rec-persona-btn" data-persona="newbie">🐱 Tutor novato</button>
+          <button class="rec-persona-btn" data-persona="gourmet">🍣 Gato gourmet</button>
+          <button class="rec-persona-btn" data-persona="player">🎾 Brincalhão</button>
+          <button class="rec-persona-btn" data-persona="hygienic">🧼 Limpinho</button>
+        </div>
+
+        <div class="rec-catalog" id="rec-catalog"></div>
+
+        <div class="rec-status">
+          <span>👤 Você curtiu: <strong id="rec-liked-count">0</strong> itens</span>
+          <button class="rec-btn ghost" id="rec-clear-likes">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="rec-side">
+        <div class="rec-recos">
+          <div class="rec-recos-head">
+            <span id="rec-recos-title">🎯 Recomendados pra você</span>
+          </div>
+          <div class="rec-recos-list" id="rec-recos-list">
+            <div class="rec-empty">Curta alguns itens à esquerda pra começar a receber recomendações.</div>
+          </div>
+        </div>
+
+        <div class="rec-explain" id="rec-explain">
+          <h4 id="rec-explain-title">🧠 USER_PERSONALIZATION</h4>
+          <p id="rec-explain-desc">Recipe principal do Personalize. Aprende preferências do usuário a partir de interações, considera contexto (hora, device) e usa Hierarchical Recurrent Neural Networks pra capturar padrões temporais.</p>
+        </div>
+
+        <div class="rec-pipeline">
+          <div class="rec-pipe-head">⚙️ Pipeline real do Personalize:</div>
+          <div class="rec-pipe-steps">
+            <div class="rec-pipe">📥 Dataset Group</div>
+            <div class="rec-pipe-arrow">→</div>
+            <div class="rec-pipe">🧪 Solution + Recipe</div>
+            <div class="rec-pipe-arrow">→</div>
+            <div class="rec-pipe">🎓 Training</div>
+            <div class="rec-pipe-arrow">→</div>
+            <div class="rec-pipe">📡 Campaign (endpoint)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 6: AMAZON FRAUD DETECTOR ============ -->
+<section class="chapter" id="fraud">
+  <div class="container">
+    <span class="chapter-number">06 · Detecção de Fraudes · Amazon Fraud Detector</span>
+    <h2>O <span style="color:var(--orange)">detetive felino</span> que dá score de fraude em tempo real.</h2>
+    <p class="lead">
+      Fraud Detector combina <strong>seu histórico de transações</strong> com <strong>20 anos de inteligência da Amazon</strong> sobre fraude, treina um modelo customizado e te entrega: <strong>score de risco de 0 a 1000</strong> (quanto <em>menor</em> o número, mais segura é a transação) + decisão por regras (APPROVE / REVIEW / DENY). <strong>Submete uma transação</strong> abaixo e veja a IA pesar cada fator.
+    </p>
+
+    <div class="fr-block">
+      <div class="fr-card">
+        <div class="fr-card-head">💳 Submeter transação</div>
+        <div class="fr-grid">
+          <div class="fr-input">
+            <label>💰 Valor</label>
+            <div class="fr-input-money">
+              <span>R$</span>
+              <input type="number" id="fr-amount" value="450" min="1" max="50000">
+            </div>
+          </div>
+          <div class="fr-input">
+            <label>🌍 País origem do IP</label>
+            <select id="fr-country">
+              <option value="BR" selected>🇧🇷 Brasil (mesmo do cliente)</option>
+              <option value="US">🇺🇸 EUA</option>
+              <option value="UA">🇺🇦 Ucrânia</option>
+              <option value="NG">🇳🇬 Nigéria</option>
+              <option value="RO">🇷🇴 Romênia</option>
+            </select>
+          </div>
+          <div class="fr-input">
+            <label>🕐 Hora da transação</label>
+            <select id="fr-hour">
+              <option value="day" selected>☀️ Dia (8h-18h)</option>
+              <option value="evening">🌆 Noite (18h-23h)</option>
+              <option value="dawn">🌙 Madrugada (00h-06h)</option>
+            </select>
+          </div>
+          <div class="fr-input">
+            <label>📧 Idade do email (dias)</label>
+            <input type="number" id="fr-email-age" value="730" min="0" max="3650">
+          </div>
+          <div class="fr-input">
+            <label>💳 Tipo de pagamento</label>
+            <select id="fr-card">
+              <option value="known" selected>Cartão conhecido (mesmo já usado)</option>
+              <option value="new">Cartão novo cadastrado hoje</option>
+              <option value="prepaid">Pré-pago / virtual</option>
+            </select>
+          </div>
+          <div class="fr-input">
+            <label>🌐 Velocidade (compras na última 1h)</label>
+            <input type="number" id="fr-velocity" value="1" min="0" max="50">
+          </div>
+          <div class="fr-input">
+            <label>📍 Distância IP × endereço</label>
+            <select id="fr-distance">
+              <option value="same" selected>Mesma cidade</option>
+              <option value="state">Mesmo estado</option>
+              <option value="country">Mesmo país</option>
+              <option value="far">Outro continente</option>
+            </select>
+          </div>
+          <div class="fr-input">
+            <label>🛒 Tipo de cliente</label>
+            <select id="fr-customer">
+              <option value="repeat" selected>Recorrente (>5 compras)</option>
+              <option value="returning">Volta (1-5 compras)</option>
+              <option value="new">Primeira compra</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fr-actions">
+          <button class="fr-btn primary" id="fr-eval">⚡ Avaliar fraude</button>
+          <button class="fr-btn ghost" id="fr-reset">↺ Resetar</button>
+          <button class="fr-btn" id="fr-preset-fraud">🦹 Carregar caso fraudulento</button>
+          <button class="fr-btn" id="fr-preset-safe">✅ Carregar caso normal</button>
+        </div>
+      </div>
+
+      <div class="fr-side">
+        <div class="fr-result-card">
+          <div class="fr-decision-hero" id="fr-decision-hero">
+            <span class="fr-hero-icon" id="fr-hero-icon">⏸️</span>
+            <div class="fr-hero-text">
+              <strong id="fr-hero-label">AGUARDANDO</strong>
+              <span id="fr-hero-msg">Submete uma transação pra avaliar</span>
+            </div>
+          </div>
+
+          <div class="fr-thermometer">
+            <div class="fr-thermo-bar">
+              <span class="fr-thermo-zone approve" style="flex: 300"><span>APPROVE</span></span>
+              <span class="fr-thermo-zone review" style="flex: 400"><span>REVIEW</span></span>
+              <span class="fr-thermo-zone deny" style="flex: 300"><span>DENY</span></span>
+              <div class="fr-thermo-marker" id="fr-thermo-marker" style="left: 0%;">
+                <span class="fr-marker-pin">▼</span>
+                <span class="fr-marker-num" id="fr-marker-num">···</span>
+              </div>
+            </div>
+            <div class="fr-thermo-axis">
+              <span>0</span>
+              <span>300</span>
+              <span>700</span>
+              <span>1000</span>
+            </div>
+            <div class="fr-thermo-caption">↑ score técnico de risco · quanto menor, mais seguro</div>
+          </div>
+
+          <div class="fr-factors" id="fr-factors">
+            <div class="fr-factors-head">🔬 O que pesou nessa decisão</div>
+            <div class="fr-factors-legend">
+              <span class="fr-leg-item"><span class="sw neg"></span>⚠️ ALERTA = aumenta risco</span>
+              <span class="fr-leg-item"><span class="sw pos"></span>✅ SEGURO = reduz risco</span>
+            </div>
+            <div class="fr-factors-list" id="fr-factors-list">
+              <span class="fr-empty">Submete uma transação pra ver o detalhamento.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fr-rules">
+          <div class="fr-rules-head">📜 Regras (quanto menor o risco, melhor):</div>
+          <div class="fr-rule"><span class="badge approve">APPROVE</span> risco &lt; 300 · libera</div>
+          <div class="fr-rule"><span class="badge review">REVIEW</span> 300 ≤ risco &lt; 700 · revisão humana</div>
+          <div class="fr-rule"><span class="badge deny">DENY</span> risco ≥ 700 · bloqueia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-explain">
+      <h3>🪄 Como funciona por baixo do capô?</h3>
+      <p>
+        Você sobe um <strong>Event Dataset</strong> (CSV com transações histórias rotuladas como FRAUD/LEGIT). O Fraud Detector treina um modelo XGBoost-like + features da Amazon (reputação de IP, padrões globais). Depois você define <strong>regras</strong> em cima do score: "se score &gt; 700 → DENY, se score entre 300 e 700 → REVIEW".
+      </p>
+      <p class="small">
+        Tipos de evento prontos: <strong>Online Fraud</strong> (e-commerce), <strong>Transaction Fraud</strong> (pagamento), <strong>Account Takeover</strong> (login suspeito). Você não precisa de PhD em ML pra isso, é serviço gerenciado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 7: OUTROS SERVIÇOS ============ -->
+<section class="chapter" id="outros">
+  <div class="container">
+    <span class="chapter-number">07 · Outros serviços e recursos</span>
+    <h2>O resto do <span style="color:var(--orange)">balaio AWS</span>: assistentes, modelos e busca.</h2>
+    <p class="lead">
+      6 serviços que vão aparecer na sua trilha. Cada um tem um <strong>mini-demo interativo</strong> aqui pra você sacar a vibe.
+    </p>
+
+    <div class="oth-grid">
+      <!-- Q DEVELOPER -->
+      <div class="oth-card" data-srv="qdev">
+        <div class="oth-card-head">
+          <span class="oth-ic">💻</span>
+          <div>
+            <h4>Amazon Q Developer</h4>
+            <span class="oth-micro">copiloto de código</span>
+          </div>
+        </div>
+        <p class="oth-desc">Sucessor do CodeWhisperer. Autocomplete, chat, transformação de código, security scan, geração de testes. Integra com VS Code, JetBrains, CLI.</p>
+        <div class="oth-demo qdev-demo">
+          <div class="qdev-tabs">
+            <button class="qdev-tab-btn active" data-qdev-tab="complete">⌨️ Autocomplete</button>
+            <button class="qdev-tab-btn" data-qdev-tab="chat">💬 /chat</button>
+            <button class="qdev-tab-btn" data-qdev-tab="test">🧪 /test</button>
+            <button class="qdev-tab-btn" data-qdev-tab="security">🛡️ /scan</button>
+          </div>
+          <div class="qdev-editor" id="qdev-editor"></div>
+          <div class="qdev-buttons" id="qdev-buttons"></div>
+        </div>
+      </div>
+
+      <!-- Q QUICKSIGHT -->
+      <div class="oth-card" data-srv="qqs">
+        <div class="oth-card-head">
+          <span class="oth-ic">📊</span>
+          <div>
+            <h4>Amazon Q no QuickSight</h4>
+            <span class="oth-micro">pergunta em linguagem natural</span>
+          </div>
+        </div>
+        <p class="oth-desc">QuickSight é o BI da AWS. Q embute IA: você pergunta em português ("quais 5 produtos venderam mais ano passado?") e ele monta o gráfico.</p>
+        <div class="oth-demo qqs-demo">
+          <div class="qqs-input-wrap">
+            <input type="text" id="qqs-input" placeholder="Pergunta sobre as vendas...">
+            <button class="qqs-go" id="qqs-go">▶️</button>
+          </div>
+          <div class="qqs-questions">
+            <button class="qqs-q" data-q="0">📈 Vendas por mês</button>
+            <button class="qqs-q" data-q="1">🏆 Top 5 produtos</button>
+            <button class="qqs-q" data-q="2">🌎 Vendas por região</button>
+            <button class="qqs-q" data-q="3">📊 Comparativo trimestral</button>
+            <button class="qqs-q" data-q="4">🥧 Mix de categorias</button>
+            <button class="qqs-q" data-q="5">📉 Devoluções por mês</button>
+          </div>
+          <div class="qqs-chart-type" id="qqs-chart-type"></div>
+          <div class="qqs-chart" id="qqs-chart">
+            <span style="font-size: 13px; color: var(--ink-soft); font-style: italic;">Faz uma pergunta acima ou clica num exemplo.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEX -->
+      <div class="oth-card" data-srv="lex">
+        <div class="oth-card-head">
+          <span class="oth-ic">💬</span>
+          <div>
+            <h4>Amazon Lex</h4>
+            <span class="oth-micro">chatbot conversacional</span>
+          </div>
+        </div>
+        <p class="oth-desc">Mesmo motor da Alexa. Define <strong>intents</strong> (intenções: agendar, cancelar, consultar) e <strong>slots</strong> (variáveis pra preencher). Texto ou voz.</p>
+        <div class="oth-demo lex-demo">
+          <div class="lex-state-bar" id="lex-state-bar">
+            <span class="lex-state-pill" id="lex-state-intent">intent: <strong>···</strong></span>
+            <span class="lex-state-pill" id="lex-state-slot">slot: <strong>···</strong></span>
+          </div>
+          <div class="lex-chat" id="lex-chat"></div>
+          <div class="lex-input-wrap">
+            <input type="text" id="lex-input" placeholder="Digita uma mensagem..." value="">
+            <button class="lex-mic" id="lex-mic" title="Falar com microfone (Web Speech)">🎙️</button>
+            <button class="lex-send" id="lex-send">↗️</button>
+          </div>
+          <div class="lex-suggestions" id="lex-suggestions">
+            <button class="lex-sugg" data-sugg="agendar consulta">📅 Agendar consulta</button>
+            <button class="lex-sugg" data-sugg="comprar ração">🥫 Comprar ração</button>
+            <button class="lex-sugg" data-sugg="cancelar pedido">❌ Cancelar pedido</button>
+            <button class="lex-sugg" data-sugg="ajuda">🆘 Ajuda</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TITAN -->
+      <div class="oth-card" data-srv="titan">
+        <div class="oth-card-head">
+          <span class="oth-ic">🌟</span>
+          <div>
+            <h4>Amazon Titan</h4>
+            <span class="oth-micro">família de FMs da AWS</span>
+          </div>
+        </div>
+        <p class="oth-desc">Foundation Models próprios da Amazon, servidos via Bedrock. Texto, imagem, embedding. Otimizados pra integrar com AWS, com governança e privacidade fortes.</p>
+        <div class="oth-demo titan-demo">
+          <div class="titan-models" id="titan-models">
+            <button class="titan-model active" data-tm="text-express">Text Express</button>
+            <button class="titan-model" data-tm="text-lite">Text Lite</button>
+            <button class="titan-model" data-tm="embed-v2">Embeddings v2</button>
+            <button class="titan-model" data-tm="image">Image G1</button>
+          </div>
+          <div class="titan-info" id="titan-info"></div>
+          <div class="titan-playground" id="titan-playground"></div>
+          <div class="titan-cost">
+            <label>Tokens estimados (mês): <span id="titan-tokens-v">100.000</span></label>
+            <input type="range" id="titan-tokens" min="1000" max="10000000" step="1000" value="100000">
+            <div class="titan-cost-result" id="titan-cost-r">~$0.08/mês</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOVA -->
+      <div class="oth-card" data-srv="nova">
+        <div class="oth-card-head">
+          <span class="oth-ic">✨</span>
+          <div>
+            <h4>Amazon Nova</h4>
+            <span class="oth-micro">FM multimodal de ponta · 2024+</span>
+          </div>
+        </div>
+        <p class="oth-desc">Geração nova de FMs da AWS, lançada no re:Invent 2024. Texto, imagem, vídeo. Desenhada pra competir com Claude, GPT, Gemini. Servida em Bedrock.</p>
+        <div class="oth-demo nova-demo">
+          <div class="nova-tier-picker">
+            <button class="nova-tier active" data-tier="micro">⚡ Micro</button>
+            <button class="nova-tier" data-tier="lite">🎯 Lite</button>
+            <button class="nova-tier" data-tier="pro">🔥 Pro</button>
+            <button class="nova-tier" data-tier="canvas">🎨 Canvas</button>
+            <button class="nova-tier" data-tier="reel">🎬 Reel</button>
+          </div>
+          <div class="nova-display" id="nova-display"></div>
+          <div class="nova-prompt-wrap" id="nova-prompt-wrap">
+            <input type="text" id="nova-prompt" placeholder="Prompt... ex: gato detetive">
+            <button class="nova-go" id="nova-go">▶️ Gerar</button>
+          </div>
+          <div class="nova-compare" id="nova-compare"></div>
+        </div>
+      </div>
+
+      <!-- OPENSEARCH -->
+      <div class="oth-card" data-srv="opensearch">
+        <div class="oth-card-head">
+          <span class="oth-ic">🔍</span>
+          <div>
+            <h4>OpenSearch Service</h4>
+            <span class="oth-micro">busca + analytics + vector DB</span>
+          </div>
+        </div>
+        <p class="oth-desc">Fork do Elasticsearch que virou a versão gerenciada AWS. Faz busca textual clássica E busca vetorial (k-NN), virando vector DB nativo pra RAG.</p>
+        <div class="oth-demo os-demo">
+          <div class="os-input-wrap">
+            <input type="text" id="os-input" placeholder='Buscar... ex: "comida quente apimentada"' value='comida quente apimentada'>
+            <div class="os-modes">
+              <button class="os-mode active" data-mode="kw">🔤 Keyword</button>
+              <button class="os-mode" data-mode="vec">🧠 Semantic (k-NN)</button>
+              <button class="os-mode" data-mode="hyb">🔀 Híbrido</button>
+            </div>
+          </div>
+          <div class="os-suggestions">
+            <button class="os-sug" data-sug='comida quente apimentada'>comida quente apimentada</button>
+            <button class="os-sug" data-sug='bebida fresca pro verão'>bebida fresca pro verão</button>
+            <button class="os-sug" data-sug='almoço japonês cru'>almoço japonês cru</button>
+            <button class="os-sug" data-sug='massa rápida'>massa rápida</button>
+          </div>
+          <div class="os-explain" id="os-explain"></div>
+          <div class="os-results" id="os-results"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2 style="margin-bottom: 8px;">A cola da aula 9.</h2>
+    <p style="font-size: 17px; color: var(--ink-soft); max-width: 700px; margin-bottom: 16px;">
+      10 serviços, 10 verbos. Que problema cada um resolve em 1 frase.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">📄 Textract</div>
+        <div class="micro">OCR estrutural</div>
+        <div class="q">"Lê papel."</div>
+        <div class="what">Detect (OCR), Forms (key-value), Tables, Expense (NF), ID (RG/CNH). Sync e async.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🌐 Translate</div>
+        <div class="micro">tradução neural</div>
+        <div class="q">"Idioma A → idioma B."</div>
+        <div class="what">75+ idiomas. Real-time (TranslateText) ou batch (StartTextTranslationJob). Custom Terminology.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🎯 Personalize</div>
+        <div class="micro">recomendação</div>
+        <div class="q">"Vai gostar disso."</div>
+        <div class="what">Recipes: USER_PERSONALIZATION, SIMS, PERSONALIZED_RANKING. Treino com histórico de interações.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🛡️ Fraud Detector</div>
+        <div class="micro">risco de fraude</div>
+        <div class="q">"Essa transação é safada?"</div>
+        <div class="what">Score 0-1000 + regras. Online Fraud, Transaction Fraud, Account Takeover.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">💻 Q Developer</div>
+        <div class="micro">copiloto AWS</div>
+        <div class="q">"Escreve código pra mim."</div>
+        <div class="what">Autocomplete, chat, transform, security scan, /test. Integra IDE/CLI. Free tier generoso.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📊 Q · QuickSight</div>
+        <div class="micro">BI conversacional</div>
+        <div class="q">"Pergunta sobre os dados."</div>
+        <div class="what">Linguagem natural sobre dataset, gera gráfico e narrativa. Q também aparece no AWS Console e no Connect.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">💬 Lex</div>
+        <div class="micro">chatbot</div>
+        <div class="q">"Conversa com o cliente."</div>
+        <div class="what">Intents + slots + fulfillment Lambda. Mesma engine da Alexa. Texto e voz.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🌟 Titan</div>
+        <div class="micro">FMs AWS</div>
+        <div class="q">"Geração via Bedrock."</div>
+        <div class="what">Text Express, Text Lite, Embeddings v2, Image G1. Privacidade e governança AWS-native.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">✨ Nova</div>
+        <div class="micro">FMs nova geração</div>
+        <div class="q">"Concorre com Claude/GPT."</div>
+        <div class="what">Micro, Lite, Pro, Canvas (image), Reel (video). Lançado no re:Invent 2024.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔍 OpenSearch</div>
+        <div class="micro">busca + vector</div>
+        <div class="q">"Encontra rápido."</div>
+        <div class="what">Busca full-text, agregações, e k-NN (busca vetorial). Vira vector DB pra RAG sem outro serviço.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏗️ Padrão</div>
+        <div class="micro">stack AWS de IA</div>
+        <div class="q">"Como combinar?"</div>
+        <div class="what">S3 + Lambda + Textract / Translate / Comprehend → DynamoDB → QuickSight ou Q.</div>
+      </div>
+      <div class="cheat-card" style="background: var(--orange); color: var(--paper);">
+        <div class="name" style="color: var(--paper);">🐾 Resumo do resumo</div>
+        <div class="q" style="color: rgba(255,255,255,0.85);">"O que eu levo?"</div>
+        <div class="what" style="color: var(--paper);"><strong>Cada problema de IA tem um serviço gerenciado da AWS pronto. Antes de treinar do zero, abre essa lista e checa se tem um Comprehend, Textract, Personalize, Fraud Detector que resolve em horas, não em meses.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
+    Aula 9 com 7 serviços e 10+ demos interativos.
+  </div>
+  <div style="margin-top: 8px; opacity: 0.7;">
+    Arrasta papel, traduz frase, curte produto, analisa fraude, conversa com chatbot. <em>"Os alunos que aprendam mexendo, não decorando."</em>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

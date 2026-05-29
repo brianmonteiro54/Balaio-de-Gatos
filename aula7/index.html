@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 7: olhos e palavras de gato</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos<span style="font-family:'Sora', sans-serif; font-size:12px; color:var(--ink-soft); font-weight:500"> · Aula 7</span></div>
+    <div class="nav-links">
+      <a href="#subcampos">Sub-campos</a>
+      <a href="#visao">Visão</a>
+      <a href="#gan">GAN</a>
+      <a href="#rekognition">Rekognition</a>
+      <a href="#credenciais">Credenciais</a>
+      <a href="#lab">Lab</a>
+      <a href="#custom">Custom Labels</a>
+      <a href="#nlp">NLP</a>
+      <a href="#sentimento">Sentimento</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · Aula 7 · Visão & Linguagem</div>
+        <h1>
+          O gato<br>
+          <span class="scratch">vê</span> e<br>
+          o gato <span class="accent">lê</span>.
+        </h1>
+        <p>
+          Visão Computacional, GAN, Amazon Rekognition (e seus Custom Labels), distribuição segura de credenciais AWS, NLP e análise de sentimento. Tudo interativo: clica nas fotos, treina seu próprio modelo de raça de gato, gera caras falsas com GAN, escreve uma frase e veja o sentimento ser computado ao vivo.
+        </p>
+        <a href="#subcampos" class="hero-cta">Bora começar 🐾</a>
+      </div>
+
+      <div class="brain-cat">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- frame -->
+          <circle cx="200" cy="200" r="180" fill="#F5E9CF" stroke="#2B1810" stroke-width="2.5"/>
+          <circle cx="200" cy="200" r="140" fill="#FBD9C5" stroke="#2B1810" stroke-width="2"/>
+
+          <!-- detective cat -->
+          <g class="float">
+            <ellipse cx="200" cy="225" rx="62" ry="56" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="155,180 168,150 178,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <polygon points="222,180 232,150 245,180" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+            <!-- magnifying glass -->
+            <circle cx="178" cy="220" r="14" fill="#FFF9EC" stroke="#2B1810" stroke-width="2.5"/>
+            <circle cx="178" cy="220" r="3" fill="#2B1810"/>
+            <circle cx="225" cy="218" r="5" fill="#2B1810"/>
+            <ellipse cx="200" cy="240" rx="3.5" ry="2.5" fill="#2B1810"/>
+            <path d="M 187 246 Q 195 252 203 246" stroke="#2B1810" stroke-width="2" fill="none"/>
+            <!-- whiskers -->
+            <line x1="155" y1="240" x2="135" y2="235" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="155" y1="245" x2="135" y2="248" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="245" y1="240" x2="265" y2="235" stroke="#2B1810" stroke-width="1.5"/>
+            <line x1="245" y1="245" x2="265" y2="248" stroke="#2B1810" stroke-width="1.5"/>
+          </g>
+
+          <!-- floating thought bubbles -->
+          <g class="pulse-node">
+            <rect x="48" y="80" width="80" height="32" rx="14" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+            <text x="88" y="100" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">👁️ 0,98</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-1s">
+            <rect x="280" y="70" width="92" height="32" rx="14" fill="#8A6FB1" stroke="#2B1810" stroke-width="2"/>
+            <text x="326" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">"adoro" +</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-2s">
+            <rect x="290" y="310" width="80" height="32" rx="14" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+            <text x="330" y="330" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#2B1810" font-weight="700">🎨 GAN</text>
+          </g>
+          <g class="pulse-node" style="animation-delay:-2.6s">
+            <rect x="40" y="320" width="92" height="32" rx="14" fill="#6B8E23" stroke="#2B1810" stroke-width="2"/>
+            <text x="86" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#FFF9EC" font-weight="700">📸 gato 🐈</text>
+          </g>
+
+          <!-- connecting dotted lines -->
+          <line x1="128" y1="100" x2="180" y2="200" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="290" y1="86" x2="220" y2="200" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="295" y1="320" x2="225" y2="240" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+          <line x1="120" y1="320" x2="180" y2="245" stroke="#2B1810" stroke-width="1.5" opacity="0.25" stroke-dasharray="3 3"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🐾 SUB-CAMPOS</span><span>👁️ VISÃO COMPUTACIONAL</span><span>⚔️ GAN</span><span>📸 AMAZON REKOGNITION</span><span>🔐 CREDENCIAIS AWS</span><span>🧪 LAB</span><span>🏷️ CUSTOM LABELS</span><span>📖 NLP</span><span>💚💔 SENTIMENTO</span><span>🐾 SUB-CAMPOS</span><span>👁️ VISÃO COMPUTACIONAL</span><span>⚔️ GAN</span><span>📸 AMAZON REKOGNITION</span><span>🔐 CREDENCIAIS AWS</span><span>🧪 LAB</span><span>🏷️ CUSTOM LABELS</span><span>📖 NLP</span><span>💚💔 SENTIMENTO</span>
+  </div>
+</div>
+
+<!-- ============ MÓDULO 1: SUB-CAMPOS DE IA ============ -->
+<section class="chapter" id="subcampos">
+  <div class="container">
+    <span class="chapter-number">01 · Sub-campos de IA</span>
+    <h2>IA é um <span style="color:var(--orange)">balaio</span> de áreas, não uma só.</h2>
+    <p class="lead">
+      Quando alguém fala "estou usando IA", a primeira pergunta tem que ser <strong>"qual sub-campo?"</strong>. Cada um resolve um tipo de problema, com técnicas próprias. Hoje os holofotes vão pra <strong>Visão Computacional</strong> e <strong>NLP</strong>, mas o balaio é maior. <strong>Clica nos cartões</strong> pra ver cada um.
+    </p>
+
+    <div class="subfield-grid" id="subfield-grid">
+      <button class="subfield-card active" data-sf="cv">
+        <div class="ic">👁️</div>
+        <h4>Visão Computacional</h4>
+        <span class="micro">Computer Vision</span>
+        <p>Ensinar a máquina a "ver" e entender imagens e vídeo.</p>
+      </button>
+      <button class="subfield-card" data-sf="nlp">
+        <div class="ic">📖</div>
+        <h4>NLP</h4>
+        <span class="micro">Linguagem Natural</span>
+        <p>Texto e fala humana viram coisa que máquina entende.</p>
+      </button>
+      <button class="subfield-card" data-sf="speech">
+        <div class="ic">🎙️</div>
+        <h4>Reconhecimento de Fala</h4>
+        <span class="micro">Speech / ASR / TTS</span>
+        <p>Áudio vira texto. Texto vira áudio. Voz pra todo lado.</p>
+      </button>
+      <button class="subfield-card" data-sf="robotics">
+        <div class="ic">🤖</div>
+        <h4>Robótica</h4>
+        <span class="micro">Robotics</span>
+        <p>IA controlando corpo físico. Sensores, atuadores, movimento.</p>
+      </button>
+      <button class="subfield-card" data-sf="recsys">
+        <div class="ic">🎯</div>
+        <h4>Sistemas de Recomendação</h4>
+        <span class="micro">Recsys</span>
+        <p>O "se você gostou disso, vai gostar daquilo" da Netflix e Spotify.</p>
+      </button>
+      <button class="subfield-card" data-sf="kr">
+        <div class="ic">🧠</div>
+        <h4>Representação de Conhecimento</h4>
+        <span class="micro">Knowledge Reasoning</span>
+        <p>Ontologias, grafos, lógica. IA simbólica, anos 80, ainda viva.</p>
+      </button>
+      <button class="subfield-card" data-sf="planning">
+        <div class="ic">🗺️</div>
+        <h4>Planejamento</h4>
+        <span class="micro">Planning</span>
+        <p>Gerar sequência de ações pra atingir objetivo. Logística, jogos.</p>
+      </button>
+      <button class="subfield-card" data-sf="rl">
+        <div class="ic">🎮</div>
+        <h4>Aprendizado por Reforço</h4>
+        <span class="micro">Reinforcement Learning</span>
+        <p>Agente aprende por tentativa e erro com recompensa. AlphaGo.</p>
+      </button>
+      <button class="subfield-card" data-sf="genai">
+        <div class="ic">✨</div>
+        <h4>IA Generativa</h4>
+        <span class="micro">Generative AI</span>
+        <p>Cria conteúdo novo: texto, imagem, áudio, vídeo, código.</p>
+      </button>
+    </div>
+
+    <div class="subfield-detail" id="sf-detail">
+      <span class="tag" id="sf-tag">Sub-campo selecionado</span>
+      <h3 id="sf-title">👁️ Visão Computacional</h3>
+      <p id="sf-desc"></p>
+      <div class="sf-grid">
+        <div class="sf-block">
+          <strong>Tarefas típicas</strong>
+          <ul id="sf-tasks"></ul>
+        </div>
+        <div class="sf-block">
+          <strong>Ferramentas / Serviços AWS</strong>
+          <ul id="sf-aws"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 2: VISÃO COMPUTACIONAL ============ -->
+<section class="chapter" id="visao">
+  <div class="container">
+    <span class="chapter-number">02 · Visão Computacional</span>
+    <h2>De pixel a "<span style="color:var(--orange)">isso é um gato com 98% de certeza</span>".</h2>
+    <p class="lead">
+      A foto é só uma matriz de números (R, G, B por pixel). A mágica da Visão Computacional é transformar essa montanha de números em conceitos. <strong>Escolhe a tarefa</strong> abaixo e veja como muda o que a IA devolve sobre a mesma imagem.
+    </p>
+
+    <div class="cv-block">
+      <div class="cv-card">
+        <div class="cv-task-picker" id="cv-task-picker">
+          <button class="cv-task-btn active" data-task="classification">🏷️ Classificação</button>
+          <button class="cv-task-btn" data-task="detection">📦 Detecção</button>
+          <button class="cv-task-btn" data-task="segmentation">✂️ Segmentação</button>
+          <button class="cv-task-btn" data-task="face">😺 Face / Emoção</button>
+          <button class="cv-task-btn" data-task="ocr">🔤 OCR</button>
+        </div>
+
+        <div class="cv-stage" id="cv-stage">
+          <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" id="cv-svg">
+            <!-- background "photo" frame -->
+            <rect x="0" y="0" width="600" height="400" fill="#FCF6E3"/>
+            <!-- floor -->
+            <rect x="0" y="280" width="600" height="120" fill="#E8D9B8"/>
+            <!-- placa com texto -->
+            <g id="cv-sign">
+              <rect x="30" y="80" width="160" height="60" rx="6" fill="#FFF9EC" stroke="#2B1810" stroke-width="2"/>
+              <text x="110" y="106" text-anchor="middle" font-family="Caprasimo" font-size="16" fill="#2B1810">CASA DO</text>
+              <text x="110" y="128" text-anchor="middle" font-family="Caprasimo" font-size="20" fill="#FF6B35">GATO 7</text>
+            </g>
+            <!-- almofada -->
+            <ellipse cx="200" cy="320" rx="120" ry="22" fill="#8A6FB1" stroke="#2B1810" stroke-width="2"/>
+            <!-- gato -->
+            <g id="cv-cat">
+              <ellipse cx="200" cy="280" rx="62" ry="50" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+              <polygon points="158,238 170,210 180,238" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+              <polygon points="222,238 232,210 245,238" fill="#FF6B35" stroke="#2B1810" stroke-width="2.5"/>
+              <circle cx="183" cy="280" r="4.5" fill="#2B1810"/>
+              <circle cx="217" cy="280" r="4.5" fill="#2B1810"/>
+              <ellipse cx="200" cy="294" rx="3.5" ry="2.5" fill="#2B1810"/>
+              <path d="M 188 302 Q 195 308 200 302 Q 205 308 213 302" stroke="#2B1810" stroke-width="2" fill="none"/>
+              <line x1="160" y1="290" x2="135" y2="285" stroke="#2B1810" stroke-width="1.5"/>
+              <line x1="160" y1="295" x2="135" y2="298" stroke="#2B1810" stroke-width="1.5"/>
+              <line x1="240" y1="290" x2="265" y2="285" stroke="#2B1810" stroke-width="1.5"/>
+              <line x1="240" y1="295" x2="265" y2="298" stroke="#2B1810" stroke-width="1.5"/>
+            </g>
+            <!-- coelhinho de pelúcia -->
+            <g id="cv-bunny">
+              <ellipse cx="430" cy="320" rx="38" ry="32" fill="#F4D35E" stroke="#2B1810" stroke-width="2.5"/>
+              <ellipse cx="418" cy="290" rx="6" ry="14" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+              <ellipse cx="442" cy="290" rx="6" ry="14" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+              <circle cx="422" cy="318" r="2.5" fill="#2B1810"/>
+              <circle cx="438" cy="318" r="2.5" fill="#2B1810"/>
+              <ellipse cx="430" cy="328" rx="2" ry="1.5" fill="#FF6B35"/>
+            </g>
+            <!-- bola -->
+            <g id="cv-ball">
+              <circle cx="510" cy="345" r="22" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+              <line x1="488" y1="345" x2="532" y2="345" stroke="#2B1810" stroke-width="1.5"/>
+              <path d="M 510 323 Q 518 345 510 367" fill="none" stroke="#2B1810" stroke-width="1.5"/>
+            </g>
+
+            <!-- annotation overlay (drawn dynamically) -->
+            <g id="cv-overlay"></g>
+          </svg>
+        </div>
+
+        <div class="cv-readout" id="cv-readout">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <div class="cv-explain">
+        <h3 id="cv-h3">🏷️ Classificação</h3>
+        <p id="cv-explain-desc">A tarefa mais clássica da CV: receber uma imagem e devolver um <strong>rótulo</strong> com confiança. "É um gato? É um cachorro?" - 1 imagem, 1 resposta.</p>
+        <div class="cv-pipeline">
+          <span>📷 Pixels</span><span>→</span><span>🧠 CNN</span><span>→</span><span>📊 Probabilidades</span><span>→</span><span>🏷️ Label</span>
+        </div>
+        <div class="biz">
+          <strong style="color: var(--yellow)">💡 Por que CNN?</strong> Convolutional Neural Networks olham pedacinhos da imagem (3×3, 5×5 pixels) com filtros que aprendem a detectar bordas, texturas, formas - depois compõem no todo. É como o gato que vê o bigode primeiro, depois reconhece "ah, é o outro gato".
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 3: GAN ============ -->
+<section class="chapter" id="gan">
+  <div class="container">
+    <span class="chapter-number">03 · GAN · Generative Adversarial Network</span>
+    <h2>Duas redes neurais <span style="color:var(--orange)">jogando xadrez</span>: uma falsifica, a outra fiscaliza.</h2>
+    <p class="lead">
+      GAN é a arquitetura por trás de muitas das primeiras IAs que <strong>geravam</strong> imagens convincentes (deepfakes, faces sintéticas). Tem dois personagens: o <strong>Gerador</strong> (G), que tenta criar gato falso, e o <strong>Discriminador</strong> (D), que tenta diferenciar gato falso de gato real. Os dois treinam juntos. <strong>Clica em "Treinar 1 round"</strong> e veja a coisa evoluir.
+    </p>
+
+    <div class="gan-block">
+      <div class="gan-card">
+        <div class="gan-flow">
+          <div class="gan-actor gen">
+            <span class="ic">🎨</span>
+            <h4>Gerador (G)</h4>
+            <p class="micro">Falsificador</p>
+            <p class="role">Recebe ruído aleatório e tenta produzir um gato que pareça real.</p>
+            <div class="meter"><span>Habilidade</span><div class="bar"><div class="fill" id="g-bar" style="width: 12%"></div></div><span class="num" id="g-num">0,12</span></div>
+          </div>
+
+          <svg class="gan-arrows" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 10 60 C 70 60 70 100 190 100" fill="none" stroke="#2B1810" stroke-width="2.5" marker-end="url(#ga)" stroke-dasharray="6 4"/>
+            <text x="100" y="50" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4A3528">gato falso 🎭</text>
+            <path d="M 190 160 C 100 160 100 200 10 200" fill="none" stroke="#C73E1D" stroke-width="2.5" marker-end="url(#ga)"/>
+            <text x="100" y="190" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#C73E1D">"é falso!" feedback</text>
+            <defs>
+              <marker id="ga" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2B1810"/></marker>
+            </defs>
+          </svg>
+
+          <div class="gan-actor disc">
+            <span class="ic">🕵️</span>
+            <h4>Discriminador (D)</h4>
+            <p class="micro">Detetive</p>
+            <p class="role">Recebe gatos reais e gatos falsos e tenta dizer qual é qual.</p>
+            <div class="meter"><span>Acurácia</span><div class="bar"><div class="fill sage" id="d-bar" style="width: 88%"></div></div><span class="num" id="d-num">0,88</span></div>
+          </div>
+        </div>
+
+        <div class="gan-gallery">
+          <div class="gan-gallery-label">🖼️ Galeria do Gerador (último round):</div>
+          <div class="gan-cats" id="gan-cats">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <div class="gan-controls">
+          <button class="gan-btn" id="gan-train">🎓 Treinar 1 round</button>
+          <button class="gan-btn auto" id="gan-auto">▶️ Auto-treinar 10x</button>
+          <button class="gan-btn ghost" id="gan-reset">↺ Reset</button>
+          <span class="gan-epoch">Round: <strong id="gan-epoch-n">0</strong></span>
+        </div>
+      </div>
+
+      <div class="gan-explain">
+        <h3>⚔️ Por que isso converge?</h3>
+        <p>
+          É um <strong>jogo de soma-zero</strong>: G só ganha enganando D. D só ganha não sendo enganado. No equilíbrio (Nash equilibrium), G está produzindo amostras tão boas que D só acerta 50%, ou seja, está chutando.
+        </p>
+        <p>
+          Em cada round: D recebe um lote misto (reais + falsos do G), aprende a distinguir. Depois G recebe o feedback de quais geraram mais "é real" do D, e ajusta os pesos pra fazer mais daquilo.
+        </p>
+        <p class="small">
+          <strong>Risco clássico:</strong> <em>mode collapse</em>, quando G descobre 1 ou 2 jeitos de enganar D e produz só aquilo. Imagina um falsificador que só sabe imitar 1 quadro. <em>Treino instável</em> também é a queixa nº 1 de quem mexe com GAN.
+        </p>
+        <div class="quote">
+          "Onde GAN aparece hoje: faces sintéticas (thispersondoesnotexist), super-resolução, transferência de estilo, geração de dados sintéticos pra treinar outros modelos quando dado real é escasso ou sensível."
+        </div>
+      </div>
+    </div>
+
+    <div class="gan-uses">
+      <div class="gu">
+        <span class="ic">👤</span>
+        <h4>Faces sintéticas</h4>
+        <p>Stock de "pessoas" que não existem. Privacidade, mock de testes, treino de outros modelos.</p>
+      </div>
+      <div class="gu">
+        <span class="ic">📸</span>
+        <h4>Super-resolução</h4>
+        <p>Foto borrada vira nítida. ESRGAN, SRGAN. Restauração de fotos antigas.</p>
+      </div>
+      <div class="gu">
+        <span class="ic">🎨</span>
+        <h4>Style transfer</h4>
+        <p>Foto vira "Van Gogh" ou "anime". CycleGAN, StyleGAN.</p>
+      </div>
+      <div class="gu" style="background: var(--ink); color: var(--paper); border-color: var(--orange);">
+        <span class="ic">🎭</span>
+        <h4 style="color: var(--yellow)">Deepfakes</h4>
+        <p style="color: var(--cream-2)">Cara da pessoa A no corpo da pessoa B. Tecnologia legal, uso eticamente perigoso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 4: AMAZON REKOGNITION ============ -->
+<section class="chapter" id="rekognition">
+  <div class="container">
+    <span class="chapter-number">04 · Amazon Rekognition</span>
+    <h2>O serviço da AWS que <span style="color:var(--orange)">vê pra você</span>.</h2>
+    <p class="lead">
+      Rekognition é o serviço gerenciado de Visão Computacional da AWS. Você manda uma imagem ou vídeo, ele devolve labels, faces, texto, conteúdo impróprio, celebridades, comparação facial e mais. <strong>Não precisa treinar modelo</strong> (a não ser que queira - aí tem Custom Labels). <strong>Clica em cada feature</strong> abaixo pra ver a chamada e a resposta.
+    </p>
+
+    <div class="rek-grid" id="rek-grid">
+      <button class="rek-card active" data-rek="labels">
+        <span class="rek-ic">🏷️</span>
+        <h4>DetectLabels</h4>
+        <p>Identifica objetos, cenas, conceitos. "Cat", "Pet", "Furniture", "Outdoor".</p>
+      </button>
+      <button class="rek-card" data-rek="faces">
+        <span class="rek-ic">😺</span>
+        <h4>DetectFaces</h4>
+        <p>Localiza rostos e estima idade, gênero, emoção, óculos, sorriso, olhos abertos.</p>
+      </button>
+      <button class="rek-card" data-rek="moderation">
+        <span class="rek-ic">🚫</span>
+        <h4>DetectModerationLabels</h4>
+        <p>Conteúdo impróprio: violência, nudez, drogas, ódio. Score de confiança por categoria.</p>
+      </button>
+      <button class="rek-card" data-rek="text">
+        <span class="rek-ic">🔤</span>
+        <h4>DetectText</h4>
+        <p>OCR direto: extrai texto de placas, documentos, prints, legendas, páginas.</p>
+      </button>
+      <button class="rek-card" data-rek="celebrity">
+        <span class="rek-ic">🌟</span>
+        <h4>RecognizeCelebrities</h4>
+        <p>Casa rostos com banco de celebridades. Útil pra mídia, esportes, jornalismo.</p>
+      </button>
+      <button class="rek-card" data-rek="compare">
+        <span class="rek-ic">👯</span>
+        <h4>CompareFaces</h4>
+        <p>Mesma pessoa em duas fotos? Score de similaridade. Onboarding, KYC, controle.</p>
+      </button>
+      <button class="rek-card" data-rek="ppe">
+        <span class="rek-ic">🦺</span>
+        <h4>DetectProtectiveEquipment</h4>
+        <p>Capacete, máscara, luva, colete. Indústria, canteiro de obras, segurança.</p>
+      </button>
+      <button class="rek-card" data-rek="video">
+        <span class="rek-ic">🎬</span>
+        <h4>StartLabelDetection (Video)</h4>
+        <p>Mesma análise, mas em vídeo, com timestamps. Streaming + assíncrono.</p>
+      </button>
+    </div>
+
+    <div class="rek-display">
+      <div class="rek-call">
+        <div class="rek-call-head">📡 Chamada da API</div>
+        <pre class="rek-code" id="rek-code"></pre>
+      </div>
+      <div class="rek-resp">
+        <div class="rek-call-head">📨 Resposta (mock)</div>
+        <pre class="rek-code" id="rek-resp"></pre>
+      </div>
+    </div>
+
+    <div class="rek-tip">
+      💡 <strong>Boa prática:</strong> sempre filtre por <code>Confidence</code> mínima. Default da AWS é 50%, mas pra produção você quer pelo menos 80%, e pra decisão crítica (segurança, KYC) acima de 95% + revisão humana via <strong>Amazon A2I</strong>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 5: CREDENCIAIS AWS ============ -->
+<section class="chapter" id="credenciais">
+  <div class="container">
+    <span class="chapter-number">05 · Distribuição de credenciais AWS</span>
+    <h2>Antes de chamar a API, a pergunta: <span style="color:var(--orange)">quem vai chamar?</span></h2>
+    <p class="lead">
+      Toda chamada à AWS precisa de credenciais. Mas <strong>como</strong> você entrega essas credenciais pra aplicação importa muito. Hardcode no código? Nem morto. Variável de ambiente em produção? Tá ruim. IAM Role? <strong>Esse é o caminho</strong>. <strong>Clica nas opções</strong> e veja o veredito do conselho dos gatos.
+    </p>
+
+    <div class="cred-block">
+      <div class="cred-options" id="cred-options">
+        <button class="cred-opt bad" data-cred="hardcode">
+          <span class="badge">⛔ NUNCA</span>
+          <h4>1. Hardcoded no código</h4>
+          <p><code>aws_access_key_id="AKIA..."</code> direto no .py? Sobe pro Git, vaza, conta hackeada. Acabou.</p>
+        </button>
+        <button class="cred-opt mid" data-cred="env">
+          <span class="badge">⚠️ EVITE</span>
+          <h4>2. Variável de ambiente em prod</h4>
+          <p>Melhor que hardcode, mas as keys ainda são <strong>permanentes</strong> e moram em algum arquivo .env. Se vazar, alguém usa indefinidamente.</p>
+        </button>
+        <button class="cred-opt mid" data-cred="profile">
+          <span class="badge">✅ DEV LOCAL</span>
+          <h4>3. AWS CLI profile (~/.aws/credentials)</h4>
+          <p>Ótimo pra desenvolvimento local. Em prod? Não. Use SSO/Identity Center pra sessões temporárias mesmo no dev.</p>
+        </button>
+        <button class="cred-opt good active" data-cred="role">
+          <span class="badge">🏆 PROD</span>
+          <h4>4. IAM Role anexada ao recurso</h4>
+          <p>EC2, Lambda, ECS, EKS pegam credenciais <strong>temporárias</strong> via metadata da AWS automaticamente. Sem keys no código. Rotação automática.</p>
+        </button>
+        <button class="cred-opt good" data-cred="sso">
+          <span class="badge">🏆 USUÁRIOS</span>
+          <h4>5. AWS IAM Identity Center (SSO)</h4>
+          <p>Usuários humanos logam com SSO corporativo, recebem credenciais temporárias por sessão. Adeus keys permanentes.</p>
+        </button>
+        <button class="cred-opt good" data-cred="secrets">
+          <span class="badge">🏆 SECRETS</span>
+          <h4>6. Secrets Manager / SSM Parameter Store</h4>
+          <p>Pra credenciais de terceiros (DB, API externa, token Stripe). Rotação automática, IAM controla quem lê, audit no CloudTrail.</p>
+        </button>
+      </div>
+
+      <div class="cred-detail" id="cred-detail">
+        <div class="cred-head">
+          <span class="ic" id="cred-ic">🏆</span>
+          <h3 id="cred-title">IAM Role anexada ao recurso</h3>
+        </div>
+        <div class="cred-meter">
+          <div class="cred-meter-row">
+            <span>🔐 Segurança</span>
+            <div class="cred-bar"><div class="cred-fill" id="cred-sec" style="width: 95%"></div></div>
+          </div>
+          <div class="cred-meter-row">
+            <span>🚀 Facilidade de uso</span>
+            <div class="cred-bar"><div class="cred-fill sage" id="cred-easy" style="width: 90%"></div></div>
+          </div>
+          <div class="cred-meter-row">
+            <span>♻️ Rotação automática</span>
+            <div class="cred-bar"><div class="cred-fill olive" id="cred-rot" style="width: 100%"></div></div>
+          </div>
+          <div class="cred-meter-row">
+            <span>📜 Auditável (CloudTrail)</span>
+            <div class="cred-bar"><div class="cred-fill" id="cred-aud" style="width: 100%"></div></div>
+          </div>
+        </div>
+        <div class="cred-verdict" id="cred-verdict">
+          <strong>👍 Recomendado pra produção.</strong>
+          <p>Você anexa uma Role no recurso (EC2/Lambda/ECS) com permissão pra Rekognition. O SDK pega credenciais temporárias automaticamente. Rotação a cada hora. Zero key no código.</p>
+        </div>
+        <pre class="cred-code" id="cred-code">// Lambda com Role anexada · não precisa de credentials no código
+import boto3
+client = boto3.client("rekognition")
+res = client.detect_labels(
+    Image={"S3Object": {"Bucket": "meu-bucket", "Name": "gato.jpg"}},
+    MinConfidence=80
+)</pre>
+      </div>
+    </div>
+
+    <div class="cred-rules">
+      <div class="cr-card">
+        <h4>🔑 Princípio do menor privilégio</h4>
+        <p>Cada Role/User tem só as permissões que precisa. Rekognition? Não dá <code>"Action": "*"</code>, dá <code>"rekognition:DetectLabels"</code>.</p>
+      </div>
+      <div class="cr-card">
+        <h4>♻️ Credenciais temporárias sempre</h4>
+        <p>Roles, STS, AssumeRole, SSO. Se a credencial vaza, ela já expirou (ou expira em horas).</p>
+      </div>
+      <div class="cr-card">
+        <h4>🚫 Nunca commit de chaves</h4>
+        <p>.gitignore pra .env. Use git-secrets ou trufflehog. AWS detecta e desativa keys públicas, mas o estrago já tá feito.</p>
+      </div>
+      <div class="cr-card">
+        <h4>📜 CloudTrail liga geral</h4>
+        <p>Toda chamada API fica logada. Sem CloudTrail você não sabe quem fez o quê. Não negocie isso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 6: LAB ============ -->
+<section class="chapter" id="lab">
+  <div class="container">
+    <span class="chapter-number">06 · Lab Amazon Rekognition</span>
+    <h2>Hora do <span style="color:var(--orange)">mão na massa</span>: 5 passos pra detectar gato.</h2>
+    <p class="lead">
+      Vamos simular o lab do zero. Você vai subir uma foto pro S3, configurar a Role, chamar a API e filtrar resultados por confiança. <strong>Clica em "Próximo passo"</strong> pra avançar e veja cada peça se conectar.
+    </p>
+
+    <div class="lab-card">
+      <div class="lab-progress">
+        <div class="lab-step done" data-lab="1"><span class="lab-num">1</span><span class="lab-lbl">S3</span></div>
+        <div class="lab-line"></div>
+        <div class="lab-step" data-lab="2"><span class="lab-num">2</span><span class="lab-lbl">IAM</span></div>
+        <div class="lab-line"></div>
+        <div class="lab-step" data-lab="3"><span class="lab-num">3</span><span class="lab-lbl">Call</span></div>
+        <div class="lab-line"></div>
+        <div class="lab-step" data-lab="4"><span class="lab-num">4</span><span class="lab-lbl">Filter</span></div>
+        <div class="lab-line"></div>
+        <div class="lab-step" data-lab="5"><span class="lab-num">5</span><span class="lab-lbl">Done</span></div>
+      </div>
+
+      <div class="lab-content" id="lab-content">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="lab-controls">
+        <button class="lab-btn" id="lab-prev">← Voltar</button>
+        <button class="lab-btn primary" id="lab-next">Próximo passo →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 7: CUSTOM LABELS ============ -->
+<section class="chapter" id="custom">
+  <div class="container">
+    <span class="chapter-number">07 · Amazon Rekognition Custom Labels</span>
+    <h2>Quando o <span style="color:var(--orange)">"DetectLabels" não conhece a sua raça de gato</span>.</h2>
+    <p class="lead">
+      Rekognition padrão sabe que é "Cat". Mas e se você precisa diferenciar <strong>Persa, Siamês e Maine Coon</strong>? Aí entra Custom Labels: você sobe poucas dezenas de fotos rotuladas, a AWS treina um modelo pra você (transfer learning) e te entrega um endpoint. <strong>Aqui você é o ML engineer</strong>: arrasta as fotos pra rotular, liga data augmentation, treina vendo a curva de loss ao vivo, depois testa com fotos novas e olha a matriz de confusão.
+    </p>
+
+    <!-- Step navigator -->
+    <div class="cl-stepper">
+      <div class="cl-step active" data-step="1"><span class="n">1</span><span class="lbl">📥 Dataset</span></div>
+      <div class="cl-step-line"></div>
+      <div class="cl-step" data-step="2"><span class="n">2</span><span class="lbl">⚙️ Config</span></div>
+      <div class="cl-step-line"></div>
+      <div class="cl-step" data-step="3"><span class="n">3</span><span class="lbl">🎓 Treino</span></div>
+      <div class="cl-step-line"></div>
+      <div class="cl-step" data-step="4"><span class="n">4</span><span class="lbl">📊 Avaliação</span></div>
+      <div class="cl-step-line"></div>
+      <div class="cl-step" data-step="5"><span class="n">5</span><span class="lbl">🚀 Deploy</span></div>
+    </div>
+
+    <!-- ====== STEP 1: ROTULAR DATASET ====== -->
+    <div class="cl-panel active" data-panel="1">
+      <div class="cl-panel-grid">
+        <div class="cl-card">
+          <div class="cl-card-head">
+            <div class="cl-card-title">🏷️ Rotule o dataset</div>
+            <div class="cl-card-sub">Arrasta cada foto pro balde da raça correta. Mín. 3 por raça pra treinar (na AWS real, mín. 10).</div>
+          </div>
+
+          <div class="cl-buckets" id="cl-buckets">
+            <div class="cl-bucket" data-breed="persa">
+              <h5>🦁 Persa</h5>
+              <span class="count" data-count="persa">0</span>
+              <span class="cl-bucket-hint">Pelo longo, focinho achatado</span>
+              <div class="cl-drop" data-breed-drop="persa"></div>
+            </div>
+            <div class="cl-bucket" data-breed="siames">
+              <h5>🥷 Siamês</h5>
+              <span class="count" data-count="siames">0</span>
+              <span class="cl-bucket-hint">Magro, pontas escuras</span>
+              <div class="cl-drop" data-breed-drop="siames"></div>
+            </div>
+            <div class="cl-bucket" data-breed="maine">
+              <h5>🦌 Maine Coon</h5>
+              <span class="count" data-count="maine">0</span>
+              <span class="cl-bucket-hint">Grandão, peludo</span>
+              <div class="cl-drop" data-breed-drop="maine"></div>
+            </div>
+          </div>
+
+          <div class="cl-pool-head">
+            <span class="cl-pool-label">📥 Pool de fotos sem rótulo:</span>
+            <div class="cl-pool-actions">
+              <button class="cl-mini-btn" id="cl-auto-label">✨ Auto-rotular tudo</button>
+              <button class="cl-mini-btn" id="cl-shuffle">🔀 Embaralhar</button>
+              <button class="cl-mini-btn ghost" id="cl-reset-pool">↺ Resetar</button>
+            </div>
+          </div>
+          <div class="cl-pool" id="cl-pool"></div>
+          <div class="cl-pool-helper" id="cl-pool-helper">💡 Dica: <strong>arraste</strong> as fotos pros baldes, ou clica numa foto e depois num balde. Tem fotos meio difíceis de propósito (😺 genérico) pra você ver como o modelo se confunde.</div>
+        </div>
+
+        <div class="cl-stats">
+          <div class="cl-stats-head">📊 Estatísticas do dataset</div>
+          <div class="cl-stat-row">
+            <span class="lbl">Total rotulado</span>
+            <span class="v" id="cl-stat-total">0 / 30</span>
+          </div>
+          <div class="cl-stat-bar"><div class="fill" id="cl-stat-total-bar" style="width:0%"></div></div>
+          <div class="cl-stat-classes">
+            <div class="cl-stat-class">
+              <span class="dot persa"></span>
+              <span>Persa</span>
+              <span class="num" id="cl-stat-persa">0</span>
+              <div class="mini-bar"><div class="mini-fill persa" id="cl-stat-persa-bar"></div></div>
+            </div>
+            <div class="cl-stat-class">
+              <span class="dot siames"></span>
+              <span>Siamês</span>
+              <span class="num" id="cl-stat-siames">0</span>
+              <div class="mini-bar"><div class="mini-fill siames" id="cl-stat-siames-bar"></div></div>
+            </div>
+            <div class="cl-stat-class">
+              <span class="dot maine"></span>
+              <span>Maine Coon</span>
+              <span class="num" id="cl-stat-maine">0</span>
+              <div class="mini-bar"><div class="mini-fill maine" id="cl-stat-maine-bar"></div></div>
+            </div>
+          </div>
+
+          <div class="cl-balance" id="cl-balance">
+            <span class="ic">⚖️</span>
+            <div>
+              <strong id="cl-balance-title">Balanceamento: aguardando dados</strong>
+              <p id="cl-balance-msg">Datasets desbalanceados ensinam a IA a "chutar a maioria". Mantenha os 3 baldes parecidos.</p>
+            </div>
+          </div>
+
+          <div class="cl-quality">
+            <div class="cl-quality-head">🎯 Saúde do dataset</div>
+            <div class="cl-q-row">
+              <span>Mínimo por classe</span>
+              <span class="badge" id="cl-q-min">⏳</span>
+            </div>
+            <div class="cl-q-row">
+              <span>Balanceamento (≥ 70%)</span>
+              <span class="badge" id="cl-q-bal">⏳</span>
+            </div>
+            <div class="cl-q-row">
+              <span>Tamanho recomendado</span>
+              <span class="badge" id="cl-q-size">⏳</span>
+            </div>
+          </div>
+
+          <button class="cl-next-btn" id="cl-go-step2" disabled>Próximo: configurar treino →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== STEP 2: CONFIGURAÇÃO ====== -->
+    <div class="cl-panel" data-panel="2">
+      <div class="cl-panel-grid">
+        <div class="cl-card">
+          <div class="cl-card-head">
+            <div class="cl-card-title">⚙️ Configure o treino</div>
+            <div class="cl-card-sub">Hiperparâmetros básicos. Os defaults aqui são razoáveis pra começar.</div>
+          </div>
+
+          <div class="cl-config">
+            <div class="cl-config-row">
+              <label>
+                <span>📚 Epochs (passes pelo dataset)</span>
+                <span class="val" id="cfg-epochs-v">15</span>
+              </label>
+              <input type="range" id="cfg-epochs" min="3" max="50" value="15" step="1">
+              <div class="cl-config-hint">Mais epochs = aprende melhor, mas pode <strong>overfittar</strong> (decorar o dataset).</div>
+            </div>
+
+            <div class="cl-config-row">
+              <label>
+                <span>🌡️ Learning rate</span>
+                <span class="val" id="cfg-lr-v">0,001</span>
+              </label>
+              <input type="range" id="cfg-lr" min="0" max="4" value="2" step="1">
+              <div class="cl-ticks-mini"><span>0,0001</span><span>0,001</span><span>0,01</span></div>
+              <div class="cl-config-hint">Pequeno demais: aprende devagar. Grande demais: explode o gradiente.</div>
+            </div>
+
+            <div class="cl-config-row toggle-row">
+              <label class="cl-toggle">
+                <input type="checkbox" id="cfg-augment" checked>
+                <span class="slider"></span>
+                <span class="toggle-lbl">🎨 <strong>Data augmentation</strong>: espelhar, girar, ajustar brilho. Aumenta dataset virtual sem coletar mais foto.</span>
+              </label>
+            </div>
+
+            <div class="cl-config-row toggle-row">
+              <label class="cl-toggle">
+                <input type="checkbox" id="cfg-pretrained" checked>
+                <span class="slider"></span>
+                <span class="toggle-lbl">🧠 <strong>Transfer learning</strong>: começar de um modelo pré-treinado em milhões de imagens (na AWS real isso é o padrão e não dá pra desligar; aqui é didático).</span>
+              </label>
+            </div>
+
+            <div class="cl-config-row split-row">
+              <span class="lbl">📊 Split treino / teste</span>
+              <div class="cl-split-bar">
+                <div class="train" style="flex: 80"><span>Treino · 80%</span></div>
+                <div class="test" style="flex: 20"><span>Teste · 20%</span></div>
+              </div>
+              <div class="cl-config-hint">A AWS divide automaticamente. As fotos de teste o modelo <strong>nunca vê</strong> durante o treino.</div>
+            </div>
+          </div>
+
+          <div class="cl-cost">
+            <div class="cl-cost-head">💰 Custo estimado (mock)</div>
+            <div class="cl-cost-row">
+              <span>Treino</span>
+              <strong id="cost-train">~$0,72 (45min × $1 / hora)</strong>
+            </div>
+            <div class="cl-cost-row">
+              <span>Endpoint</span>
+              <strong>~$4 / hora ligado · desliga quando não usa</strong>
+            </div>
+            <div class="cl-cost-row">
+              <span>Inferência</span>
+              <strong>~$0,001 / imagem</strong>
+            </div>
+          </div>
+
+          <div class="cl-step-nav">
+            <button class="cl-back-btn" id="cl-back-step1">← Voltar pro dataset</button>
+            <button class="cl-next-btn" id="cl-go-step3">🚀 Iniciar treino →</button>
+          </div>
+        </div>
+
+        <div class="cl-stats">
+          <div class="cl-stats-head">📋 Resumo do projeto</div>
+          <div class="cl-summary">
+            <div class="cl-sum-row">
+              <span>📦 Project</span>
+              <code>balaio-cat-breeds</code>
+            </div>
+            <div class="cl-sum-row">
+              <span>🏷️ Classes</span>
+              <code>3 (Persa, Siamês, Maine)</code>
+            </div>
+            <div class="cl-sum-row">
+              <span>📥 Imagens</span>
+              <code id="cl-sum-imgs">0</code>
+            </div>
+            <div class="cl-sum-row">
+              <span>🌎 Region</span>
+              <code>us-east-1</code>
+            </div>
+            <div class="cl-sum-row">
+              <span>📊 S3 path</span>
+              <code>s3://balaio-cat-breeds/v1</code>
+            </div>
+          </div>
+
+          <div class="cl-yaml">
+            <div class="cl-yaml-head">📝 manifest.json (gerado)</div>
+            <pre id="cl-manifest"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== STEP 3: TREINO AO VIVO ====== -->
+    <div class="cl-panel" data-panel="3">
+      <div class="cl-panel-grid">
+        <div class="cl-card">
+          <div class="cl-card-head">
+            <div class="cl-card-title">🎓 Treino em tempo real</div>
+            <div class="cl-card-sub">Veja o loss caindo, a acurácia subindo e a "rede" se reorganizando epoch a epoch.</div>
+          </div>
+
+          <div class="cl-train-graph">
+            <svg id="cl-loss-svg" viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
+              <!-- grid -->
+              <g stroke="#D4A574" stroke-width="1" opacity="0.35" fill="none">
+                <line x1="40" y1="200" x2="460" y2="200"/>
+                <line x1="40" y1="150" x2="460" y2="150"/>
+                <line x1="40" y1="100" x2="460" y2="100"/>
+                <line x1="40" y1="50" x2="460" y2="50"/>
+                <line x1="40" y1="20" x2="40" y2="220"/>
+              </g>
+              <!-- axis labels -->
+              <text x="36" y="24" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#4A3528">1.0</text>
+              <text x="36" y="104" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#4A3528">0.5</text>
+              <text x="36" y="204" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#4A3528">0.0</text>
+              <text x="250" y="232" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4A3528">→ epoch</text>
+              <!-- curves -->
+              <polyline id="cl-loss-line" fill="none" stroke="#C73E1D" stroke-width="2.5" points=""/>
+              <polyline id="cl-acc-line" fill="none" stroke="#6B8E23" stroke-width="2.5" points=""/>
+              <!-- legend -->
+              <g transform="translate(360, 30)">
+                <rect width="100" height="48" rx="6" fill="#FFF9EC" stroke="#2B1810" stroke-width="1.5"/>
+                <line x1="8" y1="16" x2="22" y2="16" stroke="#C73E1D" stroke-width="2.5"/>
+                <text x="28" y="20" font-family="JetBrains Mono" font-size="10" fill="#2B1810">loss</text>
+                <line x1="8" y1="36" x2="22" y2="36" stroke="#6B8E23" stroke-width="2.5"/>
+                <text x="28" y="40" font-family="JetBrains Mono" font-size="10" fill="#2B1810">accuracy</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="cl-net">
+            <svg id="cl-net-svg" viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg">
+              <text x="240" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4A3528">arquitetura simplificada · transfer learning</text>
+              <!-- frozen backbone -->
+              <rect x="20" y="40" width="120" height="120" rx="14" fill="#5C8D89" stroke="#2B1810" stroke-width="2"/>
+              <text x="80" y="72" text-anchor="middle" font-family="Caprasimo" font-size="14" fill="#FFF9EC">🧊 Backbone</text>
+              <text x="80" y="92" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#FFF9EC">pré-treinado</text>
+              <text x="80" y="106" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#FFF9EC">(ResNet-like)</text>
+              <text x="80" y="130" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#FFF9EC">CONGELADO ❄️</text>
+              <text x="80" y="148" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#FFF9EC">milhões de imagens</text>
+
+              <!-- arrow -->
+              <line x1="142" y1="100" x2="178" y2="100" stroke="#2B1810" stroke-width="2" marker-end="url(#cl-arr)"/>
+
+              <!-- new head -->
+              <g id="cl-net-head">
+                <rect x="180" y="50" width="160" height="100" rx="14" fill="#FFE8DD" stroke="#2B1810" stroke-width="2"/>
+                <text x="260" y="78" text-anchor="middle" font-family="Caprasimo" font-size="13" fill="#2B1810">🔥 Head re-treinada</text>
+                <!-- 3 output neurons that "pulse" on epoch -->
+                <g id="cl-out-neurons">
+                  <g class="cl-out persa">
+                    <circle cx="220" cy="115" r="14" fill="#FF6B35" stroke="#2B1810" stroke-width="2"/>
+                    <text x="220" y="119" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#FFF9EC" font-weight="700">Persa</text>
+                  </g>
+                  <g class="cl-out siames">
+                    <circle cx="260" cy="115" r="14" fill="#8A6FB1" stroke="#2B1810" stroke-width="2"/>
+                    <text x="260" y="119" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#FFF9EC" font-weight="700">Siamês</text>
+                  </g>
+                  <g class="cl-out maine">
+                    <circle cx="300" cy="115" r="14" fill="#6B8E23" stroke="#2B1810" stroke-width="2"/>
+                    <text x="300" y="119" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#FFF9EC" font-weight="700">Maine</text>
+                  </g>
+                </g>
+              </g>
+
+              <!-- output -->
+              <line x1="340" y1="100" x2="376" y2="100" stroke="#2B1810" stroke-width="2" marker-end="url(#cl-arr)"/>
+              <rect x="378" y="76" width="82" height="48" rx="10" fill="#F4D35E" stroke="#2B1810" stroke-width="2"/>
+              <text x="419" y="98" text-anchor="middle" font-family="Caprasimo" font-size="11" fill="#2B1810">probs</text>
+              <text x="419" y="112" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#2B1810">softmax</text>
+
+              <defs>
+                <marker id="cl-arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#2B1810"/>
+                </marker>
+              </defs>
+            </svg>
+          </div>
+        </div>
+
+        <div class="cl-stats">
+          <div class="cl-stats-head">📈 Métricas ao vivo</div>
+          <div class="cl-live-metrics">
+            <div class="cl-live-row">
+              <span class="lbl">⏱️ Epoch</span>
+              <span class="v" id="live-epoch">0 / 15</span>
+            </div>
+            <div class="cl-live-row">
+              <span class="lbl">📉 Loss</span>
+              <span class="v coral" id="live-loss">···</span>
+            </div>
+            <div class="cl-live-row">
+              <span class="lbl">🎯 Train accuracy</span>
+              <span class="v olive" id="live-train-acc">···</span>
+            </div>
+            <div class="cl-live-row">
+              <span class="lbl">🧪 Val accuracy</span>
+              <span class="v olive" id="live-val-acc">···</span>
+            </div>
+            <div class="cl-live-row">
+              <span class="lbl">📊 Status</span>
+              <span class="v" id="live-status">Aguardando…</span>
+            </div>
+          </div>
+
+          <div class="cl-train-controls">
+            <button class="cl-btn" id="cl-train-start">▶️ Iniciar treino</button>
+            <button class="cl-btn ghost" id="cl-train-pause" disabled>⏸️ Pausar</button>
+            <button class="cl-btn ghost" id="cl-train-faster">⚡ 2× velocidade</button>
+          </div>
+
+          <div class="cl-train-log">
+            <div class="cl-train-log-head">📝 Log</div>
+            <div class="cl-train-log-body" id="cl-train-log"></div>
+          </div>
+
+          <div class="cl-step-nav">
+            <button class="cl-back-btn" id="cl-back-step2">← Voltar config</button>
+            <button class="cl-next-btn" id="cl-go-step4" disabled>Próximo: avaliar →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== STEP 4: AVALIAÇÃO ====== -->
+    <div class="cl-panel" data-panel="4">
+      <div class="cl-panel-grid">
+        <div class="cl-card">
+          <div class="cl-card-head">
+            <div class="cl-card-title">📊 Matriz de confusão</div>
+            <div class="cl-card-sub">Linhas = verdade, Colunas = predição. Diagonal verde = acertou. Fora da diagonal = errou.</div>
+          </div>
+          <div class="cl-confusion" id="cl-confusion"></div>
+
+          <div class="cl-metrics">
+            <div class="cl-metric">
+              <div class="lbl">🎯 Acurácia</div>
+              <div class="v" id="m-acc">···</div>
+              <div class="hint">acertos / total</div>
+            </div>
+            <div class="cl-metric">
+              <div class="lbl">🎣 Precision (média)</div>
+              <div class="v" id="m-prec">···</div>
+              <div class="hint">de tudo que predisse, quanto era certo</div>
+            </div>
+            <div class="cl-metric">
+              <div class="lbl">📡 Recall (média)</div>
+              <div class="v" id="m-rec">···</div>
+              <div class="hint">do que era verdade, quanto pegou</div>
+            </div>
+            <div class="cl-metric">
+              <div class="lbl">⚖️ F1-score</div>
+              <div class="v" id="m-f1">···</div>
+              <div class="hint">média harmônica de prec & recall</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cl-stats">
+          <div class="cl-stats-head">🎯 Threshold de confiança</div>
+          <p class="cl-side-desc">Aumente o threshold pra ser mais rigoroso: aceita só predições muito confiantes. Veja como precision sobe e recall cai.</p>
+          <div class="cl-threshold">
+            <label><span>Threshold mínimo</span><span class="val" id="thr-v">50%</span></label>
+            <input type="range" id="thr-slider" min="10" max="95" value="50" step="5">
+          </div>
+
+          <div class="cl-classwise">
+            <div class="cl-classwise-head">Métricas por classe</div>
+            <div class="cl-cw-row" data-cw="persa">
+              <span class="dot persa"></span>
+              <span class="name">Persa</span>
+              <span class="prec" id="cw-persa-p">···</span>
+              <span class="rec" id="cw-persa-r">···</span>
+            </div>
+            <div class="cl-cw-row" data-cw="siames">
+              <span class="dot siames"></span>
+              <span class="name">Siamês</span>
+              <span class="prec" id="cw-siames-p">···</span>
+              <span class="rec" id="cw-siames-r">···</span>
+            </div>
+            <div class="cl-cw-row" data-cw="maine">
+              <span class="dot maine"></span>
+              <span class="name">Maine Coon</span>
+              <span class="prec" id="cw-maine-p">···</span>
+              <span class="rec" id="cw-maine-r">···</span>
+            </div>
+            <div class="cl-cw-row head">
+              <span></span>
+              <span></span>
+              <span class="prec">Precision</span>
+              <span class="rec">Recall</span>
+            </div>
+          </div>
+
+          <div class="cl-step-nav">
+            <button class="cl-back-btn" id="cl-back-step3">← Voltar treino</button>
+            <button class="cl-next-btn" id="cl-go-step5">🚀 Fazer deploy →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== STEP 5: DEPLOY + INFERENCE PLAYGROUND ====== -->
+    <div class="cl-panel" data-panel="5">
+      <div class="cl-panel-grid">
+        <div class="cl-card">
+          <div class="cl-card-head">
+            <div class="cl-card-title">🚀 Endpoint live · Inference Playground</div>
+            <div class="cl-card-sub">O modelo virou um endpoint. Arrasta uma foto pra "câmera" abaixo e veja a predição em tempo real.</div>
+          </div>
+
+          <div class="cl-endpoint">
+            <span class="cl-endpoint-pulse"></span>
+            <span class="cl-endpoint-lbl">ProjectVersionArn:</span>
+            <code>arn:aws:rekognition:us-east-1:.../balaio-cat-breeds/version/v1</code>
+            <span class="cl-endpoint-status">RUNNING</span>
+          </div>
+
+          <div class="cl-playground">
+            <div class="cl-camera" id="cl-camera">
+              <div class="cl-camera-frame">
+                <div class="cl-camera-target" id="cl-camera-target">
+                  <span class="cl-camera-emoji" id="cl-camera-emoji">📷</span>
+                </div>
+                <div class="cl-camera-corner tl"></div>
+                <div class="cl-camera-corner tr"></div>
+                <div class="cl-camera-corner bl"></div>
+                <div class="cl-camera-corner br"></div>
+                <div class="cl-camera-scan" id="cl-camera-scan"></div>
+              </div>
+              <div class="cl-camera-hint" id="cl-camera-hint">⬇️ Arraste uma foto aqui (ou clica numa abaixo)</div>
+            </div>
+
+            <div class="cl-pred-panel" id="cl-pred-panel">
+              <div class="cl-pred-head">📨 Resposta da API</div>
+              <div class="cl-pred-bars">
+                <div class="cl-pred-bar-row" data-pred="persa">
+                  <span class="dot persa"></span>
+                  <span class="lbl">Persa</span>
+                  <div class="bar"><div class="fill persa" id="pred-persa" style="width:0%"></div></div>
+                  <span class="pct" id="pred-persa-v">0%</span>
+                </div>
+                <div class="cl-pred-bar-row" data-pred="siames">
+                  <span class="dot siames"></span>
+                  <span class="lbl">Siamês</span>
+                  <div class="bar"><div class="fill siames" id="pred-siames" style="width:0%"></div></div>
+                  <span class="pct" id="pred-siames-v">0%</span>
+                </div>
+                <div class="cl-pred-bar-row" data-pred="maine">
+                  <span class="dot maine"></span>
+                  <span class="lbl">Maine Coon</span>
+                  <div class="bar"><div class="fill maine" id="pred-maine" style="width:0%"></div></div>
+                  <span class="pct" id="pred-maine-v">0%</span>
+                </div>
+              </div>
+              <div class="cl-pred-verdict" id="cl-pred-verdict">
+                <span class="ic">🤖</span>
+                <div>
+                  <strong id="pred-label">Aguardando foto…</strong>
+                  <p id="pred-msg">Arrasta uma das fotos do banco abaixo pra câmera.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cl-test-pool-head">📦 Banco de fotos de teste (nunca vistas pelo modelo):</div>
+          <div class="cl-test-pool" id="cl-test-pool"></div>
+        </div>
+
+        <div class="cl-stats">
+          <div class="cl-stats-head">📊 Live tracker</div>
+          <div class="cl-tracker">
+            <div class="cl-tracker-row">
+              <span class="lbl">Predições feitas</span>
+              <span class="v" id="trk-total">0</span>
+            </div>
+            <div class="cl-tracker-row">
+              <span class="lbl">Acertos</span>
+              <span class="v olive" id="trk-correct">0</span>
+            </div>
+            <div class="cl-tracker-row">
+              <span class="lbl">Erros</span>
+              <span class="v coral" id="trk-wrong">0</span>
+            </div>
+            <div class="cl-tracker-row">
+              <span class="lbl">Acurácia ao vivo</span>
+              <span class="v" id="trk-acc">···</span>
+            </div>
+          </div>
+
+          <div class="cl-history-head">🕐 Histórico (últimas 10):</div>
+          <div class="cl-history" id="cl-history"></div>
+
+          <div class="cl-api-call">
+            <div class="cl-api-call-head">📡 Chamada equivalente:</div>
+            <pre id="cl-api-snippet"><span class="c"># DetectCustomLabels usa o endpoint que você criou</span>
+<span class="k">import</span> boto3
+rek = boto3.client(<span class="s">"rekognition"</span>)
+
+resp = rek.detect_custom_labels(
+    ProjectVersionArn=<span class="s">"arn:.../balaio-cat-breeds/version/v1"</span>,
+    Image={<span class="s">"S3Object"</span>: {<span class="s">"Bucket"</span>:<span class="s">"x"</span>,<span class="s">"Name"</span>:<span class="s">"y.jpg"</span>}},
+    MinConfidence=<span class="n">50</span>
+)</pre>
+          </div>
+
+          <div class="cl-step-nav">
+            <button class="cl-back-btn" id="cl-back-step4">← Voltar avaliação</button>
+            <button class="cl-back-btn" id="cl-restart-all">🔄 Recomeçar do zero</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== EXPLANATION FOOTER ===== -->
+    <div class="cl-explain cl-explain-bottom">
+      <h3>🪄 Por que isso funciona com pouquíssima foto?</h3>
+      <p>
+        Custom Labels usa <strong>transfer learning</strong>: parte de um modelo que <em>já</em> aprendeu a "ver" milhões de imagens (gerais), e só re-treina as últimas camadas pra distinguir <em>suas</em> categorias específicas. Por isso 30-50 fotos por classe já produz resultado decente.
+      </p>
+      <p>
+        Você só paga: <strong>(1) treino</strong> (por hora de cluster), <strong>(2) endpoint</strong> (por hora ligado, então desliga quando não usar) e <strong>(3) inferência</strong> por imagem. Não esquece de chamar <code>StopProjectVersion</code> quando terminar de testar. Endpoint ligado custa por hora mesmo sem requisição.
+      </p>
+      <p class="small">
+        Casos reais: classificar produtos defeituosos numa linha de produção, identificar logo de marca em vídeos esportivos, distinguir espécies de planta numa fazenda, aprovar fotos de carteirinha.
+      </p>
+      <div class="quote">
+        "Use Custom Labels quando o conceito que você quer detectar é específico do seu domínio e o Rekognition padrão não cobre. Caso contrário, fique no padrão: é mais barato e zero treino."
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 8: NLP ============ -->
+<section class="chapter" id="nlp">
+  <div class="container">
+    <span class="chapter-number">08 · NLP · Natural Language Processing</span>
+    <h2>O outro olho do gato: <span style="color:var(--orange)">entender o que a galera escreve</span>.</h2>
+    <p class="lead">
+      NLP transforma texto humano (bagunçado, ambíguo, com emoji) em estrutura que máquina entende. Antes de qualquer modelo grande, vem um <strong>pipeline</strong> de NLP. <strong>Clica em cada etapa</strong> pra ver o texto sendo processado.
+    </p>
+
+    <div class="nlp-pipeline">
+      <div class="nlp-stage active" data-nlp="raw"><span class="ic">📝</span><h5>Texto cru</h5></div>
+      <div class="nlp-arrow">→</div>
+      <div class="nlp-stage" data-nlp="token"><span class="ic">✂️</span><h5>Tokenização</h5></div>
+      <div class="nlp-arrow">→</div>
+      <div class="nlp-stage" data-nlp="lemma"><span class="ic">🧹</span><h5>Lematização</h5></div>
+      <div class="nlp-arrow">→</div>
+      <div class="nlp-stage" data-nlp="pos"><span class="ic">🏷️</span><h5>POS tagging</h5></div>
+      <div class="nlp-arrow">→</div>
+      <div class="nlp-stage" data-nlp="ner"><span class="ic">🔍</span><h5>NER</h5></div>
+      <div class="nlp-arrow">→</div>
+      <div class="nlp-stage" data-nlp="embed"><span class="ic">📐</span><h5>Embedding</h5></div>
+    </div>
+
+    <div class="nlp-output">
+      <div class="nlp-output-card">
+        <div class="nlp-output-head" id="nlp-stage-title">📝 Texto cru</div>
+        <p class="nlp-output-desc" id="nlp-stage-desc">A frase original, do jeito que veio do usuário. Ainda sem nada de processamento.</p>
+        <div class="nlp-output-result" id="nlp-output-result"></div>
+      </div>
+      <div class="nlp-services">
+        <h4>🛠️ Onde a AWS entra:</h4>
+        <ul>
+          <li><strong>Amazon Comprehend</strong>: NLP gerenciado: idioma, entidades, sentimento, tópicos.</li>
+          <li><strong>Amazon Comprehend Medical</strong>: entidades médicas (sintoma, medicamento, dosagem).</li>
+          <li><strong>Amazon Translate</strong>: tradução neural entre 75+ idiomas.</li>
+          <li><strong>Amazon Transcribe</strong>: fala vira texto. Junta com Comprehend pra analisar áudio de call center.</li>
+          <li><strong>Amazon Lex</strong>: chatbot conversacional, mesmo motor da Alexa.</li>
+          <li><strong>Amazon Bedrock</strong>: LLMs gerenciados pra NLP avançado: Claude, Titan, Jamba, Mistral.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÓDULO 9: ANÁLISE DE SENTIMENTO ============ -->
+<section class="chapter" id="sentimento">
+  <div class="container">
+    <span class="chapter-number">09 · Análise de Sentimento</span>
+    <h2>O texto está <span style="color:var(--orange)">feliz, bravo ou em cima do muro</span>?</h2>
+    <p class="lead">
+      Análise de Sentimento (sentiment analysis) classifica um texto em <strong>POSITIVO, NEGATIVO, NEUTRO ou MIXED</strong>. Comprehend faz isso fora da caixa. Útil pra ouvir cliente: review da Amazon, comentário no Insta, ticket de suporte, NPS aberto. <strong>Digita uma frase ou clica num exemplo</strong> e veja a classificação.
+    </p>
+
+    <div class="sent-block">
+      <div class="sent-card">
+        <div style="font-family:'Caprasimo',serif; font-size:22px; margin-bottom:8px;">💬 Analisador ao vivo</div>
+        <p style="font-size:13px; color: var(--ink-soft); margin-bottom: 14px;">Digita o texto. Cada palavra que conta vira uma "carga" positiva ou negativa, e o resultado final agrega tudo.</p>
+
+        <div class="sent-examples" id="sent-examples">
+          <button class="sent-ex-btn" data-ex="0">"Adorei o atendimento, super atencioso."</button>
+          <button class="sent-ex-btn" data-ex="1">"Não recomendo, o produto chegou quebrado."</button>
+          <button class="sent-ex-btn" data-ex="2">"O pedido chegou no prazo."</button>
+          <button class="sent-ex-btn" data-ex="3">"Adorei o produto, mas o frete foi terrível."</button>
+        </div>
+
+        <textarea class="sent-input" id="sent-input" rows="3" placeholder="Escreve uma frase em português aqui...">Adorei o atendimento, super atencioso.</textarea>
+
+        <div class="sent-result">
+          <div class="sent-bars">
+            <div class="sent-bar-row">
+              <span class="lbl pos">😊 Positivo</span>
+              <div class="sent-bar"><div class="sent-fill pos" id="sent-pos" style="width:0%"></div></div>
+              <span class="pct" id="sent-pos-v">0%</span>
+            </div>
+            <div class="sent-bar-row">
+              <span class="lbl neg">😠 Negativo</span>
+              <div class="sent-bar"><div class="sent-fill neg" id="sent-neg" style="width:0%"></div></div>
+              <span class="pct" id="sent-neg-v">0%</span>
+            </div>
+            <div class="sent-bar-row">
+              <span class="lbl neu">😐 Neutro</span>
+              <div class="sent-bar"><div class="sent-fill neu" id="sent-neu" style="width:0%"></div></div>
+              <span class="pct" id="sent-neu-v">0%</span>
+            </div>
+            <div class="sent-bar-row">
+              <span class="lbl mix">🤷 Mixed</span>
+              <div class="sent-bar"><div class="sent-fill mix" id="sent-mix" style="width:0%"></div></div>
+              <span class="pct" id="sent-mix-v">0%</span>
+            </div>
+          </div>
+          <div class="sent-verdict" id="sent-verdict">
+            <span class="emoji" id="sent-emoji">😊</span>
+            <div>
+              <strong id="sent-label">POSITIVO</strong>
+              <p id="sent-msg">O texto carrega tom positivo claro.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sent-tokens" id="sent-tokens">
+          <span class="sent-tok-head">🔍 Palavras que pesaram:</span>
+          <div class="sent-tok-list" id="sent-tok-list"></div>
+        </div>
+      </div>
+
+      <div class="sent-explain">
+        <h3>🐱 Como o Comprehend faz isso?</h3>
+        <p>
+          Por baixo dos panos é um classificador treinado em milhões de textos rotulados. Para cada texto retorna 4 scores que <strong>somam 1.0</strong>: positivo, negativo, neutro e mixed. O label final é o de maior score.
+        </p>
+        <p>
+          <strong>MIXED</strong> rola quando o texto tem cargas opostas: <em>"adorei o produto, mas o frete foi terrível"</em>. Não é "neutro", é "tem dos dois".
+        </p>
+        <p class="small">
+          Nosso analisador aqui é <em>simplificado</em>: ele tem um dicionário de palavras com peso. O Comprehend de verdade entende contexto, ironia parcial, negação ("não gostei"), idioma e nuance.
+        </p>
+        <div class="quote">
+          "Análise de sentimento bem feita salva o NPS aberto, descobre tendências em redes sociais, prioriza tickets explosivos no suporte e mede a temperatura de uma marca em tempo real."
+        </div>
+      </div>
+    </div>
+
+    <div class="sent-cases">
+      <div class="sc">
+        <span class="ic">📞</span>
+        <h4>Call center</h4>
+        <p>Transcribe + Comprehend. Detecta cliente irritado em tempo real e escala pro supervisor.</p>
+      </div>
+      <div class="sc">
+        <span class="ic">⭐</span>
+        <h4>Reviews</h4>
+        <p>Marketplaces classificam reviews automaticamente. Filtram falsos positivos, agrupam reclamações.</p>
+      </div>
+      <div class="sc">
+        <span class="ic">📱</span>
+        <h4>Social listening</h4>
+        <p>Twitter/X, Insta, TikTok. Marca monitora menção. Crise de imagem identificada antes de virar bola de neve.</p>
+      </div>
+      <div class="sc" style="background: var(--ink); color: var(--paper); border-color: var(--orange);">
+        <span class="ic">🎯</span>
+        <h4 style="color: var(--yellow)">Pesquisa NPS aberta</h4>
+        <p style="color: var(--cream-2)">"Por que esse score?" Texto livre vira métrica agrupada. Adeus leitura manual de 10 mil respostas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="cheatsheet" id="resumo">
+  <div class="container">
+    <span class="chapter-number">TL;DR · Cola final</span>
+    <h2 style="margin-bottom: 8px;">A cola da aula 7.</h2>
+    <p style="font-size: 17px; color: var(--ink-soft); max-width: 700px; margin-bottom: 16px;">
+      Aulinha pra você levar no bolso e abrir antes da prova ou do code review.
+    </p>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="name">🐾 Sub-campos</div>
+        <div class="micro">o balaio</div>
+        <div class="q">"IA é guarda-chuva."</div>
+        <div class="what">CV, NLP, Speech, Robótica, RecSys, RL, KR, Planning, GenAI. Cada um com técnicas e ferramentas próprias.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">👁️ Visão Comp.</div>
+        <div class="micro">Computer Vision</div>
+        <div class="q">"Pixel vira conceito."</div>
+        <div class="what">Tarefas: classificação, detecção, segmentação, face, OCR. Tecnologia base: CNN.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">⚔️ GAN</div>
+        <div class="micro">Generative Adversarial Network</div>
+        <div class="q">"G falsifica, D fiscaliza."</div>
+        <div class="what">Duas redes competindo. Gera dados sintéticos: faces, super-resolução, style transfer.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📸 Rekognition</div>
+        <div class="micro">CV gerenciado AWS</div>
+        <div class="q">"Visão como serviço."</div>
+        <div class="what">DetectLabels, Faces, Moderation, Text, Celebrity, Compare. Pré-treinado, sem ML team.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🏷️ Custom Labels</div>
+        <div class="micro">treino próprio</div>
+        <div class="q">"Quando label padrão não basta."</div>
+        <div class="what">Transfer learning. Poucas dezenas de fotos por classe. Endpoint dedicado, paga por hora.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🔐 Credenciais</div>
+        <div class="micro">IAM, Roles, SSO</div>
+        <div class="q">"Nunca commit de keys."</div>
+        <div class="what">IAM Role pra recursos AWS, Identity Center pra humanos, Secrets Manager pra terceiros, CloudTrail sempre ligado.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">🧪 Lab Rekognition</div>
+        <div class="micro">5 passos</div>
+        <div class="q">"S3 → IAM → Call → Filter."</div>
+        <div class="what">Sobe foto, anexa Role, chama detect_labels, filtra por confidence ≥ 80%, lê resultado.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📖 NLP</div>
+        <div class="micro">processamento de texto</div>
+        <div class="q">"Texto vira estrutura."</div>
+        <div class="what">Tokenização, lemmas, POS, NER, embeddings. AWS: Comprehend, Translate, Transcribe, Lex, Bedrock.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">💚💔 Sentimento</div>
+        <div class="micro">positivo/negativo/neutro/mixed</div>
+        <div class="q">"O texto está feliz?"</div>
+        <div class="what">Comprehend retorna 4 scores. Mixed = cargas opostas no mesmo texto. Aplicações: NPS, suporte, social listening.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">⚙️ Comprehend</div>
+        <div class="micro">NLP gerenciado</div>
+        <div class="q">"NLP fora da caixa."</div>
+        <div class="what">Idioma, entidades, sentimento, tópicos, frases-chave. Versão Medical pra entidades clínicas.</div>
+      </div>
+      <div class="cheat-card">
+        <div class="name">📜 CloudTrail</div>
+        <div class="micro">audit log</div>
+        <div class="q">"Quem fez o quê quando?"</div>
+        <div class="what">Toda chamada API logada. Sem ele, não tem auditoria. Não é opcional.</div>
+      </div>
+      <div class="cheat-card" style="background: var(--orange); color: var(--paper);">
+        <div class="name" style="color: var(--paper);">🐾 Resumo do resumo</div>
+        <div class="q" style="color: rgba(255,255,255,0.85);">"O que eu levo dessa aula?"</div>
+        <div class="what" style="color: var(--paper);"><strong>Visão Computacional + NLP são os dois sub-campos com mais serviço gerenciado da AWS. Rekognition pra CV, Comprehend pra texto, Custom Labels quando precisa de algo específico. Credenciais sempre via Role, nunca hardcoded.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    Feito com <span class="heart">🧡</span> pra <strong>Escola da Nuvem</strong>,
+    Aula 7 materializada em código pra quem aprende mexendo.
+  </div>
+  <div style="margin-top: 8px; opacity: 0.7;">
+    Clica nas fotos, treina seu modelo de raça de gato, gera com GAN, escreve uma frase. <em>"Os alunos que aprendam mexendo, não decorando."</em>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>

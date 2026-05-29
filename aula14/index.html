@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaio de Gatos · Aula 14: Bedrock, Playground e Dívida Técnica</title>
+
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="shortcut icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<meta name="description" content="Aula 14 do Balaio de Gatos: Amazon Bedrock, Bedrock Playground, capacidade Sob-Demanda vs Provisionada e dívida técnica em GenAI. Aula visual e interativa pra AWS AI Practitioner.">
+<meta name="keywords" content="Amazon Bedrock, Bedrock Playground, sob-demanda, on-demand, provisioned throughput, capacidade provisionada, dívida técnica, technical debt, GenAI, Foundation Models, AWS AI Practitioner, Escola da Nuvem">
+<meta name="author" content="Escola da Nuvem">
+<meta name="theme-color" content="#FF6B35">
+
+<meta property="og:title" content="Aula 14 · Bedrock, Playground e Dívida Técnica">
+<meta property="og:description" content="Brinca com o playground, decide entre cobrança sob-demanda e provisionada, e descobre como dívida técnica em GenAI explode em produção.">
+<meta property="og:image" content="../cat-thumbnail.png">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">🐈 Balaio de Gatos <span class="pt">aula 14</span></div>
+    <div class="nav-links">
+      <a href="#divida">Dívida Técnica</a>
+      <a href="#bedrock">Bedrock</a>
+      <a href="#playground">Playground</a>
+      <a href="#sob-demanda">Sob-Demanda</a>
+      <a href="#provisionada">Provisionada</a>
+      <a href="#decisor">Decisor</a>
+      <a href="#cola">Cola</a>
+      <a href="../index.html">← Aulas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Escola da Nuvem · AI Practitioner <span class="v2">aula 14</span></div>
+        <h1>
+          O <span class="scratch">Bedrock</span> é<br>
+          o pet shop dos<br>
+          <span class="accent">Foundation Models.</span>
+        </h1>
+        <p>
+          Hoje a gente entra no <strong>Amazon Bedrock</strong>. Vamos brincar no <strong>Playground</strong>, decidir entre <strong>capacidade Sob-Demanda</strong> e <strong>Provisionada</strong> sem queimar a fatura, e ver por que <strong>dívida técnica em GenAI</strong> é um gato selvagem que ninguém quer dentro de casa.
+        </p>
+        <a href="#divida" class="hero-cta">Bora começar 🐾</a>
+        <a href="#cola" class="hero-cta ghost">Cola final</a>
+      </div>
+      <div class="cat-lab">
+        <span class="float-cat c1">🪨</span>
+        <span class="float-cat c2">😼</span>
+        <span class="float-cat c3">🤖</span>
+        <span class="float-cat c4">💸</span>
+        <span class="float-cat c5">⚙️</span>
+        <span class="chip">Bedrock</span>
+        <span class="chip2">Sob-Demanda</span>
+        <span class="chip3">Provisionada</span>
+        <span class="chip4">Playground ⚡</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cat-strip">
+  <div class="cat-strip-inner">
+    <span>🪨 BEDROCK</span><span>🎮 PLAYGROUND</span><span>💸 SOB-DEMANDA</span><span>🏗️ PROVISIONADA</span><span>🐛 DÍVIDA TÉCNICA</span><span>🤖 FOUNDATION MODELS</span><span>⚖️ DECISÃO</span><span>📊 TPM</span><span>🪨 BEDROCK</span><span>🎮 PLAYGROUND</span><span>💸 SOB-DEMANDA</span><span>🏗️ PROVISIONADA</span><span>🐛 DÍVIDA TÉCNICA</span><span>🤖 FOUNDATION MODELS</span>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!-- PARTE 1: DÍVIDA TÉCNICA -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 1 · O bicho que mora no porão</span>
+    <h2>
+      A IA que <span class="accent">funciona hoje</span> pode<br>
+      virar um <span class="yel">monstro amanhã.</span>
+    </h2>
+    <p>
+      Antes de mergulhar no Bedrock, precisamos falar de uma coisa que ninguém gosta de falar: <strong>dívida técnica em sistemas de IA</strong>. É o gato bravo que ninguém alimenta, mas que continua arranhando sua arquitetura toda noite.
+    </p>
+  </div>
+</section>
+
+<section class="chapter" id="divida">
+  <div class="container">
+    <span class="chapter-number">01 · Dívida Técnica em GenAI</span>
+    <h2>O que é <span style="color:var(--orange)">dívida técnica</span> num sistema de IA?</h2>
+    <p class="lead">
+      Igual à dívida no banco: você toma emprestado pra entregar agora e paga juros depois. A diferença é que em IA os juros vêm em <strong>alucinação descontrolada, custo explodindo, performance caindo e impossibilidade de auditar</strong>. Clica em cada gato pra ver o estrago.
+    </p>
+
+    <div class="debt-wrap">
+      <div class="debt-grid" id="debt-grid">
+        <button class="debt-cat" data-debt="model" type="button">
+          <span class="emoji">🪨</span>
+          <span class="t">Modelo congelado</span>
+          <span class="sub">Versão de 2 anos atrás</span>
+        </button>
+        <button class="debt-cat" data-debt="prompt" type="button">
+          <span class="emoji">📜</span>
+          <span class="t">Prompt no código</span>
+          <span class="sub">Hardcoded sem versão</span>
+        </button>
+        <button class="debt-cat" data-debt="eval" type="button">
+          <span class="emoji">🤷</span>
+          <span class="t">Sem avaliação</span>
+          <span class="sub">"Confia que tá bom"</span>
+        </button>
+        <button class="debt-cat" data-debt="guard" type="button">
+          <span class="emoji">🚪</span>
+          <span class="t">Sem guardrails</span>
+          <span class="sub">Output cru no usuário</span>
+        </button>
+        <button class="debt-cat" data-debt="rag" type="button">
+          <span class="emoji">📚</span>
+          <span class="t">RAG sem refresh</span>
+          <span class="sub">Vector DB de janeiro</span>
+        </button>
+        <button class="debt-cat" data-debt="cost" type="button">
+          <span class="emoji">💸</span>
+          <span class="t">Sem controle de custo</span>
+          <span class="sub">Token-pricing surpresa</span>
+        </button>
+        <button class="debt-cat" data-debt="log" type="button">
+          <span class="emoji">🕵️</span>
+          <span class="t">Sem audit trail</span>
+          <span class="sub">Quem chamou o quê?</span>
+        </button>
+        <button class="debt-cat" data-debt="lock" type="button">
+          <span class="emoji">🔒</span>
+          <span class="t">Vendor lock-in cego</span>
+          <span class="sub">Um modelo só, sem fallback</span>
+        </button>
+      </div>
+
+      <div class="debt-detail" id="debt-detail">
+        <div class="debt-empty">
+          <span class="big">👈</span>
+          <p>Clica num gato pra ver o tipo de dívida, o impacto que ela causa em produção, e como o Bedrock ajuda a pagar essa conta.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="debt-meter">
+      <div class="meter-info">
+        <strong>🩺 Termômetro da sua arquitetura:</strong>
+        <span id="debt-counter">Selecione os itens que existem no seu projeto</span>
+      </div>
+      <div class="meter-bar"><div class="meter-fill" id="debt-fill"></div></div>
+      <div class="meter-labels"><span>🟢 saudável</span><span>🟡 cuidado</span><span>🔴 crítico</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 2: BEDROCK -->
+<!-- ============================ -->
+<section class="part-banner alt">
+  <div class="container">
+    <span class="chapter-number">Parte 2 · O Bedrock chegou pra arrumar a casa</span>
+    <h2>
+      Foundation Models <span class="accent">como serviço</span>,<br>
+      sem treinar <span class="yel">um único parâmetro.</span>
+    </h2>
+    <p>
+      Amazon Bedrock é o serviço gerenciado da AWS que entrega Foundation Models de várias empresas (Anthropic, Meta, Mistral, Amazon, AI21, Cohere, Stability) atrás de uma <strong>API única</strong>. Você não treina, não hospeda, não escala. Só chama.
+    </p>
+  </div>
+</section>
+
+<section class="chapter" id="bedrock">
+  <div class="container">
+    <span class="chapter-number">02 · Amazon Bedrock</span>
+    <h2>O <span style="color:var(--orange)">menu de modelos</span> da AWS.</h2>
+    <p class="lead">
+      Cada provider tem família de modelos. Família tem variantes de tamanho. Cada variante tem perfil de custo, latência e qualidade. Passa o mouse no menu pra ver:
+    </p>
+
+    <div class="bedrock-menu" id="bedrock-menu">
+      <button class="bm-card" data-prov="anthropic">
+        <div class="bm-head"><span class="bm-icon">🧠</span><span class="bm-name">Claude</span></div>
+        <div class="bm-prov">Anthropic</div>
+        <div class="bm-models">Opus · Sonnet · Haiku</div>
+        <div class="bm-tag">Raciocínio · Conversação</div>
+      </button>
+      <button class="bm-card" data-prov="meta">
+        <div class="bm-head"><span class="bm-icon">🦙</span><span class="bm-name">Llama</span></div>
+        <div class="bm-prov">Meta</div>
+        <div class="bm-models">8B · 70B · 405B</div>
+        <div class="bm-tag">Open weights · Custo baixo</div>
+      </button>
+      <button class="bm-card" data-prov="amazon">
+        <div class="bm-head"><span class="bm-icon">🅰️</span><span class="bm-name">Titan / Nova</span></div>
+        <div class="bm-prov">Amazon</div>
+        <div class="bm-models">Lite · Pro · Premier</div>
+        <div class="bm-tag">Multimodal · AWS-native</div>
+      </button>
+      <button class="bm-card" data-prov="mistral">
+        <div class="bm-head"><span class="bm-icon">🌬️</span><span class="bm-name">Mistral</span></div>
+        <div class="bm-prov">Mistral AI</div>
+        <div class="bm-models">7B · Large</div>
+        <div class="bm-tag">Eficiência europeia</div>
+      </button>
+      <button class="bm-card" data-prov="cohere">
+        <div class="bm-head"><span class="bm-icon">🪢</span><span class="bm-name">Command</span></div>
+        <div class="bm-prov">Cohere</div>
+        <div class="bm-models">R · R+ · Embed</div>
+        <div class="bm-tag">RAG · Embeddings</div>
+      </button>
+      <button class="bm-card" data-prov="stability">
+        <div class="bm-head"><span class="bm-icon">🎨</span><span class="bm-name">Stable Diffusion</span></div>
+        <div class="bm-prov">Stability AI</div>
+        <div class="bm-models">SD3 · XL</div>
+        <div class="bm-tag">Imagem (texto→imagem)</div>
+      </button>
+    </div>
+
+    <div class="bedrock-features">
+      <div class="bf-card">
+        <span class="bf-emoji">🔌</span>
+        <h4>API única</h4>
+        <p>Troca de modelo é mudar uma string. Anthropic hoje, Llama amanhã. Anti-lock-in.</p>
+      </div>
+      <div class="bf-card">
+        <span class="bf-emoji">🛡️</span>
+        <h4>Privacidade</h4>
+        <p>Seus prompts e dados <strong>não treinam</strong> os modelos base. Tráfego pode ir por VPC Endpoint.</p>
+      </div>
+      <div class="bf-card">
+        <span class="bf-emoji">🧰</span>
+        <h4>Ecossistema</h4>
+        <p>Knowledge Bases (RAG), Agents (ações), Guardrails (filtros), Model Evaluation, Prompt Management.</p>
+      </div>
+      <div class="bf-card">
+        <span class="bf-emoji">🔐</span>
+        <h4>Integrações AWS</h4>
+        <p>IAM pra acesso, KMS pra chaves, CloudTrail pra audit, S3 pra dados, PrivateLink pra rede privada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 3: PLAYGROUND -->
+<!-- ============================ -->
+<section class="chapter alt-bg" id="playground">
+  <div class="container">
+    <span class="chapter-number">03 · Bedrock Playground</span>
+    <h2>O <span style="color:var(--orange)">Playground</span> é o lugar pra brincar antes de colocar em produção.</h2>
+    <p class="lead">
+      No console da AWS, o Bedrock Playground deixa você testar prompts, comparar modelos lado a lado e ajustar parâmetros de inferência sem escrever uma linha de código. Aqui dentro, simulamos como ele se comporta. <strong>Mexe nos sliders e vê a resposta mudar.</strong>
+    </p>
+
+    <div class="playground" id="playground">
+      <div class="pg-controls">
+        <div class="pg-field">
+          <label>Modelo</label>
+          <div class="pg-models">
+            <button class="pg-model active" data-model="haiku">Claude Haiku <span>🐇 rápido</span></button>
+            <button class="pg-model" data-model="sonnet">Claude Sonnet <span>⚖️ equilibrado</span></button>
+            <button class="pg-model" data-model="opus">Claude Opus <span>🧠 capaz</span></button>
+          </div>
+        </div>
+
+        <div class="pg-field">
+          <label>Temperature <span class="pg-val" id="pg-temp-v">0.2</span></label>
+          <input type="range" id="pg-temp" min="0" max="100" value="20">
+          <div class="pg-hint"><span>0 · factual</span><span>1 · criativo</span></div>
+        </div>
+
+        <div class="pg-field">
+          <label>Top-p <span class="pg-val" id="pg-topp-v">0.9</span></label>
+          <input type="range" id="pg-topp" min="0" max="100" value="90">
+          <div class="pg-hint"><span>0.1 · focado</span><span>1 · diverso</span></div>
+        </div>
+
+        <div class="pg-field">
+          <label>Max tokens <span class="pg-val" id="pg-max-v">300</span></label>
+          <input type="range" id="pg-max" min="50" max="1000" step="50" value="300">
+        </div>
+
+        <div class="pg-field">
+          <label>Prompt do sistema</label>
+          <select id="pg-sys">
+            <option value="vet">🩺 Veterinário (factual, conservador)</option>
+            <option value="poet">🎭 Poeta de gatos (criativo)</option>
+            <option value="aws">☁️ Especialista AWS (técnico)</option>
+            <option value="code">💻 Code reviewer</option>
+          </select>
+        </div>
+
+        <button class="pg-run" id="pg-run">▶ Gerar resposta</button>
+      </div>
+
+      <div class="pg-output">
+        <div class="pg-prompt">
+          <span class="lbl">USER</span>
+          <div id="pg-user-prompt">Tenho um gato persa de 8 anos com tosse seca há 2 dias. Devo levar ao veterinário?</div>
+        </div>
+
+        <div class="pg-response" id="pg-response-box">
+          <div class="lbl"><span>ASSISTANT</span> <span class="pg-meta" id="pg-meta">Claude Haiku · t=0.2</span></div>
+          <div class="pg-text" id="pg-response">
+            <em class="pg-placeholder">Aperta "Gerar resposta" pra ver o modelo responder com os parâmetros atuais.</em>
+          </div>
+          <div class="pg-stats" id="pg-stats" hidden>
+            <span><strong id="pg-tok-in">0</strong> tokens in</span>
+            <span><strong id="pg-tok-out">0</strong> tokens out</span>
+            <span><strong id="pg-cost">$0.000</strong></span>
+            <span><strong id="pg-latency">0 ms</strong></span>
+          </div>
+        </div>
+
+        <div class="pg-tips">
+          <strong>💡 O que muda com cada parâmetro?</strong>
+          <ul>
+            <li><strong>Temperature baixa (0–0.3):</strong> resposta determinística, repetível, factual. Ideal pra suporte técnico.</li>
+            <li><strong>Temperature alta (0.7+):</strong> resposta criativa e variada. Ideal pra brainstorming, copy.</li>
+            <li><strong>Top-p:</strong> limita o universo de tokens considerados. Top-p baixo = mais focado.</li>
+            <li><strong>Max tokens:</strong> teto da resposta. Lembra: você paga por token gerado.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 4: COBRANÇA -->
+<!-- ============================ -->
+<section class="part-banner">
+  <div class="container">
+    <span class="chapter-number">Parte 3 · Como a AWS te cobra</span>
+    <h2>
+      <span class="accent">Sob-Demanda</span> ou<br>
+      <span class="yel">Provisionada</span>?
+    </h2>
+    <p>
+      Aqui mora a pegadinha que cai na prova e que decide se sua arquitetura é sustentável ou rasga sua AWS bill no meio. Bedrock tem dois modos de cobrança principais. Cada um pro seu cenário.
+    </p>
+  </div>
+</section>
+
+<section class="chapter" id="sob-demanda">
+  <div class="container">
+    <span class="chapter-number">04 · Capacidade Sob-Demanda</span>
+    <h2>Você paga só o que <span style="color:var(--orange)">o gato bebeu</span>.</h2>
+    <p class="lead">
+      No modo <strong>On-Demand</strong> (sob-demanda), a AWS cobra por <strong>token de entrada</strong> e <strong>token de saída</strong>. Sem compromisso. Você liga, manda o prompt, paga só o que usou. Nenhuma reserva, nenhum mínimo mensal.
+    </p>
+
+    <div class="ondemand-grid">
+      <div class="card-feat ok">
+        <span class="emoji">✅</span>
+        <h4>Quando usar</h4>
+        <ul>
+          <li>Tráfego variável ou imprevisível</li>
+          <li>Protótipos e provas de conceito</li>
+          <li>Volume baixo a médio</li>
+          <li>Testes em desenvolvimento</li>
+          <li>Aplicações sazonais</li>
+        </ul>
+      </div>
+      <div class="card-feat warn">
+        <span class="emoji">⚠️</span>
+        <h4>Cuidados</h4>
+        <ul>
+          <li>Sem garantia de capacidade em pico</li>
+          <li>Pode ter throttling em horários de alta demanda</li>
+          <li>Custo previsível só com monitoramento ativo</li>
+          <li>Latência média, não dedicada</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TOKEN COUNTER + PRICING SIMULATOR -->
+    <div class="card aws-shadow simulator">
+      <div class="sim-header">
+        <span class="aws-badge">Bedrock On-Demand · Pricing Simulator</span>
+        <h3>Simulador de fatura sob-demanda</h3>
+        <p>Estimativas didáticas baseadas em ordens de grandeza típicas. Os valores reais variam por modelo e região.</p>
+      </div>
+      <div class="sim-grid">
+        <div class="sim-control">
+          <label>Requisições por dia <span class="sim-val" id="sim-req-v">10.000</span></label>
+          <input type="range" id="sim-req" min="100" max="100000" step="100" value="10000">
+        </div>
+        <div class="sim-control">
+          <label>Tokens médios IN por requisição <span class="sim-val" id="sim-in-v">500</span></label>
+          <input type="range" id="sim-in" min="50" max="4000" step="50" value="500">
+        </div>
+        <div class="sim-control">
+          <label>Tokens médios OUT por requisição <span class="sim-val" id="sim-out-v">200</span></label>
+          <input type="range" id="sim-out" min="20" max="2000" step="20" value="200">
+        </div>
+        <div class="sim-control">
+          <label>Modelo
+            <select id="sim-model">
+              <option value="haiku">Claude Haiku (barato)</option>
+              <option value="sonnet" selected>Claude Sonnet (médio)</option>
+              <option value="opus">Claude Opus (caro)</option>
+              <option value="llama">Llama 70B (econômico)</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="sim-result">
+        <div class="sim-stat">
+          <span class="lbl">Custo/dia</span>
+          <span class="v" id="sim-day">US$ 0,00</span>
+        </div>
+        <div class="sim-stat highlight">
+          <span class="lbl">Custo/mês</span>
+          <span class="v" id="sim-month">US$ 0,00</span>
+        </div>
+        <div class="sim-stat">
+          <span class="lbl">Tokens/mês</span>
+          <span class="v" id="sim-tokens">0</span>
+        </div>
+        <div class="sim-stat">
+          <span class="lbl">Tokens/min (TPM)</span>
+          <span class="v" id="sim-tpm">0</span>
+        </div>
+      </div>
+
+      <div class="sim-warn" id="sim-warn"></div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="provisionada">
+  <div class="container">
+    <span class="chapter-number">05 · Capacidade Provisionada (Provisioned Throughput)</span>
+    <h2>Você <span style="color:var(--orange)">aluga uma fatia</span> da nuvem.</h2>
+    <p class="lead">
+      No modo <strong>Provisioned Throughput</strong>, você compra <strong>Model Units (MUs)</strong>, fatias de capacidade dedicada, por hora, com compromisso de 1 ou 6 meses. Em troca, garante throughput, latência baixa e preço previsível.
+    </p>
+
+    <div class="provisioned-grid">
+      <div class="card-feat ok">
+        <span class="emoji">✅</span>
+        <h4>Quando usar</h4>
+        <ul>
+          <li>Volume alto e estável (24/7)</li>
+          <li>SLA de latência rígido</li>
+          <li>Modelos custom (após import ou fine-tuning)</li>
+          <li>Picos previsíveis (Black Friday, lançamento)</li>
+          <li>Quando o cálculo mostra que sai mais barato que sob-demanda</li>
+        </ul>
+      </div>
+      <div class="card-feat warn">
+        <span class="emoji">⚠️</span>
+        <h4>Cuidados</h4>
+        <ul>
+          <li>Compromisso de 1 ou 6 meses (não cancela no meio)</li>
+          <li>Você paga MU ociosa também, mau dimensionamento dói</li>
+          <li>Precisa estimar throughput antes (<em>tokens por minuto</em>)</li>
+          <li>Não disponível pra todos os modelos</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card plum-shadow mu-card">
+      <h3>🧱 O que é uma <span style="color:var(--plum)">Model Unit (MU)</span>?</h3>
+      <p>É a unidade de capacidade dedicada do Bedrock. Cada MU dá um throughput garantido (em tokens/min de input e output). Quanto mais MU, mais paralelo, mais TPM.</p>
+
+      <div class="mu-visual">
+        <div class="mu-block">
+          <span class="mu-icon">🧱</span>
+          <span class="mu-label">1 MU</span>
+          <span class="mu-tpm">~throughput X</span>
+        </div>
+        <span class="mu-plus">+</span>
+        <div class="mu-block">
+          <span class="mu-icon">🧱</span>
+          <span class="mu-label">1 MU</span>
+          <span class="mu-tpm">~throughput X</span>
+        </div>
+        <span class="mu-plus">+</span>
+        <div class="mu-block">
+          <span class="mu-icon">🧱</span>
+          <span class="mu-label">1 MU</span>
+          <span class="mu-tpm">~throughput X</span>
+        </div>
+        <span class="mu-arrow">=</span>
+        <div class="mu-result">3 MU = 3× throughput dedicado</div>
+      </div>
+
+      <div class="mu-note">
+        💡 <strong>Atalho mental:</strong> MU é tipo cota fixa de banda no provedor. Você reserva, garante a velocidade, paga mesmo quando não usa.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 5: DECISOR -->
+<!-- ============================ -->
+<section class="chapter" id="decisor">
+  <div class="container">
+    <span class="chapter-number">06 · Decisor visual</span>
+    <h2>Sob-Demanda <span style="color:var(--orange)">vs</span> Provisionada, qual escolher?</h2>
+    <p class="lead">
+      Cinco perguntas e o gato te diz qual modo usar. Não é regra absoluta, é heurística pra prova e pra produção.
+    </p>
+
+    <div class="decisor" id="decisor">
+      <div class="dec-questions">
+        <div class="dec-q" data-q="vol">
+          <div class="dec-q-text">1. Volume mensal de chamadas?</div>
+          <div class="dec-q-opts">
+            <button data-v="1">🌱 Baixo (&lt; 100k/mês)</button>
+            <button data-v="2">🌳 Médio (100k–10M/mês)</button>
+            <button data-v="3">🏭 Alto (&gt; 10M/mês)</button>
+          </div>
+        </div>
+
+        <div class="dec-q" data-q="pat">
+          <div class="dec-q-text">2. Padrão de tráfego?</div>
+          <div class="dec-q-opts">
+            <button data-v="1">📉 Imprevisível, com vales longos</button>
+            <button data-v="2">📊 Médio com picos pontuais</button>
+            <button data-v="3">📈 Constante 24/7</button>
+          </div>
+        </div>
+
+        <div class="dec-q" data-q="sla">
+          <div class="dec-q-text">3. SLA de latência?</div>
+          <div class="dec-q-opts">
+            <button data-v="1">😌 Tranquilo (segundos OK)</button>
+            <button data-v="2">⏱️ Importa (P95 &lt; 3s)</button>
+            <button data-v="3">🚨 Crítico (P95 &lt; 800ms)</button>
+          </div>
+        </div>
+
+        <div class="dec-q" data-q="custom">
+          <div class="dec-q-text">4. Usa modelo custom (fine-tuned ou imported)?</div>
+          <div class="dec-q-opts">
+            <button data-v="1">❌ Não, FM padrão</button>
+            <button data-v="3">✅ Sim, modelo custom</button>
+          </div>
+        </div>
+
+        <div class="dec-q" data-q="commit">
+          <div class="dec-q-text">5. Pode se comprometer 1 mês ou mais?</div>
+          <div class="dec-q-opts">
+            <button data-v="1">🚪 Não, tudo pode mudar</button>
+            <button data-v="2">🤔 Talvez, depende do preço</button>
+            <button data-v="3">✅ Sim, é projeto firme</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dec-result" id="dec-result">
+        <span class="dec-bubble">🐈</span>
+        <h3>Responda as 5 perguntas</h3>
+        <p>O gato analisa e te diz qual modo de cobrança faz sentido pro seu cenário.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- PARTE 6: COMPARADOR -->
+<!-- ============================ -->
+<section class="chapter alt-bg">
+  <div class="container">
+    <span class="chapter-number">07 · Lado a lado</span>
+    <h2>Comparador <span style="color:var(--orange)">cara a cara</span>.</h2>
+    <p class="lead">
+      A tabela que cai na prova. Decora o atalho mental: <strong>sob-demanda = pay per token</strong>, <strong>provisionada = pay per hour de MU reservada</strong>.
+    </p>
+
+    <div class="vs-table">
+      <div class="vs-head">
+        <div></div>
+        <div class="vs-side ondemand"><span>💸</span> Sob-Demanda</div>
+        <div class="vs-side provisioned"><span>🏗️</span> Provisionada</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-label">Cobrança</div>
+        <div>Por token (input + output)</div>
+        <div>Por hora de Model Unit (MU)</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-label">Compromisso</div>
+        <div>Nenhum</div>
+        <div>1 mês ou 6 meses</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-label">Throughput</div>
+        <div>Compartilhado (best-effort)</div>
+        <div>Dedicado e garantido</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-label">Latência</div>
+        <div>Variável</div>
+        <div>Consistente e baixa</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-label">Modelos custom</div>
+        <div>Não suporta</div>
+        <div>✅ Suporta (fine-tuned, imported)</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-label">Risco em pico</div>
+        <div>Pode sofrer throttling</div>
+        <div>Sem throttling até o limite reservado</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-label">Ideal pra</div>
+        <div>POC, dev, tráfego variável</div>
+        <div>Produção 24/7, SLA rígido, alto volume</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- COLA -->
+<!-- ============================ -->
+<section class="chapter cola-section" id="cola">
+  <div class="container">
+    <span class="chapter-number">08 · Cola final pra prova</span>
+    <h2>O que <span style="color:var(--orange)">decorar</span>.</h2>
+
+    <div class="cola-grid">
+      <div class="cola-card">
+        <h4>🪨 Bedrock</h4>
+        <p>FMs como serviço via <strong>API única</strong>. Anthropic, Meta, Mistral, Amazon, Cohere, AI21, Stability. Sem treinar nem hospedar.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🎮 Playground</h4>
+        <p>Console pra testar prompts e parâmetros sem código. Compara modelos lado a lado. <strong>Nunca</strong> use em produção, é só pra exploração.</p>
+      </div>
+      <div class="cola-card">
+        <h4>💸 Sob-Demanda</h4>
+        <p>Paga por token. Sem compromisso. Tráfego variável e POCs. Sujeito a <strong>throttling</strong>.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🏗️ Provisionada</h4>
+        <p>Paga por hora de <strong>Model Unit</strong>. Compromisso de 1/6 meses. Throughput dedicado. <strong>Obrigatório</strong> pra modelos custom em produção.</p>
+      </div>
+      <div class="cola-card">
+        <h4>🐛 Dívida técnica</h4>
+        <p>Versionar prompts, avaliar saídas, monitorar custo, ter guardrails, refrescar RAG e logar tudo. Sem isso, vira gato bravo na hora errada.</p>
+      </div>
+      <div class="cola-card">
+        <h4>📊 Atalho mental</h4>
+        <p><strong>Sazonal/POC</strong> → On-Demand. <strong>24/7 ou custom</strong> → Provisioned. <strong>Latência crítica</strong> → Provisioned. <strong>Brincando</strong> → Playground.</p>
+      </div>
+    </div>
+
+    <div class="exam-tips">
+      <h3>🎯 Pegadinhas que caem na prova</h3>
+      <ul>
+        <li><strong>Modelo custom (fine-tuned ou imported)?</strong> Só roda em <strong>Provisioned Throughput</strong>. Não tem on-demand pra esses.</li>
+        <li><strong>Throttling pesado em horário de pico?</strong> A solução padrão é <strong>migrar pra Provisioned</strong>, não aumentar timeout.</li>
+        <li><strong>"Cliente quer custo previsível e SLA rígido"</strong> → resposta é Provisioned, sempre.</li>
+        <li><strong>"Cliente está prototipando uma POC"</strong> → resposta é On-Demand, sempre.</li>
+        <li><strong>"Como reduzir custo em GenAI?"</strong> → modelo menor, prompts mais curtos, cache, escolher o modo de cobrança certo. Pricing é por token.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="aula-footer">
+  <div class="container">
+    <p>Feito com 🧡 pra <strong>Escola da Nuvem</strong> · <a href="../index.html">Balaio de Gatos</a> · <a href="../mapa/">📍 Mapa de Estudos</a> · <a href="../mapa/v2.html">🎯 Treinar</a></p>
+    <p class="src">Fonte oficial: <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" target="_blank" rel="noopener">Amazon Bedrock User Guide</a> · <a href="https://aws.amazon.com/bedrock/pricing/" target="_blank" rel="noopener">Bedrock Pricing</a></p>
+  </div>
+</footer>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>
