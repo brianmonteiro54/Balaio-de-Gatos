@@ -9,14 +9,14 @@
 
 
 /* ═══════════════════════════════════════
-   1. DÍVIDA TÉCNICA — gatos clicáveis + termômetro
+   1. DÍVIDA TÉCNICA · gatos clicáveis + termômetro
    ═══════════════════════════════════════ */
 (function debtPanel(){
   const DEBT = {
     model: {
       icon:'🪨', tag:'Modelo',
       title:'Modelo congelado em uma versão antiga',
-      desc:'Você escolheu Claude 2 em 2023 e nunca mais trocou. Saiu Claude 3.5 Sonnet, Haiku, Opus 4 — todos mais baratos e melhores. Você continua pagando mais por menos.',
+      desc:'Você escolheu Claude 2 em 2023 e nunca mais trocou. Saiu Claude 3.5 Sonnet, Haiku, Opus 4: todos mais baratos e melhores. Você continua pagando mais por menos.',
       impact:'Custo por token até 3× maior que o ideal. Latência pior. Capacidades que economizariam prompt (multimodal, ferramenta) você não usa porque o modelo antigo não suporta.',
       fix:'Bedrock permite trocar de modelo mudando uma string (model id). Avalie cada release. Use <strong>Bedrock Model Evaluation</strong> pra comparar versões com seu próprio dataset.'
     },
@@ -45,7 +45,7 @@
       icon:'📚', tag:'RAG',
       title:'Vector database desatualizado',
       desc:'Você implementou RAG em janeiro, indexou os documentos e nunca mais. Hoje é julho e o modelo responde sobre versões antigas, política revogada, número de telefone errado.',
-      impact:'Alucinação <em>parecendo</em> correta porque o modelo cita o "documento" — só que o documento está obsoleto. Pior que não ter RAG: dá falsa confiança.',
+      impact:'Alucinação <em>parecendo</em> correta porque o modelo cita o "documento", só que o documento está obsoleto. Pior que não ter RAG: dá falsa confiança.',
       fix:'Pipeline de re-ingestão automática. <strong>Bedrock Knowledge Bases</strong> sincroniza com S3/SharePoint. Defina TTL. Monitore taxa de uso de cada chunk e remova os que ninguém acessa.'
     },
     cost: {
@@ -103,11 +103,11 @@
     if(n === 0){
       counter.textContent = 'Selecione os itens que existem no seu projeto';
     } else if(n <= 2){
-      counter.innerHTML = `<strong style="color:var(--olive)">🟢 Saudável</strong> — ${n}/${total} dívidas. Continue assim.`;
+      counter.innerHTML = `<strong style="color:var(--olive)">🟢 Saudável</strong> · ${n}/${total} dívidas. Continue assim.`;
     } else if(n <= 5){
-      counter.innerHTML = `<strong style="color:#C28A00">🟡 Cuidado</strong> — ${n}/${total} dívidas. Tem coisa pra arrumar.`;
+      counter.innerHTML = `<strong style="color:#C28A00">🟡 Cuidado</strong> · ${n}/${total} dívidas. Tem coisa pra arrumar.`;
     } else {
-      counter.innerHTML = `<strong style="color:var(--coral)">🔴 Crítico</strong> — ${n}/${total} dívidas. Para de adicionar feature e paga essa conta.`;
+      counter.innerHTML = `<strong style="color:var(--coral)">🔴 Crítico</strong> · ${n}/${total} dívidas. Para de adicionar feature e paga essa conta.`;
     }
   }
 
@@ -143,7 +143,7 @@
       responses: {
         low: 'Sim, recomendo agendar consulta veterinária em até 24h. Tosse seca persistente em gato sênior pode indicar (1) doença respiratória superior, (2) asma felina, (3) problema cardíaco. Antes da consulta: observe se há dispneia, secreção nasal, perda de apetite ou letargia. Mantenha o ambiente sem poeira ou aerossóis até a avaliação.',
         med: 'Em gato de 8 anos com tosse seca por 2 dias, é prudente procurar avaliação veterinária nos próximos dias. As causas mais comuns são problemas respiratórios, asma felina ou condições cardíacas. Observe sinais como dificuldade pra respirar, falta de apetite, ou letargia, e evite ambientes empoeirados. Se piorar, procure atendimento de urgência.',
-        high: 'Tosse seca em gato sênior é tipo aviso silencioso do organismo. Pode ser nada (gato engasgou com pelo, tava arranhando a garganta) ou pode ser asma, problema cardíaco, ou infecção respiratória. Eu, na sua pele, marcava uma consulta pra essa semana. Enquanto isso: ambiente arejado, sem produto químico no ar, observa se ele tá comendo e se cansa fácil. Se aparecer respiração ofegante ou lábios azulados, é emergência — corre pro pronto-atendimento.'
+        high: 'Tosse seca em gato sênior é tipo aviso silencioso do organismo. Pode ser nada (gato engasgou com pelo, tava arranhando a garganta) ou pode ser asma, problema cardíaco, ou infecção respiratória. Eu, na sua pele, marcava uma consulta pra essa semana. Enquanto isso: ambiente arejado, sem produto químico no ar, observa se ele tá comendo e se cansa fácil. Se aparecer respiração ofegante ou lábios azulados, é emergência: corre pro pronto-atendimento.'
       }
     },
     poet: {
@@ -151,8 +151,8 @@
       user:'Escreva um pequeno poema sobre um gato preto que dorme na janela ao meio-dia.',
       responses: {
         low: 'No parapeito, o gato preto dorme.\nO sol do meio-dia o aquece.\nSeus bigodes tremem suavemente.\nO mundo gira, ele permanece.',
-        med: 'Sentinela de pelagem noturna,\ndorme onde o sol do meio-dia escreve.\nA janela é seu trono provisório.\nO mundo ruge — ele apenas ronrona.',
-        high: 'Carvão & sol — paradoxo de quatro patas.\nNa janela onde a tarde estaciona,\no gato preto vira poesia e bocejo,\nrelógio de areia que ronrona contra o tempo.\nDorme o gato, e o universo, gentilmente, espera.'
+        med: 'Sentinela de pelagem noturna,\ndorme onde o sol do meio-dia escreve.\nA janela é seu trono provisório.\nO mundo ruge, ele apenas ronrona.',
+        high: 'Carvão & sol, paradoxo de quatro patas.\nNa janela onde a tarde estaciona,\no gato preto vira poesia e bocejo,\nrelógio de areia que ronrona contra o tempo.\nDorme o gato, e o universo, gentilmente, espera.'
       }
     },
     aws: {
@@ -168,7 +168,7 @@
       label:'Code reviewer', emoji:'💻',
       user:'Revise: const sum = (a, b) => { return a + b }',
       responses: {
-        low: 'Função correta. Sugestões: (1) remova as chaves e o return — uma arrow function com expressão única dispensa: `const sum = (a, b) => a + b`. (2) considere validação de tipos via TypeScript ou JSDoc.',
+        low: 'Função correta. Sugestões: (1) remova as chaves e o return: uma arrow function com expressão única dispensa: `const sum = (a, b) => a + b`. (2) considere validação de tipos via TypeScript ou JSDoc.',
         med: 'A função está funcional, mas pode ficar mais idiomática. Em arrow function de uma linha, o `return` e as chaves são desnecessários: `const sum = (a, b) => a + b`. Se quiser robustez, adicione tipagem (TypeScript) ou JSDoc, e considere o caso de inputs não-numéricos.',
         high: 'Funciona, mas tá usando smoking pra ir na padaria. Em vez de `(a, b) => { return a + b }`, escreve `(a, b) => a + b`. Um charme. Bonus: se sua codebase usa TypeScript, tipa: `(a: number, b: number): number => a + b`. Se aceita objetos, valida. Se vai virar lib, exporta com docstring. Se é só pra somar dois inteiros uma vez no projeto inteiro, deixa quieto e vai pra próxima task.'
       }
@@ -400,7 +400,7 @@
 
 
 /* ═══════════════════════════════════════
-   4. DECISOR — 5 perguntas
+   4. DECISOR · 5 perguntas
    ═══════════════════════════════════════ */
 (function decisor(){
   const root = document.getElementById('decisor');

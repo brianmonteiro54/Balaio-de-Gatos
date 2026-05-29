@@ -32,7 +32,7 @@
     tom: {
       pick:'FT', cls:'ft',
       sub:'Tom de voz da marca',
-      desc:'Tom é <strong class="k">comportamento</strong>, não dado factual. Não dá pra "buscar" tom — ele tem que estar nos pesos. Fine-tuning com 100-1.000 exemplos resolve.',
+      desc:'Tom é <strong class="k">comportamento</strong>, não dado factual. Não dá pra "buscar" tom: ele tem que estar nos pesos. Fine-tuning com 100-1.000 exemplos resolve.',
       tip:'AWS: Bedrock Custom Models · ou SageMaker JumpStart com PEFT/LoRA.'
     },
     jargao: {
@@ -57,7 +57,7 @@
       pick:'RAG', cls:'rag',
       sub:'Conhecimento privado e sensível',
       desc:'RAG mantém os dados na <strong class="k">sua VPC e seu vector DB</strong>. O FM só vê o que você decide mostrar. Acesso por linha pode ser feito via filtros.',
-      tip:'Cuidado: fine-tuning embute os dados nos pesos — se vazar o modelo, vaza o dado.'
+      tip:'Cuidado: fine-tuning embute os dados nos pesos. Se vazar o modelo, vaza o dado.'
     }
   };
 
@@ -314,7 +314,7 @@
     if(cos > 0.9){ cls='syn'; label='≈ idênticos'; expl='Vetores quase paralelos. Em texto: sinônimos ou paráfrases. Cos ≈ 1.'; }
     else if(cos > 0.5){ cls='rel'; label='relacionados'; expl='Mesma "região" semântica mas não idênticos. Tipo "gato" e "filhote", ou "saúde" e "veterinário".'; }
     else if(cos > -0.3){ cls='orth'; label='sem relação'; expl='Praticamente ortogonais. Conceitos sem vínculo semântico aparente. Cos ≈ 0.'; }
-    else { cls='opp'; label='opostos'; expl='Vetores apontando em direções contrárias. Em embeddings reais isso é raro — palavras "opostas" tendem a estar perto (mesmo contexto).'; }
+    else { cls='opp'; label='opostos'; expl='Vetores apontando em direções contrárias. Em embeddings reais isso é raro: palavras "opostas" tendem a estar perto (mesmo contexto).'; }
     tag.className = 'sim-tag ' + cls;
     tag.textContent = label;
     explain.innerHTML = `<p>${expl}</p>`;
@@ -453,7 +453,7 @@
     },
     kb: {
       title:'📦 Bedrock Knowledge Bases',
-      desc:'<strong>Não é um vector DB sozinho</strong> — é o gerenciador. Ele <em>configura</em> OpenSearch Serverless, Aurora, Neptune, MongoDB Atlas, Pinecone ou Redis Enterprise pra você. Você escolhe a fonte (S3) e o resto roda.',
+      desc:'<strong>Não é um vector DB sozinho</strong>, é o gerenciador. Ele <em>configura</em> OpenSearch Serverless, Aurora, Neptune, MongoDB Atlas, Pinecone ou Redis Enterprise pra você. Você escolhe a fonte (S3) e o resto roda.',
       pros:[
         'Ingest, chunk, embed, store, retrieve gerenciado',
         'Atualização automática quando S3 muda',
@@ -618,7 +618,7 @@
   };
 
   function pct(v){
-    if(isNaN(v) || !isFinite(v)) return '—';
+    if(isNaN(v) || !isFinite(v)) return '···';
     return (v * 100).toFixed(1) + '%';
   }
 
@@ -977,7 +977,7 @@
     {
       q:'"Detecção de fraude na hora do pagamento. Decisão tem que vir em &lt; 200ms."',
       ans:'rt',
-      why:'Latência crítica e síncrona = <strong>Real-time Endpoint</strong>. Batch nem se cogita aqui — a transação não pode esperar madrugada.'
+      why:'Latência crítica e síncrona = <strong>Real-time Endpoint</strong>. Batch nem se cogita aqui: a transação não pode esperar madrugada.'
     },
     {
       q:'"Toda noite recalcular embeddings de 500k novos artigos pra atualizar a base RAG."',

@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    AULA 21 · SERVIÇOS DE IA, PIPELINE ML, SEGURANÇA E IA RESPONSÁVEL
    ========================================================= */
 
@@ -178,7 +178,7 @@
     coleta: {
       title:'2️⃣ Coleta de dados',
       desc:'Dados crus de várias fontes. Quanto mais relevante e diverso, melhor. Cuidado com PII e licença dos dados.',
-      ops:['Fontes internas (DB, logs, S3)','Fontes externas (APIs, datasets públicos)','Streaming (Kinesis, MSK)','Rotulagem se necessário (Ground Truth)','LGPD/GDPR — base legal pra usar'],
+      ops:['Fontes internas (DB, logs, S3)','Fontes externas (APIs, datasets públicos)','Streaming (Kinesis, MSK)','Rotulagem se necessário (Ground Truth)','LGPD/GDPR · base legal pra usar'],
       services:['S3','Kinesis','Glue','Ground Truth','DataSync']
     },
     eda: {
@@ -260,7 +260,7 @@
     },
     outliers: {
       title:'🦒 Outliers',
-      desc:'Valor extremo distorce treino. Mas atenção: nem todo outlier é erro — fraude e doença rara são outliers que <em>importam</em>.',
+      desc:'Valor extremo distorce treino. Mas atenção: nem todo outlier é erro: fraude e doença rara são outliers que <em>importam</em>.',
       bad:`peso_kg\n3.2\n4.1\n3.8\n89.5    ← outlier (provável erro de digitação)\n4.5`,
       good:`peso_kg\n3.2\n4.1\n3.8\n8.95    ← corrigido\n4.5`,
       tip:'<strong>Detectar:</strong> IQR (1.5×), Z-score, Isolation Forest. <strong>Tratar:</strong> remover, capar (winsorize), transformar (log), ou manter se for sinal real.'
@@ -274,24 +274,24 @@
     },
     encode: {
       title:'🏷️ Encoding categórico',
-      desc:'Modelo só come número. Texto categórico ("laranja", "preto") tem que virar número — <strong>do jeito certo</strong>.',
+      desc:'Modelo só come número. Texto categórico ("laranja", "preto") tem que virar número, <strong>do jeito certo</strong>.',
       bad:`raça\nlaranja\npreto\nmalhado\nlaranja`,
       good:`raça_laranja  raça_preto  raça_malhado\n1            0           0\n0            1           0\n0            0           1\n1            0           0`,
       tip:'<strong>One-hot</strong>: padrão pra nominais (sem ordem). <strong>Label encoding</strong>: só pra ordinais (XS&lt;S&lt;M&lt;L). <strong>Target encoding</strong>: substitui pela média do alvo (cuidado com leakage).'
     },
     balance: {
       title:'⚖️ Desbalanceamento',
-      desc:'Em fraude, doença rara, churn — a classe positiva é &lt;5%. Modelo aprende a chutar "negativo" e tem 95% acurácia mas zero utilidade.',
+      desc:'Em fraude, doença rara, churn: a classe positiva é &lt;5%. Modelo aprende a chutar "negativo" e tem 95% acurácia mas zero utilidade.',
       bad:`Dataset:\n  positivos: 50    (5%)\n  negativos: 950  (95%)\n\nModelo: chuta tudo "negativo"\n→ Acurácia 95%   Recall = 0%`,
       good:`Após SMOTE / class weight:\n  positivos: 950  (50%)\n  negativos: 950  (50%)\n\nModelo aprende a separar\n→ Acurácia 87%   Recall 81%`,
-      tip:'<strong>Estratégias:</strong> oversampling (SMOTE), undersampling, class_weight no algoritmo, threshold ajustado. <strong>Métrica:</strong> use F1, AUC-PR — não acurácia.'
+      tip:'<strong>Estratégias:</strong> oversampling (SMOTE), undersampling, class_weight no algoritmo, threshold ajustado. <strong>Métrica:</strong> use F1, AUC-PR, não acurácia.'
     },
     split: {
       title:'✂️ Split treino / teste',
       desc:'Avaliar no <strong>mesmo dado</strong> que treinou = se enganar. Separe antes do EDA pra evitar leakage.',
       bad:`✗ EDA usando 100% dos dados\n✗ Decidir features olhando teste\n✗ Tunar threshold no teste\n✗ Random split em série temporal`,
       good:`✓ Hold-out: 70% treino / 15% val / 15% teste\n✓ K-Fold CV (5 ou 10 folds)\n✓ Stratified split (mantém proporção de classes)\n✓ Time-based split (treino antes, teste depois)`,
-      tip:'<strong>Hold-out</strong> rápido pra dataset grande. <strong>K-Fold CV</strong> pra dataset pequeno (estimativa robusta). <strong>Time-based</strong> obrigatório em série temporal — random vaza futuro pro treino.'
+      tip:'<strong>Hold-out</strong> rápido pra dataset grande. <strong>K-Fold CV</strong> pra dataset pequeno (estimativa robusta). <strong>Time-based</strong> obrigatório em série temporal: random vaza futuro pro treino.'
     }
   };
 
@@ -343,10 +343,10 @@
         ['"Gata preta, 2 anos, vacinada, dócil"']
       ], hl:[] },
       good:{ headers:['cor','idade','castrado','fiv','vacinado','docil'], rows:[
-        ['laranja','4','sim','neg','—','—'],
-        ['preta','2','—','—','sim','sim']
+        ['laranja','4','sim','neg','···','···'],
+        ['preta','2','···','···','sim','sim']
       ], hl:[0,1,2,3,4,5] },
-      bonus:'Features extraídas viram colunas estruturadas. Modelo clássico (XGBoost) brilha em tabular — mais que tentar entender texto cru.'
+      bonus:'Features extraídas viram colunas estruturadas. Modelo clássico (XGBoost) brilha em tabular: mais que tentar entender texto cru.'
     },
     combine: {
       title:'🔗 Combinação',
@@ -734,7 +734,7 @@
       desc:'Caso mais complexo. Cada região tem regulação própria (LGPD, GDPR, CCPA, PIPL, APPI). Estratégia comum: <strong>data localization por região</strong> + replicação controlada.',
       law:'<strong>Mosaico</strong>: LGPD (BR), GDPR (UE), CCPA (Califórnia), PIPL (China), APPI (Japão), POPIA (África do Sul). Cada uma com base legal e direitos próprios.',
       pillars:['Multi-region deployment com particionamento por região','Tabela de mapeamento usuário→região','Bloquear cross-region replication onde a lei exige','Data Subject Rights workflow centralizado','Privacy notice localizado'],
-      regions:['Cada região AWS hospedando um shard','Bedrock e SageMaker são regionais — deploye em cada','S3 com Object Lock + Replication Time Control']
+      regions:['Cada região AWS hospedando um shard','Bedrock e SageMaker são regionais: deploye em cada','S3 com Object Lock + Replication Time Control']
     }
   };
 
@@ -1037,7 +1037,7 @@
       cons:['Caixa preta extrema','Alucina','Caro de operar','Auditoria por prompt + Guardrails'],
       perf:'⚙️ Performance · 10/10 (genérico)',
       interp:'🔎 Interpretabilidade · 1/10',
-      use:'GenAI, chatbot, sumário, RAG, agentes — quase tudo que envolve linguagem natural'
+      use:'GenAI, chatbot, sumário, RAG, agentes: quase tudo que envolve linguagem natural'
     }
   };
 
@@ -1151,7 +1151,7 @@
   const STRAT = {
     schedule: {
       title:'📅 Retreinamento agendado',
-      desc:'Roda em <strong>cadência fixa</strong> (todo domingo, 1º de cada mês). Simples, previsível, fácil de operar — mas pode retreinar sem necessidade ou demorar pra reagir a um drift agudo.',
+      desc:'Roda em <strong>cadência fixa</strong> (todo domingo, 1º de cada mês). Simples, previsível, fácil de operar, mas pode retreinar sem necessidade ou demorar pra reagir a um drift agudo.',
       ops:['Cron job no SageMaker Pipelines','EventBridge dispara o job','Mesmo dado base + janela móvel','Validação automática antes do deploy','Notificação se métrica abaixo do baseline'],
       pros:'Simples · previsível · fácil de orçar',
       cons:'Pode desperdiçar GPU · não reage cedo a drift agudo',

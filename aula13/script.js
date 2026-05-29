@@ -1,4 +1,4 @@
-/* ===== bloco 1 ===== */
+﻿/* ===== bloco 1 ===== */
 
 /* =========================================================
    AULA 13 · BALAIO DE GATOS · widgets interativos
@@ -97,7 +97,7 @@
     pointsG.innerHTML = '';
     bestG.style.display = 'none';
     runsTbody.innerHTML = '';
-    bestAcc.textContent = '—';
+    bestAcc.textContent = '···';
     cost.textContent = '0';
     winnerBox.classList.remove('show');
   }
@@ -158,7 +158,7 @@
     });
     convLegend.innerHTML = strats.map(s => {
       const arr = convCurves[s];
-      const final = arr.length ? arr[arr.length-1].toFixed(3) : '—';
+      const final = arr.length ? arr[arr.length-1].toFixed(3) : '···';
       const cls = (s === winnerStrat && strats.length > 1) ? 'legend-item winner' : 'legend-item';
       const crown = (s === winnerStrat && strats.length > 1) ? '👑 ' : '';
       return `<span class="${cls}"><span class="dot" style="background:${STRAT_COLORS[s]}"></span>${crown}${STRAT_LABELS[s]} · ${final}</span>`;
@@ -371,7 +371,7 @@
       after: '⚠️ Filhotes com menos de 6 meses frequentemente apresentam <strong>falso-positivo</strong> em testes de FIV por anticorpos maternos. Repetir o teste após 6 meses. Se confirmado, FIV não tem cura, mas com manejo adequado (castração, ambiente fechado, dieta rica em proteína, check-ups semestrais) o gato vive com qualidade. Cuidado com co-infecções (FeLV, PIF). Use teste de PCR para confirmação molecular.'
     },
     {
-      prompt: '💉 "Vacinação V4 vs V5 — qual escolher?"',
+      prompt: '💉 "Vacinação V4 vs V5 · qual escolher?"',
       before: 'Vacinas são importantes para a saúde dos gatos. Existem diferentes opções com diferentes coberturas. Consulte um veterinário para escolher a melhor opção para seu pet de acordo com a idade e condições.',
       after: 'A <strong>V4 (Quadrupla felina)</strong> cobre: panleucopenia, rinotraqueíte (FHV-1), calicivirose (FCV) e clamidiose. A <strong>V5 (Quíntupla)</strong> adiciona <strong>FeLV (leucemia felina)</strong>. Recomendo V5 para gatos com acesso à rua ou contato com outros felinos. Para gatos exclusivamente indoor sem contato externo, V4 é suficiente. Protocolo: primeira dose aos 60 dias, reforço a cada 21-30 dias, total de 3 doses. Reforço anual após.'
     },
@@ -383,7 +383,7 @@
     {
       prompt: '🐾 "Sintomas de PIF felino?"',
       before: 'PIF é uma doença grave em gatos. Os sintomas podem incluir febre, perda de apetite e cansaço. Se suspeitar, leve ao veterinário rapidamente. O tratamento depende de cada caso e do diagnóstico do profissional.',
-      after: 'PIF (Peritonite Infecciosa Felina) deriva da mutação do <strong>coronavírus felino (FCoV)</strong>. Duas formas clínicas: <strong>efusiva (úmida)</strong> — ascite, dispneia, derrame pleural/abdominal com líquido amarelo-citrino rico em proteína (relação A:G < 0,4); <strong>não-efusiva (seca)</strong> — granulomas em SNC, olhos (uveíte, precipitados queráticos), rins. Linfopenia, hiperglobulinemia, anemia não-regenerativa. Diagnóstico: PCR de líquido efusivo + RT-PCR. <strong>Tratamento atual: GS-441524 ou Molnupiravir oral por 84 dias</strong> — taxa de cura > 85% em protocolos atualizados.'
+      after: 'PIF (Peritonite Infecciosa Felina) deriva da mutação do <strong>coronavírus felino (FCoV)</strong>. Duas formas clínicas: <strong>efusiva (úmida)</strong>: ascite, dispneia, derrame pleural/abdominal com líquido amarelo-citrino rico em proteína (relação A:G < 0,4); <strong>não-efusiva (seca)</strong>: granulomas em SNC, olhos (uveíte, precipitados queráticos), rins. Linfopenia, hiperglobulinemia, anemia não-regenerativa. Diagnóstico: PCR de líquido efusivo + RT-PCR. <strong>Tratamento atual: GS-441524 ou Molnupiravir oral por 84 dias</strong>. Taxa de cura > 85% em protocolos atualizados.'
     }
   ];
 
@@ -458,14 +458,14 @@
       ],
       dims: '5D · sem redução',
       variance: 'N/A',
-      tip: '⚡ "Bora reduzir!" — partir pra PCA ou t-SNE faz a diferença em modelos lineares e visualização.'
+      tip: '⚡ "Bora reduzir!" Partir pra PCA ou t-SNE faz a diferença em modelos lineares e visualização.'
     },
     pca: {
       name: '📐 PCA (Principal Component Analysis)',
       desc: 'PCA encontra as direções de <strong>maior variância</strong> nos dados e projeta tudo nelas. Linear, rápido, determinístico. Os clusters começam a se separar mas sobrepõem.',
       bullets: [
         '<li>📏 <strong>Linear</strong>: rotaciona os eixos pra alinhar com a variância</li>',
-        '<li>⚡ Super <strong>rápido</strong> — funciona em milhões de pontos</li>',
+        '<li>⚡ Super <strong>rápido</strong>: funciona em milhões de pontos</li>',
         '<li>🎯 Preserva <strong>estrutura global</strong>, mas perde relações não-lineares</li>',
         '<li>🛠️ Bom como <strong>pré-processamento</strong> antes de outro modelo</li>'
       ],
@@ -484,7 +484,7 @@
       ],
       dims: '5D → 2D',
       variance: 'N/A (não-linear)',
-      tip: '🎨 t-SNE é o queridinho pra <strong>visualizar embeddings</strong> (palavras, imagens, gatos). UMAP é o concorrente moderno — mais rápido e estável.'
+      tip: '🎨 t-SNE é o queridinho pra <strong>visualizar embeddings</strong> (palavras, imagens, gatos). UMAP é o concorrente moderno: mais rápido e estável.'
     }
   };
 
@@ -538,7 +538,7 @@
   const ref = 'o gato preto pulou em cima do sofá'.split(' ');
   const cands = [
     {tokens: 'o gato preto pulou em cima do sofá'.split(' '), verdict: '🎯 Tradução idêntica à referência. BLEU máximo.'},
-    {tokens: 'o gato preto pulou no sofá'.split(' '), verdict: '✅ Quase perfeita — pulou "em cima do" foi simplificado pra "no". Boa BLEU.'},
+    {tokens: 'o gato preto pulou no sofá'.split(' '), verdict: '✅ Quase perfeita: pulou "em cima do" foi simplificado pra "no". Boa BLEU.'},
     {tokens: 'o felino escuro saltou sobre o estofado'.split(' '), verdict: '😼 Sentido idêntico, palavras diferentes. BLEU detesta sinônimos. Aqui ele <strong>falha</strong>.'},
     {tokens: 'em cima do sofá pulou o gato preto'.split(' '), verdict: '🔀 Todas as palavras certas, ordem diferente. Unigramas batem, mas n-gramas maiores caem.'},
     {tokens: 'o cachorro azul comeu a casa'.split(' '), verdict: '❌ Tradução completamente errada. BLEU vai pro chão.'}
@@ -650,14 +650,14 @@
     {
       ref: '"o gato adora dormir no sol"',
       cand: '"o gato detesta dormir no sol"',
-      analysis: '<strong>Quase tudo igual</strong> — só "adora" virou "detesta". BLEU acha que tá ótimo (4 de 6 unigramas batem). BERTScore <strong>também</strong> dá score alto, porque mede similaridade contextual — esse é um caso onde BERTScore <em>falha</em>.',
+      analysis: '<strong>Quase tudo igual</strong>, só "adora" virou "detesta". BLEU acha que tá ótimo (4 de 6 unigramas batem). BERTScore <strong>também</strong> dá score alto, porque mede similaridade contextual: esse é um caso onde BERTScore <em>falha</em>.',
       bleu: 0.78, bleuV: 'palavras quase iguais',
       bert: 0.88, bertV: '⚠️ falha em negação'
     },
     {
       ref: '"o gato adora dormir no sol"',
       cand: '"o gato adora atacar o brinquedinho"',
-      analysis: 'Mesmo sujeito, mesmo verbo "adora", mas <strong>contexto diferente</strong>. BLEU dá score parcial (3 de 6 palavras batem). BERTScore vê que o restante da frase tem outro sentido — score baixa.',
+      analysis: 'Mesmo sujeito, mesmo verbo "adora", mas <strong>contexto diferente</strong>. BLEU dá score parcial (3 de 6 palavras batem). BERTScore vê que o restante da frase tem outro sentido, score baixa.',
       bleu: 0.43, bleuV: 'overlap parcial',
       bert: 0.62, bertV: 'sentido divergente'
     },
@@ -712,7 +712,7 @@
       html: '"<span class="hit">o gato preto</span> <span class="hit">passou o dia</span> <span class="hit">dormindo</span> no sofá <span class="hit">depois</span> de muito brincar"',
       refMode: 'highlight',
       r1: 1.00, r2: 1.00, rL: 1.00,
-      verdict: 'Resumo idêntico à referência — score máximo em todas as variantes.'
+      verdict: 'Resumo idêntico à referência: score máximo em todas as variantes.'
     },
     {
       html: '"o <span class="hit">gato preto dormiu</span> bastante depois de <span class="hit">brincar</span>"',
@@ -724,7 +724,7 @@
       html: '"<span class="hit">o gato</span> brincou e cansou"',
       refMode: 'low',
       r1: 0.31, r2: 0.08, rL: 0.23,
-      verdict: 'Resumo muito curto — perdeu informação demais. ROUGE pune resumos que não cobrem a referência.'
+      verdict: 'Resumo muito curto: perdeu informação demais. ROUGE pune resumos que não cobrem a referência.'
     },
     {
       html: '"o bichano negro tirou uma soneca após muita diversão"',
@@ -736,7 +736,7 @@
       html: '"<span class="hit">o cachorro</span> ladrou para o carteiro de manhã cedo"',
       refMode: 'wrong',
       r1: 0.08, r2: 0.00, rL: 0.08,
-      verdict: '❌ Resumo trocou de assunto. Mas ROUGE confunde — só vê overlap de tokens, sem entender que falou outro bicho.'
+      verdict: '❌ Resumo trocou de assunto. Mas ROUGE confunde: só vê overlap de tokens, sem entender que falou outro bicho.'
     }
   ];
 
@@ -892,7 +892,7 @@
     },
     eval: {
       title: '📐 Eval · validação e métricas',
-      text: 'Modelo treinado <em>não é</em> modelo aprovado. Mede accuracy, F1, BLEU, ROUGE, BERTScore — depende do problema. <strong>Clarify</strong> avalia viés e explicabilidade (SHAP). Só passa se bater o baseline e regras de fairness.',
+      text: 'Modelo treinado <em>não é</em> modelo aprovado. Mede accuracy, F1, BLEU, ROUGE, BERTScore (depende do problema). <strong>Clarify</strong> avalia viés e explicabilidade (SHAP). Só passa se bater o baseline e regras de fairness.',
       tools: ['Clarify', 'Experiments', 'Model Cards', 'Custom metrics']
     },
     deploy: {
@@ -1235,7 +1235,7 @@
       icon: '🚨',
       status: 'ALERTA · CRÍTICO',
       title: 'Acurácia abaixo do threshold!',
-      text: 'Acurácia caiu para <strong>71%</strong> — abaixo do mínimo aceitável (78%). <strong>CloudWatch</strong> disparou alarme. Modelo está respondendo mal em produção. Decisão imediata necessária: rollback ou retreino?',
+      text: 'Acurácia caiu para <strong>71%</strong>, abaixo do mínimo aceitável (78%). <strong>CloudWatch</strong> disparou alarme. Modelo está respondendo mal em produção. Decisão imediata necessária: rollback ou retreino?',
       action: '<strong>⚡ Próxima ação:</strong> EventBridge → SageMaker Pipeline → coletar dados novos → retreinar.',
       markerX: 560, zoneX: 460, zoneW: 120
     },

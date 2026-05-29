@@ -16,41 +16,41 @@
 
 
 /* ═══════════════════════════════════════
-   1. CLASSIFICADOR — quiz IA / ML / DL / GenAI
+   1. CLASSIFICADOR · quiz IA / ML / DL / GenAI
    Card central + diagrama vivo + dica + skip + atalhos
    ═══════════════════════════════════════ */
 (function classifier(){
   const ITEMS = [
     { id:'gps',          label:'GPS roteando rota',         emoji:'🗺️', cat:'ai',
-      hint:'Não aprende com dados — só aplica algoritmo de busca em grafo (A*, Dijkstra).',
-      explain:'Algoritmos de busca são IA <strong>clássica</strong>. Não aprendem — seguem regras matemáticas. IA mas fora de ML.' },
+      hint:'Não aprende com dados, só aplica algoritmo de busca em grafo (A*, Dijkstra).',
+      explain:'Algoritmos de busca são IA <strong>clássica</strong>. Não aprendem, seguem regras matemáticas. IA mas fora de ML.' },
     { id:'sql-rules',    label:'Regras SQL anti-fraude',    emoji:'📜', cat:'ai',
       hint:'Você ESCREVE as regras à mão (ex.: "valor > R$ 10k em país X = bloqueia"). Sem aprendizado.',
-      explain:'Regras explícitas (if/else) é IA mas <strong>NÃO é ML</strong>. Não aprende padrões — você codifica as regras.' },
+      explain:'Regras explícitas (if/else) é IA mas <strong>NÃO é ML</strong>. Não aprende padrões: você codifica as regras.' },
     { id:'chess-engine', label:'Stockfish (xadrez)',        emoji:'♟️', cat:'ai',
-      hint:'Stockfish faz busca em árvore com poda. Não aprende com partidas — é puro algoritmo.',
-      explain:'Stockfish usa busca alfa-beta — IA pura, não ML. (AlphaZero é diferente: ele é DL/RL.)' },
+      hint:'Stockfish faz busca em árvore com poda. Não aprende com partidas, é puro algoritmo.',
+      explain:'Stockfish usa busca alfa-beta, IA pura, não ML. (AlphaZero é diferente: ele é DL/RL.)' },
     { id:'spam-bayes',   label:'Filtro de spam Naive Bayes',emoji:'📧', cat:'ml',
-      hint:'Aprende probabilidades a partir de e-mails rotulados. Mas é estatística simples — não usa rede neural profunda.',
-      explain:'Naive Bayes aprende probabilidades de dados rotulados. <strong>ML clássico</strong> — sem redes neurais profundas.' },
+      hint:'Aprende probabilidades a partir de e-mails rotulados. Mas é estatística simples, não usa rede neural profunda.',
+      explain:'Naive Bayes aprende probabilidades de dados rotulados. <strong>ML clássico</strong>, sem redes neurais profundas.' },
     { id:'price-reg',    label:'Regressão linear de preços',emoji:'📈', cat:'ml',
       hint:'Aprende coeficientes (a,b) que minimizam o erro. Modelo estatístico, não rede neural.',
       explain:'Modelo estatístico que aprende coeficientes. ML supervisionado clássico. Nada profundo aqui.' },
     { id:'kmeans',       label:'K-Means de clientes',       emoji:'🎯', cat:'ml',
       hint:'Agrupa clientes parecidos sem rótulos. Algoritmo iterativo simples, sem rede neural.',
-      explain:'Clustering não-supervisionado. Algoritmo iterativo simples. ML clássico — sem rede neural.' },
+      explain:'Clustering não-supervisionado. Algoritmo iterativo simples. ML clássico, sem rede neural.' },
     { id:'random-forest',label:'Random Forest de fraude',   emoji:'🌳', cat:'ml',
-      hint:'Centenas de árvores votando. Cada árvore aprende dos dados. Mas não é "deep" — sem camadas neurais.',
-      explain:'Ensemble de árvores. ML clássico — performa muito bem em dados tabulares. Nada deep.' },
+      hint:'Centenas de árvores votando. Cada árvore aprende dos dados. Mas não é "deep", sem camadas neurais.',
+      explain:'Ensemble de árvores. ML clássico, performa muito bem em dados tabulares. Nada deep.' },
     { id:'cnn-imagenet', label:'CNN classificando imagens', emoji:'🖼️', cat:'dl',
-      hint:'Convolutional Neural Network — múltiplas camadas profundas. Mas só CLASSIFICA (gato/cachorro), não gera.',
+      hint:'Convolutional Neural Network, múltiplas camadas profundas. Mas só CLASSIFICA (gato/cachorro), não gera.',
       explain:'CNN com várias camadas convolucionais aprendendo features de pixels. <strong>Deep Learning</strong> puro.' },
     { id:'resnet',       label:'ResNet pra raio-X',         emoji:'🩻', cat:'dl',
-      hint:'Rede neural com 50+ camadas (deep). NÃO gera imagem nova — só classifica se há tumor.',
+      hint:'Rede neural com 50+ camadas (deep). NÃO gera imagem nova, só classifica se há tumor.',
       explain:'Rede com 50+ camadas e skip connections. Deep Learning aplicado a imagem médica. NÃO gera nada.' },
     { id:'transformer-class', label:'BERT classificando texto', emoji:'📝', cat:'dl',
       hint:'BERT é Transformer com 12+ camadas (deep). Aqui ele só CLASSIFICA (positivo/negativo), não gera texto novo.',
-      explain:'BERT é Transformer deep, MAS só classifica — não gera. Logo é DL, não GenAI.' },
+      explain:'BERT é Transformer deep, MAS só classifica, não gera. Logo é DL, não GenAI.' },
     { id:'claude',       label:'Claude respondendo prompt', emoji:'💬', cat:'genai',
       hint:'É deep, mas a categoria mais ESPECÍFICA é a que descreve o uso: aqui ele GERA texto novo.',
       explain:'LLM Transformer gerando texto novo. É DL <em>e</em> GenAI. A categoria mais específica é <strong>GenAI</strong>.' },
@@ -152,7 +152,7 @@
     let emoji, msg;
     if(pct === 100){ emoji = '🏆'; msg = 'Perfeito! Hierarquia tatuada na cabeça.'; }
     else if(pct >= 80){ emoji = '🎯'; msg = 'Muito bem! Quase tudo certo.'; }
-    else if(pct >= 60){ emoji = '👍'; msg = 'Bom, mas dá pra melhorar — refaz e relê os feedbacks.'; }
+    else if(pct >= 60){ emoji = '👍'; msg = 'Bom, mas dá pra melhorar. Refaz e relê os feedbacks.'; }
     else { emoji = '🔁'; msg = 'Vale revisar a teoria. Lê o resumo abaixo e tenta de novo.'; }
 
     const reviewHtml = wrongList.length
@@ -162,7 +162,7 @@
              ${wrongList.map(w => `<li style="padding:3px 0;color:rgba(251,243,226,0.85)">${w.emoji} <strong style="color:var(--paper)">${w.label}</strong> → era <span style="color:var(--yellow)">${CAT_NAME[w.cat]}</span></li>`).join('')}
            </ul>
          </div>`
-      : '<p style="margin-top:14px;color:rgba(251,243,226,0.7);font-size:13px">✨ Zero erros — você acertou todas!</p>';
+      : '<p style="margin-top:14px;color:rgba(251,243,226,0.7);font-size:13px">✨ Zero erros. Você acertou todas!</p>';
 
     stage.className = 'cl-stage done';
     stage.innerHTML = `
@@ -550,7 +550,7 @@
 
 
 /* ═══════════════════════════════════════
-   3. TASK TABS — classificação/regressão/clustering
+   3. TASK TABS · classificação/regressão/clustering
    ═══════════════════════════════════════ */
 (function taskTabs(){
   const tasks = {
@@ -568,13 +568,13 @@
         <!-- Linha de decisão -->
         <line x1="40" y1="200" x2="290" y2="40" stroke="#FF6B35" stroke-width="2.5" stroke-dasharray="6,4"/>
         <text x="220" y="100" font-size="11" font-family="Sora" font-weight="700" fill="#FF6B35">fronteira</text>
-        <!-- Classe A (gatos jovens — laranja) -->
+        <!-- Classe A (gatos jovens · laranja) -->
         <circle cx="60" cy="180" r="9" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
         <circle cx="80" cy="200" r="9" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
         <circle cx="100" cy="170" r="9" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
         <circle cx="110" cy="210" r="9" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
         <circle cx="130" cy="190" r="9" fill="#FF6B35" stroke="#2B1810" stroke-width="1.5"/>
-        <!-- Classe B (gatos adultos — sage) -->
+        <!-- Classe B (gatos adultos · sage) -->
         <circle cx="180" cy="80" r="9" fill="#5C8D89" stroke="#2B1810" stroke-width="1.5"/>
         <circle cx="220" cy="60" r="9" fill="#5C8D89" stroke="#2B1810" stroke-width="1.5"/>
         <circle cx="240" cy="100" r="9" fill="#5C8D89" stroke="#2B1810" stroke-width="1.5"/>
@@ -688,7 +688,7 @@
   if(!slider) return;
 
   // Curve mappings (calibrated to SVG paths)
-  // Train: starts at (60, 70), ends at (580, 270) — desce
+  // Train: starts at (60, 70), ends at (580, 270): desce
   // Test: U-shape, mínimo perto x=320 (sweet spot)
   function trainY(x){
     // monotonicamente decrescente: y = 70 + (200 * progress^1.3)
@@ -823,7 +823,7 @@
   // Tokenização aproximada estilo BPE: tokens ~ palavras + sufixos comuns + pontuação
   function tokenize(s){
     // Quebra por palavras + pontuação
-    const re = /\w+|[.,!?;:()\-—'"\[\]{}\/]|[\s]+/g;
+    const re = /\w+|[.,!?;:()\-'"\[\]{}\/]|[\s]+/g;
     const matches = s.match(re) || [];
     const result = [];
     matches.forEach(m => {
@@ -872,7 +872,7 @@
 
 
 /* ═══════════════════════════════════════
-   7. WINDOW LAB — context window
+   7. WINDOW LAB · context window
    ═══════════════════════════════════════ */
 (function windowLab(){
   const MODELS = [
@@ -1125,7 +1125,7 @@
       bad:'Faça um resumo do texto.',
       badNote:'Quão grande? Em que formato? Pra qual público?',
       good:'Faça um resumo executivo de até 5 bullets, em português, focado nas ações que o gestor precisa tomar nesta semana.',
-      goodNote:'Tamanho, formato, idioma, público e foco — tudo definido.'
+      goodNote:'Tamanho, formato, idioma, público e foco: tudo definido.'
     },
     role: {
       title:'🎭 Defina o papel',
@@ -1225,7 +1225,7 @@
     },
     store: {
       title:'4️⃣ Storage',
-      desc:'Vetores + metadata vão pra um <strong>vector database</strong> que sabe fazer busca por similaridade (cosseno, euclidiana). Não é DB tradicional — é otimizado pra "qual vetor é mais parecido com este?".',
+      desc:'Vetores + metadata vão pra um <strong>vector database</strong> que sabe fazer busca por similaridade (cosseno, euclidiana). Não é DB tradicional, é otimizado pra "qual vetor é mais parecido com este?".',
       ops:['Indexação (HNSW, IVF, etc.)','Filtros por metadata (data, autor)','Sharding para volume grande','Latência de busca <100ms típica'],
       services:['Amazon OpenSearch Service','Aurora PostgreSQL (pgvector)','Amazon Neptune Analytics','Bedrock KB (gerenciado)']
     },

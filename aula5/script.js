@@ -269,7 +269,7 @@
         { label: 'Cinza', value: 0.58, color: '#8B7E6A' },
         { label: 'Tricolor', value: 0.70, color: '#D4A574' }
       ],
-      insight: '<strong>Leitura:</strong> gatos <strong>laranjas e tricolores</strong> têm a maior chance de adoção. Gatos pretos têm a menor — <em>infelizmente</em> existe um viés histórico nos dados de adoção. <strong>Isso é uma red flag de bias</strong> que precisa ser tratada antes de colocar o modelo em produção.'
+      insight: '<strong>Leitura:</strong> gatos <strong>laranjas e tricolores</strong> têm a maior chance de adoção. Gatos pretos têm a menor (<em>infelizmente</em> existe um viés histórico nos dados de adoção). <strong>Isso é uma red flag de bias</strong> que precisa ser tratada antes de colocar o modelo em produção.'
     },
     castrado: {
       title: 'Efeito da castração na chance de adoção',
