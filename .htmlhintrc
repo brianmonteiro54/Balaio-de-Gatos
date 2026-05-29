@@ -1,7 +1,7 @@
 {
-  "tagname-lowercase": true,
-  "attr-lowercase": true,
-  "attr-value-double-quotes": true,
+  "tagname-lowercase": ["animateTransform", "animateMotion", "clipPath", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix", "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feDropShadow", "feFlood", "feGaussianBlur", "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight", "feSpecularLighting", "feSpotLight", "feTurbulence", "foreignObject", "linearGradient", "radialGradient", "textPath"],
+  "attr-lowercase": ["viewBox", "preserveAspectRatio", "patternUnits", "gradientUnits", "stdDeviation", "baseFrequency", "numOctaves", "stitchTiles", "primitiveUnits", "filterUnits", "kernelMatrix", "diffuseConstant", "specularConstant", "specularExponent", "limitingConeAngle", "pointsAtX", "pointsAtY", "pointsAtZ", "kernelUnitLength", "edgeMode", "lengthAdjust", "textLength", "spreadMethod", "gradientTransform", "patternTransform", "clipPathUnits", "maskUnits", "maskContentUnits", "markerUnits", "refX", "refY", "markerWidth", "markerHeight", "tableValues", "xChannelSelector", "yChannelSelector"],
+  "attr-value-double-quotes": false,
   "doctype-first": true,
   "tag-pair": true,
   "spec-char-escape": false,
