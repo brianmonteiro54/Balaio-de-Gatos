@@ -17,11 +17,6 @@ on:
 permissions:
   contents: write
 
-env:
-  # Força actions JS a rodarem no Node 24 (runtime interno).
-  # Vai virar default em junho/2026; antecipamos pra silenciar o warning de deprecation.
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 concurrency:
   group: sitemap-${{ github.ref }}
   cancel-in-progress: true
@@ -30,12 +25,12 @@ jobs:
   regenerate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
 

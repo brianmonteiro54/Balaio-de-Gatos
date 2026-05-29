@@ -10,11 +10,6 @@ on:
 permissions:
   contents: read
 
-env:
-  # Força actions JS a rodarem no Node 24 (runtime interno).
-  # Vai virar default em junho/2026; antecipamos pra silenciar o warning de deprecation.
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -24,8 +19,8 @@ jobs:
     name: HTMLHint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
       - run: npm install -g htmlhint@1.1.4
@@ -36,7 +31,7 @@ jobs:
     name: Link checker
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: lycheeverse/lychee-action@v2
         with:
           args: >-
@@ -51,7 +46,7 @@ jobs:
             "**/*.html"
           fail: false
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: lychee-report
           path: ./lychee/out.md
@@ -64,8 +59,8 @@ jobs:
     # Pula em PR, pra não testar uma URL que ainda nem deployou.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
       - run: npm install -g @lhci/cli@0.14.x
@@ -75,7 +70,7 @@ jobs:
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: lighthouse-reports
           path: .lighthouseci
