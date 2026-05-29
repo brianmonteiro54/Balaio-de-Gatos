@@ -178,8 +178,54 @@
     align-items: stretch;
   }
 
-  /* Footer */
-  footer { padding: 40px 16px 60px !important; font-size: 13px !important; }
+  /* Foco visível pra acessibilidade no mobile */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--orange, #FF6B35);
+    outline-offset: 2px;
+  }
+
+  /* Grids específicos que usam repeat(N) hard-coded em CSS local */
+  .why-strip,
+  .stats-bar,
+  .nova-canvas-result,
+  .titan-pg-image,
+  .trans-stats,
+  .gan-cats,
+  .cl-buckets,
+  .cl-metrics,
+  .traps,
+  .decision-grid,
+  .paths-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Buttons em técnica-bar / abas com min-width estouram */
+  .technique-bar button,
+  [class*="-tabs"] button,
+  [class*="-pills"] button,
+  [class*="tabbar"] button {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Overflow geral pra impedir scroll horizontal acidental */
+  body { overflow-x: hidden; }
+
+  /* Hero stats inline → empilhados */
+  .hero-stats,
+  .stats-row,
+  .quick-stats {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+  }
 }
 
 /* Celular muito pequeno (até 380px) */
@@ -188,16 +234,14 @@
   .hero h1 { font-size: clamp(28px, 9vw, 42px) !important; }
   .nav-inner { padding: 8px 12px; }
   .nav-links a { padding: 3px 8px !important; font-size: 11px !important; }
-}
 
-/* Foco visível pra acessibilidade no mobile */
-@media (max-width: 600px) {
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible {
-    outline: 2px solid var(--orange, #FF6B35);
-    outline-offset: 2px;
+  /* Grids repeat(N) viram 1 coluna nos celulares menores */
+  .why-strip,
+  .stats-bar,
+  .trans-stats,
+  .gan-cats,
+  .traps,
+  .decision-grid {
+    grid-template-columns: 1fr !important;
   }
 }
