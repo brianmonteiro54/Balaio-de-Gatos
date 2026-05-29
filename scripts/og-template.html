@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>OG template · Balaio de Gatos</title>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FBF3E2;
+    --cream-2: #F5E9CF;
+    --paper: #FFF9EC;
+    --ink: #2B1810;
+    --ink-soft: #4A3528;
+    --orange: #FF6B35;
+    --yellow: #F4D35E;
+    --sage: #5C8D89;
+    --olive: #6B8E23;
+    --purple: #8A6FB1;
+    --coral: #C73E1D;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px;
+    height: 630px;
+    background: var(--cream);
+    font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    overflow: hidden;
+    position: relative;
+  }
+  /* Background pattern */
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, var(--orange) 0, transparent 25%),
+      radial-gradient(circle at 80% 80%, var(--yellow) 0, transparent 30%),
+      radial-gradient(circle at 90% 10%, var(--sage) 0, transparent 20%);
+    opacity: 0.08;
+    z-index: 0;
+  }
+  .frame {
+    position: absolute;
+    inset: 32px;
+    border: 4px solid var(--ink);
+    border-radius: 24px;
+    box-shadow: 12px 12px 0 var(--ink);
+    background: var(--paper);
+    padding: 56px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .brand {
+    font-family: 'Caprasimo', serif;
+    font-size: 36px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .badge {
+    background: var(--ink);
+    color: var(--yellow);
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 24px 0;
+  }
+  .num {
+    font-family: 'Caprasimo', serif;
+    font-size: 96px;
+    line-height: 1;
+    color: var(--accent, var(--orange));
+    margin-bottom: 8px;
+    letter-spacing: -0.04em;
+  }
+  .title {
+    font-family: 'Caprasimo', serif;
+    font-size: 64px;
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    max-height: 200px;
+    overflow: hidden;
+  }
+  .subtitle {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    font-weight: 400;
+    max-height: 100px;
+    overflow: hidden;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 2px dashed var(--ink-soft);
+    padding-top: 18px;
+  }
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .cat {
+    font-size: 28px;
+  }
+  .footer-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  .footer-right strong {
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="header">
+      <div class="brand">🐈 Balaio de Gatos</div>
+      <div class="badge" id="badge">aula --</div>
+    </div>
+    <div class="body">
+      <div class="num" id="num">--</div>
+      <div class="title" id="title">Título da aula</div>
+      <div class="subtitle" id="subtitle">Subtítulo descritivo</div>
+    </div>
+    <div class="footer">
+      <div class="footer-left">
+        <span class="cat">🐾</span>
+        <span>Aulas visuais e interativas de IA</span>
+      </div>
+      <div class="footer-right">
+        <strong>Escola da Nuvem</strong><br>
+        AI Practitioner · AIF-C01
+      </div>
+    </div>
+  </div>
+</body>
+</html>

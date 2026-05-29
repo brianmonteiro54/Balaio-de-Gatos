@@ -7,7 +7,7 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/home.png</image:loc>
       <image:title>Balaio de Gatos · landing</image:title>
       <image:caption>Hub de aulas visuais e interativas de IA Practitioner pra Escola da Nuvem.</image:caption>
     </image:image>
@@ -18,7 +18,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula1.png</image:loc>
       <image:title>Aula 1 · IA, ML, Deep Learning e LLMs</image:title>
       <image:caption>Aula 1: hierarquia IA → ML → DL → IA Generativa, neurônio artificial e simulador de Next-Token.</image:caption>
     </image:image>
@@ -29,7 +29,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula2.png</image:loc>
       <image:title>Aula 2 · Embeddings e Aprendizado</image:title>
       <image:caption>Aula 2: tokenização, embeddings, supervisionado, não-supervisionado e reforço com laboratórios visuais.</image:caption>
     </image:image>
@@ -40,7 +40,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula3.png</image:loc>
       <image:title>Aula 3 · Técnicas Clássicas de ML</image:title>
       <image:caption>Aula 3: regressão linear, árvores de decisão, K-NN, XGBoost e clustering K-means com simuladores interativos.</image:caption>
     </image:image>
@@ -51,7 +51,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula4.png</image:loc>
       <image:title>Aula 4 · Métricas de Classificação</image:title>
       <image:caption>Aula 4: matriz de confusão, accuracy, precision, recall, F1, ROC e AUC com sliders e matrizes clicáveis.</image:caption>
     </image:image>
@@ -62,7 +62,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula5.png</image:loc>
       <image:title>Aula 5 · Métricas de Regressão e AWS</image:title>
       <image:caption>Aula 5: MSE, RMSE, R², Partial Dependence Plots, Trainium e Inferentia da AWS.</image:caption>
     </image:image>
@@ -73,7 +73,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula6.png</image:loc>
       <image:title>Aula 6 · Prompt, Agents e Alucinação</image:title>
       <image:caption>Aula 6: engenharia de prompt, prompt chaining, agents, alucinação, GANs e NLP em laboratórios práticos.</image:caption>
     </image:image>
@@ -84,7 +84,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula7.png</image:loc>
       <image:title>Aula 7 · Computer Vision e NLP</image:title>
       <image:caption>Aula 7: Computer Vision e NLP na AWS com Rekognition, Textract, Comprehend e Translate.</image:caption>
     </image:image>
@@ -95,7 +95,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula8.png</image:loc>
       <image:title>Aula 8 · Voz com Polly, Transcribe e Lex</image:title>
       <image:caption>Aula 8: text-to-speech, speech-to-text, SSML e NLU com Polly, Transcribe e Lex da AWS.</image:caption>
     </image:image>
@@ -106,7 +106,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula9.png</image:loc>
       <image:title>Aula 9 · Canivete suíço de IA da AWS</image:title>
       <image:caption>Aula 9: Bedrock, SageMaker, Personalize, Forecast e Translate em laboratórios práticos.</image:caption>
     </image:image>
@@ -117,9 +117,9 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula10.png</image:loc>
       <image:title>Aula 10 · RAG, OpenSearch e Difusão</image:title>
-      <image:caption>Aula 10: caixa de ferramentas do AI Practitioner com OpenSearch, RAG, chunking, Knowledge Bases e modelos de difusão.</image:caption>
+      <image:caption>Aula 10: caixa de ferramentas com OpenSearch, RAG, chunking, Knowledge Bases e modelos de difusão.</image:caption>
     </image:image>
   </url>
   <url>
@@ -128,7 +128,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula11.png</image:loc>
       <image:title>Aula 11 · Dados e Ciclo de Vida do ML</image:title>
       <image:caption>Aula 11: coleta, limpeza, EDA, feature engineering e ciclo de vida de ML com AWS Kendra e Glue.</image:caption>
     </image:image>
@@ -139,7 +139,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula12.png</image:loc>
       <image:title>Aula 12 · Treino e Hiperparâmetros</image:title>
       <image:caption>Aula 12: pré-processamento, feature engineering, SageMaker Feature Store, fine-tuning e hiperparâmetros.</image:caption>
     </image:image>
@@ -150,7 +150,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula13.png</image:loc>
       <image:title>Aula 13 · Otimização, Avaliação e Deploy</image:title>
       <image:caption>Aula 13: SageMaker AMT, Autopilot, BLEU, BERTScore, ROUGE, MLOps e DeepAR.</image:caption>
     </image:image>
@@ -161,7 +161,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula14.png</image:loc>
       <image:title>Aula 14 · Bedrock e Dívida Técnica</image:title>
       <image:caption>Aula 14: Amazon Bedrock, Playground, sob-demanda vs provisionada e dívida técnica em GenAI.</image:caption>
     </image:image>
@@ -172,7 +172,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula15.png</image:loc>
       <image:title>Aula 15 · IA Responsável</image:title>
       <image:caption>Aula 15: viés, fairness, explicabilidade, governança, LGPD, SageMaker Clarify e Model Monitor.</image:caption>
     </image:image>
@@ -183,7 +183,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula16.png</image:loc>
       <image:title>Aula 16 · A2I e Segurança em IA</image:title>
       <image:caption>Aula 16: Augmented AI, explicabilidade, moderação de conteúdo e segurança em IA.</image:caption>
     </image:image>
@@ -194,7 +194,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula17.png</image:loc>
       <image:title>Aula 17 · Privacidade em IA</image:title>
       <image:caption>Aula 17: safety vs security, privacidade, ataques comuns em IA e mitigação.</image:caption>
     </image:image>
@@ -205,7 +205,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula19.png</image:loc>
       <image:title>Aula 19 · Revisão Geral</image:title>
       <image:caption>Aula 19: revisão geral pra AWS AI Practitioner com IA, ML, GenAI, prompts e RAG.</image:caption>
     </image:image>
@@ -216,7 +216,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula20.png</image:loc>
       <image:title>Aula 20 · Embeddings, Métricas e Inferência</image:title>
       <image:caption>Aula 20: embeddings, métricas, inferência e serviços AWS pra AI Practitioner.</image:caption>
     </image:image>
@@ -227,7 +227,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula21.png</image:loc>
       <image:title>Aula 21 · Serviços AWS e Pipeline ML</image:title>
       <image:caption>Aula 21: serviços de IA da AWS, pipeline de ML, segurança e IA responsável.</image:caption>
     </image:image>
@@ -238,7 +238,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/aula22.png</image:loc>
       <image:title>Aula 22 · Logging, Model Cards e RAG vs FT</image:title>
       <image:caption>Aula 22: logging, model cards, fine-tuning, hiperparâmetros e Prompt vs RAG vs Fine-Tuning.</image:caption>
     </image:image>
@@ -249,7 +249,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/mapa.png</image:loc>
       <image:title>Mapa de Estudos · AI Practitioner</image:title>
       <image:caption>Mapa de tópicos da prova AWS AI Practitioner (AIF-C01) com banco de questões.</image:caption>
     </image:image>
@@ -260,7 +260,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/cat-thumbnail.png</image:loc>
+      <image:loc>https://brianmonteiro54.github.io/Balaio-de-Gatos/assets/og/game.png</image:loc>
       <image:title>Game · Jogo de incidente</image:title>
       <image:caption>Minigame interativo do Balaio de Gatos.</image:caption>
     </image:image>

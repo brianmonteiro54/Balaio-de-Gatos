@@ -1,0 +1,61 @@
+name: Atualizar imagens OG
+
+# Regenera as imagens Open Graph quando o catálogo (template ou script) mudar.
+# Imagens em si são commitadas pra evitar regerar a cada push.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/og-template.html"
+      - "scripts/generate_og_images.mjs"
+      - ".github/workflows/update-og-images.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: og-images-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Cache do Playwright
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-chromium-1223
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --no-audit --no-fund playwright
+          if [ "${{ steps.pw-cache.outputs.cache-hit }}" != "true" ]; then
+            npx playwright install --with-deps chromium
+          fi
+
+      - name: Gerar imagens OG
+        run: node scripts/generate_og_images.mjs
+
+      - name: Commit se mudou
+        run: |
+          if [ -n "$(git status --porcelain assets/og)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add assets/og
+            git commit -m "chore(seo): regenerar imagens OG [skip ci]"
+            git push
+          else
+            echo "Nenhuma imagem mudou."
+          fi
