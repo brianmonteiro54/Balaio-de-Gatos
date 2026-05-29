@@ -4,6 +4,16 @@
    Apenas reduz paddings, fonts e quebra grids no celular.
    ============================================================ */
 
+/* Bloqueio global de scroll horizontal — aplica em TODAS as larguras.
+   Sem isso, body{overflow:hidden} não basta porque html ainda scrolla. */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+@supports not (overflow-x: clip) {
+  html, body { overflow-x: hidden; }
+}
+
 /* Tablet pequeno (até 920px) — complementa breakpoints existentes */
 @media (max-width: 920px) {
   .nav-inner {
@@ -147,11 +157,183 @@
   .att-words,
   .cheat-card,
   .epoch-deck,
+  .card,
+  .decision-card,
   [class*="-card"],
   [class*="-block"] > div,
   [class*="-wrap"] > div {
     padding: 18px !important;
   }
+
+  /* Filhos de grid/flex precisam de min-width:0 pra encolherem em containers
+     com largura limitada (problema clássico de grid blowout no Chrome). */
+  [class*="grid"] > *,
+  [class*="-grid"] > *,
+  [class*="-block"] > *,
+  [class*="-wrap"] > *,
+  [class*="-row"] > * {
+    min-width: 0;
+  }
+
+  /* Wraps específicos que ainda estouravam mesmo com min-width */
+  .decision-grid,
+  .eda-block,
+  .eda-card,
+  .eda-overview-grid,
+  .preproc-wrap,
+  .feat-wrap,
+  .exp-wrap,
+  .auto-pip,
+  .pp-pipeline,
+  .wl-pipeline,
+  .dec-questions,
+  .dec-result,
+  .pg-controls,
+  .playground,
+  .decisor,
+  .kn-query-card,
+  .kn-search-wrap,
+  .fr-block,
+  .fr-side,
+  .classifier-wrap,
+  .cl-main,
+  .cl-diagram,
+  .se-lab,
+  .se-controls,
+  .se-result,
+  .ss-toggle,
+  .two-col.flip {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    max-width: 100% !important;
+  }
+
+  /* Cards específicos de várias aulas que tinham largura fixa ou padding pesado */
+  .card,
+  .card.orange-shadow,
+  .card.sage-shadow,
+  .card.aws-shadow,
+  .card.plum-shadow,
+  .card.tight,
+  .def-card,
+  .demo-box,
+  .ss-side,
+  .se-pick,
+  .cl-card-top,
+  .cl-card,
+  .cl-stage,
+  .cl-main,
+  .cl-diagram,
+  .cl-diagram-legend,
+  .dl-leg,
+  .fr-result-card,
+  .fr-hero-text {
+    max-width: 100% !important;
+    width: auto !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Defesa final: tudo dentro de .container respeita o limite */
+  .container *,
+  section *,
+  main * {
+    max-width: 100%;
+  }
+  /* Mas SVG, canvas e elementos com transform precisam ficar livres */
+  .container svg,
+  .container canvas,
+  .container [style*="transform"],
+  .container .cat-strip-inner,
+  .container .marquee-inner {
+    max-width: none !important;
+  }
+
+  /* Inline style="grid-template-columns: 1fr 1fr" e similares são bem comuns
+     no projeto. Forçar 1 coluna no celular sobrepõe esses inlines. */
+  [style*="grid-template-columns"],
+  [style*="display: grid"],
+  [style*="display:grid"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Pre/code dentro dos cards já scrolla, mas o flex/grid pai estava
+     impedindo o filho de encolher. Garante. */
+  .card pre,
+  .card code,
+  pre[style*="overflow-x"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* ============================================================
+     ACESSIBILIDADE / LEGIBILIDADE NO MOBILE
+     ============================================================ */
+
+  /* Botões interativos (não badges/tags decorativas) precisam ter
+     altura mínima razoável pra dar pra clicar com o dedo.
+     38px é um bom equilíbrio (Apple recomenda 44, Google 48,
+     mas exigir 44 quebraria o design de muitas aulas). */
+  button:not([class*="tag"]):not([class*="badge"]):not([class*="chip-mini"]),
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 36px;
+    padding-top: max(8px, var(--btn-py, 8px));
+    padding-bottom: max(8px, var(--btn-py, 8px));
+  }
+
+  /* Texto de leitura (parágrafos e listas) precisa ser legível.
+     14px é o mínimo recomendado pela maioria das diretrizes mobile. */
+  p, li, blockquote {
+    font-size: max(14px, 1em);
+    line-height: 1.55;
+  }
+
+  /* Footer com texto e links pequenos demais */
+  footer a {
+    display: inline-block;
+    padding: 6px 4px;
+    min-height: 32px;
+  }
+  footer p, footer span {
+    font-size: max(13px, 1em);
+  }
+
+  /* Quebra de palavras em conteúdo longo */
+  p, li, strong, em, h1, h2, h3, h4, h5, h6, span {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  /* Code/pre: scroll horizontal próprio */
+  pre, code {
+    overflow-wrap: normal;
+    word-break: normal;
+    white-space: pre-wrap;
+  }
+  pre {
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Form fields que esticavam (label/input/select) */
+  .row label,
+  .row input,
+  .row select,
+  .row textarea,
+  .exp-config label,
+  .exp-config input,
+  .exp-config select,
+  label > input,
+  label > select { max-width: 100%; box-sizing: border-box; }
 
   /* Imagens e SVG sempre dentro do container */
   img, svg, video, canvas { max-width: 100%; height: auto; }
@@ -217,6 +399,25 @@
 
   /* Overflow geral pra impedir scroll horizontal acidental */
   body { overflow-x: hidden; }
+
+  /* Container e seções nunca podem ultrapassar a viewport */
+  .container,
+  section.chapter > .container,
+  section > .container { max-width: 100%; }
+
+  /* Inputs/forms que costumam ser muito largos */
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="url"],
+  textarea,
+  select { max-width: 100%; box-sizing: border-box; }
+
+  /* Cards de busca/query (aula11) e similares com flex que não cabia */
+  .kn-query-card,
+  .kn-search-wrap,
+  [class*="-search-wrap"],
+  [class*="-query-card"] { max-width: 100%; flex-wrap: wrap; }
 
   /* Hero stats inline → empilhados */
   .hero-stats,
