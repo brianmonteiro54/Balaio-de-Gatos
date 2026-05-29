@@ -1,0 +1,203 @@
+/* ============================================================
+   responsive.css — overrides mobile compartilhados
+   Carregado DEPOIS do CSS específico de cada aula.
+   Apenas reduz paddings, fonts e quebra grids no celular.
+   ============================================================ */
+
+/* Tablet pequeno (até 920px) — complementa breakpoints existentes */
+@media (max-width: 920px) {
+  .nav-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 20px;
+  }
+  .nav-links {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .nav-links::-webkit-scrollbar { height: 4px; }
+  .nav-links a { white-space: nowrap; }
+
+  .container { padding: 0 20px; }
+
+  .hero { padding: 60px 0 40px; }
+  .hero p { font-size: 17px; }
+
+  section.chapter { padding: 60px 0; }
+}
+
+/* Celular (até 600px) — onde os HTMLs costumam quebrar */
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+
+  /* HERO */
+  .hero { padding: 40px 0 30px; }
+  .hero h1 {
+    font-size: clamp(34px, 9vw, 52px) !important;
+    line-height: 1 !important;
+  }
+  .hero p { font-size: 16px; line-height: 1.55; }
+  .hero-cta,
+  .hero-cta.ghost {
+    display: inline-block;
+    padding: 12px 20px !important;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* NAV */
+  .nav-inner { padding: 10px 16px; }
+  .nav-brand { font-size: 18px !important; }
+  .nav-links a {
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+  }
+  .nav-brand .pt {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+  }
+
+  /* SECTIONS */
+  section.chapter { padding: 40px 0; }
+
+  /* Heading 2 dos blocos costuma ser grande demais */
+  section.chapter h2,
+  .chapter h2 {
+    font-size: clamp(26px, 7vw, 40px) !important;
+    line-height: 1.1 !important;
+  }
+  .chapter-number,
+  .chapter-kicker { font-size: 12px !important; }
+  .lead { font-size: 16px !important; }
+
+  /* Cards / grids genéricos: força 1 coluna no mobile */
+  .hero-grid,
+  .two-col,
+  .two-col.lean,
+  .two-col.lean-r,
+  .two-col.flip,
+  .compare-grid,
+  .metric-block,
+  .tech-block,
+  .families-grid,
+  .flow-steps,
+  .cloud-cards,
+  .biz-grid,
+  .recap-grid,
+  .when-grid,
+  .cmp-block,
+  .med-block,
+  .hs-block,
+  .polly-block,
+  .trans-block,
+  .tx-block,
+  .tr-block,
+  .tlab-block,
+  .rec-block,
+  .fr-block,
+  .service-block,
+  .kn-block,
+  .dc-block,
+  .eda-block,
+  .amt-wrap,
+  .dom-wrap,
+  .dr-wrap,
+  .bleu-wrap,
+  .bert-wrap,
+  .rouge-wrap,
+  .endpoint-wrap,
+  .deepar-wrap,
+  .exp-wrap,
+  .deploy-wrap,
+  .monitor-wrap,
+  .matryoshka-wrap,
+  .nn-block,
+  .nexttoken-wrap,
+  .slmllm-wrap,
+  .transformer-wrap,
+  .embed-wrap,
+  .pp-pipeline,
+  .pip-stage,
+  .grid-wrap,
+  .roc-wrap,
+  .mae-wrap,
+  .r2-wrap,
+  .pdp-wrap,
+  .chip-hero,
+  .cost-compare,
+  .aulas-grid,
+  .cards-grid,
+  .features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Reverter ordem em flips (texto sempre antes da imagem) */
+  .two-col.flip > div:first-child { order: 0 !important; }
+
+  /* Cards e blocos com padding generoso encolhem */
+  .insight-box,
+  .aws-card,
+  .info-card,
+  .nn-input,
+  .att-words,
+  .cheat-card,
+  .epoch-deck,
+  [class*="-card"],
+  [class*="-block"] > div,
+  [class*="-wrap"] > div {
+    padding: 18px !important;
+  }
+
+  /* Imagens e SVG sempre dentro do container */
+  img, svg, video, canvas { max-width: 100%; height: auto; }
+
+  /* Tabelas com overflow horizontal pra não estourar */
+  table { display: block; max-width: 100%; overflow-x: auto; }
+
+  /* Code blocks scrolláveis horizontalmente */
+  pre, code {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    word-wrap: break-word;
+    font-size: 13px !important;
+  }
+
+  /* Botões e CTAs que usam flex em linha viram empilhados */
+  .hero-actions,
+  .cta-row,
+  .button-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  /* Footer */
+  footer { padding: 40px 16px 60px !important; font-size: 13px !important; }
+}
+
+/* Celular muito pequeno (até 380px) */
+@media (max-width: 380px) {
+  .container { padding: 0 12px; }
+  .hero h1 { font-size: clamp(28px, 9vw, 42px) !important; }
+  .nav-inner { padding: 8px 12px; }
+  .nav-links a { padding: 3px 8px !important; font-size: 11px !important; }
+}
+
+/* Foco visível pra acessibilidade no mobile */
+@media (max-width: 600px) {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--orange, #FF6B35);
+    outline-offset: 2px;
+  }
+}
