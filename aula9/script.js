@@ -964,7 +964,7 @@ document.getElementById('lab-fire').addEventListener('click', () => {
 
 
 // ============================================================
-// MÓDULO 3: AMAZON TRANSLATE — agora chama API real (Pollinations LLM)
+// MÓDULO 3: AMAZON TRANSLATE · agora chama API real (Pollinations LLM)
 // ============================================================
 
 const trLangNames = {
@@ -994,7 +994,7 @@ const trExamples = [
   { from: 'pt', to: 'en', text: 'O Balaio de Gatos é um marketplace pra Bigode Petshop e outras petshops. Felix, o gato laranja, é nosso cliente fiel. Hoje pediu 2kg de Premium Crunchy.', preset: 'customDemo' }
 ];
 
-// Estado do Custom Terminology — editável pelo usuário
+// Estado do Custom Terminology · editável pelo usuário
 const trTermDefault = [
   { from: 'gato', to: 'cat' },
   { from: 'Bigode Petshop', to: 'Bigode Petshop' },
@@ -1214,8 +1214,8 @@ async function trDoTranslate() {
 
   if (from === to) {
     document.getElementById('tr-output').textContent = text;
-    trSetStatus('Mesmo idioma — nada a traduzir.', '');
-    document.getElementById('tr-conf').textContent = '— · sem mudança';
+    trSetStatus('Mesmo idioma, nada a traduzir.', '');
+    document.getElementById('tr-conf').textContent = '··· · sem mudança';
     trUpdateCode(text, from, to, formal, custom);
     return;
   }
@@ -1301,7 +1301,7 @@ function trShowRetryCountdown(icon, label, seconds) {
       <div class="tr-retry-bar">
         <div class="tr-retry-bar-fill" id="tr-retry-bar-fill"></div>
       </div>
-      <div class="tr-retry-hint">⏳ Aguarde o contador zerar — Pollinations free está sob carga.</div>
+      <div class="tr-retry-hint">⏳ Aguarde o contador zerar. Pollinations free está sob carga.</div>
     </div>
   `;
   card.style.position = 'relative';
@@ -1420,7 +1420,7 @@ document.getElementById('tr-swap').addEventListener('click', () => {
     document.getElementById('tr-input').value = outText;
   }
   trUpdateMetadata();
-  // Não traduz automaticamente — usuário clica em Traduzir
+  // Não traduz automaticamente; usuário clica em Traduzir
 });
 
 document.querySelectorAll('#tr-examples .tr-ex-btn').forEach((b, i) => {
@@ -1443,7 +1443,7 @@ document.querySelectorAll('#tr-examples .tr-ex-btn').forEach((b, i) => {
     trUpdateMetadata();
     // Limpa output anterior pra deixar claro que precisa traduzir
     document.getElementById('tr-output').textContent = '';
-    document.getElementById('tr-conf').textContent = '— · neural';
+    document.getElementById('tr-conf').textContent = '··· · neural';
   });
 });
 
@@ -1786,7 +1786,7 @@ function frEval() {
   marker.style.left = (score / 1000 * 100) + '%';
   markerNum.textContent = score;
 
-  // Ordena por impacto absoluto (do maior pro menor) — agora usa o número de verdade
+  // Ordena por impacto absoluto (do maior pro menor); agora usa o número de verdade
   factors.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
   const list = document.getElementById('fr-factors-list');
   list.innerHTML = '';
@@ -1825,7 +1825,7 @@ document.getElementById('fr-reset').addEventListener('click', () => {
   document.getElementById('fr-hero-label').textContent = 'AGUARDANDO';
   document.getElementById('fr-hero-msg').textContent = 'Submete uma transação pra avaliar';
   document.getElementById('fr-thermo-marker').style.left = '0%';
-  document.getElementById('fr-marker-num').textContent = '—';
+  document.getElementById('fr-marker-num').textContent = '···';
   document.getElementById('fr-factors-list').innerHTML = '<span class="fr-empty">Submete uma transação pra ver o detalhamento.</span>';
 });
 
@@ -1921,7 +1921,7 @@ const qdevModes = {
     ],
     suggestions: [
       [
-        { num: 3, html: '<span class="qdev-c">// validarCPF.test.js — gerado pelo Q</span>', delay: 200, type: 'final' },
+        { num: 3, html: '<span class="qdev-c">// validarCPF.test.js · gerado pelo Q</span>', delay: 200, type: 'final' },
         { num: 4, html: '<span class="qdev-k">describe</span>(<span class="qdev-str">"validarCPF"</span>, () =&gt; {', delay: 350, type: 'final' }
       ],
       [
@@ -2080,7 +2080,7 @@ const qqsAnswers = [
       { label: 'Coleira', v: 30, value: '3.720 un' }
     ],
     chartTypeLabel: '🏆 Bar chart · ideal para ranking',
-    narrative: 'Ração lidera com 12.450 un, sozinha = 33% do volume top-5. A diferença pra 6º produto é abrupta — o catálogo "long tail" não está performando.'
+    narrative: 'Ração lidera com 12.450 un, sozinha = 33% do volume top-5. A diferença pra 6º produto é abrupta: o catálogo "long tail" não está performando.'
   },
   {
     question: 'Vendas por região em 2025',
@@ -2093,7 +2093,7 @@ const qqsAnswers = [
       { label: 'N', v: 8, value: '3%' }
     ],
     chartTypeLabel: '🗺️ Bar chart · regional',
-    narrative: 'Sudeste sozinho = mais que todas as outras regiões juntas (52%). Norte com menos de 5% — alto custo logístico ou subexposição? Investigar.'
+    narrative: 'Sudeste sozinho = mais que todas as outras regiões juntas (52%). Norte com menos de 5%: alto custo logístico ou subexposição? Investigar.'
   },
   {
     question: 'Comparativo trimestral',
@@ -2105,7 +2105,7 @@ const qqsAnswers = [
       { label: 'Q4', v: 70, value: 'R$ 5.1M' }
     ],
     chartTypeLabel: '📊 Bar chart · trimestre',
-    narrative: 'Q3 é pico (R$ 6.7M). Q4 abaixo de Q2 — possível ruptura de estoque pré-natal ou ciclo de campanhas. Cruzar com tabela de estoque.'
+    narrative: 'Q3 é pico (R$ 6.7M). Q4 abaixo de Q2: possível ruptura de estoque pré-natal ou ciclo de campanhas. Cruzar com tabela de estoque.'
   },
   {
     question: 'Mix de categorias do catálogo',
@@ -2118,7 +2118,7 @@ const qqsAnswers = [
       { label: 'Casa', v: 6, color: '#F4D35E' }
     ],
     chartTypeLabel: '🥧 Pie chart · proporção',
-    narrative: 'Alimentos puxam 42% do mix de receita. Casa com só 6% — provável que o ticket alto compense o volume baixo. Validar margem por categoria.'
+    narrative: 'Alimentos puxam 42% do mix de receita. Casa com só 6%: provável que o ticket alto compense o volume baixo. Validar margem por categoria.'
   },
   {
     question: 'Devoluções por mês',
@@ -2139,7 +2139,7 @@ const qqsAnswers = [
     ],
     suffix: '%',
     chartTypeLabel: '📉 Line chart · taxa de devolução',
-    narrative: 'Pico em abril (1.5%) e dezembro (1.4%) — sazonalidades. Resto do ano abaixo de 1%. Investigar lotes/fornecedores nesses meses específicos.'
+    narrative: 'Pico em abril (1.5%) e dezembro (1.4%): sazonalidades. Resto do ano abaixo de 1%. Investigar lotes/fornecedores nesses meses específicos.'
   }
 ];
 
@@ -2278,7 +2278,7 @@ const lexBotIntents = {
 const lexSlotDefs = {
   pet: {
     prompt: 'Qual o nome do pet?',
-    help: 'Pode ser qualquer nome — ex: Felix, Mia, Bidu, Thor.',
+    help: 'Pode ser qualquer nome. Ex: Felix, Mia, Bidu, Thor.',
     validate: (v) => v && v.length >= 2 && v.length <= 30 && !/\?$/.test(v)
   },
   data: {
@@ -2315,7 +2315,7 @@ const lexSlotDefs = {
   },
   pedido: {
     prompt: 'Qual o número do pedido?',
-    help: 'O número aparece no email de confirmação — geralmente 4 a 6 dígitos.',
+    help: 'O número aparece no email de confirmação. Geralmente 4 a 6 dígitos.',
     validate: (v) => /\d{3,}/.test(v),
     extract: (v) => {
       const m = String(v).match(/\d{3,}/);
@@ -2363,11 +2363,11 @@ let lexThinking = false;
 function lexUpdateStateBar() {
   const intentEl = document.querySelector('#lex-state-intent strong');
   const slotEl = document.querySelector('#lex-state-slot strong');
-  intentEl.textContent = lexState.intent || '—';
+  intentEl.textContent = lexState.intent || '···';
   if (lexState.awaitingConfirm) {
     slotEl.textContent = '🔔 confirmação';
   } else {
-    slotEl.textContent = lexState.nextSlot || '—';
+    slotEl.textContent = lexState.nextSlot || '···';
   }
 }
 
@@ -2579,7 +2579,7 @@ async function lexProcess(input) {
         lexState.slots[lexState.nextSlot] = cleaned;
         absorbed = true;
       } else if (sd) {
-        // Resposta inválida — re-pergunta com hint
+        // Resposta inválida; re-pergunta com hint
         lexAddMessage(
           `🤔 "${input}" não parece um valor válido pra ${lexState.nextSlot}.\n${sd.help}`,
           'bot',
@@ -2710,7 +2710,7 @@ document.getElementById('lex-mic').addEventListener('click', () => {
 });
 
 setTimeout(() => {
-  lexAddMessage('🐈 Oi! Sou o gato-bot do Petshop Bigode. NLU rodando ao vivo via LLM. Pode digitar livre — não precisa palavra-chave exata.', 'bot', 'session start');
+  lexAddMessage('🐈 Oi! Sou o gato-bot do Petshop Bigode. NLU rodando ao vivo via LLM. Pode digitar livre, não precisa palavra-chave exata.', 'bot', 'session start');
   lexUpdateStateBar();
 }, 100);
 
@@ -3229,7 +3229,7 @@ function osRender() {
     return;
   }
   if (results.length === 0) {
-    out.innerHTML = `<div style="text-align: center; padding: 14px; color: var(--ink-soft); font-style: italic; font-size: 12px;">Nenhum resultado pra "${q}" no modo ${mode}. ${mode === 'kw' ? 'Tenta o modo Semantic — entende sinônimos.' : ''}</div>`;
+    out.innerHTML = `<div style="text-align: center; padding: 14px; color: var(--ink-soft); font-style: italic; font-size: 12px;">Nenhum resultado pra "${q}" no modo ${mode}. ${mode === 'kw' ? 'Tenta o modo Semantic, entende sinônimos.' : ''}</div>`;
     return;
   }
   out.innerHTML = '';

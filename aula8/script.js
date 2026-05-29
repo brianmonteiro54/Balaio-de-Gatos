@@ -1,4 +1,4 @@
-/* ===== aula 8: Comprehend, Medical, HealthScribe, Polly, Transcribe ===== */
+﻿/* ===== aula 8: Comprehend, Medical, HealthScribe, Polly, Transcribe ===== */
 
 // ============================================================
 // MÓDULO 1: AMAZON COMPREHEND
@@ -316,7 +316,7 @@ resp = client.detect_syntax(
   else if (cmpCurrentTask === 'pii') {
     const pii = cmpExtractPii(text);
     if (pii.length === 0) {
-      out.innerHTML = `<h5>🛡️ PII (informação pessoal)</h5><p style="font-family:'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">✅ Nenhuma PII detectada — texto limpo pra publicar.</p>`;
+      out.innerHTML = `<h5>🛡️ PII (informação pessoal)</h5><p style="font-family:'Sora', sans-serif; font-size: 13px; color: var(--ink-soft); margin-top: 8px;">✅ Nenhuma PII detectada. Texto limpo pra publicar.</p>`;
     } else {
       let html = '<h5>🛡️ PII detectada</h5><div style="margin-top: 10px;">';
       pii.forEach(p => {
@@ -520,7 +520,7 @@ document.getElementById('med-icd').addEventListener('click', () => {
       } else {
         html += `<div class="map-row">
           <span>${c.text}</span>
-          <span class="code">—</span>
+          <span class="code">···</span>
           <span style="font-style:italic; color: var(--ink-soft)">sem match no demo</span>
         </div>`;
       }
@@ -549,7 +549,7 @@ document.getElementById('med-rxnorm').addEventListener('click', () => {
       } else {
         html += `<div class="map-row">
           <span>${c.text}</span>
-          <span class="code">—</span>
+          <span class="code">···</span>
           <span style="font-style:italic; color: var(--ink-soft)">sem match no demo</span>
         </div>`;
       }
@@ -703,7 +703,7 @@ document.getElementById('hs-reset').addEventListener('click', () => {
   hsCurrentLine = -1;
   hsAnimateWaveform(false);
   hsUpdate();
-  document.getElementById('hs-current-speaker').textContent = '—';
+  document.getElementById('hs-current-speaker').textContent = '···';
   document.getElementById('hs-current-speaker').className = 'hs-speaker-pill';
   document.getElementById('hs-current-line').textContent = 'aguardando…';
   document.getElementById('hs-transcript').innerHTML = '';
@@ -730,12 +730,12 @@ hsBuildWaveform();
 const ttsStageData = {
   text: {
     title: '📝 Texto cru',
-    desc: 'A frase que você quer transformar em áudio. Pode ter números, abreviações, símbolos, datas — tudo bagunçado.',
+    desc: 'A frase que você quer transformar em áudio. Pode ter números, abreviações, símbolos, datas: tudo bagunçado.',
     render: () => `<div style="font-size: 17px; color: var(--paper);">"O Dr. Smith mediu 38,5°C às 14h30 do dia 5/12."</div>`
   },
   normalize: {
     title: '🧹 Normalização',
-    desc: 'Expandir abreviações, números e símbolos pra forma falável. Datas, unidades, moeda — cada idioma tem regras próprias.',
+    desc: 'Expandir abreviações, números e símbolos pra forma falável. Datas, unidades, moeda: cada idioma tem regras próprias.',
     render: () => `<div>Original: <em>"O Dr. Smith mediu 38,5°C às 14h30 do dia 5/12."</em></div>
       <div style="margin-top: 10px;">Normalizado:</div>
       <div style="margin-top: 6px; padding: 10px; background: rgba(255,255,255,0.06); border-radius: 8px;">
@@ -1131,7 +1131,7 @@ const sttStageData = {
   },
   text: {
     title: '📝 Texto final',
-    desc: 'Saída pronta. Pode ser stream incremental (palavra a palavra) ou batch completo. Inclui timestamps por palavra, score de confiança, e — se ativado — speaker labels.',
+    desc: 'Saída pronta. Pode ser stream incremental (palavra a palavra) ou batch completo. Inclui timestamps por palavra, score de confiança, e (se ativado) speaker labels.',
     render: () => `<div>JSON estruturado:</div>
       <pre style="margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.55; color: var(--cream-2);">{
   <span style="color:var(--yellow)">"transcript"</span>: <span style="color:#C7E5C0">"O gato preto pulou no telhado"</span>,
@@ -1371,7 +1371,7 @@ document.getElementById('trans-clear').addEventListener('click', () => {
   transConfCount = 0;
   document.getElementById('trans-stat-words').textContent = 0;
   document.getElementById('trans-stat-chars').textContent = 0;
-  document.getElementById('trans-stat-conf').textContent = '—';
+  document.getElementById('trans-stat-conf').textContent = '···';
   document.getElementById('trans-stat-time').textContent = '00:00';
   document.getElementById('trans-analysis').style.display = 'none';
   transRender();
@@ -1403,8 +1403,8 @@ document.getElementById('trans-analyze').addEventListener('click', () => {
   let html = '<h6>📖 Análise Comprehend (mock)</h6>';
   html += `<div class="row"><span>🌎 Idioma</span><strong>${lang.name} (${(lang.conf * 100).toFixed(0)}%)</strong></div>`;
   html += `<div class="row"><span>💚 Sentimento</span><strong>${winnerSent} (${(sent[winnerSent] * 100).toFixed(0)}%)</strong></div>`;
-  html += `<div class="row"><span>🔍 Entidades</span><strong>${ents.length === 0 ? '—' : ents.map(e => e.text).join(', ')}</strong></div>`;
-  html += `<div class="row"><span>🔑 Frases-chave</span><strong>${phrases.length === 0 ? '—' : phrases.map(p => p[0]).join(' · ')}</strong></div>`;
+  html += `<div class="row"><span>🔍 Entidades</span><strong>${ents.length === 0 ? '···' : ents.map(e => e.text).join(', ')}</strong></div>`;
+  html += `<div class="row"><span>🔑 Frases-chave</span><strong>${phrases.length === 0 ? '···' : phrases.map(p => p[0]).join(' · ')}</strong></div>`;
   out.innerHTML = html;
 });
 

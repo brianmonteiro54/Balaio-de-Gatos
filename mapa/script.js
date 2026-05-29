@@ -1,4 +1,4 @@
-/* ===== bloco 1 ===== */
+﻿/* ===== bloco 1 ===== */
 
 // ═══════════════════════════════════════
 // 1. Toggle dos domínios (acordeão)
@@ -75,7 +75,7 @@ setTimeout(() => {
 
 
 /* =========================================================
-   ===== bloco 2 — UX do mapa de estudos
+   ===== bloco 2 · UX do mapa de estudos
    - Lê progresso do treino (localStorage do v2)
    - Diagnóstico de 3 perguntas com recomendação
    - Tooltip nas palavras-chave
@@ -126,7 +126,7 @@ setTimeout(() => {
   if(answered > 0) detailParts.push(`${acc}% de acerto`);
   if(wrong > 0) detailParts.push(`<a href="v2.html?mode=wrong">${wrong} pra refazer ❌</a>`);
   if(marked > 0) detailParts.push(`<a href="v2.html?mode=marked">${marked} marcadas ⭐</a>`);
-  detail.innerHTML = detailParts.length ? '— ' + detailParts.join(' · ') : '— bora continuar de onde parou.';
+  detail.innerHTML = detailParts.length ? '· ' + detailParts.join(' · ') : 'Bora continuar de onde parou.';
 
   // Domain bars
   const dByDomain = state.qByDomain || {};
@@ -315,15 +315,15 @@ setTimeout(() => {
 // ═══════════════════════════════════════
 (function kwTooltips(){
   const KW_DEFS = {
-    'Bedrock': 'Amazon Bedrock — Foundation Models como serviço, sem gerenciar infra',
-    'RAG': 'Retrieval Augmented Generation — busca contexto e injeta no prompt',
+    'Bedrock': 'Amazon Bedrock · Foundation Models como serviço, sem gerenciar infra',
+    'RAG': 'Retrieval Augmented Generation · busca contexto e injeta no prompt',
     'Foundation Model': 'Modelo grande pré-treinado, base pra muitas tarefas',
     'Knowledge Bases': 'Bedrock RAG totalmente gerenciado',
     'Fine-tuning': 'Ajustar pesos do modelo com dados rotulados',
     'Prompt Engineering': 'Arte de escrever prompts melhores, sem mudar o modelo',
     'SageMaker': 'Plataforma full-stack de ML da AWS',
-    'Bias': 'Viés algorítmico — modelo trata grupos de forma desigual',
-    'LLM': 'Large Language Model — FM focado em texto',
+    'Bias': 'Viés algorítmico · modelo trata grupos de forma desigual',
+    'LLM': 'Large Language Model · FM focado em texto',
     'Alucinação': 'Quando o modelo inventa informação que parece verdadeira',
     'Embeddings': 'Vetores que representam significado de texto/imagem',
     'Bedrock Agents': 'FM que chama APIs externas pra executar ações',
@@ -332,37 +332,37 @@ setTimeout(() => {
     'Não-supervisionado': 'Aprende padrões sem rótulos (ex: clustering)',
     'Reinforcement Learning': 'Aprende por recompensa/punição',
     'Temperature': 'Aleatoriedade da resposta. Baixa = factual. Alta = criativa',
-    'Top-p': 'Nucleus sampling — amostra de tokens que somam probabilidade p',
+    'Top-p': 'Nucleus sampling · amostra de tokens que somam probabilidade p',
     'Top-k': 'Amostra dos K tokens mais prováveis',
     'Zero-shot': 'Prompt sem exemplo',
     'Few-shot': 'Prompt com poucos exemplos',
     'SageMaker Clarify': 'Detecta viés e gera explicações (XAI)',
-    'Fairness': 'Imparcialidade — decisões similares pra casos similares',
+    'Fairness': 'Imparcialidade · decisões similares pra casos similares',
     'Explicabilidade (XAI)': 'Entender POR QUE o modelo decidiu assim',
     'Amazon Q Business': 'Assistente corporativo de Q&A interno',
     'Amazon Q Developer': 'Copiloto de código (ex-CodeWhisperer)',
     'Classificação': 'Saída categórica (gato/cachorro)',
     'Regressão': 'Saída numérica contínua (preço, temperatura)',
     'Vector Database': 'BD pra embeddings + busca por similaridade',
-    'IAM': 'Identity and Access Management — controle de acesso',
-    'KMS': 'Key Management Service — gerencia chaves de criptografia',
-    'Acurácia': 'Acertos / total — pode mentir em dataset desbalanceado',
+    'IAM': 'Identity and Access Management · controle de acesso',
+    'KMS': 'Key Management Service · gerencia chaves de criptografia',
+    'Acurácia': 'Acertos / total · pode mentir em dataset desbalanceado',
     'Precision': 'Dos que disse positivo, quantos eram?',
     'Recall': 'Dos positivos reais, quantos peguei?',
     'F1-Score': 'Média harmônica entre precision e recall',
     'Matriz de Confusão': 'Tabela VP/FP/VN/FN das classificações',
-    'ROC / AUC': 'Curva e área sob ela — qualidade global do classificador',
+    'ROC / AUC': 'Curva e área sob ela · qualidade global do classificador',
     'RMSE': 'Raiz do erro quadrático médio (regressão)',
     'MSE': 'Erro quadrático médio (regressão)',
     'R²': 'Variância explicada pelo modelo (regressão)',
     'Overfitting': 'Decora o treino, falha em dados novos',
     'Underfitting': 'Modelo simples demais, erra até no treino',
     'Bias-Variance': 'Tradeoff entre erro sistemático e instabilidade',
-    'Tokens': 'Unidades de texto — preço é por token',
+    'Tokens': 'Unidades de texto · preço é por token',
     'Tokenização': 'Quebrar texto em tokens',
     'Transformer': 'Arquitetura por trás dos LLMs modernos',
     'Multimodal': 'Modelo que processa texto + imagem + áudio',
-    'GAN': 'Generative Adversarial Network — gerador vs discriminador',
+    'GAN': 'Generative Adversarial Network · gerador vs discriminador',
     'Diffusion': 'Modelos que removem ruído pra gerar imagens',
     'NLP': 'Natural Language Processing',
     'Chunking': 'Quebrar docs em pedaços pra RAG',
@@ -383,11 +383,11 @@ setTimeout(() => {
     'Model Monitor': 'Monitora drift do modelo em produção',
     'Drift': 'Modelo piora com o tempo (mundo muda, dados mudam)',
     'A2I (Human-in-the-loop)': 'Workflow de revisão humana em decisões de ML',
-    'Toxicidade': 'Conteúdo ofensivo — bloqueia com Guardrails',
+    'Toxicidade': 'Conteúdo ofensivo · bloqueia com Guardrails',
     'Model Cards': 'Documentação estruturada do modelo (governança)',
     'Transparência': 'Saber como o modelo foi treinado e suas limitações',
-    'VPC Endpoints': 'PrivateLink — tráfego AWS sem internet pública',
-    'CloudTrail': 'Auditoria — quem chamou que API quando',
+    'VPC Endpoints': 'PrivateLink · tráfego AWS sem internet pública',
+    'CloudTrail': 'Auditoria · quem chamou que API quando',
     'CloudWatch': 'Monitoramento e métricas de recursos AWS',
     'Macie': 'Descoberta automatizada de PII em S3',
     'GDPR': 'Lei europeia de proteção de dados',
@@ -395,10 +395,10 @@ setTimeout(() => {
     'S3 Bucket Policy': 'Policy a nível de bucket no S3',
     'Pipeline ML': 'Sequência de passos de um sistema de ML',
     'Feature Engineering': 'Transformar dados brutos em features úteis',
-    'K-NN': 'K-Nearest Neighbors — classifica pelo "vizinho mais parecido"',
+    'K-NN': 'K-Nearest Neighbors · classifica pelo "vizinho mais parecido"',
     'Árvore de Decisão': 'Modelo if/else aprendido dos dados',
     'Cross-validation': 'Validação dividindo o dataset em K dobras',
-    'SLM': 'Small Language Model — menor, mais rápido, mais barato',
+    'SLM': 'Small Language Model · menor, mais rápido, mais barato',
     'Multimodalidade': 'Capacidade de processar múltiplos tipos de dado',
     'Model Evaluation': 'Avaliar qualidade de modelos (Bedrock tem integrado)',
     'ROUGE': 'Métrica pra avaliar sumarização',
@@ -410,8 +410,8 @@ setTimeout(() => {
     'Sustentabilidade': 'Custo ambiental do treinamento e inferência',
     'AWS Config': 'Inventário e mudanças de configuração',
     'Shared Responsibility': 'AWS cuida da infra, cliente cuida dos dados',
-    'HIPAA': 'Lei de saúde dos EUA — privacidade médica',
-    'PII': 'Personally Identifiable Information — dados pessoais'
+    'HIPAA': 'Lei de saúde dos EUA · privacidade médica',
+    'PII': 'Personally Identifiable Information · dados pessoais'
   };
 
   // Aplica title e classe nos elementos .kw
@@ -428,7 +428,7 @@ setTimeout(() => {
 
 
 // ═══════════════════════════════════════
-// 8. FAB "Treinar agora" — esconde no topo, aparece ao rolar
+// 8. FAB "Treinar agora" · esconde no topo, aparece ao rolar
 // ═══════════════════════════════════════
 (function fabBehavior(){
   const fab = document.getElementById('fab-train');

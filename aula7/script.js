@@ -1,4 +1,4 @@
-/* ===== aula 7: Visão, GAN, Rekognition, NLP, Sentimento ===== */
+﻿/* ===== aula 7: Visão, GAN, Rekognition, NLP, Sentimento ===== */
 
 // ============================================================
 // MÓDULO 1: SUB-CAMPOS DE IA
@@ -716,7 +716,7 @@ client = session.client(<span class="s">"rekognition"</span>)`
     sec: 95, easy: 90, rot: 100, aud: 100,
     verdict: `<strong>👍 Recomendado pra produção.</strong>
       <p>Você anexa uma Role no recurso (EC2/Lambda/ECS) com permissão pra Rekognition. O SDK pega credenciais temporárias automaticamente via <strong>Instance Metadata Service</strong>. Rotação a cada hora. Zero key no código.</p>`,
-    code: `<span class="c"># Lambda com Role anexada — não precisa de credentials no código</span>
+    code: `<span class="c"># Lambda com Role anexada · não precisa de credentials no código</span>
 <span class="k">import</span> boto3
 client = boto3.client(<span class="s">"rekognition"</span>)
 res = client.detect_labels(
@@ -1010,7 +1010,7 @@ function clRenderPool() {
     el.dataset.id = p.id;
     el.draggable = true;
     el.textContent = p.emoji;
-    el.title = p.ambiguous ? 'Foto ambígua — desafia o modelo!' : '';
+    el.title = p.ambiguous ? 'Foto ambígua: desafia o modelo!' : '';
     // click to select
     el.addEventListener('click', () => {
       CL.selected = CL.selected === p.id ? null : p.id;
@@ -1248,9 +1248,9 @@ function clResetTrainingUI() {
   document.getElementById('cl-loss-line').setAttribute('points', '');
   document.getElementById('cl-acc-line').setAttribute('points', '');
   document.getElementById('live-epoch').textContent = `0 / ${CL.cfg.epochs}`;
-  document.getElementById('live-loss').textContent = '—';
-  document.getElementById('live-train-acc').textContent = '—';
-  document.getElementById('live-val-acc').textContent = '—';
+  document.getElementById('live-loss').textContent = '···';
+  document.getElementById('live-train-acc').textContent = '···';
+  document.getElementById('live-val-acc').textContent = '···';
   document.getElementById('live-status').textContent = 'Aguardando…';
   document.getElementById('cl-train-log').innerHTML = '';
   document.getElementById('cl-go-step4').disabled = true;
@@ -1534,7 +1534,7 @@ function clRenderConfusion() {
       const pct = rowTotal === 0 ? 0 : (v / rowTotal);
       const isDiagHigh = t === p && pct >= 0.5;
       if (isDiagHigh) cell.classList.add('high');
-      cell.innerHTML = `<div class="heat" style="opacity:${Math.min(0.85, pct * 0.9 + (v > 0 ? 0.1 : 0))}"></div><div class="v">${v}</div><div class="pct">${rowTotal === 0 ? '—' : (pct * 100).toFixed(0) + '%'}</div>`;
+      cell.innerHTML = `<div class="heat" style="opacity:${Math.min(0.85, pct * 0.9 + (v > 0 ? 0.1 : 0))}"></div><div class="v">${v}</div><div class="pct">${rowTotal === 0 ? '···' : (pct * 100).toFixed(0) + '%'}</div>`;
       grid.appendChild(cell);
     });
   });
@@ -1557,14 +1557,14 @@ function clRenderConfusion() {
   const meanRec = (recPerClass.persa + recPerClass.siames + recPerClass.maine) / 3;
   const f1 = (meanPrec + meanRec) === 0 ? 0 : 2 * meanPrec * meanRec / (meanPrec + meanRec);
 
-  document.getElementById('m-acc').textContent = total === 0 ? '—' : (acc * 100).toFixed(0) + '%';
-  document.getElementById('m-prec').textContent = total === 0 ? '—' : (meanPrec * 100).toFixed(0) + '%';
-  document.getElementById('m-rec').textContent = total === 0 ? '—' : (meanRec * 100).toFixed(0) + '%';
-  document.getElementById('m-f1').textContent = total === 0 ? '—' : f1.toFixed(2);
+  document.getElementById('m-acc').textContent = total === 0 ? '···' : (acc * 100).toFixed(0) + '%';
+  document.getElementById('m-prec').textContent = total === 0 ? '···' : (meanPrec * 100).toFixed(0) + '%';
+  document.getElementById('m-rec').textContent = total === 0 ? '···' : (meanRec * 100).toFixed(0) + '%';
+  document.getElementById('m-f1').textContent = total === 0 ? '···' : f1.toFixed(2);
 
   breeds.forEach(b => {
-    document.getElementById(`cw-${b}-p`).textContent = total === 0 ? '—' : (precPerClass[b] * 100).toFixed(0) + '%';
-    document.getElementById(`cw-${b}-r`).textContent = total === 0 ? '—' : (recPerClass[b] * 100).toFixed(0) + '%';
+    document.getElementById(`cw-${b}-p`).textContent = total === 0 ? '···' : (precPerClass[b] * 100).toFixed(0) + '%';
+    document.getElementById(`cw-${b}-r`).textContent = total === 0 ? '···' : (recPerClass[b] * 100).toFixed(0) + '%';
   });
 }
 
@@ -1678,7 +1678,7 @@ function clUpdateTracker() {
   document.getElementById('trk-correct').textContent = CL.tracker.correct;
   document.getElementById('trk-wrong').textContent = CL.tracker.total - CL.tracker.correct;
   const acc = CL.tracker.total === 0 ? 0 : CL.tracker.correct / CL.tracker.total;
-  document.getElementById('trk-acc').textContent = CL.tracker.total === 0 ? '—' : (acc * 100).toFixed(0) + '%';
+  document.getElementById('trk-acc').textContent = CL.tracker.total === 0 ? '···' : (acc * 100).toFixed(0) + '%';
 
   const hist = document.getElementById('cl-history');
   hist.innerHTML = '';

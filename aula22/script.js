@@ -148,7 +148,7 @@
   const TYPES = {
     cloudtrail: {
       title:'📋 AWS CloudTrail',
-      desc:'Registra <strong>chamadas de API</strong> em todos os serviços. Pra IA, é o seu papel-trilha de "quem invocou qual modelo, com qual role, de onde, quando". Não traz o conteúdo do prompt — pra isso você usa logging dedicado de cada serviço.',
+      desc:'Registra <strong>chamadas de API</strong> em todos os serviços. Pra IA, é o seu papel-trilha de "quem invocou qual modelo, com qual role, de onde, quando". Não traz o conteúdo do prompt, pra isso você usa logging dedicado de cada serviço.',
       ops:['<strong>Eventos:</strong> InvokeModel, InvokeEndpoint, CreateTrainingJob, etc.','<strong>Identidade:</strong> userIdentity, sourceIPAddress, userAgent','<strong>Auditoria 90 dias</strong> (default) ou pra sempre se enviar pra S3','Integra com EventBridge pra alertas em tempo real','<strong>Não loga payload</strong> de inferência por padrão'],
       sample:`{\n  "<span class="k">eventName</span>": <span class="v">"InvokeModel"</span>,\n  "<span class="k">eventTime</span>": <span class="v">"2026-05-28T15:42:01Z"</span>,\n  "<span class="k">awsRegion</span>": <span class="v">"sa-east-1"</span>,\n  "<span class="k">userIdentity</span>": {\n    "<span class="k">type</span>": <span class="v">"AssumedRole"</span>,\n    "<span class="k">arn</span>": <span class="v">"arn:aws:sts::1234:assumed-role/AppRole/i-abc"</span>\n  },\n  "<span class="k">requestParameters</span>": {\n    "<span class="k">modelId</span>": <span class="v">"anthropic.claude-3-sonnet"</span>\n  }\n}`
     },
@@ -161,7 +161,7 @@
     datacapture: {
       title:'📦 SageMaker Data Capture (S3)',
       desc:'<strong>Captura input + output completos</strong> das chamadas de inferência e armazena em S3. Vital pra retreinar, debugar regressões e responder auditoria com o payload original.',
-      ops:['Liga no endpoint (real-time, batch, async)','% de sampling (1-100%)','Particionado por data/hora em S3','Input + output juntos no mesmo objeto','<strong>Pode conter PII</strong> — encrypt + access policies'],
+      ops:['Liga no endpoint (real-time, batch, async)','% de sampling (1-100%)','Particionado por data/hora em S3','Input + output juntos no mesmo objeto','<strong>Pode conter PII</strong>: encrypt + access policies'],
       sample:`s3://bucket/capture/cat-finder/2026/05/28/15/\n├── 0001-c92f.jsonl\n│   {\n│     "<span class="k">eventTime</span>": <span class="v">"15:42:01Z"</span>,\n│     "<span class="k">input</span>": <span class="v">"&lt;b64-img-240x240&gt;"</span>,\n│     "<span class="k">output</span>": {\n│       "<span class="k">label</span>": <span class="v">"cat"</span>,\n│       "<span class="k">score</span>": <span class="num">0.94</span>\n│     }\n│   }\n└── 0002-a4f2.jsonl ...`
     },
     monitor: {
@@ -178,7 +178,7 @@
     },
     guardrails: {
       title:'🛡️ Bedrock Guardrails Trace',
-      desc:'Mostra <strong>o que cada filtro do Guardrails detectou</strong> em cada chamada — input e output. Indispensável pra entender por que algo foi bloqueado, ajustar severidade e auditar moderação.',
+      desc:'Mostra <strong>o que cada filtro do Guardrails detectou</strong> em cada chamada (input e output). Indispensável pra entender por que algo foi bloqueado, ajustar severidade e auditar moderação.',
       ops:['Trace por chamada · GUARDRAIL_INTERVENED','Detalhes por filtro: HATE, INSULTS, SEXUAL, VIOLENCE, MISCONDUCT, PROMPT_ATTACK','Mostra denied topics e PII detectada','Vai junto com a resposta da API','Combine com CloudWatch Logs Insights pra dashboards'],
       sample:`{\n  "<span class="k">guardrailIntervened</span>": <span class="num">true</span>,\n  "<span class="k">action</span>": <span class="v">"BLOCKED"</span>,\n  "<span class="k">filters</span>": [\n    {\n      "<span class="k">type</span>": <span class="v">"CONTENT_FILTER"</span>,\n      "<span class="k">subtype</span>": <span class="v">"HATE"</span>,\n      "<span class="k">severity</span>": <span class="v">"HIGH"</span>,\n      "<span class="k">action</span>": <span class="v">"BLOCKED"</span>\n    }\n  ],\n  "<span class="k">replacedOutput</span>": <span class="v">"Não posso ajudar com isso."</span>\n}`
     }
@@ -327,7 +327,7 @@
     instruct: {
       title:'🎓 Instruction Tuning',
       sub:'Ensina o modelo a seguir instruções (supervised fine-tuning)',
-      desc:'Variante de fine-tuning supervisionado em pares <code>(instrução, resposta ideal)</code>. <strong>Não é "ensinar conhecimento novo"</strong> — é ensinar o formato de "siga instruções genericamente". É como o ChatGPT virou "Chat" GPT.',
+      desc:'Variante de fine-tuning supervisionado em pares <code>(instrução, resposta ideal)</code>. <strong>Não é "ensinar conhecimento novo"</strong>, é ensinar o formato de "siga instruções genericamente". É como o ChatGPT virou "Chat" GPT.',
       stats:[
         { label:'Tipo de dado', val:'pares I/O' },
         { label:'Custo relativo', val:'💲💲' },
@@ -409,7 +409,7 @@
     },
     train: {
       title:'4️⃣ Treino',
-      desc:'Roda em GPU gerenciada. SageMaker / Bedrock provisionam, treinam, salvam <strong>checkpoints</strong> em S3 e desligam. Acompanhe loss em CloudWatch — se subir, há algo errado.',
+      desc:'Roda em GPU gerenciada. SageMaker / Bedrock provisionam, treinam, salvam <strong>checkpoints</strong> em S3 e desligam. Acompanhe loss em CloudWatch: se subir, há algo errado.',
       ops:['Mixed precision (FP16) pra economizar memória','Gradient checkpointing pra batch grande','Spot instances (até 90% off) com checkpoint','Parar se val loss não melhorar por N epochs (early stopping)','Salvar todos os checkpoints (pode precisar voltar)']
     },
     eval: {
@@ -573,7 +573,7 @@
 
     if(unstable){
       cls = 'unstable'; tag = '🌪️ Instável (explodiu)';
-      msg = 'Learning rate alto demais — gradient explosion. Loss vira NaN. <strong>Reduza LR</strong> ou adicione gradient clipping.';
+      msg = 'Learning rate alto demais: gradient explosion. Loss vira NaN. <strong>Reduza LR</strong> ou adicione gradient clipping.';
     } else if(finalTrain > 0.7){
       cls = 'under'; tag = '😴 Underfitting';
       msg = 'Loss não desceu. <strong>LR muito baixo</strong>, dropout alto demais ou poucos epochs. Modelo não conseguiu aprender o padrão.';
@@ -673,7 +673,7 @@
     tom: {
       pick:'ft', label:'🛠️ Fine-tuning',
       title:'Tom de voz da marca',
-      reason:'Tom é <strong>comportamento</strong>, não fato. Não dá pra "buscar" tom — tem que estar nos pesos. Fine-tuning com 100-500 exemplos resolve.',
+      reason:'Tom é <strong>comportamento</strong>, não fato. Não dá pra "buscar" tom: tem que estar nos pesos. Fine-tuning com 100-500 exemplos resolve.',
       stack:['Bedrock Custom Models','Dataset de pares (msg cliente → resposta na voz da marca)','LoRA pra economizar','Provisioned Throughput pra rodar'],
       path:['root','form','ft']
     },

@@ -2,7 +2,7 @@
 
 // ============================================================
 // 1) PRÉ-PROCESSAMENTO INTERATIVO
-// Cada célula tem: {raw, fixed, issue} — issue identifica a categoria do problema.
+// Cada célula tem: {raw, fixed, issue}; issue identifica a categoria do problema.
 // Linhas com row.dup === true são duplicatas (somem quando 'duplicates' é resolvido).
 // ============================================================
 (function(){
@@ -264,7 +264,7 @@
 })();
 
 // ============================================================
-// 4) ÉPOCAS — Sessão de estudos do gato aluno (flashcards)
+// 4) ÉPOCAS · Sessão de estudos do gato aluno (flashcards)
 // Cada época = uma passada pelo caderno. Acerto no treino sobe sempre.
 // Acerto no teste sobe, atinge pico ~22, e depois cai (overfit).
 // ============================================================
@@ -495,7 +495,7 @@
 // 7) MAX TOKENS
 // ============================================================
 (function(){
-  const fullText = "Adotar um gato é uma das melhores decisões que você pode tomar. Eles são companheiros incríveis, independentes mas afetuosos. Reduzem o estresse com o ronronar, mantêm a casa livre de roedores, e cada gato tem uma personalidade única — uns são brincalhões, outros são bibliotecas vivas que preferem observar o mundo da janela. Além disso, ao adotar de uma ONG ou abrigo, você dá uma segunda chance a um animal que precisa, e geralmente o gato já vem castrado e vacinado.";
+  const fullText = "Adotar um gato é uma das melhores decisões que você pode tomar. Eles são companheiros incríveis, independentes mas afetuosos. Reduzem o estresse com o ronronar, mantêm a casa livre de roedores, e cada gato tem uma personalidade única: uns são brincalhões, outros são bibliotecas vivas que preferem observar o mundo da janela. Além disso, ao adotar de uma ONG ou abrigo, você dá uma segunda chance a um animal que precisa, e geralmente o gato já vem castrado e vacinado.";
 
   const tokens = fullText.split(/(\s+)/); // keep spaces
   const slider = document.getElementById('maxtok-slider');
@@ -723,18 +723,18 @@
     trainErrEl.textContent = trainErr.toFixed(2);
     testErrEl.textContent = testErr.toFixed(2);
 
-    // verdict — TERMO em destaque na linha grande, explicação concreta embaixo
+    // verdict · TERMO em destaque na linha grande, explicação concreta embaixo
     const verdictSubEl = document.getElementById('fit-verdict-sub');
     let cls = 'good';
     let main = '';
     let sub = '';
     if (d === 1){
       cls = 'under';
-      main = '🐢 UNDERFIT — tá perdido';
+      main = '🐢 UNDERFIT · tá perdido';
       sub = 'A reta passa longe da maioria dos gatos. Erra os do treino E os da prova.';
     } else if (d === 2){
       cls = 'under';
-      main = '🐢 UNDERFIT — aprendeu pouco';
+      main = '🐢 UNDERFIT · aprendeu pouco';
       sub = 'A curva já tenta, mas ainda passa longe demais. Modelo simples demais.';
     } else if (d >= 13){
       cls = 'over';
