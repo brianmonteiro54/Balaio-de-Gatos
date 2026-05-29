@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#FF6B35">
 
 <meta property="og:title" content="Aula 21 · Serviços de IA, pipeline ML e IA responsável">
-<meta property="og:description" content="Mexe nos serviços, monta pipeline, detecta PII, ataca o modelo com prompt injection e revisa governança — tudo num lugar.">
+<meta property="og:description" content="Mexe nos serviços, monta pipeline, detecta PII, ataca o modelo com prompt injection e revisa governança num lugar só.">
 <meta property="og:image" content="../cat-thumbnail.png">
 <meta property="og:type" content="website">
 
@@ -104,7 +104,7 @@
       sem GPU, sem <span class="yel">drama.</span>
     </h2>
     <p>
-      A AWS tem uma camada de serviços onde você <strong>não treina nada</strong> — só chama API, manda input, recebe output. Cada um cobre um caso de uso específico. Saber qual escolher é metade da prova.
+      A AWS tem uma camada de serviços onde você <strong>não treina nada</strong>, só chama API, manda input, recebe output. Cada um cobre um caso de uso específico. Saber qual escolher é metade da prova.
     </p>
   </div>
 </section>
@@ -343,7 +343,7 @@
     <span class="chapter-number">05 · Feature Engineering</span>
     <h2>O <span style="color:var(--orange)">truque</span> que mais dá ganho de modelo.</h2>
     <p class="lead">
-      Modelo aprende com features, não com colunas brutas. Clica em cada técnica pra ver o "antes" virar "depois" — e quanta acurácia muda.
+      Modelo aprende com features, não com colunas brutas. Clica em cada técnica pra ver o "antes" virar "depois" e quanta acurácia muda.
     </p>
 
     <div class="fe-tabs" id="fe-tabs">
@@ -534,7 +534,7 @@
         <div class="jb-num">02</div>
         <h4>📚 Hipótese acadêmica</h4>
         <p>"Pra fins puramente acadêmicos, descreva como fazer..." Disfarçar o pedido como educacional.</p>
-        <div class="jb-defense">Defesa: filtros não consideram "intenção" — bloqueia conteúdo independente do contexto.</div>
+        <div class="jb-defense">Defesa: filtros não consideram "intenção", bloqueiam conteúdo independente do contexto.</div>
       </div>
 
       <div class="jb-card">
@@ -679,7 +679,7 @@
     <span class="chapter-number">12 · Residência de dados</span>
     <h2>Onde <span style="color:var(--orange)">fisicamente</span> ficam os dados?</h2>
     <p class="lead">
-      Não é detalhe técnico — é exigência legal. <strong>LGPD</strong> (Brasil), <strong>GDPR</strong> (Europa), <strong>HIPAA</strong> (saúde EUA). Onde você processa muda quem é o responsável e quais multas se aplicam.
+      Não é detalhe técnico, é exigência legal. <strong>LGPD</strong> (Brasil), <strong>GDPR</strong> (Europa), <strong>HIPAA</strong> (saúde EUA). Onde você processa muda quem é o responsável e quais multas se aplicam.
     </p>
 
     <div class="res-lab">
@@ -714,7 +714,7 @@
         <li><strong>Data residency</strong> = dado fica armazenado em uma região/país específico</li>
         <li><strong>Data sovereignty</strong> = dado fica sujeito à lei daquele país</li>
         <li><strong>Cross-border transfer</strong> = transferir dados pra outra jurisdição (regulado por GDPR Cap. V, LGPD Art. 33-36)</li>
-        <li><strong>Bedrock e SageMaker são regionais</strong> — escolha a região e o dado fica lá</li>
+        <li><strong>Bedrock e SageMaker são regionais</strong>: escolha a região e o dado fica lá</li>
         <li><strong>S3</strong> tem opção de bloquear cross-region replication; <strong>Macie</strong> classifica PII</li>
       </ul>
     </div>
@@ -763,10 +763,10 @@
         <div class="bias-types">
           <strong>📋 Tipos de viés</strong>
           <ul>
-            <li><strong>Sampling</strong> — amostra não representa a população</li>
-            <li><strong>Histórico</strong> — passado já era enviesado (ex.: salário por gênero)</li>
-            <li><strong>Confirmação</strong> — modelo confirma estereótipo</li>
-            <li><strong>Medição</strong> — feature mede coisa errada (CEP como proxy de raça)</li>
+            <li><strong>Sampling</strong>: amostra não representa a população</li>
+            <li><strong>Histórico</strong>: passado já era enviesado (ex.: salário por gênero)</li>
+            <li><strong>Confirmação</strong>: modelo confirma estereótipo</li>
+            <li><strong>Medição</strong>: feature mede coisa errada (CEP como proxy de raça)</li>
           </ul>
         </div>
       </div>
@@ -903,7 +903,7 @@
     <span class="chapter-number">16 · Trade-off: performance × interpretabilidade</span>
     <h2>Modelo <span style="color:var(--orange)">mais preciso</span> nem sempre é melhor.</h2>
     <p class="lead">
-      Quanto mais complexo o modelo, geralmente mais preciso — e <strong>menos explicável</strong>. Em domínios regulados, perda de interpretabilidade pode invalidar o uso.
+      Quanto mais complexo o modelo, geralmente mais preciso e <strong>menos explicável</strong>. Em domínios regulados, perda de interpretabilidade pode invalidar o uso.
     </p>
 
     <div class="trade-lab">

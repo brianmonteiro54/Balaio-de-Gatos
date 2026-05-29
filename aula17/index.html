@@ -95,7 +95,7 @@
       <span class="accent">Security</span> protege o <span class="yel">sistema.</span>
     </h2>
     <p>
-      Em português a gente usa "segurança" pra tudo. Em inglês, no contexto de IA, são duas coisas distintas — e cair na pegadinha custa pontos na prova.
+      Em português a gente usa "segurança" pra tudo. Em inglês, no contexto de IA, são duas coisas distintas, e cair na pegadinha custa pontos na prova.
     </p>
   </div>
 </section>
@@ -127,7 +127,7 @@
 
     <div class="ss-overlap">
       <strong>🔁 Onde se encontram:</strong>
-      Um sistema com <em>safety boa mas security ruim</em> dá respostas certas, mas vaza dados de pessoas. Um sistema com <em>security boa mas safety ruim</em> nunca vaza nada — só que recomenda coisas perigosas. <strong>IA responsável precisa dos dois.</strong>
+      Um sistema com <em>safety boa mas security ruim</em> dá respostas certas, mas vaza dados de pessoas. Um sistema com <em>security boa mas safety ruim</em> nunca vaza nada, só que recomenda coisas perigosas. <strong>IA responsável precisa dos dois.</strong>
     </div>
   </div>
 </section>
@@ -324,7 +324,7 @@
 <section class="chapter alt-bg" id="residencia">
   <div class="container">
     <span class="chapter-number">05 · Residência de dados (data residency)</span>
-    <h2>Onde os dados <span style="color:var(--orange)">moram</span> não é detalhe — é lei.</h2>
+    <h2>Onde os dados <span style="color:var(--orange)">moram</span> não é detalhe, é lei.</h2>
     <p class="lead">
       Cada país tem suas regras: LGPD (Brasil), GDPR (Europa), HIPAA (EUA saúde), PIPEDA (Canadá). Algumas empresas SÃO obrigadas a manter dados dentro de uma jurisdição específica. Clica nas regiões pra ver os requisitos típicos.
     </p>
@@ -373,7 +373,7 @@
       <div class="rt-grid">
         <div class="rt-card">
           <strong>1. Escolha a região certa</strong>
-          <span>Bedrock, S3, SageMaker — todos têm Region em todo recurso. Use a região onde a lei manda.</span>
+          <span>Bedrock, S3, SageMaker: todos têm Region em todo recurso. Use a região onde a lei manda.</span>
         </div>
         <div class="rt-card">
           <strong>2. Bloqueie outras regiões via SCP</strong>
@@ -381,7 +381,7 @@
         </div>
         <div class="rt-card">
           <strong>3. Cuidado com cross-region replication</strong>
-          <span>S3 Cross-Region Replication, Aurora Global Database — ótimos pra DR, péssimos pra residência. Configure com cuidado.</span>
+          <span>S3 Cross-Region Replication, Aurora Global Database: ótimos pra DR, péssimos pra residência. Configure com cuidado.</span>
         </div>
         <div class="rt-card">
           <strong>4. Modelos do Bedrock</strong>
@@ -573,7 +573,7 @@
     <span class="chapter-number">09 · Monitoramento, logging e Model Cards</span>
     <h2>Sem <span style="color:var(--orange)">log</span> e <span style="color:var(--orange)">documentação</span>, é confiança cega.</h2>
     <p class="lead">
-      Quem chamou, quando, com qual prompt, com qual resposta — tudo precisa estar registrado e auditável. Veja a simulação de eventos chegando ao vivo.
+      Quem chamou, quando, com qual prompt, com qual resposta: tudo precisa estar registrado e auditável. Veja a simulação de eventos chegando ao vivo.
     </p>
 
     <div class="monitor-grid">
@@ -661,7 +661,7 @@
       </div>
       <div class="cola-card">
         <h4>👻 Adversarial Prompting</h4>
-        <p>Input projetado pra fazer o modelo <strong>errar de forma específica</strong> — ex.: token sutil que muda classificação. Defesa: testing adversarial, ensemble, monitoramento.</p>
+        <p>Input projetado pra fazer o modelo <strong>errar de forma específica</strong>. Ex.: token sutil que muda classificação. Defesa: testing adversarial, ensemble, monitoramento.</p>
       </div>
       <div class="cola-card">
         <h4>🚪 Bedrock Guardrails</h4>
@@ -700,7 +700,7 @@
     <div class="exam-tips">
       <h3>🎯 Pegadinhas que caem na prova</h3>
       <ul>
-        <li><strong>Safety vs Security</strong> não é mesma coisa — questões de prova testam a distinção.</li>
+        <li><strong>Safety vs Security</strong> não é mesma coisa, questões de prova testam a distinção.</li>
         <li><strong>"Ignore as instruções anteriores e ..."</strong> → <strong>prompt injection</strong>. Mitigação: <strong>Bedrock Guardrails (Prompt attack)</strong>.</li>
         <li><strong>"Filtrar PII em S3"</strong> → <strong>Macie</strong>. <strong>"Filtrar PII em texto"</strong> → <strong>Comprehend</strong>. <strong>"Filtrar PII em entrada/saída de FM"</strong> → <strong>Bedrock Guardrails</strong>.</li>
         <li><strong>Empresa regulada precisa que dados não saiam da Europa</strong> → escolher <strong>Region eu-*</strong> + <strong>SCP</strong> bloqueando outras regiões.</li>

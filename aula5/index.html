@@ -198,7 +198,7 @@
           <strong>A unidade do MSE é estranha:</strong> se você prevê peso em kg, MSE vem em kg². Não dá pra falar "o modelo erra 0,5 kg²" pro chefe, ele te olha torto. Por isso a gente quase sempre passa do MSE pro <strong>RMSE</strong> (próximo capítulo).
         </p>
         <p>
-          Mas o MSE <strong>é a estrela quando você TREINA o modelo</strong>. Muitos algoritmos otimizam MSE internamente porque ele é <em>derivável</em> e <em>convexo</em> — propriedades matemáticas que ajudam o algoritmo a aprender melhor.
+          Mas o MSE <strong>é a estrela quando você TREINA o modelo</strong>. Muitos algoritmos otimizam MSE internamente porque ele é <em>derivável</em> e <em>convexo</em>, propriedades matemáticas que ajudam o algoritmo a aprender melhor.
         </p>
         <div class="bizz">
           <strong>Quando usar?</strong> Quando você <em>não tolera erros gigantes</em>. Se o modelo prevê tempo de chegada de Uber: errar 5 min é ruim, errar 50 min é catastrófico. MSE/RMSE penalizam isso direito. MAE não percebe a diferença com a mesma intensidade.
@@ -280,7 +280,7 @@
           MAE e RMSE <strong>respondem a perguntas diferentes</strong>. MAE responde "<em>em média, quanto erro?</em>". RMSE responde "<em>quão volátil é meu erro?</em>". Um modelo pode ter MAE baixo mas RMSE alto: a maioria das previsões boas, mas <strong>alguns erros enormes</strong> escondidos.
         </p>
         <p>
-          <strong>Regra prática:</strong> se MAE e RMSE estão próximos, seus erros são <em>todos parecidos</em> — sem outliers. Se RMSE é <em>bem maior</em> que MAE, você tem <strong>casos catastróficos escondidos</strong> que merecem investigação.
+          <strong>Regra prática:</strong> se MAE e RMSE estão próximos, seus erros são <em>todos parecidos</em>, sem outliers. Se RMSE é <em>bem maior</em> que MAE, você tem <strong>casos catastróficos escondidos</strong> que merecem investigação.
         </p>
         <p>
           <strong>Lê assim:</strong> "RMSE de 0,52 kg" = "o erro típico fica em torno de ±0,52 kg, mas com inclinação a punir mais os pontos longe da média".
@@ -678,7 +678,7 @@
           Servir um modelo é um problema diferente de treinar. Em treino, você roda gradient descent, atualiza pesos, faz forward + backward. Em <strong>inferência</strong> é só <em>"forward"</em>: input entra, predição sai. Bilhões de vezes por dia, com <strong>latência baixa</strong>.
         </p>
         <p>
-          A AWS desenhou o <strong>Inferentia</strong> com isso em mente. Ele tem alto <strong>throughput</strong> (muitas predições/segundo) e baixa latência por inferência. As instâncias EC2 são da família <strong>Inf1</strong> (geração 1) e <strong>Inf2</strong> (geração 2, com mais memória — boa pra LLMs grandes).
+          A AWS desenhou o <strong>Inferentia</strong> com isso em mente. Ele tem alto <strong>throughput</strong> (muitas predições/segundo) e baixa latência por inferência. As instâncias EC2 são da família <strong>Inf1</strong> (geração 1) e <strong>Inf2</strong> (geração 2, com mais memória, boa pra LLMs grandes).
         </p>
         <p>
           <strong>O grande apelo:</strong> custo por inferência muito menor que GPU equivalente. Em escala (milhões/bilhões de requests/mês), a economia vira números absurdos.
