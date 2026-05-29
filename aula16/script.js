@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    AULA 16 · CONFIANÇA, EXPLICABILIDADE E SEGURANÇA EM IA
    - A2I flow (clicar nó → detalhe)
    - Explicabilidade (SHAP-like) com sliders
@@ -12,32 +12,32 @@
 
 
 /* ═══════════════════════════════════════
-   1. A2I FLOW — clicar nó mostra detalhe
+   1. A2I FLOW, clicar nó mostra detalhe
    ═══════════════════════════════════════ */
 (function a2iFlow(){
   const NODES = {
     input: {
-      title:'📸 Input — o gato chega',
-      body:'A aplicação envia um dado pra ser classificado: foto, documento, áudio, transação. O A2I não interfere ainda — é o ponto de entrada normal do sistema.'
+      title:'📸 Input, o gato chega',
+      body:'A aplicação envia um dado pra ser classificado: foto, documento, áudio, transação. O A2I não interfere ainda, é o ponto de entrada normal do sistema.'
     },
     model: {
-      title:'🤖 Modelo — Rekognition, SageMaker ou Bedrock',
+      title:'🤖 Modelo, Rekognition, SageMaker ou Bedrock',
       body:'O modelo processa a entrada e devolve uma predição com um <strong>score de confiança</strong>. Esse score é a chave: ele que vai decidir se a resposta é confiável o bastante pra ir direto pro usuário.'
     },
     confidence: {
-      title:'📊 Decisão — confiança alta?',
-      body:'Você define o <strong>threshold</strong> (por exemplo, 0.85). Acima do threshold = aprovado direto. Abaixo = entra na fila de revisão humana. Esse threshold é o parâmetro mais importante do A2I — calibre com cuidado.'
+      title:'📊 Decisão, confiança alta?',
+      body:'Você define o <strong>threshold</strong> (por exemplo, 0.85). Acima do threshold = aprovado direto. Abaixo = entra na fila de revisão humana. Esse threshold é o parâmetro mais importante do A2I, calibre com cuidado.'
     },
     auto: {
       title:'✅ Aprova automático',
       body:'Resposta vai direto pro app. Latência baixa, custo zero de revisão. Use quando o modelo está muito confiante OU quando o erro é barato (ex.: recomendar um filme).'
     },
     human: {
-      title:'🧑‍⚖️ Revisão humana — workforce',
+      title:'🧑‍⚖️ Revisão humana, workforce',
       body:'O caso vai pra um pool humano que pode ser: <strong>seu time interno</strong> (Private Workforce), <strong>um vendor da AWS Marketplace</strong>, ou <strong>Mechanical Turk</strong>. O humano vê o caso, corrige se preciso e devolve a decisão.'
     },
     feedback: {
-      title:'🔄 Feedback loop — fechando o ciclo',
+      title:'🔄 Feedback loop, fechando o ciclo',
       body:'A correção humana volta como <strong>dado rotulado de qualidade</strong>. Esses casos viram material pra retreino do modelo, que com o tempo precisa cada vez menos de revisão. É assim que o sistema aprende.'
     }
   };
@@ -64,7 +64,7 @@
 
 
 /* ═══════════════════════════════════════
-   2. SHAP-LIKE — explicabilidade interativa
+   2. SHAP-LIKE, explicabilidade interativa
    ═══════════════════════════════════════ */
 (function shapViz(){
   const els = {
@@ -130,7 +130,7 @@
     els.prob.style.color = pct >= 70 ? '#7FCB7F' : pct >= 40 ? 'var(--yellow)' : '#FF8B6B';
     els.probLabel.textContent = pct >= 70 ? 'alta probabilidade de adoção' :
                                 pct >= 40 ? 'probabilidade moderada' :
-                                'baixa probabilidade — necessita atenção';
+                                'baixa probabilidade, necessita atenção';
 
     // bars
     const features = [
@@ -213,7 +213,7 @@
         'Acurácia depende muito da qualidade da digitalização',
         'Manuscritos têm performance significativamente menor',
         'Idiomas cobertos são limitados (principalmente inglês, espanhol, francês, italiano, alemão, português)',
-        'Não interpreta o conteúdo — apenas extrai. Pra entender, precisa de outro modelo',
+        'Não interpreta o conteúdo, apenas extrai. Pra entender, precisa de outro modelo',
         'Tabelas complexas com células mescladas ainda são desafiadoras'
       ]
     },
@@ -231,7 +231,7 @@
         'Performance varia com sotaques, ruído de fundo e microfones de baixa qualidade',
         'Falantes simultâneos confundem a diarização',
         'Idiomas com menos dados de treino têm acurácia menor',
-        'Não interpreta semântica — só transcreve',
+        'Não interpreta semântica, só transcreve',
         'Para conteúdo médico ou financeiro, use a versão especializada (Transcribe Medical, Call Analytics)'
       ]
     },
@@ -246,7 +246,7 @@
         'Classificação personalizada com Comprehend Custom'
       ],
       limit:[
-        'Detecção de PII pode ter falsos positivos/negativos — não é 100%',
+        'Detecção de PII pode ter falsos positivos/negativos, não é 100%',
         'Modelos genéricos podem não pegar nuances de domínio (jurídico, médico)',
         'Sarcasmo e ironia confundem a análise de sentimento',
         'Línguas com menor cobertura têm performance reduzida',
@@ -264,7 +264,7 @@
         'Disponível com Provisioned Throughput pra produção'
       ],
       limit:[
-        'Risco de alucinação — sempre valide outputs factuais',
+        'Risco de alucinação, sempre valide outputs factuais',
         'Não-determinístico mesmo com temperature baixa',
         'Conhecimento limitado à data de treinamento',
         'Pode reproduzir vieses presentes nos dados de treino',
@@ -342,14 +342,14 @@
     {
       max:85,
       name:'Deep Neural Network',
-      desc:'Milhões de parâmetros, performance forte em imagem, texto e áudio. Caixa preta — pra explicar use SHAP/LIME ou SageMaker Clarify. Cuidado em decisões reguladas.',
+      desc:'Milhões de parâmetros, performance forte em imagem, texto e áudio. Caixa preta, pra explicar use SHAP/LIME ou SageMaker Clarify. Cuidado em decisões reguladas.',
       int:'★★☆☆☆', perf:'★★★★★',
       cx:430, cy:80
     },
     {
       max:100,
       name:'LLM / Foundation Model',
-      desc:'Bilhões de parâmetros. Capacidade impressionante em linguagem e raciocínio. Mas explicabilidade é prática emergente — não há SHAP fácil. Use Bedrock Model Evaluation, prompt logging e human review.',
+      desc:'Bilhões de parâmetros. Capacidade impressionante em linguagem e raciocínio. Mas explicabilidade é prática emergente, não há SHAP fácil. Use Bedrock Model Evaluation, prompt logging e human review.',
       int:'★☆☆☆☆', perf:'★★★★★',
       cx:540, cy:55
     }
@@ -380,7 +380,7 @@
 
 
 /* ═══════════════════════════════════════
-   5. APIs DE MODERAÇÃO — picker
+   5. APIs DE MODERAÇÃO, picker
    ═══════════════════════════════════════ */
 (function moderation(){
   const MODS = {
@@ -390,12 +390,12 @@
       desc:'Filtro nativo do Bedrock que aplica regras <strong>antes do prompt</strong> e <strong>antes da resposta</strong>. Bloqueia tópicos proibidos configuráveis, palavrões, PII (CPF, telefone, e-mail), jailbreaks comuns. Funciona com qualquer FM disponível no Bedrock.',
       detects:[
         'Tópicos sensíveis configuráveis (ex.: aconselhamento médico, financeiro)',
-        'PII (CPF, e-mail, telefone, endereço — redacted ou bloqueado)',
+        'PII (CPF, e-mail, telefone, endereço, redacted ou bloqueado)',
         'Toxicidade (ódio, insultos, conteúdo sexual)',
         'Tentativas de jailbreak ("ignore previous instructions...")',
         'Palavras e expressões customizadas via blocklist'
       ],
-      example:'Configura uma vez no console, aplica em <strong>todas as chamadas Bedrock</strong> daquele guardrail. Cliente final nem vê o que foi bloqueado — mensagem padrão é retornada.'
+      example:'Configura uma vez no console, aplica em <strong>todas as chamadas Bedrock</strong> daquele guardrail. Cliente final nem vê o que foi bloqueado, mensagem padrão é retornada.'
     },
     'text-user': {
       api:'Amazon Comprehend',
@@ -480,7 +480,7 @@
 
 
 /* ═══════════════════════════════════════
-   6. SCOPING MATRIX — 5 escopos
+   6. SCOPING MATRIX, 5 escopos
    ═══════════════════════════════════════ */
 (function scopingMatrix(){
   const SCOPES = {
@@ -603,7 +603,7 @@
 
 
 /* ═══════════════════════════════════════
-   7. LINHAGEM — citações que se highlight
+   7. LINHAGEM, citações que se highlight
    ═══════════════════════════════════════ */
 (function lineage(){
   const cites = document.querySelectorAll('.cite');
@@ -636,7 +636,7 @@
 
 
 /* ═══════════════════════════════════════
-   8. CHECKLIST DE DADOS SEGUROS — termômetro
+   8. CHECKLIST DE DADOS SEGUROS, termômetro
    ═══════════════════════════════════════ */
 (function checklist(){
   const list = document.getElementById('checklist');
@@ -657,13 +657,13 @@
     if(pct === 0){
       label = 'Marque os itens que já aplica';
     } else if(pct < 35){
-      label = `<strong style="color:var(--coral)">🌱 Começo</strong> — ${pct}% da maturidade. Pega o básico (KMS, IAM, CloudTrail) primeiro.`;
+      label = `<strong style="color:var(--coral)">🌱 Começo</strong>, ${pct}% da maturidade. Pega o básico (KMS, IAM, CloudTrail) primeiro.`;
     } else if(pct < 70){
-      label = `<strong style="color:#C28A00">🌳 Crescendo</strong> — ${pct}% da maturidade. Já tem fundação, agora foca em PII e linhagem.`;
+      label = `<strong style="color:#C28A00">🌳 Crescendo</strong>, ${pct}% da maturidade. Já tem fundação, agora foca em PII e linhagem.`;
     } else if(pct < 100){
-      label = `<strong style="color:var(--olive)">🌲 Quase maduro</strong> — ${pct}% da maturidade. Faltam detalhes pra estar pronto pra qualquer auditoria.`;
+      label = `<strong style="color:var(--olive)">🌲 Quase maduro</strong>, ${pct}% da maturidade. Faltam detalhes pra estar pronto pra qualquer auditoria.`;
     } else {
-      label = `<strong style="color:var(--olive)">🌲 Maduro</strong> — 100%. Sua engenharia de dados pra IA está sólida. Só não relaxa.`;
+      label = `<strong style="color:var(--olive)">🌲 Maduro</strong>, 100%. Sua engenharia de dados pra IA está sólida. Só não relaxa.`;
     }
     counter.innerHTML = label;
   }

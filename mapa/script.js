@@ -141,7 +141,7 @@ setTimeout(() => {
       weakestPct = pct;
       weakestD = d;
     }
-    const pctText = pct === null ? '—' : pct + '%';
+    const pctText = pct === null ? '-' : pct + '%';
     html += `<a class="ps-dom" href="v2.html?d=${d}" title="Domínio ${d}: ${data.c}/${data.a} (${pctText}) · clica pra praticar">
       <div class="ps-dom-bar"><div class="fill" style="width:${pct||0}%; background:${dColors[d]}"></div></div>
       <div class="ps-dom-meta"><span>D${d}</span><span class="pct">${pctText}</span></div>
@@ -174,7 +174,7 @@ setTimeout(() => {
       q: 'Quanto tempo você tem até a prova?',
       opts: [
         { v: 'lots',  label: '🌱 3+ semanas', tip: 'Caminho completo' },
-        { v: 'some',  label: '⏳ 1–2 semanas', tip: 'Foco no que pesa' },
+        { v: 'some',  label: '⏳ 1,2 semanas', tip: 'Foco no que pesa' },
         { v: 'short', label: '🔥 Menos de uma semana',  tip: 'Modo véspera' }
       ]
     },

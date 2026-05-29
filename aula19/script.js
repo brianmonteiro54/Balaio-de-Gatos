@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    AULA 19 · REVISÃO GERAL INTERATIVA
    - Hierarquia IA/ML/DL/GenAI (boneca russa clicável)
    - Quiz de tipos de aprendizado (6 cenários)
@@ -762,7 +762,7 @@
     },
     latencia: {
       pick:'SLM', cls:'slm',
-      desc:'Latência crítica (&lt;200ms) é incompatível com LLM grande, que tem latência base de 500–2000ms. <strong>SLM responde em ~100ms</strong>.',
+      desc:'Latência crítica (&lt;200ms) é incompatível com LLM grande, que tem latência base de 500,2000ms. <strong>SLM responde em ~100ms</strong>.',
       examples:['Claude Haiku','Llama 8B','Mistral 7B']
     },
     custo: {
