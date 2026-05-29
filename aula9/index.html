@@ -165,7 +165,7 @@
           <h3 id="tx-explain-title">🔤 DetectDocumentText</h3>
           <p id="tx-explain-desc"></p>
           <div class="tx-tip" id="tx-tip">
-            💡 <strong>Dica:</strong> use <code>DetectDocumentText</code> pra OCR puro. Se você precisa de <em>estrutura</em> (formulário, tabela, nota fiscal, RG), use as variantes <code>Analyze*</code> — que já entendem o tipo de documento.
+            💡 <strong>Dica:</strong> use <code>DetectDocumentText</code> pra OCR puro. Se você precisa de <em>estrutura</em> (formulário, tabela, nota fiscal, RG), use as variantes <code>Analyze*</code>, que já entendem o tipo de documento.
           </div>
         </div>
       </div>
@@ -264,7 +264,7 @@
     <span class="chapter-number">03 · Amazon Translate</span>
     <h2>O <span style="color:var(--orange)">tradutor neural</span> da AWS · 75+ idiomas, 5500 pares.</h2>
     <p class="lead">
-      Translate é tradução automática neural. Não é Google Translate da empresa do Bezos — é treinado em corpora gigantes, suporta <strong>terminologia customizada</strong> ("Bigode" sempre vira "Mustache", não "Whisker"), bate em batch e em real-time. <strong>Digita um texto na esquerda</strong>, escolhe os idiomas, vê a tradução acontecer.
+      Translate é tradução automática neural. Não é Google Translate da empresa do Bezos. É treinado em corpora gigantes, suporta <strong>terminologia customizada</strong> ("Bigode" sempre vira "Mustache", não "Whisker"), bate em batch e em real-time. <strong>Digita um texto na esquerda</strong>, escolhe os idiomas, vê a tradução acontecer.
     </p>
 
     <div class="tr-block">
@@ -331,7 +331,7 @@
           <div class="tr-side-area">
             <div class="tr-side-head">
               <span id="tr-to-name">🇧🇷 Português</span>
-              <span class="tr-conf" id="tr-conf">— · neural</span>
+              <span class="tr-conf" id="tr-conf">··· · neural</span>
             </div>
             <div id="tr-output" class="tr-output"></div>
             <div class="tr-out-actions">
@@ -455,12 +455,12 @@
           <div class="tlab-cost-grid">
             <div class="tlab-cost-card" id="tlab-rt-cost">
               <span class="tlab-cost-name">⚡ Real-time</span>
-              <span class="tlab-cost-v" id="tlab-rt-v">—</span>
+              <span class="tlab-cost-v" id="tlab-rt-v">···</span>
               <span class="tlab-cost-rate">~$15 / 1M chars</span>
             </div>
             <div class="tlab-cost-card" id="tlab-bt-cost">
               <span class="tlab-cost-name">📦 Batch</span>
-              <span class="tlab-cost-v" id="tlab-bt-v">—</span>
+              <span class="tlab-cost-v" id="tlab-bt-v">···</span>
               <span class="tlab-cost-rate">~$15 / 1M chars + S3</span>
             </div>
           </div>
@@ -657,7 +657,7 @@
               <span class="fr-thermo-zone deny" style="flex: 300"><span>DENY</span></span>
               <div class="fr-thermo-marker" id="fr-thermo-marker" style="left: 0%;">
                 <span class="fr-marker-pin">▼</span>
-                <span class="fr-marker-num" id="fr-marker-num">—</span>
+                <span class="fr-marker-num" id="fr-marker-num">···</span>
               </div>
             </div>
             <div class="fr-thermo-axis">
@@ -696,7 +696,7 @@
         Você sobe um <strong>Event Dataset</strong> (CSV com transações histórias rotuladas como FRAUD/LEGIT). O Fraud Detector treina um modelo XGBoost-like + features da Amazon (reputação de IP, padrões globais). Depois você define <strong>regras</strong> em cima do score: "se score &gt; 700 → DENY, se score entre 300 e 700 → REVIEW".
       </p>
       <p class="small">
-        Tipos de evento prontos: <strong>Online Fraud</strong> (e-commerce), <strong>Transaction Fraud</strong> (pagamento), <strong>Account Takeover</strong> (login suspeito). Você não precisa de PhD em ML pra isso — é serviço gerenciado.
+        Tipos de evento prontos: <strong>Online Fraud</strong> (e-commerce), <strong>Transaction Fraud</strong> (pagamento), <strong>Account Takeover</strong> (login suspeito). Você não precisa de PhD em ML pra isso, é serviço gerenciado.
       </p>
     </div>
   </div>
@@ -776,8 +776,8 @@
         <p class="oth-desc">Mesmo motor da Alexa. Define <strong>intents</strong> (intenções: agendar, cancelar, consultar) e <strong>slots</strong> (variáveis pra preencher). Texto ou voz.</p>
         <div class="oth-demo lex-demo">
           <div class="lex-state-bar" id="lex-state-bar">
-            <span class="lex-state-pill" id="lex-state-intent">intent: <strong>—</strong></span>
-            <span class="lex-state-pill" id="lex-state-slot">slot: <strong>—</strong></span>
+            <span class="lex-state-pill" id="lex-state-intent">intent: <strong>···</strong></span>
+            <span class="lex-state-pill" id="lex-state-slot">slot: <strong>···</strong></span>
           </div>
           <div class="lex-chat" id="lex-chat"></div>
           <div class="lex-input-wrap">

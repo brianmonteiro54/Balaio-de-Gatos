@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Balaio de Gatos · Aula 19: Revisão geral — IA, ML, GenAI, prompts e RAG</title>
+<title>Balaio de Gatos · Aula 19: Revisão geral · IA, ML, GenAI, prompts e RAG</title>
 
 <link rel="icon" type="image/png" href="../favicon.png">
 <link rel="shortcut icon" href="../favicon.png">
@@ -153,7 +153,7 @@
             <text x="160" y="155" text-anchor="middle" font-family="Caprasimo" font-size="14" fill="#FBF3E2" font-weight="700" pointer-events="none">GenAI</text>
             <text x="160" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="9"  fill="#FBF3E2" pointer-events="none">(LLMs · diffusion)</text>
 
-            <!-- emojis dos itens classificados — preenchidos pelo JS -->
+            <!-- emojis dos itens classificados, preenchidos pelo JS -->
             <g id="cl-diagram-items"></g>
           </svg>
           <div class="cl-diagram-legend">
@@ -317,7 +317,7 @@
     <span class="chapter-number">04 · Over × Underfitting</span>
     <h2>Modelo <span style="color:var(--orange)">simples demais</span> ou <span style="color:var(--orange)">complexo demais</span>?</h2>
     <p class="lead">
-      Mexe no slider de complexidade e veja as duas linhas (erro de treino e erro de teste) responderem. O ponto doce é onde o erro de teste é mínimo — nem antes (underfit) nem depois (overfit).
+      Mexe no slider de complexidade e veja as duas linhas (erro de treino e erro de teste) responderem. O ponto doce é onde o erro de teste é mínimo, nem antes (underfit) nem depois (overfit).
     </p>
 
     <div class="fit-lab">
@@ -452,7 +452,7 @@
     <div class="token-lab">
       <div class="token-input">
         <label>Texto pra tokenizar</label>
-        <textarea id="token-text" rows="4">O gato laranja dormiu na janela. Tokenização não é mágica — é só quebrar texto em pedacinhos que o modelo entende.</textarea>
+        <textarea id="token-text" rows="4">O gato laranja dormiu na janela. Tokenização não é mágica, é só quebrar texto em pedacinhos que o modelo entende.</textarea>
       </div>
 
       <div class="token-output">
@@ -499,7 +499,7 @@
     <span class="chapter-number">07 · Janela de contexto (context window)</span>
     <h2>O que <span style="color:var(--orange)">cabe</span> no prompt?</h2>
     <p class="lead">
-      Cada modelo tem uma janela máxima — o limite total de tokens que entra (input + system prompt + saída). Passou disso, o que não cabe é <strong>cortado</strong>. Veja diferentes modelos lado a lado.
+      Cada modelo tem uma janela máxima, o limite total de tokens que entra (input + system prompt + saída). Passou disso, o que não cabe é <strong>cortado</strong>. Veja diferentes modelos lado a lado.
     </p>
 
     <div class="window-lab">
@@ -584,9 +584,9 @@
         <div class="he-response">
           <strong>Resposta alucinada:</strong>
           <ol>
-            <li>"Backpropagation Revisited" (2018) — DOI: 10.1234/<span class="invented">567890</span> ❌</li>
-            <li>"Capsule Networks for Vision" (2019) — DOI: 10.5678/<span class="invented">111213</span> ❌</li>
-            <li>"Distributed Representations" (2020) — DOI: 10.9876/<span class="invented">141516</span> ❌</li>
+            <li>"Backpropagation Revisited" (2018) · DOI: 10.1234/<span class="invented">567890</span> ❌</li>
+            <li>"Capsule Networks for Vision" (2019) · DOI: 10.5678/<span class="invented">111213</span> ❌</li>
+            <li>"Distributed Representations" (2020) · DOI: 10.9876/<span class="invented">141516</span> ❌</li>
           </ol>
           <p class="he-note">⚠️ Os papers <em>parecem</em> plausíveis mas os DOIs são inventados. O modelo nunca consultou nenhuma base. Cuidado em domínio jurídico, médico, acadêmico.</p>
         </div>
@@ -882,7 +882,7 @@
     <span class="chapter-number">14 · O que é RAG</span>
     <h2>Sem RAG <span style="color:var(--orange)">vs</span> com RAG.</h2>
     <p class="lead">
-      Mesmo modelo. Mesma pergunta. Compare a resposta. RAG <strong>recupera</strong> trechos relevantes da sua base e <strong>injeta</strong> no prompt antes do FM responder. Não treina o modelo — só dá contexto.
+      Mesmo modelo. Mesma pergunta. Compare a resposta. RAG <strong>recupera</strong> trechos relevantes da sua base e <strong>injeta</strong> no prompt antes do FM responder. Não treina o modelo, só dá contexto.
     </p>
 
     <div class="rag-compare">

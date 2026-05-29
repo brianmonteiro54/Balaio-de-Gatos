@@ -104,7 +104,7 @@
     <span class="chapter-number">01 · Pré-processamento</span>
     <h2>Dados <span style="color:var(--orange)">sujos</span> entram. Modelo <span style="color:var(--orange)">desorientado</span> sai.</h2>
     <p class="lead">
-      Pré-processamento é o passo onde a gente <strong>limpa, padroniza e arruma</strong> os dados antes de treinar. Valor faltando, duplicados, formato bagunçado, escalas diferentes — tudo precisa ser tratado. <strong>Clica nos botões abaixo</strong> pra ver cada problema sendo resolvido um por um:
+      Pré-processamento é o passo onde a gente <strong>limpa, padroniza e arruma</strong> os dados antes de treinar. Valor faltando, duplicados, formato bagunçado, escalas diferentes: tudo precisa ser tratado. <strong>Clica nos botões abaixo</strong> pra ver cada problema sendo resolvido um por um:
     </p>
 
     <div class="preproc-wrap">
@@ -418,7 +418,7 @@
         Quando tu tem <strong>poucos dados</strong>, e <strong>coletar mais é caro</strong>: imagens médicas raras, espécies em extinção, defeitos de fábrica que aparecem 1 em 10 mil. Augmentation multiplica o que tem.
       </p>
       <p style="font-size:14.5px;color:var(--ink-soft)">
-        Funciona muito bem em <strong>visão computacional</strong> (rotacionar uma foto de gato e ainda é gato) e em <strong>áudio</strong> (acelerar, abafar). Em texto e dados tabulares é mais delicado — "rotacionar uma frase" não faz sentido literal, mas existem técnicas como <em>back-translation</em> e <em>synonym replacement</em>.
+        Funciona muito bem em <strong>visão computacional</strong> (rotacionar uma foto de gato e ainda é gato) e em <strong>áudio</strong> (acelerar, abafar). Em texto e dados tabulares é mais delicado: "rotacionar uma frase" não faz sentido literal, mas existem técnicas como <em>back-translation</em> e <em>synonym replacement</em>.
       </p>
     </div>
   </div>
@@ -781,14 +781,14 @@
           </div>
 
           <div class="epoch-deck">
-            <div class="epoch-deck-label">📓 Caderno de exercícios — TREINO (já viu)</div>
+            <div class="epoch-deck-label">📓 Caderno de exercícios · TREINO (já viu)</div>
             <div class="epoch-cards" id="epoch-train-cards"></div>
             <div class="epoch-meter-label"><span>Acerto no treino</span> <span class="pct" id="epoch-train-pct">17%</span></div>
             <div class="epoch-meter-bar"><div class="epoch-meter-fill" id="epoch-train-fill" style="width:17%"></div></div>
           </div>
 
           <div class="epoch-deck">
-            <div class="epoch-deck-label">📝 Prova surpresa — TESTE (nunca viu)</div>
+            <div class="epoch-deck-label">📝 Prova surpresa · TESTE (nunca viu)</div>
             <div class="epoch-cards" id="epoch-test-cards"></div>
             <div class="epoch-meter-label"><span>Acerto na prova</span> <span class="pct" id="epoch-test-pct">17%</span></div>
             <div class="epoch-meter-bar"><div class="epoch-meter-fill" id="epoch-test-fill" style="width:17%"></div></div>
@@ -949,7 +949,7 @@
     <span class="chapter-number">11 · Máximo de tokens (Max Tokens)</span>
     <h2>Quantas <em style="color:var(--orange);font-style:normal">palavras</em> a resposta pode ter?</h2>
     <p class="lead">
-      <strong>Max tokens</strong> é o teto de quantos "pedacinhos de palavra" (tokens) o modelo pode gerar na resposta. Não é o tamanho exato — é o limite máximo. <strong>Importa</strong> porque: (1) <em>controle de custo</em> (tu paga por token), (2) <em>controle de latência</em> (resposta longa demora), (3) <em>controle de comportamento</em> (forçar respostas curtas).
+      <strong>Max tokens</strong> é o teto de quantos "pedacinhos de palavra" (tokens) o modelo pode gerar na resposta. Não é o tamanho exato, é o limite máximo. <strong>Importa</strong> porque: (1) <em>controle de custo</em> (tu paga por token), (2) <em>controle de latência</em> (resposta longa demora), (3) <em>controle de comportamento</em> (forçar respostas curtas).
     </p>
 
     <div class="hp-block">
@@ -1013,7 +1013,7 @@
     <div class="tuning-types">
       <div class="tuning-mini">
         <h5>🟦 Grid Search</h5>
-        <p>Testa <strong>todas as combinações</strong> de uma grade pré-definida. Exaustivo. Caro. Garantido — mas explode em custo se você tem muitos hiperparâmetros.</p>
+        <p>Testa <strong>todas as combinações</strong> de uma grade pré-definida. Exaustivo. Caro. Garantido, mas explode em custo se você tem muitos hiperparâmetros.</p>
         <span class="tag-mini">força bruta</span>
       </div>
       <div class="tuning-mini">
@@ -1065,7 +1065,7 @@
     <span class="chapter-number">13 · Overfitting &amp; Underfitting</span>
     <h2>Quando o modelo <em style="color:var(--orange);font-style:normal">acerta demais</em> ou <em style="color:var(--orange);font-style:normal">acerta de menos</em>.</h2>
     <p class="lead">
-      Imagine três alunos estudando pra prova. <strong>🐢 O preguiçoso</strong> nem leu a matéria — chuta tudo na prova oficial <em>e</em> em qualquer prova nova (<strong>underfit</strong>). <strong>🐱 O esperto</strong> entendeu os conceitos — vai bem em qualquer questão. <strong>🤖 O decoreba</strong> decorou a lista de exercícios palavra por palavra — gabarita a lista, mas trava em questões reformuladas (<strong>overfit</strong>). <strong>Clica nos três botões abaixo</strong> e veja a "curva de estudo" de cada um:
+      Imagine três alunos estudando pra prova. <strong>🐢 O preguiçoso</strong> nem leu a matéria, chuta tudo na prova oficial <em>e</em> em qualquer prova nova (<strong>underfit</strong>). <strong>🐱 O esperto</strong> entendeu os conceitos e vai bem em qualquer questão. <strong>🤖 O decoreba</strong> decorou a lista de exercícios palavra por palavra, gabarita a lista, mas trava em questões reformuladas (<strong>overfit</strong>). <strong>Clica nos três botões abaixo</strong> e veja a "curva de estudo" de cada um:
     </p>
 
     <div class="fit-wrap">

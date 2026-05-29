@@ -142,7 +142,7 @@
       <div class="kn-tool-stat">
         <span class="kn-stat-ic">⚡</span>
         <div>
-          <strong id="kn-stat-latency">—</strong>
+          <strong id="kn-stat-latency">···</strong>
           <span>latência último query</span>
         </div>
       </div>
@@ -152,7 +152,7 @@
     <div class="kn-query-card">
       <div class="kn-search-wrap">
         <span class="kn-search-icon">🔍</span>
-        <input type="text" id="kn-input" placeholder="Pergunte em linguagem natural — ex: 'quanto tempo demora pra dar férias?'" value="quem é o líder do time de gatos e quem reporta pra ele?">
+        <input type="text" id="kn-input" placeholder="Pergunte em linguagem natural. Ex: 'quanto tempo demora pra dar férias?'" value="quem é o líder do time de gatos e quem reporta pra ele?">
         <button class="kn-go" id="kn-go">▶️ Search</button>
       </div>
 
@@ -250,7 +250,7 @@
           <div class="kn-faq"><strong>Posso vender meus dias de férias?</strong><span>Sim, até 10 dias (1/3 do período).</span></div>
           <div class="kn-faq"><strong>Quanto é o vale-refeição?</strong><span>R$ 40 por dia útil trabalhado.</span></div>
           <div class="kn-faq"><strong>Onde fica o escritório de SP?</strong><span>Av. Paulista, 1500 - 8º andar.</span></div>
-          <div class="kn-faq"><strong>Como pedir reembolso de academia?</strong><span>Use o Gympass — está incluso no pacote.</span></div>
+          <div class="kn-faq"><strong>Como pedir reembolso de academia?</strong><span>Use o Gympass: está incluso no pacote.</span></div>
         </div>
       </div>
 
@@ -421,11 +421,11 @@ resp = client.query(
             </div>
             <div class="dc-q-item">
               <span class="ic">🕳️</span>
-              <div><strong>Missing values</strong><p>Campos NULL — inputar média, mediana, ou descartar</p></div>
+              <div><strong>Missing values</strong><p>Campos NULL: inputar média, mediana, ou descartar</p></div>
             </div>
             <div class="dc-q-item">
               <span class="ic">📏</span>
-              <div><strong>Schema drift</strong><p>Source mudou coluna sem avisar — alerta automático</p></div>
+              <div><strong>Schema drift</strong><p>Source mudou coluna sem avisar: alerta automático</p></div>
             </div>
             <div class="dc-q-item">
               <span class="ic">🚨</span>
@@ -557,7 +557,7 @@ resp = client.query(
         <div class="eda-card-head">
           <div>
             <div class="eda-card-title">📊 Dataset: vendas Bigode Petshop</div>
-            <div class="eda-card-sub" id="eda-summary">— linhas, — colunas</div>
+            <div class="eda-card-sub" id="eda-summary">··· linhas, ··· colunas</div>
           </div>
           <button class="eda-mini-btn" id="eda-regen">🎲 Regenerar dataset</button>
         </div>
@@ -583,12 +583,12 @@ resp = client.query(
         <div class="eda-side-card">
           <h3>🔬 O que EDA responde?</h3>
           <ul>
-            <li><strong>Distribuição</strong> — minhas vendas seguem normal ou cauda longa?</li>
-            <li><strong>Outliers</strong> — tem ponto absurdo afetando a média?</li>
-            <li><strong>Correlação</strong> — quais variáveis se mexem juntas? Pode haver redundância.</li>
-            <li><strong>Missing</strong> — onde tá faltando dado e por quê?</li>
-            <li><strong>Cardinalidade</strong> — campos categóricos com 100k valores únicos? Vai gerar feature explosion.</li>
-            <li><strong>Skewness</strong> — campo enviesado pra um lado? Considere log-transform.</li>
+            <li><strong>Distribuição</strong>: minhas vendas seguem normal ou cauda longa?</li>
+            <li><strong>Outliers</strong>: tem ponto absurdo afetando a média?</li>
+            <li><strong>Correlação</strong>: quais variáveis se mexem juntas? Pode haver redundância.</li>
+            <li><strong>Missing</strong>: onde tá faltando dado e por quê?</li>
+            <li><strong>Cardinalidade</strong>: campos categóricos com 100k valores únicos? Vai gerar feature explosion.</li>
+            <li><strong>Skewness</strong>: campo enviesado pra um lado? Considere log-transform.</li>
           </ul>
         </div>
 
@@ -602,7 +602,7 @@ resp = client.query(
         <div class="eda-side-card">
           <h3>🛠️ Ferramentas comuns</h3>
           <div class="eda-tools">
-            <div class="eda-tool"><strong>pandas</strong> · Python — DataFrame, .describe(), .info()</div>
+            <div class="eda-tool"><strong>pandas</strong> · Python · DataFrame, .describe(), .info()</div>
             <div class="eda-tool"><strong>matplotlib / seaborn</strong> · Plots estatísticos clássicos</div>
             <div class="eda-tool"><strong>plotly / altair</strong> · Visualizações interativas</div>
             <div class="eda-tool"><strong>SageMaker Data Wrangler</strong> · EDA visual sem código na AWS</div>

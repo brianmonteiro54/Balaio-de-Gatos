@@ -516,7 +516,7 @@
           <strong>👍 Recomendado pra produção.</strong>
           <p>Você anexa uma Role no recurso (EC2/Lambda/ECS) com permissão pra Rekognition. O SDK pega credenciais temporárias automaticamente. Rotação a cada hora. Zero key no código.</p>
         </div>
-        <pre class="cred-code" id="cred-code">// Lambda com Role anexada — não precisa de credentials no código
+        <pre class="cred-code" id="cred-code">// Lambda com Role anexada · não precisa de credentials no código
 import boto3
 client = boto3.client("rekognition")
 res = client.detect_labels(
@@ -735,7 +735,7 @@ res = client.detect_labels(
               <label class="cl-toggle">
                 <input type="checkbox" id="cfg-augment" checked>
                 <span class="slider"></span>
-                <span class="toggle-lbl">🎨 <strong>Data augmentation</strong> — espelhar, girar, ajustar brilho. Aumenta dataset virtual sem coletar mais foto.</span>
+                <span class="toggle-lbl">🎨 <strong>Data augmentation</strong>: espelhar, girar, ajustar brilho. Aumenta dataset virtual sem coletar mais foto.</span>
               </label>
             </div>
 
@@ -743,7 +743,7 @@ res = client.detect_labels(
               <label class="cl-toggle">
                 <input type="checkbox" id="cfg-pretrained" checked>
                 <span class="slider"></span>
-                <span class="toggle-lbl">🧠 <strong>Transfer learning</strong> — começar de um modelo pré-treinado em milhões de imagens (na AWS real isso é o padrão e não dá pra desligar; aqui é didático).</span>
+                <span class="toggle-lbl">🧠 <strong>Transfer learning</strong>: começar de um modelo pré-treinado em milhões de imagens (na AWS real isso é o padrão e não dá pra desligar; aqui é didático).</span>
               </label>
             </div>
 
@@ -909,15 +909,15 @@ res = client.detect_labels(
             </div>
             <div class="cl-live-row">
               <span class="lbl">📉 Loss</span>
-              <span class="v coral" id="live-loss">—</span>
+              <span class="v coral" id="live-loss">···</span>
             </div>
             <div class="cl-live-row">
               <span class="lbl">🎯 Train accuracy</span>
-              <span class="v olive" id="live-train-acc">—</span>
+              <span class="v olive" id="live-train-acc">···</span>
             </div>
             <div class="cl-live-row">
               <span class="lbl">🧪 Val accuracy</span>
-              <span class="v olive" id="live-val-acc">—</span>
+              <span class="v olive" id="live-val-acc">···</span>
             </div>
             <div class="cl-live-row">
               <span class="lbl">📊 Status</span>
@@ -957,22 +957,22 @@ res = client.detect_labels(
           <div class="cl-metrics">
             <div class="cl-metric">
               <div class="lbl">🎯 Acurácia</div>
-              <div class="v" id="m-acc">—</div>
+              <div class="v" id="m-acc">···</div>
               <div class="hint">acertos / total</div>
             </div>
             <div class="cl-metric">
               <div class="lbl">🎣 Precision (média)</div>
-              <div class="v" id="m-prec">—</div>
+              <div class="v" id="m-prec">···</div>
               <div class="hint">de tudo que predisse, quanto era certo</div>
             </div>
             <div class="cl-metric">
               <div class="lbl">📡 Recall (média)</div>
-              <div class="v" id="m-rec">—</div>
+              <div class="v" id="m-rec">···</div>
               <div class="hint">do que era verdade, quanto pegou</div>
             </div>
             <div class="cl-metric">
               <div class="lbl">⚖️ F1-score</div>
-              <div class="v" id="m-f1">—</div>
+              <div class="v" id="m-f1">···</div>
               <div class="hint">média harmônica de prec & recall</div>
             </div>
           </div>
@@ -991,20 +991,20 @@ res = client.detect_labels(
             <div class="cl-cw-row" data-cw="persa">
               <span class="dot persa"></span>
               <span class="name">Persa</span>
-              <span class="prec" id="cw-persa-p">—</span>
-              <span class="rec" id="cw-persa-r">—</span>
+              <span class="prec" id="cw-persa-p">···</span>
+              <span class="rec" id="cw-persa-r">···</span>
             </div>
             <div class="cl-cw-row" data-cw="siames">
               <span class="dot siames"></span>
               <span class="name">Siamês</span>
-              <span class="prec" id="cw-siames-p">—</span>
-              <span class="rec" id="cw-siames-r">—</span>
+              <span class="prec" id="cw-siames-p">···</span>
+              <span class="rec" id="cw-siames-r">···</span>
             </div>
             <div class="cl-cw-row" data-cw="maine">
               <span class="dot maine"></span>
               <span class="name">Maine Coon</span>
-              <span class="prec" id="cw-maine-p">—</span>
-              <span class="rec" id="cw-maine-r">—</span>
+              <span class="prec" id="cw-maine-p">···</span>
+              <span class="rec" id="cw-maine-r">···</span>
             </div>
             <div class="cl-cw-row head">
               <span></span>
@@ -1106,7 +1106,7 @@ res = client.detect_labels(
             </div>
             <div class="cl-tracker-row">
               <span class="lbl">Acurácia ao vivo</span>
-              <span class="v" id="trk-acc">—</span>
+              <span class="v" id="trk-acc">···</span>
             </div>
           </div>
 
@@ -1141,13 +1141,13 @@ resp = rek.detect_custom_labels(
         Custom Labels usa <strong>transfer learning</strong>: parte de um modelo que <em>já</em> aprendeu a "ver" milhões de imagens (gerais), e só re-treina as últimas camadas pra distinguir <em>suas</em> categorias específicas. Por isso 30-50 fotos por classe já produz resultado decente.
       </p>
       <p>
-        Você só paga: <strong>(1) treino</strong> (por hora de cluster), <strong>(2) endpoint</strong> (por hora ligado, então desliga quando não usar) e <strong>(3) inferência</strong> por imagem. Não esquece de chamar <code>StopProjectVersion</code> quando terminar de testar — endpoint ligado custa por hora mesmo sem requisição.
+        Você só paga: <strong>(1) treino</strong> (por hora de cluster), <strong>(2) endpoint</strong> (por hora ligado, então desliga quando não usar) e <strong>(3) inferência</strong> por imagem. Não esquece de chamar <code>StopProjectVersion</code> quando terminar de testar. Endpoint ligado custa por hora mesmo sem requisição.
       </p>
       <p class="small">
         Casos reais: classificar produtos defeituosos numa linha de produção, identificar logo de marca em vídeos esportivos, distinguir espécies de planta numa fazenda, aprovar fotos de carteirinha.
       </p>
       <div class="quote">
-        "Use Custom Labels quando o conceito que você quer detectar é específico do seu domínio e o Rekognition padrão não cobre. Caso contrário, fique no padrão — é mais barato e zero treino."
+        "Use Custom Labels quando o conceito que você quer detectar é específico do seu domínio e o Rekognition padrão não cobre. Caso contrário, fique no padrão: é mais barato e zero treino."
       </div>
     </div>
   </div>
@@ -1185,12 +1185,12 @@ resp = rek.detect_custom_labels(
       <div class="nlp-services">
         <h4>🛠️ Onde a AWS entra:</h4>
         <ul>
-          <li><strong>Amazon Comprehend</strong> — NLP gerenciado: idioma, entidades, sentimento, tópicos.</li>
-          <li><strong>Amazon Comprehend Medical</strong> — entidades médicas (sintoma, medicamento, dosagem).</li>
-          <li><strong>Amazon Translate</strong> — tradução neural entre 75+ idiomas.</li>
-          <li><strong>Amazon Transcribe</strong> — fala vira texto. Junta com Comprehend pra analisar áudio de call center.</li>
-          <li><strong>Amazon Lex</strong> — chatbot conversacional, mesmo motor da Alexa.</li>
-          <li><strong>Amazon Bedrock</strong> — LLMs gerenciados pra NLP avançado: Claude, Titan, Jamba, Mistral.</li>
+          <li><strong>Amazon Comprehend</strong>: NLP gerenciado: idioma, entidades, sentimento, tópicos.</li>
+          <li><strong>Amazon Comprehend Medical</strong>: entidades médicas (sintoma, medicamento, dosagem).</li>
+          <li><strong>Amazon Translate</strong>: tradução neural entre 75+ idiomas.</li>
+          <li><strong>Amazon Transcribe</strong>: fala vira texto. Junta com Comprehend pra analisar áudio de call center.</li>
+          <li><strong>Amazon Lex</strong>: chatbot conversacional, mesmo motor da Alexa.</li>
+          <li><strong>Amazon Bedrock</strong>: LLMs gerenciados pra NLP avançado: Claude, Titan, Jamba, Mistral.</li>
         </ul>
       </div>
     </div>

@@ -96,12 +96,12 @@
       AWS <span class="yel">testa pra gente?</span>
     </h2>
     <p>
-      A gente vimos hiperparâmetros na aula 12 — épocas, learning rate, temperatura. Mas testar combinação por combinação na mão é lento e caro. A AWS automatizou isso. Conheça <strong>AMT</strong> e <strong>Autopilot</strong>, dois superpoderes do SageMaker.
+      A gente vimos hiperparâmetros na aula 12 (épocas, learning rate, temperatura). Mas testar combinação por combinação na mão é lento e caro. A AWS automatizou isso. Conheça <strong>AMT</strong> e <strong>Autopilot</strong>, dois superpoderes do SageMaker.
     </p>
   </div>
 </section>
 
-<!-- AMT — SageMaker Hyperparameter Tuning -->
+<!-- AMT · SageMaker Hyperparameter Tuning -->
 <section class="chapter" id="amt">
   <div class="container">
     <div class="aws-badge">AWS · SageMaker AMT</div>
@@ -190,13 +190,13 @@
 
         <div class="amt-winner" id="amt-winner">
           <div class="lbl">🏆 melhor config encontrada</div>
-          <div class="config" id="amt-winner-config">—</div>
+          <div class="config" id="amt-winner-config">···</div>
         </div>
 
         <div class="amt-info">
           <div class="stat">
             <div class="lbl">Melhor acurácia</div>
-            <div class="v"><span id="amt-best-acc">—</span></div>
+            <div class="v"><span id="amt-best-acc">···</span></div>
           </div>
           <div class="stat">
             <div class="lbl">Custo total*</div>
@@ -303,7 +303,7 @@
         <ul style="font-size:14px;color:var(--ink-soft);padding-left:22px">
           <li style="margin-bottom:6px">Você é <strong>iniciante em ML</strong> e quer um baseline rápido</li>
           <li style="margin-bottom:6px">Quer <strong>comparar várias abordagens</strong> sem codar cada uma</li>
-          <li style="margin-bottom:6px">O problema é <strong>tabular</strong> (CSV, parquet) — Autopilot brilha aqui</li>
+          <li style="margin-bottom:6px">O problema é <strong>tabular</strong> (CSV, parquet): Autopilot brilha aqui</li>
           <li style="margin-bottom:6px">Tarefas: <strong>classificação binária, multi-classe, regressão</strong></li>
           <li>Você quer um modelo bom <strong>sem virar especialista</strong> em ML</li>
         </ul>
@@ -313,9 +313,9 @@
         <ul style="font-size:14px;color:var(--ink-soft);padding-left:22px">
           <li style="margin-bottom:6px">Imagens, áudio ou texto bruto → <strong>use modelos especializados</strong></li>
           <li style="margin-bottom:6px">Você precisa de <strong>controle fino</strong> sobre arquitetura</li>
-          <li style="margin-bottom:6px">Dataset gigante (TBs) — custo escala</li>
+          <li style="margin-bottom:6px">Dataset gigante (TBs): custo escala</li>
           <li style="margin-bottom:6px">Restrições estritas de <strong>explicabilidade</strong> (mas Autopilot gera relatório!)</li>
-          <li>Quando você já sabe qual algoritmo é o certo — vá direto</li>
+          <li>Quando você já sabe qual algoritmo é o certo: vá direto</li>
         </ul>
       </div>
     </div>
@@ -333,7 +333,7 @@
     <span class="chapter-number">03 · Fine-tuning com Adaptação de Domínio</span>
     <h2>Quando o modelo geral <em style="color:var(--orange);font-style:normal">não fala</em> a sua língua.</h2>
     <p class="lead">
-      Vimos fine-tuning na aula 12. <strong>Domain adaptation</strong> é um tipo específico: você pega um modelo treinado em texto geral (web inteira) e <em>adapta</em> ele pro seu <strong>domínio específico</strong> — medicina, direito, veterinária, código interno da empresa. <strong>Clica nas perguntas abaixo</strong> e veja a diferença entre um modelo genérico e um adaptado:
+      Vimos fine-tuning na aula 12. <strong>Domain adaptation</strong> é um tipo específico: você pega um modelo treinado em texto geral (web inteira) e <em>adapta</em> ele pro seu <strong>domínio específico</strong>: medicina, direito, veterinária, código interno da empresa. <strong>Clica nas perguntas abaixo</strong> e veja a diferença entre um modelo genérico e um adaptado:
     </p>
 
     <div class="dom-q-selector" id="dom-questions">
@@ -646,7 +646,7 @@
       </div>
       <div class="aws-callout">
         <span class="badge">CERT</span>
-        <p>BLEU é a métrica clássica de <strong>tradução automática</strong>. Score entre <strong>0 e 1</strong>. Penaliza tradução curta com "brevity penalty". Hoje, BLEU é considerado <em>insuficiente</em> sozinho — métricas modernas como <strong>BERTScore</strong> e <strong>chrF++</strong> são mais confiáveis pra capturar paráfrase e semântica.</p>
+        <p>BLEU é a métrica clássica de <strong>tradução automática</strong>. Score entre <strong>0 e 1</strong>. Penaliza tradução curta com "brevity penalty". Hoje, BLEU é considerado <em>insuficiente</em> sozinho. Métricas modernas como <strong>BERTScore</strong> e <strong>chrF++</strong> são mais confiáveis pra capturar paráfrase e semântica.</p>
       </div>
     </div>
   </div>
@@ -795,7 +795,7 @@
         <div style="background:var(--cream-2);border:2px solid var(--ink);border-radius:10px;padding:14px;margin-bottom:14px;font-size:13px;color:var(--ink-soft)">
           <div style="margin-bottom:8px"><strong style="color:var(--orange-deep);font-family:'Caprasimo',serif;font-size:15px">ROUGE-1:</strong> recall de palavras individuais (1-gramas)</div>
           <div style="margin-bottom:8px"><strong style="color:var(--orange-deep);font-family:'Caprasimo',serif;font-size:15px">ROUGE-2:</strong> recall de pares consecutivos (2-gramas)</div>
-          <div><strong style="color:var(--orange-deep);font-family:'Caprasimo',serif;font-size:15px">ROUGE-L:</strong> maior subsequência comum (LCS) — captura ordem</div>
+          <div><strong style="color:var(--orange-deep);font-family:'Caprasimo',serif;font-size:15px">ROUGE-L:</strong> maior subsequência comum (LCS), captura ordem</div>
         </div>
 
         <div class="rouge-scores">
@@ -818,7 +818,7 @@
 
         <div style="background:var(--ink);color:var(--paper);border-radius:10px;padding:14px;margin-top:14px;font-size:13px" id="rouge-verdict-box">
           <strong style="color:var(--yellow);font-family:'Caprasimo',serif">🏆 Veredito:</strong>
-          <p style="margin-top:6px;color:var(--cream-2)" id="rouge-verdict">Resumo idêntico à referência — score máximo em todas as variantes.</p>
+          <p style="margin-top:6px;color:var(--cream-2)" id="rouge-verdict">Resumo idêntico à referência, score máximo em todas as variantes.</p>
         </div>
       </div>
     </div>
@@ -826,7 +826,7 @@
     <div class="card orange-shadow" style="margin-top:30px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
         <div>
-          <h3 style="font-size:24px;margin-bottom:10px">📚 BLEU vs ROUGE — quando usar cada?</h3>
+          <h3 style="font-size:24px;margin-bottom:10px">📚 BLEU vs ROUGE · quando usar cada?</h3>
           <p style="font-size:14px;color:var(--ink-soft);margin-bottom:8px"><strong style="color:var(--orange-deep)">BLEU = "precision"</strong>: das palavras que <em>gerei</em>, quantas estão certas? Bom pra <strong>tradução</strong> (não queremos inventar).</p>
           <p style="font-size:14px;color:var(--ink-soft)"><strong style="color:var(--orange-deep)">ROUGE = "recall"</strong>: das palavras-chave <em>importantes</em>, quantas eu capturei? Bom pra <strong>sumarização</strong> (resumo curto não pode esquecer o essencial).</p>
         </div>
@@ -859,7 +859,7 @@
       nada parado. <span class="yel">Bora deployar.</span>
     </h2>
     <p>
-      Treinar é metade do trabalho. Colocar em produção pra usuários reais usarem, monitorar performance e retreinar quando o mundo muda — isso é a outra metade. Conheça <strong>endpoints</strong>, <strong>MLOps</strong>, <strong>DeepAR</strong> e <strong>Experiments</strong>.
+      Treinar é metade do trabalho. Colocar em produção pra usuários reais usarem, monitorar performance e retreinar quando o mundo muda, isso é a outra metade. Conheça <strong>endpoints</strong>, <strong>MLOps</strong>, <strong>DeepAR</strong> e <strong>Experiments</strong>.
     </p>
   </div>
 </section>
@@ -917,7 +917,7 @@
         </div>
         <div class="endpoint-explain" id="ep-batch">
           <h4>📦 Batch Transform</h4>
-          <p>Não é endpoint exatamente — é um <strong>job</strong>. Você aponta pra um dataset no S3, a AWS roda inferência em lote e escreve o resultado em outro S3. <strong>Sem servidor permanente</strong>.</p>
+          <p>Não é endpoint exatamente. É um <strong>job</strong>. Você aponta pra um dataset no S3, a AWS roda inferência em lote e escreve o resultado em outro S3. <strong>Sem servidor permanente</strong>.</p>
           <span class="use">Use quando: scoring noturno de uma base, ETL, predições em lote</span>
         </div>
       </div>
@@ -1242,7 +1242,7 @@
 
       <div class="exp-card controls">
         <div style="font-family:'Caprasimo',serif;font-size:20px;margin-bottom:10px">⚙️ Configurar novo run</div>
-        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Cada combinação aqui é registrada como uma <em>run</em> separada — você pode comparar todas depois.</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Cada combinação aqui é registrada como uma <em>run</em> separada. Você pode comparar todas depois.</p>
 
         <div class="exp-config">
           <div class="row">
@@ -1321,7 +1321,7 @@
           <div class="ic">🤖</div>
           <h3>API gerenciada<span class="sub">SageMaker Endpoints · Bedrock</span></h3>
         </div>
-        <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:14px">A AWS cuida da infra. Você sobe o modelo, clica em "deploy", recebe uma URL. <strong>Tipo Uber pro seu modelo</strong> — chama, paga, anda. Não pensa em motor.</p>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:14px">A AWS cuida da infra. Você sobe o modelo, clica em "deploy", recebe uma URL. <strong>Tipo Uber pro seu modelo</strong>: chama, paga, anda. Não pensa em motor.</p>
 
         <div class="deploy-bars">
           <div class="deploy-bar-row">
@@ -1354,7 +1354,7 @@
         <div class="deploy-pros">
           <h4>✅ A favor</h4>
           <ul>
-            <li><span class="check">✓</span><span>Auto-scaling, alta disponibilidade e load balancer já vêm embutidos — você não configura nada</span></li>
+            <li><span class="check">✓</span><span>Auto-scaling, alta disponibilidade e load balancer já vêm embutidos: você não configura nada</span></li>
             <li><span class="check">✓</span><span>Patching, atualização de driver, GPU, segurança: tudo da AWS</span></li>
             <li><span class="check">✓</span><span>Integração nativa com IAM, KMS, CloudWatch, VPC, Model Monitor</span></li>
             <li><span class="check">✓</span><span>Suporta A/B testing e blue/green deployment com 1 clique (variant weights)</span></li>
@@ -1365,7 +1365,7 @@
         <div class="deploy-pros cons">
           <h4>⚠️ Contra</h4>
           <ul>
-            <li><span class="check">✗</span><span>Paga pela hora da instância (real-time) ou por token (Bedrock) — pode ficar caro em volume alto</span></li>
+            <li><span class="check">✗</span><span>Paga pela hora da instância (real-time) ou por token (Bedrock): pode ficar caro em volume alto</span></li>
             <li><span class="check">✗</span><span>Tipos de instância limitados ao catálogo da AWS</span></li>
             <li><span class="check">✗</span><span>Algumas customizações pesadas (kernels CUDA, libs exóticas) batem na parede</span></li>
             <li><span class="check">✗</span><span>Vendor lock-in: migrar pra outro provedor é trabalho</span></li>
@@ -1383,7 +1383,7 @@
           <div class="ic">🛠️</div>
           <h3>Auto-hospedado<span class="sub">EKS · EC2 · Triton · TorchServe</span></h3>
         </div>
-        <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:14px">Você sobe um cluster, instala servidor de inferência, gerencia GPU, escala, monitora. <strong>Tipo carro próprio</strong> — mais barato no longo prazo, mas tem que trocar óleo, IPVA, seguro, oficina.</p>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:14px">Você sobe um cluster, instala servidor de inferência, gerencia GPU, escala, monitora. <strong>Tipo carro próprio</strong>: mais barato no longo prazo, mas tem que trocar óleo, IPVA, seguro, oficina.</p>
 
         <div class="deploy-bars">
           <div class="deploy-bar-row">
@@ -1427,10 +1427,10 @@
         <div class="deploy-pros cons">
           <h4>⚠️ Contra</h4>
           <ul>
-            <li><span class="check">✗</span><span>Precisa de time MLOps de verdade — provisionar, patchar, escalar, debugar</span></li>
+            <li><span class="check">✗</span><span>Precisa de time MLOps de verdade: provisionar, patchar, escalar, debugar</span></li>
             <li><span class="check">✗</span><span>Você é responsável por SLA, segurança, atualizações de driver, CVEs</span></li>
             <li><span class="check">✗</span><span>Setup inicial leva semanas (cluster, networking, monitoring, CI/CD)</span></li>
-            <li><span class="check">✗</span><span>GPU ociosa dói no bolso — overprovision custa real</span></li>
+            <li><span class="check">✗</span><span>GPU ociosa dói no bolso: overprovision custa real</span></li>
           </ul>
         </div>
 
@@ -1452,7 +1452,7 @@
   <div class="container">
     <div class="chapter-label">CAPÍTULO 13 · o modelo ficou velho?</div>
     <h2 class="chapter-title">Monitoramento & retreinamento</h2>
-    <p class="chapter-sub">Modelo em produção <em>não é</em> escultura — é planta. Você rega. Você vê se nasceu fungo. Você poda. <strong>Data drift</strong> e <strong>model decay</strong> são as duas formas de murchar: o mundo muda, o modelo continua respondendo como no treino. Bora montar a régua que dispara o alerta.</p>
+    <p class="chapter-sub">Modelo em produção <em>não é</em> escultura, é planta. Você rega. Você vê se nasceu fungo. Você poda. <strong>Data drift</strong> e <strong>model decay</strong> são as duas formas de murchar: o mundo muda, o modelo continua respondendo como no treino. Bora montar a régua que dispara o alerta.</p>
 
     <div class="monitor-wrap">
 
@@ -1591,7 +1591,7 @@
         <div class="name">🩺 Domain Adaptation</div>
         <div class="micro">Fine-tuning especializado</div>
         <div class="q">"LLM genérico não sabe o jargão da minha área"</div>
-        <div class="what">Duas etapas: <strong>1) CPT</strong> (Continued Pre-Training) com texto bruto do domínio + <strong>2) SFT</strong> (Supervised Fine-Tuning) com pares pergunta-resposta. Vira especialista — não fala genérico mais.</div>
+        <div class="what">Duas etapas: <strong>1) CPT</strong> (Continued Pre-Training) com texto bruto do domínio + <strong>2) SFT</strong> (Supervised Fine-Tuning) com pares pergunta-resposta. Vira especialista, não fala genérico mais.</div>
       </div>
 
       <div class="cheat-card">
@@ -1612,7 +1612,7 @@
         <div class="name">📊 BLEU</div>
         <div class="micro">Métrica de tradução</div>
         <div class="q">"Tradução automática bate com a referência?"</div>
-        <div class="what">Mede n-gram overlap (1, 2, 3, 4). Pega <strong>precisão</strong>. Cego pra sinônimos — "carro" vs "automóvel" = 0. Bom pra MT clássica, fraco pra LLMs criativos.</div>
+        <div class="what">Mede n-gram overlap (1, 2, 3, 4). Pega <strong>precisão</strong>. Cego pra sinônimos: "carro" vs "automóvel" = 0. Bom pra MT clássica, fraco pra LLMs criativos.</div>
       </div>
 
       <div class="cheat-card">

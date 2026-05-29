@@ -45,7 +45,7 @@
           entende.
         </h1>
         <p>
-          Amazon Comprehend, Comprehend Medical, AWS HealthScribe, Polly e Transcribe. Os labs do Polly e do Transcribe rodam <strong>de verdade aqui no seu navegador</strong> — clica pra ouvir o gato falar em 10 idiomas e fala no microfone pra ele transcrever ao vivo.
+          Amazon Comprehend, Comprehend Medical, AWS HealthScribe, Polly e Transcribe. Os labs do Polly e do Transcribe rodam <strong>de verdade aqui no seu navegador</strong>. Clica pra ouvir o gato falar em 10 idiomas e fala no microfone pra ele transcrever ao vivo.
         </p>
         <a href="#comprehend" class="hero-cta">Começa aqui 🐾</a>
       </div>
@@ -199,7 +199,7 @@
     <span class="chapter-number">02 · Amazon Comprehend Medical</span>
     <h2>O <span style="color:var(--orange)">veterinário-NLP</span>: entende prontuário, receita e exame.</h2>
     <p class="lead">
-      Texto clínico é uma fera diferente. "Paciente com PA 140x90, em uso de losartana 50mg 1x/dia, queixa de cefaleia há 3 dias" — isso é português, mas com vocabulário próprio. Comprehend Medical extrai <strong>entidades clínicas</strong>: medicamento, dosagem, frequência, condição, anatomia, tratamento e <strong>PHI</strong> (dados protegidos do paciente). <strong>Clica num caso clínico</strong> e veja as entidades destacadas.
+      Texto clínico é uma fera diferente. "Paciente com PA 140x90, em uso de losartana 50mg 1x/dia, queixa de cefaleia há 3 dias", isso é português, mas com vocabulário próprio. Comprehend Medical extrai <strong>entidades clínicas</strong>: medicamento, dosagem, frequência, condição, anatomia, tratamento e <strong>PHI</strong> (dados protegidos do paciente). <strong>Clica num caso clínico</strong> e veja as entidades destacadas.
     </p>
 
     <div class="med-block">
@@ -239,7 +239,7 @@
       <div class="med-side">
         <h3>⚠️ Por que existe um Comprehend separado pra saúde?</h3>
         <p>
-          Vocabulário clínico é específico. "Acetaminofeno", "BPM", "TC sem contraste", "hipertensão arterial sistêmica" — Comprehend padrão não ia acertar a categoria. O Medical foi treinado em milhões de textos clínicos.
+          Vocabulário clínico é específico. "Acetaminofeno", "BPM", "TC sem contraste", "hipertensão arterial sistêmica": Comprehend padrão não ia acertar a categoria. O Medical foi treinado em milhões de textos clínicos.
         </p>
         <p>
           Além disso, ele <strong>já é HIPAA-eligible</strong> (PHI não é usado pra retreinar) e mapeia entidades pra padrões da indústria: <strong>ICD-10-CM</strong> (códigos de doença), <strong>RxNorm</strong> (medicamentos) e <strong>SNOMED CT</strong> (terminologia clínica).
@@ -248,7 +248,7 @@
           Casos: prontuário eletrônico que destaca alergias automaticamente, alerta de interação medicamentosa, classificação de exames pra triagem, anonimização de dataset clínico antes de virar paper.
         </p>
         <div class="med-quote">
-          "Para texto clínico, fugir do Comprehend Medical é reinventar a roda — e essa roda envolve compliance HIPAA, vocabulário ICD-10 e treinamento em milhões de prontuários reais."
+          "Para texto clínico, fugir do Comprehend Medical é reinventar a roda, e essa roda envolve compliance HIPAA, vocabulário ICD-10 e treinamento em milhões de prontuários reais."
         </div>
       </div>
     </div>
@@ -288,7 +288,7 @@
           <div class="hs-panel active" data-panel="audio">
             <div class="hs-waveform" id="hs-waveform"></div>
             <div class="hs-now-speaking" id="hs-now-speaking">
-              <span class="hs-speaker-pill" id="hs-current-speaker">—</span>
+              <span class="hs-speaker-pill" id="hs-current-speaker">···</span>
               <span class="hs-current-line" id="hs-current-line">aguardando…</span>
             </div>
             <p class="hs-helper">A consulta é processada em streaming. Conforme o áudio toca, a transcrição vai se materializando à direita (tab "Transcrição") e a SOAP note se constrói automaticamente.</p>
@@ -341,7 +341,7 @@
           Médicos passam <strong>2 horas por dia</strong> digitando prontuário. HealthScribe corta esse trabalho: o médico só precisa <strong>revisar e aprovar</strong> a nota gerada.
         </p>
         <p class="small">
-          A saída é estruturada com <strong>citações</strong> apontando pro trecho exato da transcrição que originou cada bullet. Auditoria, compliance, confiança. Não é "LLM cuspindo texto bonito" — é "rastreável até a fala original".
+          A saída é estruturada com <strong>citações</strong> apontando pro trecho exato da transcrição que originou cada bullet. Auditoria, compliance, confiança. Não é "LLM cuspindo texto bonito", é "rastreável até a fala original".
         </p>
         <div class="hs-arch">
           <div class="hs-arch-head">⚙️ Por baixo do capô</div>
@@ -436,7 +436,7 @@
     <span class="chapter-number">05 · Amazon Polly · 🧪 Lab</span>
     <h2>O serviço de voz da AWS: <span style="color:var(--orange)">100+ vozes em 40 idiomas</span>.</h2>
     <p class="lead">
-      Aqui o lab é <strong>de verdade</strong>. Seu navegador tem uma engine TTS embutida (Web Speech API) que estamos usando como mock do Polly — mesma interface, mesmas configurações. <strong>Clica em "Falar"</strong> e ouve. As vozes vão variar conforme o seu sistema operacional.
+      Aqui o lab é <strong>de verdade</strong>. Seu navegador tem uma engine TTS embutida (Web Speech API) que estamos usando como mock do Polly: mesma interface, mesmas configurações. <strong>Clica em "Falar"</strong> e ouve. As vozes vão variar conforme o seu sistema operacional.
     </p>
 
     <div class="polly-block">
@@ -552,7 +552,7 @@
     <span class="chapter-number">06 · Speech-to-Text (STT)</span>
     <h2>O caminho inverso: <span style="color:var(--orange)">áudio vira texto</span>.</h2>
     <p class="lead">
-      STT (também chamado de ASR — Automatic Speech Recognition) é o pilar de Siri, Alexa, Google Assistant, legendas automáticas no YouTube e transcrição de reunião. <strong>Veja o pipeline</strong> e clica em cada peça.
+      STT (também chamado de ASR · Automatic Speech Recognition) é o pilar de Siri, Alexa, Google Assistant, legendas automáticas no YouTube e transcrição de reunião. <strong>Veja o pipeline</strong> e clica em cada peça.
     </p>
 
     <div class="stt-pipeline">
@@ -602,7 +602,7 @@
       <div class="stt-ch">
         <div class="ic">📚</div>
         <h4>Vocabulário técnico</h4>
-        <p>"Pleitear", "azitromicina", "bug fix" — fora do dicionário comum precisa de boost (Custom Vocabulary).</p>
+        <p>"Pleitear", "azitromicina", "bug fix": fora do dicionário comum precisa de boost (Custom Vocabulary).</p>
       </div>
       <div class="stt-ch" style="background: var(--ink); color: var(--paper); border-color: var(--orange);">
         <div class="ic">👯</div>
@@ -619,7 +619,7 @@
     <span class="chapter-number">07 · Amazon Transcribe · 🧪 Lab</span>
     <h2>Outro lab <span style="color:var(--orange)">de verdade</span>: clica, fala, transcreve.</h2>
     <p class="lead">
-      Seu navegador tem uma Web Speech Recognition embutida (Chrome / Edge funcionam melhor). Estamos usando ela como mock do Transcribe — mesma ideia, mesmos parâmetros. <strong>Clica em "Iniciar gravação"</strong>, fala uma frase, e veja a transcrição aparecer ao vivo.
+      Seu navegador tem uma Web Speech Recognition embutida (Chrome / Edge funcionam melhor). Estamos usando ela como mock do Transcribe: mesma ideia, mesmos parâmetros. <strong>Clica em "Iniciar gravação"</strong>, fala uma frase, e veja a transcrição aparecer ao vivo.
     </p>
 
     <div class="trans-block">
@@ -696,7 +696,7 @@
             </div>
             <div class="trans-stat">
               <span class="lbl">Confiança ≈</span>
-              <span class="v" id="trans-stat-conf">—</span>
+              <span class="v" id="trans-stat-conf">···</span>
             </div>
             <div class="trans-stat">
               <span class="lbl">Tempo</span>
@@ -769,7 +769,7 @@
     </div>
 
     <div class="trans-tip">
-      <strong>💡 Dica de produção:</strong> Transcribe tem dois modos — <code>StartTranscriptionJob</code> (assíncrono, lê de S3, ideal pra arquivos longos) e <code>StartStreamTranscription</code> (WebSocket, ideal pra live de call center, legendas ao vivo). O navegador aqui simula o segundo.
+      <strong>💡 Dica de produção:</strong> Transcribe tem dois modos. <code>StartTranscriptionJob</code> (assíncrono, lê de S3, ideal pra arquivos longos) e <code>StartStreamTranscription</code> (WebSocket, ideal pra live de call center, legendas ao vivo). O navegador aqui simula o segundo.
     </div>
   </div>
 </section>
