@@ -1,0 +1,51 @@
+name: Lighthouse CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.html"
+      - "**/*.css"
+      - "**/*.js"
+      - ".github/workflows/lighthouse.yml"
+      - ".lighthouserc.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lhci:
+    name: Lighthouse audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Wait for GitHub Pages deploy
+        # Pages updates can take a minute after push. Sleep a bit before auditing.
+        run: sleep 60
+
+      - name: Run Lighthouse CI
+        run: lhci autorun --config=.lighthouserc.json
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          if-no-files-found: ignore

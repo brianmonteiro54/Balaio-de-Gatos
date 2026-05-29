@@ -1,0 +1,62 @@
+name: Qualidade do site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  htmlhint:
+    name: HTMLHint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install HTMLHint
+        run: npm install -g htmlhint@1.1.4
+
+      - name: Run HTMLHint
+        run: htmlhint "**/*.html" --ignore "node_modules/**" --rulesfile .htmlhintrc
+
+  link-check:
+    name: Link checker (lychee)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --max-concurrency 8
+            --accept 200,206,301,302,308,403,429
+            --exclude-mail
+            --exclude "linkedin\.com"
+            --exclude "twitter\.com"
+            --exclude "x\.com"
+            --exclude "localhost"
+            "**/*.html"
+          fail: false
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lychee-report
+          path: ./lychee/out.md
+          if-no-files-found: ignore

@@ -1,0 +1,29 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://brianmonteiro54.github.io/Balaio-de-Gatos/",
+        "https://brianmonteiro54.github.io/Balaio-de-Gatos/aula1/",
+        "https://brianmonteiro54.github.io/Balaio-de-Gatos/aula6/",
+        "https://brianmonteiro54.github.io/Balaio-de-Gatos/aula13/",
+        "https://brianmonteiro54.github.io/Balaio-de-Gatos/aula22/"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "preset": "desktop",
+        "chromeFlags": "--no-sandbox --headless"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["warn", { "minScore": 0.85 }],
+        "categories:accessibility": ["warn", { "minScore": 0.9 }],
+        "categories:best-practices": ["warn", { "minScore": 0.9 }],
+        "categories:seo": ["error", { "minScore": 0.95 }]
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}
