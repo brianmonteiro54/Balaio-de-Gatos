@@ -30,7 +30,8 @@ jobs:
         run: npm install -g htmlhint@1.1.4
 
       - name: Run HTMLHint
-        run: htmlhint "**/*.html" --ignore "node_modules/**" --rulesfile .htmlhintrc
+        # htmlhint reads .htmlhintrc from the working directory automatically
+        run: htmlhint "**/*.html" --ignore "node_modules/**"
 
   link-check:
     name: Link checker (lychee)
