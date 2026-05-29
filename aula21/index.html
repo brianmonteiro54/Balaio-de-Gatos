@@ -791,12 +791,12 @@
       <div class="bias-controls">
         <h4>🎛️ Composição do dataset de treino</h4>
         <div class="bias-field">
-          <label>% Gatos pretos no treino <span class="cm-val" id="bias-pretos-v">10%</span></label>
+          <label for="bias-pretos">% Gatos pretos no treino <span class="cm-val" id="bias-pretos-v">10%</span></label>
           <input type="range" id="bias-pretos" min="0" max="100" value="10">
           <small>Realidade: 25% dos gatos do abrigo</small>
         </div>
         <div class="bias-field">
-          <label>% Gatos laranja no treino <span class="cm-val" id="bias-laranja-v">60%</span></label>
+          <label for="bias-laranja">% Gatos laranja no treino <span class="cm-val" id="bias-laranja-v">60%</span></label>
           <input type="range" id="bias-laranja" min="0" max="100" value="60">
           <small>Realidade: 30%</small>
         </div>
@@ -883,7 +883,7 @@
 
     <div class="hitl-lab">
       <div class="hitl-controls">
-        <label>Threshold de confiança <span class="cm-val" id="hitl-th-v">0.80</span></label>
+        <label for="hitl-th">Threshold de confiança <span class="cm-val" id="hitl-th-v">0.80</span></label>
         <input type="range" id="hitl-th" min="50" max="99" value="80">
         <small>Predições com confiança abaixo disso vão pra revisão humana</small>
 
@@ -1056,7 +1056,7 @@
       </div>
 
       <div class="drift-controls">
-        <label>Tempo desde o deploy <span class="cm-val" id="drift-t-v">0 meses</span></label>
+        <label for="drift-t">Tempo desde o deploy <span class="cm-val" id="drift-t-v">0 meses</span></label>
         <input type="range" id="drift-t" min="0" max="24" value="0">
 
         <div class="drift-state" id="drift-state">

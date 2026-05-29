@@ -578,19 +578,19 @@
     <div class="param-lab">
       <div class="param-controls">
         <div class="pc-field">
-          <label>Temperature <span class="pc-val" id="pc-temp-v">0.20</span></label>
+          <label for="pc-temp">Temperature <span class="pc-val" id="pc-temp-v">0.20</span></label>
           <input type="range" id="pc-temp" min="0" max="100" value="20">
           <div class="pc-hint"><span>0 · determinístico</span><span>1 · criativo</span></div>
         </div>
 
         <div class="pc-field">
-          <label>Top-k <span class="pc-val" id="pc-topk-v">50</span></label>
+          <label for="pc-topk">Top-k <span class="pc-val" id="pc-topk-v">50</span></label>
           <input type="range" id="pc-topk" min="1" max="200" value="50">
           <div class="pc-hint"><span>1 · greedy</span><span>200 · diverso</span></div>
         </div>
 
         <div class="pc-field">
-          <label>Max tokens <span class="pc-val" id="pc-max-v">200</span></label>
+          <label for="pc-max">Max tokens <span class="pc-val" id="pc-max-v">200</span></label>
           <input type="range" id="pc-max" min="20" max="1000" step="10" value="200">
           <div class="pc-hint"><span>curto</span><span>longo</span></div>
         </div>
@@ -1060,12 +1060,12 @@
     <div class="chunking-lab">
       <div class="chunk-controls">
         <div class="cc-field">
-          <label>Tamanho do chunk <span class="cc-val" id="chunk-size-v">300</span> tokens</label>
+          <label for="chunk-size">Tamanho do chunk <span class="cc-val" id="chunk-size-v">300</span> tokens</label>
           <input type="range" id="chunk-size" min="50" max="1000" step="50" value="300">
           <div class="cc-hint"><span>50 (preciso)</span><span>1000 (contextual)</span></div>
         </div>
         <div class="cc-field">
-          <label>Overlap <span class="cc-val" id="chunk-overlap-v">50</span> tokens</label>
+          <label for="chunk-overlap">Overlap <span class="cc-val" id="chunk-overlap-v">50</span> tokens</label>
           <input type="range" id="chunk-overlap" min="0" max="200" step="10" value="50">
           <div class="cc-hint"><span>0 (corte limpo)</span><span>200 (muita redundância)</span></div>
         </div>

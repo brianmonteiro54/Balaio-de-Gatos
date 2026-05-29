@@ -278,13 +278,13 @@
         </svg>
 
         <div class="lr-controls">
-          <label>
+          <label for="lr-slope">
             <span>📐 Inclinação (g por mês)</span>
             <span id="lr-slope-val" style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep)">250</span>
           </label>
           <input type="range" id="lr-slope" min="0" max="100" value="80">
 
-          <label style="margin-top: 12px;">
+          <label style="margin-top: 12px;" for="lr-intercept">
             <span>⬆️ Intercepto (peso ao nascer)</span>
             <span id="lr-intercept-val" style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep)">0,10 kg</span>
           </label>
@@ -533,7 +533,7 @@
         </svg>
 
         <div class="binary-threshold-control">
-          <label>
+          <label for="binary-thr-slider">
             <span>🎚️ Limiar de decisão</span>
             <span id="binary-thr-val" style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep)">0,50</span>
           </label>
@@ -666,7 +666,7 @@
         </svg>
 
         <div class="knn-control">
-          <label>
+          <label for="knn-k">
             <span>🔢 K (quantos vizinhos olhar)</span>
             <span id="knn-k-val" style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep)">3</span>
           </label>

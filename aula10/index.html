@@ -338,7 +338,7 @@
           <div class="diffusion-stages" id="diffusion-stages"></div>
           <div class="diffusion-prompt" id="diffusion-prompt">"um gato astronauta no Rio de Janeiro"</div>
           <div class="diffusion-control">
-            <label>
+            <label for="diff-slider">
               <span>🎚️ Passo de denoising</span>
               <span id="diff-step-value" style="font-family:'JetBrains Mono', monospace; color: var(--orange-deep); font-weight: 700;">5/5</span>
             </label>
@@ -482,14 +482,14 @@
 
       <div class="chunk-controls">
         <div class="chunk-control">
-          <label>
+          <label for="chunk-size">
             <span>📏 Tamanho do chunk (caracteres)</span>
             <span class="value" id="chunk-size-val">120</span>
           </label>
           <input type="range" id="chunk-size" min="50" max="250" value="120" step="10">
         </div>
         <div class="chunk-control">
-          <label>
+          <label for="chunk-overlap">
             <span>🔁 Overlap (sobreposição)</span>
             <span class="value" id="chunk-overlap-val">20</span>
           </label>

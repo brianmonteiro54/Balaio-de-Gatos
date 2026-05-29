@@ -516,22 +516,22 @@
     <div class="hp-lab">
       <div class="hp-controls">
         <div class="hp-field">
-          <label>Learning Rate <span class="cm-val" id="hp-lr-v">1e-4</span></label>
+          <label for="hp-lr">Learning Rate <span class="cm-val" id="hp-lr-v">1e-4</span></label>
           <input type="range" id="hp-lr" min="0" max="100" value="40">
           <small>1e-6 (lento, seguro) ··· 1e-2 (rápido, instável)</small>
         </div>
         <div class="hp-field">
-          <label>Batch Size <span class="cm-val" id="hp-bs-v">32</span></label>
+          <label for="hp-bs">Batch Size <span class="cm-val" id="hp-bs-v">32</span></label>
           <input type="range" id="hp-bs" min="0" max="100" value="50">
           <small>2 (ruidoso, generaliza) ··· 512 (estável, GPU pesada)</small>
         </div>
         <div class="hp-field">
-          <label>Epochs <span class="cm-val" id="hp-ep-v">5</span></label>
+          <label for="hp-ep">Epochs <span class="cm-val" id="hp-ep-v">5</span></label>
           <input type="range" id="hp-ep" min="1" max="50" value="5">
           <small>poucas (underfit) ··· muitas (overfit)</small>
         </div>
         <div class="hp-field">
-          <label>Dropout <span class="cm-val" id="hp-dr-v">0.20</span></label>
+          <label for="hp-dr">Dropout <span class="cm-val" id="hp-dr-v">0.20</span></label>
           <input type="range" id="hp-dr" min="0" max="80" value="20">
           <small>0 (decora) ··· 0.5+ (regulariza demais)</small>
         </div>

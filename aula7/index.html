@@ -770,7 +770,7 @@ res = client.detect_labels(
 
           <div class="cl-config">
             <div class="cl-config-row">
-              <label>
+              <label for="cfg-epochs">
                 <span>📚 Epochs (passes pelo dataset)</span>
                 <span class="val" id="cfg-epochs-v">15</span>
               </label>
@@ -779,7 +779,7 @@ res = client.detect_labels(
             </div>
 
             <div class="cl-config-row">
-              <label>
+              <label for="cfg-lr">
                 <span>🌡️ Learning rate</span>
                 <span class="val" id="cfg-lr-v">0,001</span>
               </label>
@@ -1039,7 +1039,7 @@ res = client.detect_labels(
           <div class="cl-stats-head">🎯 Threshold de confiança</div>
           <p class="cl-side-desc">Aumente o threshold pra ser mais rigoroso: aceita só predições muito confiantes. Veja como precision sobe e recall cai.</p>
           <div class="cl-threshold">
-            <label><span>Threshold mínimo</span><span class="val" id="thr-v">50%</span></label>
+            <label for="thr-slider"><span>Threshold mínimo</span><span class="val" id="thr-v">50%</span></label>
             <input type="range" id="thr-slider" min="10" max="95" value="50" step="5">
           </div>
 
