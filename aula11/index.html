@@ -277,22 +277,22 @@
         <h3>⚖️ Relevance Tuning · Boosts</h3>
         <p class="kn-tool-desc">Ajuste manual de pesos. Útil quando documento mais novo é mais relevante (ex: política de RH 2026 acima de 2024).</p>
         <div class="kn-boost-row">
-          <label>📅 Recência (data do doc)</label>
+          <label for="kn-boost-recency">📅 Recência (data do doc)</label>
           <input type="range" class="kn-boost" id="kn-boost-recency" min="0" max="100" value="35">
           <span class="kn-boost-v" id="kn-boost-recency-v">35</span>
         </div>
         <div class="kn-boost-row">
-          <label>🎯 Match no título</label>
+          <label for="kn-boost-title">🎯 Match no título</label>
           <input type="range" class="kn-boost" id="kn-boost-title" min="0" max="100" value="60">
           <span class="kn-boost-v" id="kn-boost-title-v">60</span>
         </div>
         <div class="kn-boost-row">
-          <label>📊 Cliques históricos (popularidade)</label>
+          <label for="kn-boost-clicks">📊 Cliques históricos (popularidade)</label>
           <input type="range" class="kn-boost" id="kn-boost-clicks" min="0" max="100" value="40">
           <span class="kn-boost-v" id="kn-boost-clicks-v">40</span>
         </div>
         <div class="kn-boost-row">
-          <label>👤 Authority (autor)</label>
+          <label for="kn-boost-authority">👤 Authority (autor)</label>
           <input type="range" class="kn-boost" id="kn-boost-authority" min="0" max="100" value="20">
           <span class="kn-boost-v" id="kn-boost-authority-v">20</span>
         </div>
@@ -414,7 +414,7 @@ resp = client.query(
 
         <div class="dc-config">
           <div class="dc-row">
-            <label>📍 Onde está a fonte?</label>
+            <label for="dc-source">📍 Onde está a fonte?</label>
             <select id="dc-source">
               <option value="db">🗄️ Banco relacional (MySQL, Postgres)</option>
               <option value="nosql">📦 NoSQL (MongoDB, Cassandra)</option>
@@ -438,7 +438,7 @@ resp = client.query(
           </div>
 
           <div class="dc-row">
-            <label>📦 Volume típico</label>
+            <label for="dc-volume">📦 Volume típico</label>
             <input type="range" id="dc-volume" min="0" max="6" step="1" value="3">
             <div class="dc-vol-axis">
               <span>1 MB</span><span>1 GB</span><span>1 TB</span><span>1 PB</span>
@@ -447,7 +447,7 @@ resp = client.query(
           </div>
 
           <div class="dc-row">
-            <label>🎯 Destino dos dados</label>
+            <label for="dc-target">🎯 Destino dos dados</label>
             <select id="dc-target">
               <option value="s3" selected>🪣 Data Lake (S3 + Glue Catalog)</option>
               <option value="warehouse">🏛️ Data Warehouse (Redshift)</option>

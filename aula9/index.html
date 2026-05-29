@@ -328,7 +328,7 @@
       <div class="tr-card">
         <div class="tr-langs">
           <div class="tr-lang-pick">
-            <label>De</label>
+            <label for="tr-from">De</label>
             <select id="tr-from">
               <option value="auto" selected>🌐 Auto-detectar</option>
               <option value="pt">🇧🇷 Português</option>
@@ -351,7 +351,7 @@
           </div>
           <button class="tr-swap" id="tr-swap" title="Trocar idiomas">⇄</button>
           <div class="tr-lang-pick">
-            <label>Para</label>
+            <label for="tr-to">Para</label>
             <select id="tr-to">
               <option value="en">🇺🇸 English</option>
               <option value="pt" selected>🇧🇷 Português</option>
@@ -480,17 +480,17 @@
       <div class="tlab-card">
         <div class="tlab-card-head">📋 Caso de uso</div>
         <div class="tlab-row">
-          <label>📊 Volume mensal de chars</label>
+          <label for="tlab-vol">📊 Volume mensal de chars</label>
           <input type="range" id="tlab-vol" min="0" max="6" step="1" value="3">
           <span class="val" id="tlab-vol-v">10 milhões</span>
         </div>
         <div class="tlab-row">
-          <label>⏱️ Latência aceitável</label>
+          <label for="tlab-lat">⏱️ Latência aceitável</label>
           <input type="range" id="tlab-lat" min="0" max="3" step="1" value="1">
           <span class="val" id="tlab-lat-v">≤ 1 segundo</span>
         </div>
         <div class="tlab-row">
-          <label>🔁 Frequência</label>
+          <label for="tlab-freq">🔁 Frequência</label>
           <select id="tlab-freq">
             <option value="continuous" selected>Contínuo (chega o tempo todo)</option>
             <option value="daily">Diário (1× por dia)</option>
@@ -637,7 +637,7 @@
             </div>
           </div>
           <div class="fr-input">
-            <label>🌍 País origem do IP</label>
+            <label for="fr-country">🌍 País origem do IP</label>
             <select id="fr-country">
               <option value="BR" selected>🇧🇷 Brasil (mesmo do cliente)</option>
               <option value="US">🇺🇸 EUA</option>
@@ -647,7 +647,7 @@
             </select>
           </div>
           <div class="fr-input">
-            <label>🕐 Hora da transação</label>
+            <label for="fr-hour">🕐 Hora da transação</label>
             <select id="fr-hour">
               <option value="day" selected>☀️ Dia (8h-18h)</option>
               <option value="evening">🌆 Noite (18h-23h)</option>
@@ -655,11 +655,11 @@
             </select>
           </div>
           <div class="fr-input">
-            <label>📧 Idade do email (dias)</label>
+            <label for="fr-email-age">📧 Idade do email (dias)</label>
             <input type="number" id="fr-email-age" value="730" min="0" max="3650">
           </div>
           <div class="fr-input">
-            <label>💳 Tipo de pagamento</label>
+            <label for="fr-card">💳 Tipo de pagamento</label>
             <select id="fr-card">
               <option value="known" selected>Cartão conhecido (mesmo já usado)</option>
               <option value="new">Cartão novo cadastrado hoje</option>
@@ -667,11 +667,11 @@
             </select>
           </div>
           <div class="fr-input">
-            <label>🌐 Velocidade (compras na última 1h)</label>
+            <label for="fr-velocity">🌐 Velocidade (compras na última 1h)</label>
             <input type="number" id="fr-velocity" value="1" min="0" max="50">
           </div>
           <div class="fr-input">
-            <label>📍 Distância IP × endereço</label>
+            <label for="fr-distance">📍 Distância IP × endereço</label>
             <select id="fr-distance">
               <option value="same" selected>Mesma cidade</option>
               <option value="state">Mesmo estado</option>
@@ -680,7 +680,7 @@
             </select>
           </div>
           <div class="fr-input">
-            <label>🛒 Tipo de cliente</label>
+            <label for="fr-customer">🛒 Tipo de cliente</label>
             <select id="fr-customer">
               <option value="repeat" selected>Recorrente (>5 compras)</option>
               <option value="returning">Volta (1-5 compras)</option>

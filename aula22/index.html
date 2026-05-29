@@ -278,16 +278,16 @@
     <div class="mcb-lab">
       <div class="mcb-form">
         <div class="mcb-field">
-          <label>Nome do modelo</label>
+          <label for="mcb-name">Nome do modelo</label>
           <input type="text" id="mcb-name" value="cat-finder-v3">
         </div>
         <div class="mcb-row">
           <div class="mcb-field">
-            <label>Versão</label>
+            <label for="mcb-version">Versão</label>
             <input type="text" id="mcb-version" value="3.2.1">
           </div>
           <div class="mcb-field">
-            <label>Status</label>
+            <label for="mcb-status">Status</label>
             <select id="mcb-status">
               <option value="draft">Draft</option>
               <option value="pending">Pending review</option>
@@ -297,7 +297,7 @@
           </div>
         </div>
         <div class="mcb-field">
-          <label>Risk rating</label>
+          <label for="mcb-risk">Risk rating</label>
           <select id="mcb-risk">
             <option value="low">Low</option>
             <option value="medium" selected>Medium</option>
@@ -305,33 +305,33 @@
           </select>
         </div>
         <div class="mcb-field">
-          <label>Uso pretendido</label>
+          <label for="mcb-intended">Uso pretendido</label>
           <textarea id="mcb-intended" rows="2">Identificar gatos perdidos comparando foto enviada por usuário com fotos da base do abrigo. Apoia adoção e devolução.</textarea>
         </div>
         <div class="mcb-field">
-          <label>Uso NÃO pretendido</label>
+          <label for="mcb-not">Uso NÃO pretendido</label>
           <textarea id="mcb-not" rows="2">Identificação forense, vigilância, decisão final sem revisão humana, classificação de raça pra fins de pedigree.</textarea>
         </div>
         <div class="mcb-row">
           <div class="mcb-field">
-            <label>Acurácia</label>
+            <label for="mcb-acc">Acurácia</label>
             <input type="text" id="mcb-acc" value="92.4%">
           </div>
           <div class="mcb-field">
-            <label>Precisão</label>
+            <label for="mcb-prec">Precisão</label>
             <input type="text" id="mcb-prec" value="89.1%">
           </div>
           <div class="mcb-field">
-            <label>Recall</label>
+            <label for="mcb-rec">Recall</label>
             <input type="text" id="mcb-rec" value="87.3%">
           </div>
         </div>
         <div class="mcb-field">
-          <label>Riscos identificados</label>
+          <label for="mcb-risks">Riscos identificados</label>
           <textarea id="mcb-risks" rows="2">Performance ~10pp menor em fotos noturnas. Sub-representação de raças sem pelo (sphynx). Possível sobreajuste a fotos do abrigo.</textarea>
         </div>
         <div class="mcb-field">
-          <label>Mitigações</label>
+          <label for="mcb-mit">Mitigações</label>
           <textarea id="mcb-mit" rows="2">Aviso ao usuário em fotos com baixa luminosidade. Threshold mais alto pra aprovar match. HITL via A2I em score &lt; 0.75.</textarea>
         </div>
       </div>
