@@ -1,5 +1,10 @@
 name: Atualizar sitemap
 
+# Roda ANTES do Pages re-deployar, regenerando sitemap.xml com lastmod novo
+# sempre que algum HTML mudar. Se o sitemap precisar de update, faz commit
+# (com [skip ci] pra não disparar o CI de novo) e o Pages publica a versão
+# atualizada automaticamente.
+
 on:
   push:
     branches: [main]
@@ -20,19 +25,16 @@ jobs:
   regenerate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
-      - name: Regenerar sitemap.xml
-        run: python scripts/generate_sitemap.py
+      - run: python scripts/generate_sitemap.py
 
       - name: Commit se mudou
         run: |

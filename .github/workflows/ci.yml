@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  htmlhint:
+    name: HTMLHint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install -g htmlhint@1.1.4
+      # htmlhint reads .htmlhintrc from the working directory automatically
+      - run: htmlhint "**/*.html" --ignore "node_modules/**"
+
+  link-check:
+    name: Link checker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --max-concurrency 8
+            --accept 200,206,301,302,308,403,429
+            --exclude-mail
+            --exclude "linkedin\.com"
+            --exclude "twitter\.com"
+            --exclude "x\.com"
+            --exclude "localhost"
+            "**/*.html"
+          fail: false
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lychee-report
+          path: ./lychee/out.md
+          if-no-files-found: ignore
+
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    # Só roda em push pra main (depois do Pages estar publicado).
+    # Pula em PR, pra não testar uma URL que ainda nem deployou.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install -g @lhci/cli@0.14.x
+      - name: Aguardar GitHub Pages re-deployar
+        run: sleep 90
+      - run: lhci autorun --config=.lighthouserc.json
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          if-no-files-found: ignore
