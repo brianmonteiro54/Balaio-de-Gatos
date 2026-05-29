@@ -43,7 +43,13 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add sitemap.xml
             git commit -m "chore(seo): atualizar sitemap.xml [skip ci]"
-            git push
+            # Pode haver commits novos no remote (ex: bot de OG rodando em paralelo).
+            # Rebase + push com retry simples pra evitar race condition.
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push origin main && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 3
+            done
           else
             echo "sitemap.xml já está atualizado, nada a commitar."
           fi

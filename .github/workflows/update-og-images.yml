@@ -33,7 +33,7 @@ jobs:
 
       - name: Cache do Playwright
         id: pw-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-chromium-1223
@@ -55,7 +55,13 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add assets/og
             git commit -m "chore(seo): regenerar imagens OG [skip ci]"
-            git push
+            # Pode haver commits novos no remote (ex: bot do sitemap rodando em paralelo).
+            # Rebase + push com retry simples pra evitar race condition.
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push origin main && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 3
+            done
           else
             echo "Nenhuma imagem mudou."
           fi
