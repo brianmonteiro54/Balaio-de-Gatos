@@ -17,6 +17,11 @@ on:
 permissions:
   contents: write
 
+env:
+  # Força actions JS a rodarem no Node 24 (runtime interno).
+  # Vai virar default em junho/2026; antecipamos pra silenciar o warning de deprecation.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 concurrency:
   group: sitemap-${{ github.ref }}
   cancel-in-progress: true

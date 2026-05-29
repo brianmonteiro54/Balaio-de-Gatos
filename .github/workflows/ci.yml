@@ -10,6 +10,11 @@ on:
 permissions:
   contents: read
 
+env:
+  # Força actions JS a rodarem no Node 24 (runtime interno).
+  # Vai virar default em junho/2026; antecipamos pra silenciar o warning de deprecation.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -22,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - run: npm install -g htmlhint@1.1.4
       # htmlhint reads .htmlhintrc from the working directory automatically
       - run: htmlhint "**/*.html" --ignore "node_modules/**"
@@ -62,7 +67,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - run: npm install -g @lhci/cli@0.14.x
       - name: Aguardar GitHub Pages re-deployar
         run: sleep 90
