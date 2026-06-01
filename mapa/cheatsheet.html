@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheatsheet AIF-C01 · Balaio de Gatos</title>
+<meta name="description" content="Vade-mecum imprimível da AWS AI Practitioner. 5 domínios, 3 decisões, 20 serviços, 10 pegadinhas. Cabe em 2 folhas A4.">
+<meta name="robots" content="noindex">
+
+<link rel="icon" type="image/png" href="../favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --ink:    #2B1810;
+  --ink-2:  #4A3528;
+  --ink-3:  #6E5642;
+  --paper:  #FFF9EC;
+  --cream:  #FBF3E2;
+  --cream-2:#F5E9CF;
+  --orange: #FF6B35;
+  --orange-deep: #E54E1B;
+  --sage:   #5C8D89;
+  --sage-deep: #3F6864;
+  --purple: #8A6FB1;
+  --purple-deep: #5B3F87;
+  --coral:  #C73E1D;
+  --caramel:#D4A574;
+  --yellow: #F4D35E;
+  --olive:  #6B8E23;
+}
+
+*{box-sizing: border-box; margin: 0; padding: 0}
+html{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body{
+  font-family: 'Sora', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.4;
+  font-size: 11.5pt;
+}
+
+/* ─── Tela: container centralizado simulando A4 ─── */
+.page{
+  max-width: 200mm;
+  margin: 18px auto;
+  padding: 14mm 14mm;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  position: relative;
+}
+.page + .page{ margin-top: 24px; }
+
+/* ─── Cabeçalho ─── */
+.cs-header{
+  border-bottom: 2.5px solid var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+.cs-header h1{
+  font-family: 'Caprasimo', serif;
+  font-size: 22pt;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.cs-header .scratch{
+  background: linear-gradient(180deg, transparent 60%, var(--yellow) 60%, var(--yellow) 92%, transparent 92%);
+  padding: 0 4px;
+}
+.cs-header .accent{ color: var(--orange-deep); }
+.cs-header .meta{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  color: var(--ink-2);
+  text-align: right;
+  line-height: 1.4;
+}
+.cs-header .meta strong{ color: var(--ink); font-weight: 700; }
+
+/* ─── Blocos ─── */
+.cs-block{
+  margin-bottom: 10mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.cs-block h2{
+  font-family: 'Caprasimo', serif;
+  font-size: 14pt;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1.5px solid var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.cs-block h2 .num{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9pt;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.cs-block h2 .h-meta{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  color: var(--ink-3);
+  font-weight: 400;
+  margin-left: auto;
+}
+
+/* ─── Bloco 1: domínios ─── */
+.cs-domains{
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 4px 12px;
+  font-size: 10.5pt;
+  align-items: baseline;
+}
+.cs-domains .d-num{
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 11pt;
+}
+.cs-domains .d-1 .d-num{ color: var(--sage-deep); }
+.cs-domains .d-2 .d-num{ color: var(--purple-deep); }
+.cs-domains .d-3 .d-num{ color: var(--orange-deep); }
+.cs-domains .d-4 .d-num{ color: var(--coral); }
+.cs-domains .d-5 .d-num{ color: #8B6E45; }
+.cs-domains .d-name{ font-weight: 700; }
+.cs-domains .d-1 { display: contents; }
+.cs-domains .d-2 { display: contents; }
+.cs-domains .d-3 { display: contents; }
+.cs-domains .d-4 { display: contents; }
+.cs-domains .d-5 { display: contents; }
+.cs-domains .d-row{ display: contents; }
+.cs-domains .d-pct{
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  padding-right: 4px;
+}
+.cs-domains .d-pct.maior::after{
+  content: ' ⭐';
+}
+.cs-domains .d-keys{
+  font-size: 10pt;
+  color: var(--ink-2);
+}
+
+/* ─── Bloco 2: decisões ─── */
+.cs-dec{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.cs-dec-card{
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: var(--cream);
+}
+.cs-dec-card .title{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-2);
+  margin-bottom: 4px;
+}
+.cs-dec-card .answer{
+  font-family: 'Caprasimo', serif;
+  font-size: 14pt;
+  color: var(--orange-deep);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.cs-dec-card .when{
+  font-size: 9.5pt;
+  color: var(--ink-2);
+  line-height: 1.3;
+}
+.cs-dec-title{
+  font-weight: 700;
+  font-size: 11pt;
+  margin: 8px 0 4px;
+  color: var(--ink);
+}
+
+/* ─── Bloco 3: serviços ─── */
+.cs-svc{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 16px;
+  font-size: 10pt;
+}
+.cs-svc-fam{
+  grid-column: 1 / -1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-2);
+  margin: 6px 0 1px;
+  padding-bottom: 1px;
+  border-bottom: 1px dashed var(--ink-3);
+}
+.cs-svc-row{
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 6px;
+  align-items: baseline;
+}
+.cs-svc-row .sym{
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 9pt;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.cs-svc-row .body strong{ font-weight: 700; }
+.cs-svc-row .body{ line-height: 1.35; }
+
+/* ─── Bloco 4: pegadinhas ─── */
+.cs-trap{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 14px;
+  font-size: 10pt;
+}
+.cs-trap-row{
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 4px;
+  align-items: baseline;
+  padding: 2px 0;
+}
+.cs-trap-row .num{
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--orange-deep);
+  font-size: 9.5pt;
+}
+.cs-trap-row .body{ line-height: 1.35; }
+.cs-trap-row .body strong{ font-weight: 700; }
+.cs-trap-row .body .v{ color: var(--orange-deep); font-weight: 700; }
+.cs-trap-row .body .x{ color: var(--coral); font-weight: 700; }
+
+/* ─── Bloco 5: atalhos mentais ─── */
+.cs-shortcuts{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px 14px;
+  font-size: 9.5pt;
+}
+.cs-shortcuts .row{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 6px;
+  align-items: baseline;
+  padding: 1px 0;
+}
+.cs-shortcuts .row .q{ color: var(--ink-2); }
+.cs-shortcuts .row .arrow{ color: var(--ink-3); font-weight: 700; }
+.cs-shortcuts .row .a{ font-weight: 700; color: var(--orange-deep); }
+
+/* ─── Botão de impressão e voltar (só na tela) ─── */
+.toolbar{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--cream);
+  padding: 10px 18px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 0 var(--ink);
+}
+.btn{
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 9px 18px;
+  border: 2.5px solid var(--ink);
+  border-radius: 100px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.btn:hover{
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.btn.primary{
+  background: var(--orange);
+  color: var(--paper);
+}
+.btn.ghost{
+  background: transparent;
+}
+
+.foot-tip{
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9pt;
+  color: var(--ink-3);
+  padding: 12px;
+}
+
+/* ─── IMPRESSÃO ─── */
+@media print{
+  body{
+    background: white;
+    font-size: 8.5pt;
+    line-height: 1.28;
+  }
+  .toolbar, .foot-tip, .no-print{ display: none !important; }
+  .page{
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: white;
+    border: 0;
+    box-shadow: none;
+  }
+  .page + .page{ margin: 0; }
+  .cs-block{ margin-bottom: 3.5mm; }
+  .cs-block h2{ font-size: 10.5pt; padding-bottom: 2px; margin-bottom: 4px; }
+  .cs-block h2 .num{ font-size: 7.5pt; padding: 1px 5px; }
+  .cs-block h2 .h-meta{ font-size: 7pt; }
+  .cs-header{ margin-bottom: 6px; padding-bottom: 4px; }
+  .cs-header h1{ font-size: 15pt; }
+  .cs-header .meta{ font-size: 7.5pt; }
+  .cs-header .scratch{
+    background: linear-gradient(180deg, transparent 60%, #ffe680 60%, #ffe680 92%, transparent 92%);
+  }
+  .page:not(:first-of-type) .cs-header{ display: none; }
+  /* Domínios — mais denso */
+  .cs-domains{ font-size: 8.5pt; gap: 2px 10px; }
+  .cs-domains .d-num{ font-size: 9pt; }
+  .cs-domains .d-keys{ font-size: 8pt; }
+  /* Decisões — cards mais comprimidos */
+  .cs-dec{ gap: 5px; margin-bottom: 4px; }
+  .cs-dec-card{ background: #fafafa; padding: 5px 7px; }
+  .cs-dec-card .title{ font-size: 7pt; margin-bottom: 2px; }
+  .cs-dec-card .answer{ font-size: 12pt; margin-bottom: 2px; }
+  .cs-dec-card .when{ font-size: 8pt; line-height: 1.25; }
+  .cs-dec-title{ font-size: 9pt; margin: 4px 0 3px; }
+  /* Serviços — 3 colunas */
+  .cs-svc{ grid-template-columns: repeat(3, 1fr); gap: 3px 12px; font-size: 8.5pt; }
+  .cs-svc-fam{ font-size: 7.5pt; margin: 4px 0 2px; }
+  .cs-svc-row{ grid-template-columns: 26px 1fr; gap: 4px; }
+  .cs-svc-row .sym{ background: #2B1810; color: white; font-size: 7.5pt; padding: 1px 3px; }
+  .cs-svc-row .body{ font-size: 8pt; line-height: 1.25; }
+  /* Pegadinhas — 3 colunas */
+  .cs-trap{ grid-template-columns: repeat(3, 1fr); gap: 3px 10px; font-size: 8pt; }
+  .cs-trap-row{ padding: 1px 0; }
+  .cs-trap-row .body{ line-height: 1.25; }
+  /* Atalhos — 3 colunas */
+  .cs-shortcuts{ grid-template-columns: repeat(3, 1fr); gap: 2px 12px; font-size: 7.5pt; }
+  .cs-shortcuts .row{ grid-template-columns: 1fr auto 1fr; gap: 4px; }
+  a{ color: inherit; text-decoration: none; }
+}
+@page{
+  size: A4 portrait;
+  margin: 12mm 12mm 12mm 12mm;
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <a href="index.html" class="btn ghost">← Voltar pro Mapa</a>
+  <button class="btn primary" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+</div>
+
+<!-- ═════════════════ PÁGINA 1 ═════════════════ -->
+<div class="page">
+
+  <header class="cs-header">
+    <div>
+      <h1>Cheatsheet <span class="scratch">AIF-C01</span></h1>
+      <p style="font-family:'JetBrains Mono',monospace; font-size: 9pt; color: var(--ink-2); margin-top: 4px;">
+        AWS Certified AI Practitioner · vade-mecum pra prova
+      </p>
+    </div>
+    <div class="meta">
+      <strong>65 questões</strong> · 90 min<br>
+      corte 700/1000 (~70%)<br>
+      US$ 100 · foundational<br>
+      <span style="opacity: 0.6">Balaio de Gatos · Escola da Nuvem</span>
+    </div>
+  </header>
+
+  <!-- BLOCO 1: DOMÍNIOS -->
+  <section class="cs-block">
+    <h2><span class="num">01</span> Os 5 domínios e seus pesos <span class="h-meta">D3 sozinho ≈ ⅓ da prova</span></h2>
+    <div class="cs-domains">
+      <div class="d-row d-1"><span class="d-num">01</span><span class="d-pct">20%</span><span><strong class="d-name">Fundamentos de IA e ML</strong> <span class="d-keys">— Sup/Não-sup/Reforço · Classif vs Regr · Treino/Val/Teste · Over/Underfitting · Métricas (Acc, P, R, F1, ROC/AUC, MSE, RMSE, R²) · Embeddings · Pipeline ML</span></span></div>
+      <div class="d-row d-2"><span class="d-num">02</span><span class="d-pct">24%</span><span><strong class="d-name">Fundamentos de GenAI</strong> <span class="d-keys">— Foundation Models · LLM/SLM · Transformer · Tokens · Embeddings · Vector DB · Multimodal · Alucinação · GAN/Diffusion · Vantagens × Limitações</span></span></div>
+      <div class="d-row d-3"><span class="d-num">03</span><span class="d-pct maior">28%</span><span><strong class="d-name">Aplicações de Foundation Models</strong> <span class="d-keys">— Bedrock (KB, Agents, Guardrails) · RAG · Fine-tuning vs Continued Pre-training · Prompt Eng (0/few-shot, CoT) · Temperature / top-p / top-k · Vector DBs · Amazon Q · Model evaluation</span></span></div>
+      <div class="d-row d-4"><span class="d-num">04</span><span class="d-pct">14%</span><span><strong class="d-name">Diretrizes para IA Responsável</strong> <span class="d-keys">— Bias (data/sampling) · Fairness · XAI/Explicabilidade · SageMaker Clarify · Model Monitor · A2I (HITL) · Model Cards · Toxicidade</span></span></div>
+      <div class="d-row d-5"><span class="d-num">05</span><span class="d-pct">14%</span><span><strong class="d-name">Segurança, Conformidade e Governança</strong> <span class="d-keys">— IAM · KMS · VPC Endpoints (PrivateLink) · CloudTrail · CloudWatch · Macie · AWS Config · GDPR/HIPAA · Modelo de responsabilidade compartilhada</span></span></div>
+    </div>
+  </section>
+
+  <!-- BLOCO 2: DECISÕES -->
+  <section class="cs-block">
+    <h2><span class="num">02</span> As 3 grandes decisões <span class="h-meta">Pelo menos uma cai em quase toda prova</span></h2>
+
+    <div class="cs-dec-title">RAG × Fine-tuning × Prompt Engineering</div>
+    <div class="cs-dec">
+      <div class="cs-dec-card">
+        <div class="title">Dados mudam</div>
+        <div class="answer">RAG</div>
+        <div class="when">Busca trechos do vector DB e injeta no prompt. <strong>Não treina o modelo.</strong> Custo baixo.</div>
+      </div>
+      <div class="cs-dec-card">
+        <div class="title">Tom de voz / estilo / jargão</div>
+        <div class="answer">Fine-tuning</div>
+        <div class="when">Ajusta os pesos do modelo com seus <strong>dados rotulados</strong>. Custo alto.</div>
+      </div>
+      <div class="cs-dec-card">
+        <div class="title">Instrução simples</div>
+        <div class="answer">Prompt Eng</div>
+        <div class="when">Zero-shot, few-shot, CoT. <strong>Sem mudar o modelo, sem dados externos.</strong> Custo mínimo.</div>
+      </div>
+    </div>
+
+    <div class="cs-dec-title">Bedrock × SageMaker × Amazon Q</div>
+    <div class="cs-dec">
+      <div class="cs-dec-card">
+        <div class="title">Construir app GenAI</div>
+        <div class="answer">Bedrock</div>
+        <div class="when">API pra acessar FMs sem gerenciar infra. Skill baixo.</div>
+      </div>
+      <div class="cs-dec-card">
+        <div class="title">Ciclo completo de ML</div>
+        <div class="answer">SageMaker</div>
+        <div class="when">Full-stack ML: rotular, treinar, deployar, monitorar custom. Skill alto.</div>
+      </div>
+      <div class="cs-dec-card">
+        <div class="title">Assistente pronto</div>
+        <div class="answer">Q</div>
+        <div class="when">Q Business (Q&A corporativo) · Q Developer (código na IDE).</div>
+      </div>
+    </div>
+
+    <div class="cs-dec-title">Temperature</div>
+    <div class="cs-dec">
+      <div class="cs-dec-card">
+        <div class="title">Factual, repetível</div>
+        <div class="answer">Baixa (0–0.3)</div>
+        <div class="when">Q&A técnico · análise de docs · extração de dados.</div>
+      </div>
+      <div class="cs-dec-card">
+        <div class="title">Equilibrado</div>
+        <div class="answer">Média (0.4–0.7)</div>
+        <div class="when">Chatbots · suporte · e-mails. Default da maioria.</div>
+      </div>
+      <div class="cs-dec-card">
+        <div class="title">Criativo</div>
+        <div class="answer">Alta (0.8–1.0+)</div>
+        <div class="when">Brainstorm · copywriting · ideação. Variado, inconsistente.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═════════════════ PÁGINA 2 ═════════════════ -->
+<div class="page">
+
+  <header class="cs-header">
+    <div>
+      <h1>Cheatsheet <span class="scratch">AIF-C01</span> <span class="accent">· verso</span></h1>
+    </div>
+    <div class="meta">página 2 de 2 · serviços + pegadinhas</div>
+  </header>
+
+  <!-- BLOCO 3: SERVIÇOS-ÂNCORA -->
+  <section class="cs-block">
+    <h2><span class="num">03</span> Serviços AWS-âncora (sigla → uso em 1 linha) <span class="h-meta">23 serviços que mapeiam a maioria das questões</span></h2>
+    <div class="cs-svc">
+
+      <div class="cs-svc-fam">🧠 Foundation / GenAI</div>
+      <div class="cs-svc-row"><span class="sym">Bed</span><span class="body"><strong>Bedrock</strong> — FMs como serviço, API. Sem infra.</span></div>
+      <div class="cs-svc-row"><span class="sym">BKB</span><span class="body"><strong>Knowledge Bases</strong> — RAG gerenciado em cima do Bedrock.</span></div>
+      <div class="cs-svc-row"><span class="sym">BAg</span><span class="body"><strong>Bedrock Agents</strong> — FM chama APIs e executa ações multi-step.</span></div>
+      <div class="cs-svc-row"><span class="sym">BGr</span><span class="body"><strong>Guardrails</strong> — filtra conteúdo (PII, toxicidade, tópicos).</span></div>
+
+      <div class="cs-svc-fam">⚙️ ML Workbench · SageMaker family</div>
+      <div class="cs-svc-row"><span class="sym">SM</span><span class="body"><strong>SageMaker</strong> — plataforma ML completa (treino → deploy → monitor).</span></div>
+      <div class="cs-svc-row"><span class="sym">SMC</span><span class="body"><strong>SM Canvas</strong> — ML no-code, pra analistas de negócio.</span></div>
+      <div class="cs-svc-row"><span class="sym">SMJ</span><span class="body"><strong>SM JumpStart</strong> — catálogo de FMs pré-treinados.</span></div>
+      <div class="cs-svc-row"><span class="sym">SMx</span><span class="body"><strong>SM Clarify</strong> — detecta viés + gera explicações (SHAP).</span></div>
+      <div class="cs-svc-row"><span class="sym">SMM</span><span class="body"><strong>Model Monitor</strong> — alerta drift do modelo em produção.</span></div>
+
+      <div class="cs-svc-fam">💬 Texto / NLP</div>
+      <div class="cs-svc-row"><span class="sym">Cmp</span><span class="body"><strong>Comprehend</strong> — sentimento, entidades, idioma, key phrases.</span></div>
+      <div class="cs-svc-row"><span class="sym">Knd</span><span class="body"><strong>Kendra</strong> — busca semântica em docs internos.</span></div>
+      <div class="cs-svc-row"><span class="sym">Trl</span><span class="body"><strong>Translate</strong> — tradução neural entre 75+ idiomas.</span></div>
+      <div class="cs-svc-row"><span class="sym">Txt</span><span class="body"><strong>Textract</strong> — OCR de docs (texto, tabelas, formulários).</span></div>
+
+      <div class="cs-svc-fam">🎤 Voz · 👁️ Visão</div>
+      <div class="cs-svc-row"><span class="sym">Pll</span><span class="body"><strong>Polly</strong> — texto → fala (TTS), várias vozes/idiomas.</span></div>
+      <div class="cs-svc-row"><span class="sym">Tsc</span><span class="body"><strong>Transcribe</strong> — fala → texto (STT), com diarização.</span></div>
+      <div class="cs-svc-row"><span class="sym">Lex</span><span class="body"><strong>Lex</strong> — chatbots (intent, slots). Mesma tech da Alexa.</span></div>
+      <div class="cs-svc-row"><span class="sym">Rek</span><span class="body"><strong>Rekognition</strong> — visão: objetos, rostos, moderação.</span></div>
+
+      <div class="cs-svc-fam">🤖 Assistentes prontos</div>
+      <div class="cs-svc-row"><span class="sym">QB</span><span class="body"><strong>Q Business</strong> — Q&A corporativo em docs internos.</span></div>
+      <div class="cs-svc-row"><span class="sym">QD</span><span class="body"><strong>Q Developer</strong> — copiloto de código na IDE.</span></div>
+
+      <div class="cs-svc-fam">🔒 Segurança / Governança · 🗃️ Dados</div>
+      <div class="cs-svc-row"><span class="sym">A2I</span><span class="body"><strong>A2I</strong> — workflow de revisão humana (human-in-the-loop).</span></div>
+      <div class="cs-svc-row"><span class="sym">IAM</span><span class="body"><strong>IAM + KMS + CloudTrail</strong> — combo de segurança padrão.</span></div>
+      <div class="cs-svc-row"><span class="sym">Mac</span><span class="body"><strong>Macie</strong> — descobre PII em S3 automaticamente.</span></div>
+      <div class="cs-svc-row"><span class="sym">OS</span><span class="body"><strong>OpenSearch</strong> — vector DB pra embeddings (base do RAG).</span></div>
+
+    </div>
+  </section>
+
+  <!-- BLOCO 4: PEGADINHAS -->
+  <section class="cs-block">
+    <h2><span class="num">04</span> 10 pegadinhas que derrubam todo mundo</h2>
+    <div class="cs-trap">
+      <div class="cs-trap-row"><span class="num">01</span><span class="body"><strong>RAG ≠ Fine-tuning.</strong> Dados que mudam → <span class="v">RAG</span>. Estilo/tom → <span class="v">FT</span>.</span></div>
+      <div class="cs-trap-row"><span class="num">02</span><span class="body"><strong>Fine-tuning ≠ Continued Pre-training.</strong> Rotulado/pouco → <span class="v">FT</span>. Não-rotulado/muito → <span class="v">CPT</span>.</span></div>
+      <div class="cs-trap-row"><span class="num">03</span><span class="body"><strong>Clarify ≠ Model Monitor.</strong> Detectar bias → <span class="v">Clarify</span>. Drift em produção → <span class="v">Monitor</span>.</span></div>
+      <div class="cs-trap-row"><span class="num">04</span><span class="body"><strong>Q Business ≠ Q Developer.</strong> Docs da empresa → <span class="v">Business</span>. Código na IDE → <span class="v">Developer</span>.</span></div>
+      <div class="cs-trap-row"><span class="num">05</span><span class="body"><strong>Lex ≠ Bedrock.</strong> Interface de chat → <span class="v">Lex</span>. Inteligência → <span class="v">Bedrock</span>. Combinam.</span></div>
+      <div class="cs-trap-row"><span class="num">06</span><span class="body"><strong>Temperature alta ≠ resposta melhor.</strong> Alta = aleatória. Factual = baixa.</span></div>
+      <div class="cs-trap-row"><span class="num">07</span><span class="body"><strong>Alucinação se "mitiga", não se "elimina".</strong> RAG + revisão + validação. Resposta com "elimina 100%" → <span class="x">errada</span>.</span></div>
+      <div class="cs-trap-row"><span class="num">08</span><span class="body"><strong>Precision ≠ Recall.</strong> Falso positivo dói → <span class="v">Precision</span>. Falso negativo dói → <span class="v">Recall</span>.</span></div>
+      <div class="cs-trap-row"><span class="num">09</span><span class="body"><strong>Guardrails ≠ IAM.</strong> Filtra conteúdo → <span class="v">Guardrails</span>. Controla acesso → <span class="v">IAM</span>.</span></div>
+      <div class="cs-trap-row"><span class="num">10</span><span class="body"><strong>"Treinar FM do zero"</strong> quase nunca é a resposta. Adapta um pronto (RAG/FT).</span></div>
+    </div>
+  </section>
+
+  <!-- BLOCO 5: ATALHOS MENTAIS -->
+  <section class="cs-block">
+    <h2><span class="num">05</span> Atalhos mentais "cenário → resposta" <span class="h-meta">leitura direta na hora da prova</span></h2>
+    <div class="cs-shortcuts">
+      <div class="row"><span class="q">detectar viés em dataset/modelo</span><span class="arrow">→</span><span class="a">SageMaker Clarify</span></div>
+      <div class="row"><span class="q">modelo piora ao longo do tempo</span><span class="arrow">→</span><span class="a">Model Monitor</span></div>
+      <div class="row"><span class="q">filtrar PII/toxicidade no FM</span><span class="arrow">→</span><span class="a">Bedrock Guardrails</span></div>
+      <div class="row"><span class="q">RAG totalmente gerenciado</span><span class="arrow">→</span><span class="a">Knowledge Bases</span></div>
+      <div class="row"><span class="q">FM que chama APIs externas</span><span class="arrow">→</span><span class="a">Bedrock Agents</span></div>
+      <div class="row"><span class="q">revisão humana em ML</span><span class="arrow">→</span><span class="a">Amazon A2I</span></div>
+      <div class="row"><span class="q">Q&A nos docs da empresa</span><span class="arrow">→</span><span class="a">Amazon Q Business</span></div>
+      <div class="row"><span class="q">copiloto de código na IDE</span><span class="arrow">→</span><span class="a">Amazon Q Developer</span></div>
+      <div class="row"><span class="q">ML no-code pra analista</span><span class="arrow">→</span><span class="a">SageMaker Canvas</span></div>
+      <div class="row"><span class="q">FMs pré-treinados prontos</span><span class="arrow">→</span><span class="a">SM JumpStart</span></div>
+      <div class="row"><span class="q">achar PII em S3 automático</span><span class="arrow">→</span><span class="a">Amazon Macie</span></div>
+      <div class="row"><span class="q">auditoria — quem chamou quando</span><span class="arrow">→</span><span class="a">CloudTrail</span></div>
+      <div class="row"><span class="q">tráfego AWS sem internet pública</span><span class="arrow">→</span><span class="a">VPC Endpoints (PrivateLink)</span></div>
+      <div class="row"><span class="q">criptografia em repouso (S3, EBS)</span><span class="arrow">→</span><span class="a">KMS</span></div>
+      <div class="row"><span class="q">controle de acesso a API</span><span class="arrow">→</span><span class="a">IAM</span></div>
+      <div class="row"><span class="q">OCR de docs digitalizados</span><span class="arrow">→</span><span class="a">Textract</span></div>
+      <div class="row"><span class="q">NLP gerenciado (sentimento etc)</span><span class="arrow">→</span><span class="a">Comprehend</span></div>
+      <div class="row"><span class="q">visão computacional</span><span class="arrow">→</span><span class="a">Rekognition</span></div>
+      <div class="row"><span class="q">texto → fala (TTS)</span><span class="arrow">→</span><span class="a">Polly</span></div>
+      <div class="row"><span class="q">fala → texto (STT)</span><span class="arrow">→</span><span class="a">Transcribe</span></div>
+      <div class="row"><span class="q">tradução neural</span><span class="arrow">→</span><span class="a">Translate</span></div>
+      <div class="row"><span class="q">chatbot conversacional</span><span class="arrow">→</span><span class="a">Lex (+ Bedrock)</span></div>
+      <div class="row"><span class="q">vector DB pra RAG</span><span class="arrow">→</span><span class="a">OpenSearch / Aurora pgvector</span></div>
+      <div class="row"><span class="q">comparar/avaliar FMs</span><span class="arrow">→</span><span class="a">Bedrock Model Evaluation</span></div>
+    </div>
+  </section>
+
+</div>
+
+<p class="foot-tip no-print">
+  ↑ Aperta Ctrl/Cmd + P pra imprimir · ou salva como PDF · cabe em 2 folhas A4
+</p>
+
+</body>
+</html>

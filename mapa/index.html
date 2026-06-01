@@ -612,139 +612,187 @@
      ═══════════════════════════════════════ -->
 <section class="block" id="mapa">
   <div class="container">
-    <span class="section-kicker">🗺️ mapa visual</span>
-    <h2 class="section-title">Mapa de <span class="accent">palavras-chave</span>.</h2>
+    <span class="section-kicker">🧪 tabela periódica</span>
+    <h2 class="section-title">Os <span class="accent">serviços AWS de IA</span>, organizados como elementos.</h2>
     <p class="section-sub">
-      Cada palavra é um termo que pode aparecer no enunciado. <strong>O tamanho</strong> indica
-      o quanto cai. <strong>A cor</strong> diz a qual domínio pertence. Filtra por domínio
-      pra ver o que estudar primeiro. Passa o mouse pra dar uma chacoalhada nelas.
+      Oito famílias funcionais. <strong>Clica em qualquer um</strong> pra ver quando usar
+      (e quando NÃO usar). É a referência rápida pra a pegadinha mais frequente da prova:
+      <em>&ldquo;qual serviço AWS pra X?&rdquo;</em>.
     </p>
 
-    <div class="kw-controls">
-      <button class="kw-filter active" data-f="all">Todos</button>
-      <button class="kw-filter" data-f="d1"><span class="dot" style="background:var(--sage)"></span>Domínio 1 · Fundamentos</button>
-      <button class="kw-filter" data-f="d2"><span class="dot" style="background:var(--purple)"></span>Domínio 2 · GenAI</button>
-      <button class="kw-filter" data-f="d3"><span class="dot" style="background:var(--orange)"></span>Domínio 3 · FM Apps</button>
-      <button class="kw-filter" data-f="d4"><span class="dot" style="background:var(--coral)"></span>Domínio 4 · IA Responsável</button>
-      <button class="kw-filter" data-f="d5"><span class="dot" style="background:var(--caramel)"></span>Domínio 5 · Segurança</button>
+    <!-- Toolbar: botão do cheatsheet -->
+    <div class="pt-controls">
+      <a href="cheatsheet.html" class="pt-print-btn" target="_blank" rel="noopener">
+        🖨️ Cheatsheet pra imprimir
+      </a>
+      <span class="pt-controls-meta">2 páginas A4 frente e verso · vade-mecum da prova</span>
     </div>
 
-    <div class="kw-map" id="kw-map">
-      <!-- size 5 (gigante) -->
-      <span class="kw k-d3 s-5">Bedrock</span>
-      <span class="kw k-d3 s-5">RAG</span>
-      <span class="kw k-d2 s-5">Foundation Model</span>
-
-      <!-- size 4 (grande) -->
-      <span class="kw k-d3 s-4">Knowledge Bases</span>
-      <span class="kw k-d3 s-4">Fine-tuning</span>
-      <span class="kw k-d3 s-4">Prompt Engineering</span>
-      <span class="kw k-d1 s-4">SageMaker</span>
-      <span class="kw k-d4 s-4">Bias</span>
-      <span class="kw k-d2 s-4">LLM</span>
-      <span class="kw k-d2 s-4">Alucinação</span>
-      <span class="kw k-d2 s-4">Embeddings</span>
-
-      <!-- size 3 (médio-grande) -->
-      <span class="kw k-d3 s-3">Bedrock Agents</span>
-      <span class="kw k-d3 s-3">Guardrails</span>
-      <span class="kw k-d1 s-3">Supervisionado</span>
-      <span class="kw k-d1 s-3">Não-supervisionado</span>
-      <span class="kw k-d1 s-3">Reinforcement Learning</span>
-      <span class="kw k-d3 s-3">Temperature</span>
-      <span class="kw k-d3 s-3">Top-p</span>
-      <span class="kw k-d3 s-3">Top-k</span>
-      <span class="kw k-d3 s-3">Zero-shot</span>
-      <span class="kw k-d3 s-3">Few-shot</span>
-      <span class="kw k-d4 s-3">SageMaker Clarify</span>
-      <span class="kw k-d4 s-3">Fairness</span>
-      <span class="kw k-d4 s-3">Explicabilidade (XAI)</span>
-      <span class="kw k-d3 s-3">Amazon Q Business</span>
-      <span class="kw k-d3 s-3">Amazon Q Developer</span>
-      <span class="kw k-d1 s-3">Classificação</span>
-      <span class="kw k-d1 s-3">Regressão</span>
-      <span class="kw k-d2 s-3">Vector Database</span>
-      <span class="kw k-d5 s-3">IAM</span>
-      <span class="kw k-d5 s-3">KMS</span>
-
-      <!-- size 2 (médio) -->
-      <span class="kw k-d1 s-2">Acurácia</span>
-      <span class="kw k-d1 s-2">Precision</span>
-      <span class="kw k-d1 s-2">Recall</span>
-      <span class="kw k-d1 s-2">F1-Score</span>
-      <span class="kw k-d1 s-2">Matriz de Confusão</span>
-      <span class="kw k-d1 s-2">ROC / AUC</span>
-      <span class="kw k-d1 s-2">RMSE</span>
-      <span class="kw k-d1 s-2">MSE</span>
-      <span class="kw k-d1 s-2">R²</span>
-      <span class="kw k-d1 s-2">Overfitting</span>
-      <span class="kw k-d1 s-2">Underfitting</span>
-      <span class="kw k-d1 s-2">Bias-Variance</span>
-      <span class="kw k-d2 s-2">Tokens</span>
-      <span class="kw k-d2 s-2">Tokenização</span>
-      <span class="kw k-d2 s-2">Transformer</span>
-      <span class="kw k-d2 s-2">Multimodal</span>
-      <span class="kw k-d2 s-2">GAN</span>
-      <span class="kw k-d2 s-2">Diffusion</span>
-      <span class="kw k-d2 s-2">NLP</span>
-      <span class="kw k-d3 s-2">Chunking</span>
-      <span class="kw k-d3 s-2">Chain-of-Thought</span>
-      <span class="kw k-d3 s-2">JumpStart</span>
-      <span class="kw k-d3 s-2">SageMaker Canvas</span>
-      <span class="kw k-d3 s-2">Continued Pre-training</span>
-      <span class="kw k-d3 s-2">Inference</span>
-      <span class="kw k-d3 s-2">Endpoints</span>
-      <span class="kw k-d3 s-2">Comprehend</span>
-      <span class="kw k-d3 s-2">Rekognition</span>
-      <span class="kw k-d3 s-2">Lex</span>
-      <span class="kw k-d3 s-2">Polly</span>
-      <span class="kw k-d3 s-2">Translate</span>
-      <span class="kw k-d3 s-2">Transcribe</span>
-      <span class="kw k-d3 s-2">Textract</span>
-      <span class="kw k-d3 s-2">Kendra</span>
-      <span class="kw k-d4 s-2">Model Monitor</span>
-      <span class="kw k-d4 s-2">Drift</span>
-      <span class="kw k-d4 s-2">A2I (Human-in-the-loop)</span>
-      <span class="kw k-d4 s-2">Toxicidade</span>
-      <span class="kw k-d4 s-2">Model Cards</span>
-      <span class="kw k-d4 s-2">Transparência</span>
-      <span class="kw k-d5 s-2">VPC Endpoints</span>
-      <span class="kw k-d5 s-2">CloudTrail</span>
-      <span class="kw k-d5 s-2">CloudWatch</span>
-      <span class="kw k-d5 s-2">Macie</span>
-      <span class="kw k-d5 s-2">GDPR</span>
-      <span class="kw k-d5 s-2">Compliance</span>
-      <span class="kw k-d5 s-2">S3 Bucket Policy</span>
-
-      <!-- size 1 (pequeno) -->
-      <span class="kw k-d1 s-1">Pipeline ML</span>
-      <span class="kw k-d1 s-1">Feature Engineering</span>
-      <span class="kw k-d1 s-1">K-NN</span>
-      <span class="kw k-d1 s-1">Árvore de Decisão</span>
-      <span class="kw k-d1 s-1">Cross-validation</span>
-      <span class="kw k-d2 s-1">SLM</span>
-      <span class="kw k-d2 s-1">Multimodalidade</span>
-      <span class="kw k-d3 s-1">Model Evaluation</span>
-      <span class="kw k-d3 s-1">ROUGE</span>
-      <span class="kw k-d3 s-1">BLEU</span>
-      <span class="kw k-d3 s-1">Perplexity</span>
-      <span class="kw k-d3 s-1">PartyRock</span>
-      <span class="kw k-d3 s-1">CodeWhisperer</span>
-      <span class="kw k-d4 s-1">Inclusão</span>
-      <span class="kw k-d4 s-1">Sustentabilidade</span>
-      <span class="kw k-d5 s-1">AWS Config</span>
-      <span class="kw k-d5 s-1">Shared Responsibility</span>
-      <span class="kw k-d5 s-1">HIPAA</span>
-      <span class="kw k-d5 s-1">PII</span>
+    <!-- Tabela: renderizada por JS -->
+    <div class="pt-table" id="pt-table">
+      <!-- agrupada por família, renderizada pelo bloco 9 do script.js -->
     </div>
 
-    <div class="kw-legend">
-      <span class="li l1">D1 · Fundamentos AI/ML</span>
-      <span class="li l2">D2 · GenAI</span>
-      <span class="li l3">D3 · Foundation Models Apps</span>
-      <span class="li l4">D4 · IA Responsável</span>
-      <span class="li l5">D5 · Segurança</span>
+    <!-- Painel de detalhe (inline, aparece após clicar numa célula) -->
+    <div class="pt-detail" id="pt-detail" hidden>
+      <!-- preenchido por JS -->
     </div>
+
+    <!-- Legenda -->
+    <div class="pt-legend">
+      <span class="pt-leg pt-fam-gen">🧠 Foundation / GenAI</span>
+      <span class="pt-leg pt-fam-ml">⚙️ ML Workbench</span>
+      <span class="pt-leg pt-fam-txt">💬 Texto / NLP</span>
+      <span class="pt-leg pt-fam-voz">🎤 Voz</span>
+      <span class="pt-leg pt-fam-vis">👁️ Visão</span>
+      <span class="pt-leg pt-fam-asst">🤖 Assistentes</span>
+      <span class="pt-leg pt-fam-data">🗃️ Dados / Infra</span>
+      <span class="pt-leg pt-fam-sec">🔒 Segurança / Governança</span>
+    </div>
+
+    <!-- ─── divisor entre Periodic Table e Nuvem ─── -->
+    <div class="mapa-divider" role="separator">
+      <span class="mapa-divider-mark">+ panorama visual</span>
+    </div>
+
+    <!-- ─── NUVEM DE PALAVRAS-CHAVE (panorama visual original) ─── -->
+    <div class="kw-section">
+
+      <span class="section-kicker">🗺️ nuvem de palavras</span>
+      <h3 class="kw-section-title">97 termos que podem cair no <span class="accent">enunciado</span>.</h3>
+      <p class="section-sub">
+        <strong>O tamanho</strong> indica o quanto cai. <strong>A cor</strong> diz a qual domínio pertence.
+        Passa o mouse pra dar uma chacoalhada nelas e ver a definição.
+      </p>
+
+      <div class="kw-controls">
+        <button class="kw-filter active" data-f="all">Todos</button>
+        <button class="kw-filter" data-f="d1"><span class="dot" style="background:var(--sage)"></span>Domínio 1 · Fundamentos</button>
+        <button class="kw-filter" data-f="d2"><span class="dot" style="background:var(--purple)"></span>Domínio 2 · GenAI</button>
+        <button class="kw-filter" data-f="d3"><span class="dot" style="background:var(--orange)"></span>Domínio 3 · FM Apps</button>
+        <button class="kw-filter" data-f="d4"><span class="dot" style="background:var(--coral)"></span>Domínio 4 · IA Responsável</button>
+        <button class="kw-filter" data-f="d5"><span class="dot" style="background:var(--caramel)"></span>Domínio 5 · Segurança</button>
+      </div>
+
+      <div class="kw-map" id="kw-map">
+        <!-- size 5 (gigante) -->
+        <span class="kw k-d3 s-5">Bedrock</span>
+        <span class="kw k-d3 s-5">RAG</span>
+        <span class="kw k-d2 s-5">Foundation Model</span>
+
+        <!-- size 4 (grande) -->
+        <span class="kw k-d3 s-4">Knowledge Bases</span>
+        <span class="kw k-d3 s-4">Fine-tuning</span>
+        <span class="kw k-d3 s-4">Prompt Engineering</span>
+        <span class="kw k-d1 s-4">SageMaker</span>
+        <span class="kw k-d4 s-4">Bias</span>
+        <span class="kw k-d2 s-4">LLM</span>
+        <span class="kw k-d2 s-4">Alucinação</span>
+        <span class="kw k-d2 s-4">Embeddings</span>
+
+        <!-- size 3 (médio-grande) -->
+        <span class="kw k-d3 s-3">Bedrock Agents</span>
+        <span class="kw k-d3 s-3">Guardrails</span>
+        <span class="kw k-d1 s-3">Supervisionado</span>
+        <span class="kw k-d1 s-3">Não-supervisionado</span>
+        <span class="kw k-d1 s-3">Reinforcement Learning</span>
+        <span class="kw k-d3 s-3">Temperature</span>
+        <span class="kw k-d3 s-3">Top-p</span>
+        <span class="kw k-d3 s-3">Top-k</span>
+        <span class="kw k-d3 s-3">Zero-shot</span>
+        <span class="kw k-d3 s-3">Few-shot</span>
+        <span class="kw k-d4 s-3">SageMaker Clarify</span>
+        <span class="kw k-d4 s-3">Fairness</span>
+        <span class="kw k-d4 s-3">Explicabilidade (XAI)</span>
+        <span class="kw k-d3 s-3">Amazon Q Business</span>
+        <span class="kw k-d3 s-3">Amazon Q Developer</span>
+        <span class="kw k-d1 s-3">Classificação</span>
+        <span class="kw k-d1 s-3">Regressão</span>
+        <span class="kw k-d2 s-3">Vector Database</span>
+        <span class="kw k-d5 s-3">IAM</span>
+        <span class="kw k-d5 s-3">KMS</span>
+
+        <!-- size 2 (médio) -->
+        <span class="kw k-d1 s-2">Acurácia</span>
+        <span class="kw k-d1 s-2">Precision</span>
+        <span class="kw k-d1 s-2">Recall</span>
+        <span class="kw k-d1 s-2">F1-Score</span>
+        <span class="kw k-d1 s-2">Matriz de Confusão</span>
+        <span class="kw k-d1 s-2">ROC / AUC</span>
+        <span class="kw k-d1 s-2">RMSE</span>
+        <span class="kw k-d1 s-2">MSE</span>
+        <span class="kw k-d1 s-2">R²</span>
+        <span class="kw k-d1 s-2">Overfitting</span>
+        <span class="kw k-d1 s-2">Underfitting</span>
+        <span class="kw k-d1 s-2">Bias-Variance</span>
+        <span class="kw k-d2 s-2">Tokens</span>
+        <span class="kw k-d2 s-2">Tokenização</span>
+        <span class="kw k-d2 s-2">Transformer</span>
+        <span class="kw k-d2 s-2">Multimodal</span>
+        <span class="kw k-d2 s-2">GAN</span>
+        <span class="kw k-d2 s-2">Diffusion</span>
+        <span class="kw k-d2 s-2">NLP</span>
+        <span class="kw k-d3 s-2">Chunking</span>
+        <span class="kw k-d3 s-2">Chain-of-Thought</span>
+        <span class="kw k-d3 s-2">JumpStart</span>
+        <span class="kw k-d3 s-2">SageMaker Canvas</span>
+        <span class="kw k-d3 s-2">Continued Pre-training</span>
+        <span class="kw k-d3 s-2">Inference</span>
+        <span class="kw k-d3 s-2">Endpoints</span>
+        <span class="kw k-d3 s-2">Comprehend</span>
+        <span class="kw k-d3 s-2">Rekognition</span>
+        <span class="kw k-d3 s-2">Lex</span>
+        <span class="kw k-d3 s-2">Polly</span>
+        <span class="kw k-d3 s-2">Translate</span>
+        <span class="kw k-d3 s-2">Transcribe</span>
+        <span class="kw k-d3 s-2">Textract</span>
+        <span class="kw k-d3 s-2">Kendra</span>
+        <span class="kw k-d4 s-2">Model Monitor</span>
+        <span class="kw k-d4 s-2">Drift</span>
+        <span class="kw k-d4 s-2">A2I (Human-in-the-loop)</span>
+        <span class="kw k-d4 s-2">Toxicidade</span>
+        <span class="kw k-d4 s-2">Model Cards</span>
+        <span class="kw k-d4 s-2">Transparência</span>
+        <span class="kw k-d5 s-2">VPC Endpoints</span>
+        <span class="kw k-d5 s-2">CloudTrail</span>
+        <span class="kw k-d5 s-2">CloudWatch</span>
+        <span class="kw k-d5 s-2">Macie</span>
+        <span class="kw k-d5 s-2">GDPR</span>
+        <span class="kw k-d5 s-2">Compliance</span>
+        <span class="kw k-d5 s-2">S3 Bucket Policy</span>
+
+        <!-- size 1 (pequeno) -->
+        <span class="kw k-d1 s-1">Pipeline ML</span>
+        <span class="kw k-d1 s-1">Feature Engineering</span>
+        <span class="kw k-d1 s-1">K-NN</span>
+        <span class="kw k-d1 s-1">Árvore de Decisão</span>
+        <span class="kw k-d1 s-1">Cross-validation</span>
+        <span class="kw k-d2 s-1">SLM</span>
+        <span class="kw k-d2 s-1">Multimodalidade</span>
+        <span class="kw k-d3 s-1">Model Evaluation</span>
+        <span class="kw k-d3 s-1">ROUGE</span>
+        <span class="kw k-d3 s-1">BLEU</span>
+        <span class="kw k-d3 s-1">Perplexity</span>
+        <span class="kw k-d3 s-1">PartyRock</span>
+        <span class="kw k-d3 s-1">CodeWhisperer</span>
+        <span class="kw k-d4 s-1">Inclusão</span>
+        <span class="kw k-d4 s-1">Sustentabilidade</span>
+        <span class="kw k-d5 s-1">AWS Config</span>
+        <span class="kw k-d5 s-1">Shared Responsibility</span>
+        <span class="kw k-d5 s-1">HIPAA</span>
+        <span class="kw k-d5 s-1">PII</span>
+      </div>
+
+      <div class="kw-legend">
+        <span class="li l1">D1 · Fundamentos AI/ML</span>
+        <span class="li l2">D2 · GenAI</span>
+        <span class="li l3">D3 · Foundation Models Apps</span>
+        <span class="li l4">D4 · IA Responsável</span>
+        <span class="li l5">D5 · Segurança</span>
+      </div>
+
+    </div>
+
   </div>
 </section>
 

@@ -441,3 +441,346 @@ setTimeout(() => {
   window.addEventListener('scroll', update, { passive: true });
   update();
 })();
+/* =========================================================
+   ===== bloco 9 · PERIODIC TABLE de serviços AWS de IA
+   Substitui a seção "Mapa de palavras-chave" por uma
+   referência visual: 33 serviços em 8 famílias funcionais.
+   Clique em uma célula → painel de detalhe inline.
+   ========================================================= */
+(function periodicTable(){
+
+  // ───────────────────────────────────────
+  // FAMÍLIAS · cor + emoji + label
+  // ───────────────────────────────────────
+  const FAMILIES = {
+    gen:  { label: 'Foundation / GenAI',         emoji: '🧠', shortLabel: 'GenAI' },
+    ml:   { label: 'ML Workbench (SageMaker)',   emoji: '⚙️', shortLabel: 'ML' },
+    txt:  { label: 'Texto / NLP',                emoji: '💬', shortLabel: 'NLP' },
+    voz:  { label: 'Voz',                        emoji: '🎤', shortLabel: 'Voz' },
+    vis:  { label: 'Visão',                      emoji: '👁️', shortLabel: 'Visão' },
+    asst: { label: 'Assistentes prontos',        emoji: '🤖', shortLabel: 'Q' },
+    data: { label: 'Dados / Infra',              emoji: '🗃️', shortLabel: 'Dados' },
+    sec:  { label: 'Segurança / Governança',     emoji: '🔒', shortLabel: 'Seg' }
+  };
+
+  // ───────────────────────────────────────
+  // SERVIÇOS · símbolo, nome, frase, família, domínio, quando-usar, quando-NÃO, link aula, pegadinha
+  // ───────────────────────────────────────
+  const SERVICES = [
+    // ── Foundation / GenAI
+    { sym: 'Bed', name: 'Amazon Bedrock',     line: 'FMs como serviço, sem infra', fam: 'gen', d: 3,
+      use:  'Construir apps GenAI usando FMs prontos via API (Anthropic, Meta, Mistral, Amazon).',
+      avoid: 'Quando precisa de modelo customizado from-scratch — vai pra SageMaker.',
+      aula: 'aula14', trap: null },
+    { sym: 'BKB', name: 'Knowledge Bases',    line: 'RAG gerenciado',              fam: 'gen', d: 3,
+      use:  'RAG totalmente gerenciado em cima do Bedrock — conecta docs do S3, monta vector DB, retrieval.',
+      avoid: 'Quando a info muda raramente e cabe no contexto direto (basta prompt engineering).',
+      aula: 'aula10', trap: null },
+    { sym: 'BAg', name: 'Bedrock Agents',     line: 'FM chama APIs externas',      fam: 'gen', d: 3,
+      use:  'Quando o LLM precisa EXECUTAR ações (buscar dados, agendar, transacionar) em vez de só responder.',
+      avoid: 'Quando o caso é só responder perguntas — basta RAG/Knowledge Bases.',
+      aula: 'aula6', trap: null },
+    { sym: 'BGr', name: 'Bedrock Guardrails', line: 'Filtra conteúdo do FM',       fam: 'gen', d: 3,
+      use:  'Filtrar entrada e saída do FM contra PII, toxicidade, tópicos proibidos.',
+      avoid: 'Pra controlar QUEM chama o modelo — isso é IAM, não Guardrails.',
+      aula: 'aula16', trap: 'Guardrails ≠ IAM. Guardrails filtra CONTEÚDO, IAM filtra ACESSO.' },
+    { sym: 'BEv', name: 'Bedrock Eval',       line: 'Avalia qualidade de FMs',     fam: 'gen', d: 3,
+      use:  'Comparar FMs entre si com métricas automáticas (ROUGE, BLEU, BERTScore) e revisão humana.',
+      avoid: null,
+      aula: 'aula13', trap: null },
+    { sym: 'PRk', name: 'PartyRock',          line: 'Playground gratuito',         fam: 'gen', d: 3,
+      use:  'Prototipar apps GenAI sem código nem conta AWS. Bom pra demo e exploração.',
+      avoid: 'Não é production-ready. Pra produção use Bedrock direto.',
+      aula: 'aula14', trap: null },
+
+    // ── ML Workbench (SageMaker family)
+    { sym: 'SM',  name: 'Amazon SageMaker',   line: 'Plataforma ML completa',      fam: 'ml',  d: 1,
+      use:  'Ciclo completo de ML customizado: rotular → treinar → tuning → deployar → monitorar.',
+      avoid: 'Quando quer só usar FM pronto — vai pra Bedrock. Mais técnico, mais flexível, mais responsabilidade.',
+      aula: 'aula13', trap: 'SageMaker treina/deploya MODELOS. Bedrock dá ACESSO A FMs prontos.' },
+    { sym: 'SMC', name: 'SageMaker Canvas',   line: 'ML no-code',                  fam: 'ml',  d: 1,
+      use:  'Analista de negócio criar modelo via interface visual sem escrever código.',
+      avoid: 'Workflows automatizados em escala — use SageMaker normal.',
+      aula: 'aula13', trap: null },
+    { sym: 'SMJ', name: 'SageMaker JumpStart',line: 'Catálogo de FMs/modelos',     fam: 'ml',  d: 1,
+      use:  'Atalho pra usar modelos pré-treinados (FMs e classicos) dentro do SageMaker.',
+      avoid: null,
+      aula: 'aula13', trap: null },
+    { sym: 'SMx', name: 'SageMaker Clarify',  line: 'Detecta viés + XAI',          fam: 'ml',  d: 4,
+      use:  'Detectar bias em dados/modelo (pre-train, post-train) e gerar explicações (SHAP).',
+      avoid: 'Monitorar DRIFT do modelo em produção — isso é Model Monitor.',
+      aula: 'aula16', trap: 'Clarify ≠ Model Monitor. Clarify = BIAS. Monitor = DRIFT.' },
+    { sym: 'SMM', name: 'SM Model Monitor',   line: 'Drift em produção',           fam: 'ml',  d: 4,
+      use:  'Alertar quando modelo piora ao longo do tempo (data drift, concept drift).',
+      avoid: 'Detectar viés no dataset/modelo — isso é Clarify.',
+      aula: 'aula13', trap: null },
+    { sym: 'SMA', name: 'SM Autopilot',       line: 'AutoML',                      fam: 'ml',  d: 1,
+      use:  'SageMaker escolhe modelo, features e hiperparâmetros automaticamente.',
+      avoid: null,
+      aula: 'aula13', trap: null },
+
+    // ── Texto / NLP
+    { sym: 'Cmp', name: 'Comprehend',         line: 'NLP gerenciado',              fam: 'txt', d: 3,
+      use:  'Sentimento, entidades, idioma, key phrases, tópicos. Texto → insights.',
+      avoid: 'Busca/Q&A em docs — use Kendra ou Q Business.',
+      aula: 'aula8', trap: null },
+    { sym: 'Knd', name: 'Kendra',             line: 'Busca empresarial',           fam: 'txt', d: 3,
+      use:  'Busca semântica em docs internos com NLU. Bom pra "enterprise search".',
+      avoid: 'Pra Q&A conversacional hoje use Q Business (mais novo, mais conversacional).',
+      aula: 'aula11', trap: null },
+    { sym: 'Trl', name: 'Translate',          line: 'Tradução neural',             fam: 'txt', d: 3,
+      use:  'Tradução automática entre 75+ idiomas. Por API ou batch.',
+      avoid: null,
+      aula: 'aula9', trap: null },
+    { sym: 'Txt', name: 'Textract',           line: 'OCR avançado',                fam: 'txt', d: 3,
+      use:  'Extrair texto, TABELAS e FORMULÁRIOS de docs digitalizados/PDFs.',
+      avoid: 'Pra detectar objetos em imagem qualquer use Rekognition.',
+      aula: 'aula9', trap: null },
+
+    // ── Voz
+    { sym: 'Pll', name: 'Polly',              line: 'Texto → fala (TTS)',          fam: 'voz', d: 3,
+      use:  'Sintetizar áudio realista a partir de texto. Várias vozes e idiomas.',
+      avoid: null,
+      aula: 'aula8', trap: null },
+    { sym: 'Tsc', name: 'Transcribe',         line: 'Fala → texto (STT)',          fam: 'voz', d: 3,
+      use:  'Reconhecimento de voz com pontuação, diarização, vocabulário customizado.',
+      avoid: null,
+      aula: 'aula8', trap: null },
+    { sym: 'Lex', name: 'Amazon Lex',         line: 'Chatbots conversacionais',    fam: 'voz', d: 3,
+      use:  'Interfaces de chat com intent + slots. Mesma tecnologia da Alexa.',
+      avoid: 'Não responde com FM sozinho — Lex é o FLUXO. Inteligência vem do Bedrock atrás.',
+      aula: 'aula9', trap: 'Lex ≠ Bedrock. Lex = fluxo conversacional. Bedrock = inteligência. Combinam.' },
+
+    // ── Visão
+    { sym: 'Rek', name: 'Rekognition',        line: 'Visão computacional',         fam: 'vis', d: 3,
+      use:  'Detectar objetos, rostos, texto, moderar conteúdo em imagens e vídeos.',
+      avoid: 'OCR de documentos estruturados (tabelas, forms) — vai melhor com Textract.',
+      aula: 'aula7', trap: null },
+
+    // ── Assistentes prontos
+    { sym: 'QB',  name: 'Amazon Q Business',  line: 'Q&A corporativo',             fam: 'asst', d: 3,
+      use:  'Assistente pronto que conecta nas fontes de dados da empresa (S3, SharePoint, Slack) e responde sobre conhecimento interno.',
+      avoid: 'Pra sugerir/completar código — use Q Developer.',
+      aula: 'aula9', trap: 'Q Business ≠ Q Developer. Business = docs. Developer = código.' },
+    { sym: 'QD',  name: 'Amazon Q Developer', line: 'Copiloto de código',          fam: 'asst', d: 3,
+      use:  'Sugestões de código em tempo real na IDE. Sucessor do CodeWhisperer.',
+      avoid: 'Pra perguntar sobre docs internos da empresa — use Q Business.',
+      aula: 'aula9', trap: null },
+
+    // ── Dados / Infra
+    { sym: 'S3',  name: 'Amazon S3',          line: 'Armazenamento de objetos',    fam: 'data', d: 5,
+      use:  'Onde ficam datasets, artefatos de modelo, embeddings serializados. A "fundação" de quase todo pipeline AWS.',
+      avoid: null,
+      aula: 'aula11', trap: null },
+    { sym: 'OS',  name: 'OpenSearch',         line: 'Vector DB pra RAG',           fam: 'data', d: 3,
+      use:  'Banco vetorial pra armazenar embeddings + busca por similaridade. Base de RAG na AWS.',
+      avoid: null,
+      aula: 'aula10', trap: null },
+    { sym: 'Aur', name: 'Aurora pgvector',    line: 'PostgreSQL com vetores',      fam: 'data', d: 3,
+      use:  'Alternativa ao OpenSearch quando o app já usa Aurora — adiciona extensão pgvector.',
+      avoid: null,
+      aula: 'aula10', trap: null },
+
+    // ── Segurança / Governança
+    { sym: 'IAM', name: 'IAM',                line: 'Controle de acesso',          fam: 'sec', d: 5,
+      use:  'Controlar QUEM (usuário, role, serviço) pode chamar O QUE na AWS.',
+      avoid: 'Filtrar CONTEÚDO gerado por FM — isso é Guardrails.',
+      aula: 'aula17', trap: null },
+    { sym: 'KMS', name: 'KMS',                line: 'Chaves de criptografia',      fam: 'sec', d: 5,
+      use:  'Gerenciar chaves pra criptografar dados em repouso (S3, EBS, RDS).',
+      avoid: null,
+      aula: 'aula17', trap: null },
+    { sym: 'VPC', name: 'VPC Endpoints',      line: 'PrivateLink',                 fam: 'sec', d: 5,
+      use:  'Garantir que chamadas pra serviços AWS NÃO passem pela internet pública.',
+      avoid: null,
+      aula: 'aula17', trap: null },
+    { sym: 'CT',  name: 'CloudTrail',         line: 'Auditoria de chamadas',       fam: 'sec', d: 5,
+      use:  'Quem chamou qual API quando. Pra responder "quem deletou isso?".',
+      avoid: 'Monitorar latência/custo/throughput — use CloudWatch.',
+      aula: 'aula17', trap: 'CloudTrail ≠ CloudWatch. Trail = AUDITORIA. Watch = MÉTRICAS.' },
+    { sym: 'CW',  name: 'CloudWatch',         line: 'Métricas e logs',             fam: 'sec', d: 5,
+      use:  'Monitorar métricas, alertar em throughput, latência, custo. Logs centralizados.',
+      avoid: 'Auditoria de quem-chamou-o-que — isso é CloudTrail.',
+      aula: 'aula17', trap: null },
+    { sym: 'Mac', name: 'Macie',              line: 'Descobre PII em S3',          fam: 'sec', d: 5,
+      use:  'Descoberta automatizada de dados sensíveis (CPF, e-mails, cartões) em buckets S3.',
+      avoid: null,
+      aula: 'aula16', trap: null },
+    { sym: 'Cfg', name: 'AWS Config',         line: 'Inventário e conformidade',   fam: 'sec', d: 5,
+      use:  'Histórico de mudanças de configuração e regras de compliance automatizadas.',
+      avoid: null,
+      aula: 'aula17', trap: null },
+    { sym: 'A2I', name: 'Amazon A2I',         line: 'Revisão humana (HITL)',       fam: 'sec', d: 4,
+      use:  'Meter humano-no-loop em decisões críticas/incertas do modelo. Workflow de revisão.',
+      avoid: null,
+      aula: 'aula16', trap: 'HITL — Human In The Loop. Cai sempre.' }
+  ];
+
+  // ───────────────────────────────────────
+  // ESTADO · qual célula tá selecionada (nada persistido — é só referência)
+  // ───────────────────────────────────────
+  let selectedSym = null;
+
+  // ───────────────────────────────────────
+  // RENDER · monta a tabela
+  // ───────────────────────────────────────
+  function renderTable(){
+    const wrap = document.getElementById('pt-table');
+    if(!wrap) return;
+
+    // agrupa serviços por família
+    const groups = {};
+    for(const s of SERVICES){
+      if(!groups[s.fam]) groups[s.fam] = [];
+      groups[s.fam].push(s);
+    }
+
+    // ordem das famílias (gen primeiro porque é o que mais cai)
+    const order = ['gen', 'ml', 'txt', 'voz', 'vis', 'asst', 'data', 'sec'];
+
+    wrap.innerHTML = order.map(famKey => {
+      const fam = FAMILIES[famKey];
+      const items = groups[famKey] || [];
+      return `
+        <div class="pt-row pt-fam-${famKey}">
+          <div class="pt-row-label">
+            <span class="pt-row-emoji" aria-hidden="true">${fam.emoji}</span>
+            <span class="pt-row-name">${fam.label}</span>
+            <span class="pt-row-count">${items.length}</span>
+          </div>
+          <div class="pt-row-cells">
+            ${items.map(s => buildCell(s)).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    wireCellClicks();
+  }
+
+  function buildCell(s){
+    return `
+      <button class="pt-cell pt-fam-${s.fam}" data-sym="${escAttr(s.sym)}" type="button"
+              aria-label="${escAttr(s.name)} — ${escAttr(s.line)}">
+        <span class="pt-cell-d">D${s.d}</span>
+        <span class="pt-cell-sym">${escHtml(s.sym)}</span>
+        <span class="pt-cell-name">${escHtml(s.name.replace(/^Amazon /,''))}</span>
+        <span class="pt-cell-line">${escHtml(s.line)}</span>
+      </button>
+    `;
+  }
+
+  // ───────────────────────────────────────
+  // RENDER · painel de detalhe
+  // ───────────────────────────────────────
+  function showDetail(sym){
+    const s = SERVICES.find(x => x.sym === sym);
+    const detail = document.getElementById('pt-detail');
+    if(!s || !detail) return;
+    selectedSym = sym;
+
+    const fam = FAMILIES[s.fam];
+    detail.innerHTML = `
+      <div class="pt-d-head pt-fam-${s.fam}">
+        <div class="pt-d-head-main">
+          <span class="pt-d-sym">${escHtml(s.sym)}</span>
+          <div class="pt-d-titles">
+            <h3 class="pt-d-name">${escHtml(s.name)}</h3>
+            <div class="pt-d-meta">
+              <span class="pt-d-fam">${fam.emoji} ${escHtml(fam.label)}</span>
+              <span class="pt-d-dom">Domínio ${s.d}</span>
+            </div>
+          </div>
+        </div>
+        <button class="pt-d-close" id="pt-d-close" aria-label="Fechar">✕</button>
+      </div>
+      <div class="pt-d-body">
+        <div class="pt-d-row pt-d-use">
+          <span class="pt-d-label">✅ Quando usar</span>
+          <p>${escHtml(s.use)}</p>
+        </div>
+        ${s.avoid ? `
+          <div class="pt-d-row pt-d-avoid">
+            <span class="pt-d-label">🚫 Quando NÃO usar</span>
+            <p>${escHtml(s.avoid)}</p>
+          </div>
+        ` : ''}
+        ${s.trap ? `
+          <div class="pt-d-row pt-d-trap">
+            <span class="pt-d-label">⚠️ Pegadinha</span>
+            <p>${escHtml(s.trap)}</p>
+          </div>
+        ` : ''}
+        <div class="pt-d-actions">
+          <a href="../${s.aula}/" class="pt-d-btn">📚 Aula relacionada →</a>
+          <button class="pt-d-btn ghost" id="pt-d-next">Próximo serviço →</button>
+        </div>
+      </div>
+    `;
+    detail.hidden = false;
+
+    // wire close
+    document.getElementById('pt-d-close').addEventListener('click', closeDetail);
+
+    // wire "próximo"
+    document.getElementById('pt-d-next').addEventListener('click', () => {
+      const idx = SERVICES.findIndex(x => x.sym === sym);
+      const next = SERVICES[(idx + 1) % SERVICES.length];
+      showDetail(next.sym);
+      // foca a célula correspondente
+      const cell = document.querySelector(`.pt-cell[data-sym="${cssEsc(next.sym)}"]`);
+      if(cell){
+        cell.focus();
+        cell.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+      }
+    });
+
+    // marca a célula como selected
+    document.querySelectorAll('.pt-cell').forEach(c => {
+      c.classList.toggle('pt-selected', c.dataset.sym === sym);
+    });
+
+    // scroll suave até o detalhe
+    setTimeout(() => detail.scrollIntoView({behavior:'smooth', block:'center'}), 100);
+  }
+
+  function closeDetail(){
+    const detail = document.getElementById('pt-detail');
+    if(detail){ detail.hidden = true; detail.innerHTML = ''; }
+    document.querySelectorAll('.pt-cell.pt-selected').forEach(c => c.classList.remove('pt-selected'));
+    selectedSym = null;
+  }
+
+  // ───────────────────────────────────────
+  // WIRE · cliques
+  // ───────────────────────────────────────
+  function wireCellClicks(){
+    document.querySelectorAll('.pt-cell').forEach(cell => {
+      cell.addEventListener('click', () => showDetail(cell.dataset.sym));
+    });
+  }
+
+  // ESC fecha o detalhe
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && selectedSym) closeDetail();
+  });
+
+  // ───────────────────────────────────────
+  // HELPERS
+  // ───────────────────────────────────────
+  function escHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  }
+  function escAttr(s){ return escHtml(s); }
+  function cssEsc(s){
+    if(window.CSS && window.CSS.escape) return CSS.escape(s);
+    return String(s).replace(/[^a-zA-Z0-9_-]/g, c => '\\' + c);
+  }
+
+  // ───────────────────────────────────────
+  // BOOT
+  // ───────────────────────────────────────
+  if(document.getElementById('pt-table')){
+    renderTable();
+  }
+})();
