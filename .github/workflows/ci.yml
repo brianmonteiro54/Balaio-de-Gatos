@@ -46,7 +46,7 @@ jobs:
             "**/*.html"
           fail: false
       - if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: lychee-report
           path: ./lychee/out.md
@@ -70,7 +70,7 @@ jobs:
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
       - if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: lighthouse-reports
           path: .lighthouseci
