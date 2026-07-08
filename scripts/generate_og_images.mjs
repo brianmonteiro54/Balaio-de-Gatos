@@ -78,11 +78,9 @@ for (const p of targets) {
   const out = path.join(OUT_DIR, `${p.slug}.png`);
   await page.screenshot({ path: out, type: "png", omitBackground: false });
 
-  // Gera versão WebP em paralelo (50% menor, suportada por todas as redes sociais modernas)
-  const outWebp = path.join(OUT_DIR, `${p.slug}.webp`);
-  await page.screenshot({ path: outWebp, type: "webp", quality: 85, omitBackground: false });
-
-  console.log(`✓ ${p.slug}.png + .webp`);
+  // WebP é gerado depois por scripts/generate_og_webp.mjs (via sharp).
+  // Playwright.screenshot() só aceita type "png" ou "jpeg" — não encoda WebP.
+  console.log(`✓ ${p.slug}.png`);
 }
 
 await browser.close();
